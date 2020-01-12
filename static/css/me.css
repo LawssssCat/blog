@@ -1,0 +1,61 @@
+/*------ 间距 ----------------------*/
+.m-padded-mini{
+    padding: 0.2em !important;
+}
+.m-padded-tiny{
+    padding: 0.3em !important;
+}
+.m-padded-tb-mini{ /*行间距 - 最小*/
+    padding-top: 0.2em !important;
+    padding-bottom: 0.2em !important;
+}
+.m-padded-tb-tiny{/*行间距 - 很小*/
+    padding-top: 0.3em !important;
+    padding-bottom: 0.3em !important;
+}
+.m-padded-tb-small{/*行间距 - 小*/
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+}
+.m-padded-tb{/*行间距*/
+    padding-top: 1em !important;
+    padding-bottom: 1em !important;
+}
+.m-padded-tb-large{/*行间距 - 大*/
+    padding-top: 2em !important;
+    padding-bottom: 2em !important;
+}
+.m-padded-tb-big{/*行间距 - 大大*/
+    padding-top: 3em !important;
+    padding-bottom: 3em !important;
+}
+.m-padded-tb-huge{/*行间距 - 大大大*/
+    padding-top: 4em !important;
+    padding-bottom: 4em !important;
+}
+
+.m-padded-tb-massive{/*行间距 - 最大*/
+    padding-top: 5em !important;
+    padding-bottom: 5em !important;
+}
+
+/*--------- text -----------*/
+.m-text-thin {
+    font-weight: 300 !important;/*字大小*/
+}
+.m-text-spaced {
+    letter-spacing: 1px !important; /*字间距*/
+}
+.m-text-lined{
+    line-height: 1.8;/*行间距*/
+}
+
+.m-opacity-mini {
+    opacity: 0.8 !important; /*透明度*/
+}
+
+
+/*----  display  ------------------*/
+.m-inline-block{
+    display: inline-block !important ;
+}
