@@ -1,4 +1,4 @@
-/*------ 间距 ----------------------*/
+/*------ 间距padded ----------------------*/
 .m-padded-mini{
     padding: 0.2em !important;
 }
@@ -39,6 +39,21 @@
     padding-bottom: 5em !important;
 }
 
+/*----- 内间距 margin ------------------*/
+.m-margin-tb-tiny{
+    margin-bottom: 0.3em !important ; 
+    margin-top: 0.3em !important ;
+}
+.m-margin-top-small{
+    margin-top: 0.5em !important;
+}
+.m-margin-top{
+    margin-top: 1em !important;
+}
+.m-margin-top-large{
+    margin-top: 2em !important;
+}
+
 /*--------- text -----------*/
 .m-text-thin {
     font-weight: 300 !important;/*字大小*/
@@ -58,4 +73,37 @@
 /*----  display  ------------------*/
 .m-inline-block{
     display: inline-block !important ;
+}
+
+/*----- position ------------------*/
+.m-right-top{
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+/*---- container ------------------*/
+.m-container{
+    max-width: 72em !important;
+    margin: auto !important;
+}
+
+/*-----------color-----------*/
+.m-black{
+    color: #333 !important;
+}
+
+/*-----*/
+.m-mobile-show{
+    display: none !important;
+}
+@media screen and (max-width: 768px){
+    /* 手机时候 隐藏 */
+    .m-mobile-hide{
+        display: none !important;
+    }
+    /* 手机时候 出现 */
+    .m-mobile-show{
+        display: block !important;
+    }
 }
