@@ -299,12 +299,139 @@
 
         </div>
 
-        <!-- message positive 修改颜色 -->
+        <!-- message positive 修改颜色 绿 -->
         <div class="ui attached positive message">
-            博客信息
+
+            <!--博客信息-->
+            <!-- middle aligned : 垂直居中-->
+            <div class="ui grid middle aligned" >
+                <div class="eleven wide column">
+
+                    <ui class="list">
+                        <li>作者: lawssssCat (联系作者) </li>
+                        <li>发表时间: 2020-1-13 23:23:17 </li>
+                        <li>版权声明: 自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)</li>
+                        <li>公众号转载: 请在文末添加作者公众号二维码</li>
+                    </ui>
+
+                </div>
+                <div class="five wide column">
+
+                    <!--floated：向右浮动-->
+                    <img src="./static/images/wechat.jpg" alt="" class="ui right floated rounded bordered image" style="width: 110px;">
+                    
+                </div>
+
+            </div>
         </div>
+
+
         <div class="ui attached bottom segment">
-            留言区
+            <!--留言区域列表-->
+            <div class="ui teal segment">
+
+                <div class="ui threaded comments">
+                    <h3 class="ui dividing header">Comments</h3>
+                    <div class="comment">
+                      <a class="avatar">
+                        <img src="./static/images/matt.jpg">
+                      </a>
+                      <div class="content">
+                        <a class="author">Matt</a>
+                        <div class="metadata">
+                          <span class="date">Today at 5:42PM</span>
+                        </div>
+                        <div class="text">
+                          How artistic!
+                        </div>
+                        <div class="actions">
+                          <a class="reply">Reply</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comment">
+                      <a class="avatar">
+                        <img src="./static/images/elliot.jpg">
+                      </a>
+                      <div class="content">
+                        <a class="author">Elliot Fu</a>
+                        <div class="metadata">
+                          <span class="date">Yesterday at 12:30AM</span>
+                        </div>
+                        <div class="text">
+                          <p>This has been very useful for my research. Thanks as well!</p>
+                        </div>
+                        <div class="actions">
+                          <a class="reply">Reply</a>
+                        </div>
+                      </div>
+                      <div class="comments">
+                        <div class="comment">
+                          <a class="avatar">
+                            <img src="./static/images/jenny.jpg">
+                          </a>
+                          <div class="content">
+                            <a class="author">Jenny Hess</a>
+                            <div class="metadata">
+                              <span class="date">Just now</span>
+                            </div>
+                            <div class="text">
+                              Elliot you are always so right :)
+                            </div>
+                            <div class="actions">
+                              <a class="reply">Reply</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comment">
+                      <a class="avatar">
+                        <img src="./static/images/joe.jpg">
+                      </a>
+                      <div class="content">
+                        <a class="author">Joe Henderson</a>
+                        <div class="metadata">
+                          <span class="date">5 days ago</span>
+                        </div>
+                        <div class="text">
+                          Dude, this is awesome. Thanks so much
+                        </div>
+                        <div class="actions">
+                          <a class="reply">Reply</a>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+
+            </div>
+
+            <!--评论部分 -->
+            <div class="ui form">
+                <div class="field">
+
+                    <textarea name="content" placeholder="输入评论信息..." id="" cols="30" rows="10"></textarea>
+                </div>
+                <div class="fields">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input type="text" placeholder="姓名" name="nickname">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="mail icon"></i>
+                            <input type="text" name="email" placeholder="邮箱">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <button class="ui teal button"><i class="edit icon"></i>发布</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
