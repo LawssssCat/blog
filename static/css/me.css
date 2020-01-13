@@ -1,3 +1,7 @@
+body{
+    background: url("../images/background.png");
+}
+
 /*------ 间距padded ----------------------*/
 .m-padded-mini{
     padding: 0.2em !important;
@@ -65,8 +69,12 @@
     line-height: 1.8;/*行间距*/
 }
 
+/*-------- opacity --------------*/
 .m-opacity-mini {
     opacity: 0.8 !important; /*透明度*/
+}
+.m-opacity-tiny{
+    opacity: 0.6 !important ;
 }
 
 
