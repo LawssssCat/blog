@@ -31,11 +31,12 @@
 
             <!--teal:颜色-->
             <h2 class="ui item header teal">Blog </h2>
-            <a href="#" class="item m-mobile-hide"><i class="home icon"></i>首页</a>
-            <a href="#" class="item m-mobile-hide"><i class="idea icon"></i>分类</a>
-            <a href="#" class="item m-mobile-hide"><i class="tags icon"></i>标签</a>
-            <a href="#" class="item m-mobile-hide"><i class="info icon"></i>关于我</a>
-            <div class="right item m-mobile-hide">
+            <!--m-item为了选择-->
+            <a href="#" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="idea icon"></i>分类</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="tags icon"></i>标签</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+            <div class="m-item right item m-mobile-hide">
                 <!--transparent:透明效果-->
                 <div class="ui icon transparent input">
                     <input type="text" placeholder="Search....">
@@ -45,7 +46,8 @@
         </div>
     <div>
 
-    <a href="#" class="ui black icon button m-right-top m-mobile-show">
+    <!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
         <i class="sidebar icon"></i>
     </a>
 
@@ -600,5 +602,13 @@
 <!--CDN资源-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+
+<script>
+    $('.menu.toggle').click(function() {
+        //toggleClass 切换样式状态
+        $('.m-item').toggleClass('m-mobile-hide');
+    }) ;
+</script>
+
 </body>
 </html>
