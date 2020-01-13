@@ -37,11 +37,17 @@ body{
     padding-top: 4em !important;
     padding-bottom: 4em !important;
 }
-
 .m-padded-tb-massive{/*行间距 - 最大*/
     padding-top: 5em !important;
     padding-bottom: 5em !important;
 }
+
+
+.m-padded-lr{
+    padding-left: 4em;
+    padding-right: 4em;
+}
+
 
 /*----- 内间距 margin ------------------*/
 .m-margin-tb-tiny{
