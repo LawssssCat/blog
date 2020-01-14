@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>博客详情</title>
+    <title>后台管理</title>
     <!--CDN资源
         主要 : semantic-ui
     -->
@@ -22,29 +22,39 @@
         inverted ： 黑色(反转)
         m-padded-tb-mini : 自己家的
     -->
-<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
+<nav id="topBar" class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
     <div class="ui container">
         <!--
-        stackable 可堆叠，适应手机端
+        stackable 可堆叠，适应手机端 labeled icon
         -->
+        
         <div class="ui inverted secondary stackable menu">
 
             <!--teal:颜色-->
-            <h2 class="ui item header teal">Blog </h2>
+            <h2 class="ui item header teal">后台管理 </h2>
             <!--m-item为了选择-->
-            <a href="#" class="m-item item m-mobile-hide"><i class=" home icon"></i>首页</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
-            <div class="m-item right item m-mobile-hide">
-                <!--transparent:透明效果-->
-                <div class="ui icon transparent input">
-                    <input type="text" placeholder="Search....">
-                    <i class="search inverted icon link"></i>
+            <a href="#" class="m-item item m-mobile-hide "><i class=" home icon"></i>首页</a>
+            <a href="#" class="m-item item m-mobile-hide "><i class=" idea icon"></i>分类</a>
+            <a href="#" class="m-item item m-mobile-hide "><i class=" tags icon"></i>标签</a>
+           
+            <a href="#" class="m-item item m-mobile-hide  right "> 
+                <button class="ui  teal  inverted  button">
+                    <i class="pencil alternate  icon"></i>写博客
+                </button>
+            </a>
+            <div class="  menu m-margin-bottom-small   " >
+                <div class="ui m-item item m-mobile-hide dropdown m-margin-lr-no">
+                    <div class="text">
+                        <img class="ui avatar image" src="../static/images/logo.jpg">lawssssCat
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="#" class="item">注销</a>
+                    </div>
                 </div>
             </div>
         </div>
+
     <div>
 
     <!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
@@ -59,381 +69,84 @@
     <!--container，外层容器，适合响应移动端-->
     <div class="ui container">
 
-        <div class="ui top attached segment">
-             <!--头部区域-->
-            <div class="ui horizontal link list">
-                <div class="item">
-                    <img src="../static/images/placeholder.jpg" alt="" class="ui avatar image">
-                    <div class="content">
-                        <a href="#" class="header">lawssssCat</a>
-                    </div>
-                </div>
-                <div class="item">
-                    <i class="calendar icon"></i>2017-10-01
-                </div>
-                <div class="item">
-                    <i class="eye icon"></i>2342
-                </div>
-            </div>
-
-        </div>
-        <div class="ui attached segment">
-             <!--图片-->
-            <img src="../static/images/index-read.gif" alt="" class="ui fluid rounded image">
-        </div>
-        <div class="ui attached segment padded" >
 
 
-            <!--内容顶部-->
-            <div class="ui right aligned basic segment">
-                <div class="ui  orange basic label">原创</div>
-            </div>
-            <!--标题部分-->
-            <h2 class="ui center aligned header">linux系列之常用运维命令整理笔录</h2>
-            <br>
-            <br>
-            <div id="content" class="m-padded-lr" >
-
-
-                <!--正文部分-->
-
-
-
-                <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客，当然vi，文件操作等就不介绍了，慢慢积累一些其它拓展的命令，博客不定时更新</p>
-            
-               
-                <p></p><div class="toc"><h3>文章目录</h3><ul><ul><ul><li><a href="#_8" rel="nofollow">一、系统监控</a></li><ul><li><a href="#1free_9" rel="nofollow">1、free命令</a></li><li><a href="#2ulimit_44" rel="nofollow">2、ulimit命令</a></li><li><a href="#3top_62" rel="nofollow">3、top命令</a></li><li><a href="#4df_82" rel="nofollow">4、df命令</a></li><li><a href="#5ps_87" rel="nofollow">5、ps命令</a></li></ul><li><a href="#_107" rel="nofollow">二、文件操作</a></li><ul><li><a href="#1tail_108" rel="nofollow">1、tail命令</a></li><li><a href="#2ll_ah_125" rel="nofollow">2、ll -ah</a></li></ul><li><a href="#_132" rel="nofollow">三、网络通信</a></li><ul><li><a href="#1netstat_133" rel="nofollow">1、netstat</a></li><li><a href="#2_145" rel="nofollow">2、重启网络</a></li><li><a href="#3SELinux_152" rel="nofollow">3、SELinux</a></li><li><a href="#4_173" rel="nofollow">4、防火墙</a></li></ul><li><a href="#_187" rel="nofollow">四、系统管理</a></li><ul><li><a href="#1uname_188" rel="nofollow">1、uname</a></li><li><a href="#2ip_addr_190" rel="nofollow">2、ip addr</a></li></ul></ul></ul></ul></div><p></p>
-                <h3><a id="_8"></a>一、系统监控</h3>
-                <h4><a id="1free_9"></a>1、free命令</h4>
-                <p>free 命令能够显示系统中物理上的空闲和已用内存，还有交换内存，同时，也能显示被内核使用的缓冲和缓存</p>
-                <pre><code class="prism language-powershell">语法：free <span class="token namespace">[param]</span>
-                </code></pre>
-                <p>param可以为：</p>
-                <ul>
-                <li>-b：以Byte为单位显示内存使用情况；</li>
-                <li>-k：以KB为单位显示内存使用情况；</li>
-                <li>-m：以MB为单位显示内存使用情况；</li>
-                <li>-o：不显示缓冲区调节列；</li>
-                <li>-s&lt;间隔秒数&gt;：持续观察内存使用状况；</li>
-                <li>-t：显示内存总和列；</li>
-                <li>-V：显示版本信息。</li>
-                </ul>
-                <p><img src="https://img-blog.csdnimg.cn/20191028191938222.png" alt="在这里插入图片描述"><br>
-                Mem：表示物理内存统计</p>
-                <ul>
-                <li>total：表示物理内存总数(total=used+free)</li>
-                <li>used：表示系统分配给缓存使用的数量(这里的缓存包括buffer和cache)</li>
-                <li>free：表示未分配的物理内存总数</li>
-                <li>shared：表示共享内存</li>
-                <li>buffers：系统分配但未被使用的buffers 数量。</li>
-                <li>cached：系统分配但未被使用的cache 数量。</li>
-                </ul>
-                <p>-/+ buffers/cache：表示物理内存的缓存统计</p>
-                <ul>
-                <li>(-buffers/cache) 内存数： (指的第一部分Mem行中的used – buffers – cached)</li>
-                <li>(+buffers/cache) 内存数:  (指的第一部分Mem行中的free + buffers + cached)</li>
-                </ul>
-                <p>(-buffers/cache)表示真正使用的内存数， (+buffers/cache) 表示真正未使用的内存数</p>
-                <p>Swap：表示硬盘上交换分区的使用情况</p>
-                <h4><a id="2ulimit_44"></a>2、ulimit命令</h4>
-                <p>ulimit用于显示系统资源限制的信息<br>
-                语法：ulimit [param]<br>
-                param参数可以为：</p>
-                <ul>
-                <li>-a 　显示目前资源限制的设定。</li>
-                <li>-c &lt;core文件上限&gt; 　设定core文件的最大值，单位为区块。</li>
-                <li>-d &lt;数据节区大小&gt; 　程序数据节区的最大值，单位为KB。</li>
-                <li>-f &lt;文件大小&gt; 　shell所能建立的最大文件，单位为区块。</li>
-                <li>-H 　设定资源的硬性限制，也就是管理员所设下的限制。</li>
-                <li>-m &lt;内存大小&gt; 　指定可使用内存的上限，单位为KB。</li>
-                <li>-n &lt;文件数目&gt; 　指定同一时间最多可开启的文件数。</li>
-                <li>-p &lt;缓冲区大小&gt; 　指定管道缓冲区的大小，单位512字节。</li>
-                <li>-s &lt;堆叠大小&gt; 　指定堆叠的上限，单位为KB。</li>
-                <li>-S 　设定资源的弹性限制。</li>
-                <li>-t &lt;CPU时间&gt; 　指定CPU使用时间的上限，单位为秒。</li>
-                <li>-u &lt;程序数目&gt; 　用户最多可开启的程序数目。</li>
-                <li>-v &lt;虚拟内存大小&gt; 　指定可使用的虚拟内存上限，单位为KB</li>
-                </ul>
-                <h4><a id="3top_62"></a>3、top命令</h4>
-                <p>top命令可以实时动态地查看系统的整体运行情况，是一个综合了多方信息监测系统性能和运行信息的实用工具</p>
-                <pre><code class="prism language-powershell">语法：top <span class="token namespace">[param]</span>
-                </code></pre>
-                <p>param为：</p>
-                <ul>
-                <li>-b：以批处理模式操作；</li>
-                <li>-c：显示完整的治命令；</li>
-                <li>-d：屏幕刷新间隔时间；</li>
-                <li>-I：忽略失效过程；</li>
-                <li>-s：保密模式；</li>
-                <li>-S：累积模式；</li>
-                <li>-u [用户名]：指定用户名；</li>
-                <li>-p [进程号]：指定进程；</li>
-                <li>-n [次数]：循环显示的次数。</li>
-                </ul>
-                <h4><a id="4df_82"></a>4、df命令</h4>
-                <ul>
-                <li>df -h查看磁盘使用情况</li>
-                <li>df -i 查看inode使用情况</li>
-                </ul>
-                <h4><a id="5ps_87"></a>5、ps命令</h4>
-                <p>ps命令用于查看进程统计信息</p>
-                <p>常用参数：</p>
-                <ul>
-                <li>a：显示当前终端下的所有进程信息，包括其他用户的进程。</li>
-                <li>u：使用以用户为主的格式输出进程信息。</li>
-                <li>x：显示当前用户在所有终端下的进程。</li>
-                <li>-e：显示系统内的所有进程信息。</li>
-                <li>-l：使用长（long）格式显示进程信息。</li>
-                <li>-f：使用完整的（full）格式显示进程信息。</li>
-                </ul>
-                <p>在使用中可以加上grep命令一起使用，也可以单独使用</p>
-                <pre><code># ps命令单独使用的情况
-                ps -elf tomcat
-                #结合管道操作和grep命令进行过滤，用于查询某一个进程的信息
-                ps -elf | grep tomcat
-                </code></pre>
-                <h3><a id="_107"></a>二、文件操作</h3>
-                <h4><a id="1tail_108"></a>1、tail命令</h4>
-                <p>tail 命令可用于查看文件的内容，语法为</p>
-                <pre><code class="prism language-powershell">tail <span class="token namespace">[param]</span> <span class="token namespace">[filename]</span>
-                </code></pre>
-                <p>其中param可为：</p>
-                <ul>
-                <li>-f ：循环读取</li>
-                <li>-q ：不显示处理信息</li>
-                <li>-v ：显示详细的处理信息</li>
-                <li>-c [数目]： 显示的字节数</li>
-                <li>-n [行数]： 显示文件的尾部 n 行内容</li>
-                <li>–pid=PID ：与-f合用,表示在进程ID,PID死掉之后结束</li>
-                <li>-q, --quiet, --silent ：从不输出给出文件名的首部</li>
-                <li>-s, --sleep-interval=S ：与-f合用,表示在每次反复的间隔休眠S秒</li>
-                </ul>
-                <h4><a id="2ll_ah_125"></a>2、ll -ah</h4>
-                <p>ll -ah命令，可以用于查看文件情况</p>
-                <pre><code class="prism language-shell">ll -ah
-                </code></pre>
-                <h3><a id="_132"></a>三、网络通信</h3>
-                <h4><a id="1netstat_133"></a>1、netstat</h4>
-                <p>netstat命令是用于监控进出网络的包和网络接口统计的命令行工具</p>
-                <pre><code class="prism language-powershell">语法：netstat <span class="token namespace">[param]</span>
-                </code></pre>
-                <p>param参数可以为：</p>
-                <ul>
-                <li>-h  :   查看帮助</li>
-                <li>-r   :   显示路由表</li>
-                <li>-i   :   查看网络接口</li>
-                </ul>
-                <h4><a id="2_145"></a>2、重启网络</h4>
-                <p>设置了linux网络，需要重启网络，可以用命令：</p>
-                <pre><code class="prism language-shell"><span class="token function">service</span> network restart 
-                </code></pre>
-                <h4><a id="3SELinux_152"></a>3、SELinux</h4>
-                <p>SELinux全称是 Security-Enhanced Linux，它是由美国国家安全局（NSA）贡献的，它为 Linux 内核子系统引入了一个健壮的强制控制访问Mandatory Access Control架构。详情可以参考<a href="https://linux.cn/article-7317-1.html" rel="nofollow">SELinux 入门</a>，<a href="https://www.cnblogs.com/gailuo/p/5041034.html" rel="nofollow">SELINUX工作原理</a></p>
-                <p>其实SELinux的功能也就是类似于防火墙的功能，不过安全相对比较好，ok，所以本博客介绍一下SELinux的使用命令</p>
-                <p>查看selinux状态</p>
-                <pre><code class="prism language-shell">getenforce
-                </code></pre>
-                <p>临时禁用SELINUX(学习用的linux才可以禁用，生产的不建议禁用SELINUX)</p>
-                <pre><code class="prism language-shell">setenforce
-                </code></pre>
-                <p>永久禁用SELINUX(学习用的linux才可以禁用，生产的不建议禁用SELINUX)</p>
-                <pre><code class="prism language-shell"> <span class="token comment"># 将SELINUX=enforce改成SELINUX=disabled</span>
-                 <span class="token function">vi</span> /etc/selinux/config
-                </code></pre>
-                <h4><a id="4_173"></a>4、防火墙</h4>
-                <p>查询linux系统防火墙开启状态</p>
-                <pre><code class="prism language-shell">firewall-cmd --state
-                </code></pre>
-                <p>临时关闭防火墙(学习用的linux才可以禁用，生产的不建议禁用SELINUX)</p>
-                <pre><code class="prism language-shell">systemctl stop firewalld.service
-                </code></pre>
-                <p>永久关闭防火墙(学习用的linux才可以禁用，生产的不建议禁用SELINUX)</p>
-                <pre><code class="prism language-shell">systemctl disable firewalld.service
-                </code></pre>
-                <h3><a id="_187"></a>四、系统管理</h3>
-                <h4><a id="1uname_188"></a>1、uname</h4>
-                <p>uname命令用于查看内核版本</p>
-                <h4><a id="2ip_addr_190"></a>2、ip addr</h4>
-                <p>查看linux的ip地址：可以用命令</p>
-                <pre><code class="prism language-shell"> ip addr
-                </code></pre>
-                <p>附录：</p>
-                <ul>
-                <li><a href="https://www.linuxcool.com/" rel="nofollow">Linux命令大全(手册)</a></li>
-                <li><a href="https://blog.csdn.net/u014427391/category_9195352.html">我的Docker博客专栏</a></li>
-                </ul>
-
-
-
-            </div>
-            <br>
-        
-            <!--标签-->
-            <div class="m-padded-lr">
-                <div class="ui basic teal left pointing label">方法论</div>
-            </div>
-
-            <!--赞赏功能-->
-            <div class="ui center aligned segment basic">
-                <button id="payButton" class="ui orange basic circular button">赞赏</button>
-            </div>
-
-            <div id="payScreen" class="ui flowing popup">
-                <div class="ui orange basic label">
-                    <!--inherit：继承上级-->
-                    <div class="ui images" style="font-size: inherit !important;">
-                        <div class="image">
-                            <img src="../static/images/wechat.jpg" alt="" class="ui rounded bordered image" style="width:120px">
-                            <div>支付宝</div>
-                        </div>
-                        <div class="image">
-                            <img src="../static/images/wechat.jpg" alt="" class="ui  rounded bordered image" style="width:120px">
-                            <!--这里sementic不显示，自己设计-->
-                            <div>微信</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
-        </div>
-
-        <!-- message positive 修改颜色 绿 -->
-        <div class="ui attached positive message">
-
-            <!--博客信息-->
-            <!-- middle aligned : 垂直居中-->
-            <div class="ui grid middle aligned" >
-                <div class="eleven wide column">
-
-                    <ui class="list">
-                        <li>作者: lawssssCat (联系作者) </li>
-                        <li>发表时间: 2020-1-13 23:23:17 </li>
-                        <li>版权声明: 自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)</li>
-                        <li>公众号转载: 请在文末添加作者公众号二维码</li>
-                    </ui>
-
-                </div>
-                <div class="five wide column">
-
-                    <!--floated：向右浮动-->
-                    <img src="../static/images/wechat.jpg" alt="" class="ui right floated rounded bordered image" style="width: 110px;">
-                    
-                </div>
-
-            </div>
-        </div>
-
-
-        <div class="ui attached bottom segment">
-            <!--留言区域列表-->
-            <div class="ui teal segment">
-
-                <div class="ui threaded comments">
-                    <h3 class="ui dividing header">Comments</h3>
-                    <div class="comment">
-                      <a class="avatar">
-                        <img src="../static/images/matt.jpg">
-                      </a>
-                      <div class="content">
-                        <a class="author">Matt</a>
-                        <div class="metadata">
-                          <span class="date">Today at 5:42PM</span>
-                        </div>
-                        <div class="text">
-                          How artistic!
-                        </div>
-                        <div class="actions">
-                          <a class="reply">Reply</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="comment">
-                      <a class="avatar">
-                        <img src="../static/images/elliot.jpg">
-                      </a>
-                      <div class="content">
-                        <a class="author">Elliot Fu</a>
-                        <div class="metadata">
-                          <span class="date">Yesterday at 12:30AM</span>
-                        </div>
-                        <div class="text">
-                          <p>This has been very useful for my research. Thanks as well!</p>
-                        </div>
-                        <div class="actions">
-                          <a class="reply">Reply</a>
-                        </div>
-                      </div>
-                      <div class="comments">
-                        <div class="comment">
-                          <a class="avatar">
-                            <img src="../static/images/jenny.jpg">
-                          </a>
-                          <div class="content">
-                            <a class="author">Jenny Hess</a>
-                            <div class="metadata">
-                              <span class="date">Just now</span>
-                            </div>
-                            <div class="text">
-                              Elliot you are always so right :)
-                            </div>
-                            <div class="actions">
-                              <a class="reply">Reply</a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="comment">
-                      <a class="avatar">
-                        <img src="../static/images/joe.jpg">
-                      </a>
-                      <div class="content">
-                        <a class="author">Joe Henderson</a>
-                        <div class="metadata">
-                          <span class="date">5 days ago</span>
-                        </div>
-                        <div class="text">
-                          Dude, this is awesome. Thanks so much
-                        </div>
-                        <div class="actions">
-                          <a class="reply">Reply</a>
-                        </div>
-                      </div>
-                    </div>
-                    
-                  </div>
-
-            </div>
-
-            <!--评论部分 -->
-            <div class="ui form">
+        <!--1-->
+        <form action="#" method="POST" class="ui segment form">
+            <div class="fields inline">
+            <!--inline：宽度非全-->
                 <div class="field">
+                    <input type="text" placeholder="标题" name="title">
+                </div>
+                <div class="field">
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="type">
+                        <div class="default text">分类</div><!--default浅色-->
+                        <i class="dropdown icon"></i><!--自动靠右-->
+                        <div class="menu">
+                            <div class="item" data-value="1">错误日志</div>
+                            <div class="item" data-value="1">开发者手册</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="recommend" name="recommend">
+                        <label for="recommend">推荐</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <button class="ui teal basic button mini"><i class="search icon"></i>搜索</button>
+                </div>
 
-                    <textarea name="content" placeholder="输入评论信息..." id="" cols="30" rows="10"></textarea>
-                </div>
-                <!--m-mobile-wide:自定义响应-->
-                <div class="fields ">
-                    <div class="field  m-mobile-wide m-margin-bottom-small" >
-                        <div class="ui left icon input">
-                            <i class="user icon"></i>
-                            <input type="text" placeholder="姓名" name="nickname">
-                        </div>
-                    </div>
-                    <div class="field  m-mobile-wide  m-margin-bottom-small">
-                        <div class="ui left icon input">
-                            <i class="mail icon"></i>
-                            <input type="text" name="email" placeholder="邮箱">
-                        </div>
-                    </div>
-                    <div class="field m-mobile-wide  m-margin-bottom-small">
-                        <button class="ui teal button m-mobile-wide "><i class="edit icon"></i>发布</button>
-                    </div>
-                </div>
             </div>
+        </form>
 
-        </div>
+        <!--2-->
+        <table class="ui celled table"><!--celled网格-->
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>标题</th>
+                    <th>类型</th>
+                    <th>推荐</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>linux系列之常用运维命令整理笔录</td>
+                    <td>认知升级</td>
+                    <td>是</td>
+                    <td>2020-1-14 22:48:54</td>
+                    <td>
+                        <a href="#" class="ui mini teal basic button">编辑</a>
+                        <a href="#" class="ui mini red basic button">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6"><!--colspan合并列-->
+                        <div class="ui right floated pagination menu">
+                            <a class="icon item">
+                                <i class="left chevron icon"></i>
+                            </a>
+                            <a class="item">1</a>
+                            <a class="item">2</a>
+                            <a class="item">3</a>
+                            <a class="item">4</a>
+                            <a class="icon item">
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+
     </div>
 </div>
 
@@ -493,17 +206,27 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 
 <script>
-    $('.menu.toggle').click(function() {
+    //移动端 - 下拉
+    $('.menu.toggle').on("click" , function() {
         //toggleClass 切换样式状态
         $('.m-item').toggleClass('m-mobile-hide');
     }) ;
 
-    $('#payButton').popup({
-        popup : $('#payScreen'),
-        on    : 'click' , 
-        position : 'top center'
-    })
+    $(window).resize(function() {
+        var windowWidth = $(window).width();
+        if(windowWidth < 640){
+            $('#topBar').addClass('labeled icon');
+        }else{
+            $('#topBar').removeClass('labeled icon');
+        }
+    });
+
+    //右上角，下拉框
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
 </script>
+
 
 </body>
 </html>

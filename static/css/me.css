@@ -67,6 +67,10 @@ body{
     margin-bottom: 0.5em !important;
 }
 
+.m-margin-lr-no{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
 
 /*--------- text -----------*/
 .m-text-thin {
