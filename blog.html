@@ -679,15 +679,19 @@ h5,h6{font-size:1em;}
     <div class="ui vertical icon buttons ">
         <button id="tocButton" type="button" class="ui teal button">目录</button>
         <a href="#comment-container" class="ui teal button">留言</a>
-        <button class="ui  icon button"><i class="weixin icon"></i></button>
+        <!--二维码-->
+        <button class="ui wechat icon button"><i class="share alternate icon"></i></button>
         <a href="#top" class="ui icon button"><i class="icon chevron up"></i></a>
     </div>
 </div>
+<!--目录 隐藏-->
 <div id="tocScreen" class="ui toc-container flowing popup transition hidden" style="width: 250px !important;">
     <ol class="js-toc"></ol>
 </div>
-
-
+<!--二维码 隐藏 -->
+<div id="phone-qr" class="ui flowing popup "  style="width: 250px !important;">
+  <div class="ui header">扫码：</div><div class="ui item m-padded-tb" >手机浏览本页面 </div>
+</div>
 
 
 
@@ -747,35 +751,55 @@ h5,h6{font-size:1em;}
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 <script src="./static/lib/tocbot/dist/tocbot.js"></script><!--文章目录-->
+<script src="./static/lib/qrcodejs/qrcode.js"></script><!--生成二维码-->
 <script>
-    $('.menu.toggle').click(function() {
-        //toggleClass 切换样式状态
-        $('.m-item').toggleClass('m-mobile-hide');
-    }) ;
+  $('.menu.toggle').click(function() {
+      //toggleClass 切换样式状态
+      $('.m-item').toggleClass('m-mobile-hide');
+  }) ;
 
-    $('#payButton').popup({
-        popup : $('#payScreen'),
-        on    : 'click' , 
-        position : 'top center'
-    })
-    $('#tocButton').popup({
-        popup : $('#tocScreen'),
-        on    : 'click' , 
-        position : 'left center'
-    })
+  $('#tocButton').popup({
+    popup : $('#tocScreen'),
+    on    : 'hover' ,
+    inline   : true, 
+    hoverable: true,
+    position : 'left center'
+  }) ; 
+  $('.wechat').popup({
+    popup:$('#phone-qr'),
+    on: 'hover',
+    hoverable: true,
+    inline   : true,
+    position : 'left center'
+  });
+  $('#payButton').popup({
+      popup : $('#payScreen'),
+      on    : 'hover' , 
+      inline   : true,
+      hoverable: true,
+      position : 'top center'
+  }) ; 
 
-
-    tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.js-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.js-toc-content',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: 'h1, h2, h3',
-        // For headings inside relative or absolute positioned containers within content.
-        hasInnerContainers: true,
-    });
+  tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.js-toc-content',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3',
+      // For headings inside relative or absolute positioned containers within content.
+      hasInnerContainers: true,
+  });
 </script>
-
+<script type="text/javascript">
+  var qrcode = new QRCode(document.getElementById("phone-qr"), {
+    text: "http://jindo.dev.naver.com/collie",
+    width: 130,
+    height: 130,
+    colorDark : "#000000",
+    colorLight : "#ffffff",
+    correctLevel : QRCode.CorrectLevel.H
+  });
+  </script>
 </body>
 </html>
