@@ -13,7 +13,7 @@
 </head>
 <body>
     
-<!--导航-->
+<!--top 导航-->
     <!--
         ui : 组件
         container : 响应式容器
@@ -22,17 +22,22 @@
         inverted ： 黑色(反转)
         m-padded-tb-mini : 自己家的
     -->
-<nav class="ui inverted attached segment m-padded-tb-mini"> 
+<nav class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
     <div class="ui container">
-        <div class="ui inverted secondary menu">
+        <!--
+        stackable 可堆叠，适应手机端
+        -->
+        <div class="ui inverted secondary stackable menu">
 
             <!--teal:颜色-->
             <h2 class="ui item header teal">Blog </h2>
-            <a href="#" class="item"><i class="home icon"></i>首页</a>
-            <a href="#" class="item"><i class="idea icon"></i>分类</a>
-            <a href="#" class="item"><i class="tags icon"></i>标签</a>
-            <a href="#" class="item"><i class="info icon"></i>关于我</a>
-            <div class="right item">
+            <!--m-item为了选择-->
+            <a href="#" class="active m-item item m-mobile-hide"><i class=" home icon"></i>首页</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
+            <div class="m-item right item m-mobile-hide">
                 <!--transparent:透明效果-->
                 <div class="ui icon transparent input">
                     <input type="text" placeholder="Search....">
@@ -41,19 +46,25 @@
             </div>
         </div>
     <div>
+
+    <!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+
 </nav>
 
-<!--中间内容-->
-<div class="m-padded-tb-large">
+<!--mind 中间内容-->
+<div class=" m-container m-padded-tb-big"><!--m-padded-tb-big 自定义-->
     <div class="ui container">
-        <div class="ui grid">
+        <div class="ui stackable grid">
             <!--
-                左边 - 内容
+             左边 - 主要内容 - 文章
             -->
             <div class="eleven wide column">
-                <!--
-                     左边 - 内容 - header！
-                -->
+                 <!--
+                 左边 - 内容 - header！
+                 -->
                 <div class="ui attached segment">
                     <!--middle aligned:垂直方向居中-->
                     <div class="ui middle aligned two column grid">
@@ -70,37 +81,51 @@
                      左边 - 内容 - main！
                 -->
                 <div class="ui attached segment">
-                    <!-- 分两块 继续写 div -->
-                    <div class="ui segment">
-                        <div class="ui grid">
+                    
+                     <!-- 文章1 -->
+                    <div class="ui padded segment">
+                        <!--  mobile reversed:图片上面显示 -->
+                        <div class="ui mobile reversed stackable grid">
                             <div class="eleven wide column">
+
                                 <h3 class="ui header">linux系列之常用运维命令整理笔录</h3>
                                 <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，
                                     会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，
                                     所以现在整理成博客....
-                                    https://blog.csdn.net/u014427391/article/details/102785219</p>
-                                    <div class="ui grid">
-                                        <!--semantic width 16-->
-                                        <div class="eleven wide column">
-                                            <!--horizontal:水平布局-->
-                                            <div class="ui horizontal link list">
-                                                <div class="item">
-                                                    <!--avatar : 小圆形-->
-                                                    <img src="./static/images/placeholder.jpg" alt="" class="ui avatar image">
-                                                    <!--content 加一些文字 -->
-                                                    <div class="content">
-                                                        <!--原先h3, 现在a标签，让颜色变蓝-->
-                                                        <a href="#" class="header">lawssssCat</a>
-                                                    </div>
+                                    https://blog.csdn.net/u014427391/article/details/102785219
+                                </p>
+
+                                <div class="ui stackable grid"><!-- 下标 -->
+
+                                    <!--semantic width 16-->
+                                    <div class="eleven wide column">
+                                        <!--horizontal:水平布局-->
+                                        <div class="ui horizontal link list">
+                                            <div class="item">
+                                                <!--avatar : 小圆形-->
+                                                <img src="./static/images/placeholder.jpg" alt="" class="ui avatar image">
+                                                <!--content 加一些文字 -->
+                                                <div class="content">
+                                                    <!--原先h3, 现在a标签，让颜色变蓝-->
+                                                    <a href="#" class="header">lawssssCat</a>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="right aligned five wide column">
-                                            <a href="#" target="_blank" class="ui teal basic label m-padded-mini m-text-thin">认知升级</a>
+                                            <div class="item">
+                                                <i class="calendar icon"></i>2017-10-01
+                                            </div>
+                                            <div class="item">
+                                                <i class="eye icon"></i>2342
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="right aligned five wide column">
+                                        <a href="#" target="_blank" class="ui teal basic label m-padded-mini m-text-thin">认知升级</a>
+                                    </div>
+
+                                </div>
                             </div>
                             <div class="five wide column">
+
                                 <a href="#" target="_blank">
                                     <!--image:图片在div内-->
                                     <!--备选占位图:
@@ -108,13 +133,15 @@
                                     -->
                                     <img src="./static/images/index-read.gif" alt="" class="ui rounded image">
                                 </a>
+
                             </div>
                         </div>
                     </div>
+
                 </div>
-                <!--
-                     左边 - 内容 - footer！
-                -->
+                 <!--
+                 左边 - 内容 - footer！
+                 -->
                 <div class="ui bottom attached segment">
                     <div class="ui middle aligned two column grid">
                         <div class="column">
@@ -128,28 +155,176 @@
                 </div>
             </div>
             <!--
-                右边 - 侧边栏
+                 右边 - 侧边栏
             -->
-            <div class="five wide column">
-                <div class="ui segment">
+            <div class="five wide column ">
+                 <!--
+                 分类
+                 -->
+                <!--
+                segments : segment的容器（注意，这里有s）
+                -->
+                <div class="ui segments">
+                    <!--
+                     右边 - 侧边栏 - 标题
+                    -->
+                    <div class="ui secondary segment">
+                        <div class="ui two column grid">
+                            <div class="column">
+                                <i class="idea icon"></i>分类
+                            </div>
+                            <div class="right aligned column">
+                                <!--
+                                angle double right icon - 
+                                来自 
+                                - https://semantic-ui.com/elements/icon.html
+                                -->
+                                <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                     右边 - 侧边栏 - 内容
+                    -->
+                    <div class="ui teal segment">
+                        <!--
+                        竖的 vertical 
+                        菜单 menu
+                        填充 fluid
+                        -->
+                        <div class="ui vertical fluid menu">
+                            <a href="#" class="item">
+                                学习日志
+                                <!--item特性：文字后，随便内容向右对齐-->
+                                <!--
+                                teal basic : 颜色、样式
+                                left pointing : 小尖角
+                                -->
+                                <div class="ui teal basic left pointing label">13</div>
+                            </a>
+                            <a href="#" class="item">
+                                思考与感悟
+                                <div class="ui teal basic left pointing label">13</div>
+                            </a>
+                            <a href="#" class="item">
+                                学习日志
+                                <div class="ui teal basic left pointing label">13</div>
+                            </a>
+                            <a href="#" class="item">
+                                学习日志
+                                <div class="ui teal basic left pointing label">13</div>
+                            </a>
+                            <a href="#" class="item">
+                                学习日志
+                                <div class="ui teal basic left pointing label">13</div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                 <!--
+                 标签
+                 -->
+                <div class="ui segments m-margin-top-large">
+                     <!-- 标签: 头  -->
+                    <div class="ui secondary segment">
+                        <div class="ui two column grid">
+                            <div class="column">
+                                <i class="tags icon"></i>标签
+                            </div>
+                            <div class="right aligned column">
+                                <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                     <!--标签：列表-->
+                    <div class="ui teal segment m-margin-top-large">
+
+                        <!-- 标签：item -->
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            方法论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            法论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            法论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            方法论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            法论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            法论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            论ss <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            法ss论 <div class="detail">23</div></a>
+                        <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                            论ssssss <div class="detail">23</div></a>
+
+                    </div>
+                </div>
+
+                 <!--最新推荐-->
+                <div class="ui segments m-margin-top-large">
+                     <!--头部-->
+                    <div class="ui secondary segment">
+                        <i class="bookmark icon"></i>
+                            最新推荐
+                    </div>
+                     <!--内容-->
+
+                    <div class="ui segment ">
+                        <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                    </div>
+                    <div class="ui segment ">
+                        <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                    </div>
+                    <div class="ui segment ">
+                        <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                    </div>
+                    <div class="ui segment ">
+                        <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                    </div>
 
                 </div>
+                 <!--二维码-->
+                <h4 class="ui horizontal divider header m-margin-top-large">扫码关注我</h4>
+                    <!--
+                    card:边框
+                    centered :居中
+                    -->
+                    <div class="ui centered card" style="width: 11em">
+                        <img src="./static/images/wechat.jpg" alt="" class="ui rounded image"  >
+                    </div>
+                </di>
+
             </div>
         </div>
     </div>
-
+    
 </div>
 
+<br>
+<br>
+<br>
+<br>
+<br>
 
-<!--底部footer-->
+
+<!-- footer 底部-->
     <!--
         vertical : 去圆角
     -->
-<footer class="ui inverted vertical segment m-padded-tb-massive">
+<footer class="ui inverted vertical segment m-padded-tb-massive m-shadow-small">
     <div class="ui center aligned container">
         <!--grid分成16份 column:列 grid:栅--> 
         <!--divided:分割线-->
-        <div class="ui inverted divided grid">
+        <div class="ui inverted divided stackable grid">
             <div class="three wide column">
                 <div class="ui inverted link list">
                     <div class="item">
@@ -179,7 +354,7 @@
             </div>
         </div>
         <div class="ui inverted section  divider"></div>
-        <p class="m-text-thin m-text-spaced m-opacity-mini">Copyright ☺ 2030-2222 Blog Designed by 衣带渐宽终不悔,为伊消得人憔悴。</p>
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ☺ 2030-2222 Blog Designed by 衣带渐宽终不悔,为伊消得人憔悴。</p>
     </div>
 </footer>
 
@@ -188,5 +363,13 @@
 <!--CDN资源-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+
+<script>
+    $('.menu.toggle').click(function() {
+        //toggleClass 切换样式状态
+        $('.m-item').toggleClass('m-mobile-hide');
+    }) ;
+</script>
+
 </body>
 </html>

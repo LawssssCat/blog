@@ -1,4 +1,8 @@
-/*------ 间距 ----------------------*/
+body{
+    background: url("../images/background.png");
+}
+
+/*------ 间距padded ----------------------*/
 .m-padded-mini{
     padding: 0.2em !important;
 }
@@ -33,10 +37,39 @@
     padding-top: 4em !important;
     padding-bottom: 4em !important;
 }
-
 .m-padded-tb-massive{/*行间距 - 最大*/
     padding-top: 5em !important;
     padding-bottom: 5em !important;
+}
+
+
+.m-padded-lr{
+    padding-left: 4em !important;
+    padding-right: 4em !important;
+}
+
+/*----- 内间距 margin ------------------*/
+.m-margin-tb-tiny{
+    margin-bottom: 0.3em !important ; 
+    margin-top: 0.3em !important ;
+}
+.m-margin-top-small{
+    margin-top: 0.5em !important;
+}
+.m-margin-top{
+    margin-top: 1em !important;
+}
+.m-margin-top-large{
+    margin-top: 2em !important;
+}
+
+.m-margin-bottom-small{
+    margin-bottom: 0.5em !important;
+}
+
+.m-margin-lr-no{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 /*--------- text -----------*/
@@ -50,12 +83,71 @@
     line-height: 1.8;/*行间距*/
 }
 
+/*-------- opacity --------------*/
 .m-opacity-mini {
     opacity: 0.8 !important; /*透明度*/
+}
+.m-opacity-tiny{
+    opacity: 0.6 !important ;
 }
 
 
 /*----  display  ------------------*/
 .m-inline-block{
     display: inline-block !important ;
+}
+
+/*----- position ------------------*/
+.m-right-top{
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+/*---- container ------------------*/
+.m-container-small{
+    max-width: 60em !important;
+    margin: auto !important;
+}
+.m-container{
+    max-width: 72em !important;
+    margin: auto !important;
+}
+
+
+/*---- shadow ----------------*/
+.m-shadow-small{
+    -webkit-box-shadow: 0px 4px 8px rgba(0, 0,0, 0.2) !important; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important; 
+}
+
+/*-----------color-----------*/
+.m-black{
+    color: #333 !important;
+}
+
+/*-----*/
+.m-mobile-show{
+    display: none !important;
+}
+@media screen and (max-width: 768px){
+    /* 手机时候 隐藏 */
+    .m-mobile-hide{
+        display: none !important;
+    }
+    /* 手机时候 出现 */
+    .m-mobile-show{
+        display: block !important;
+    }
+    .m-padded-lr{
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .m-padded-lr-mobile-clear{
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .m-mobile-wide  {
+        width: 100% !important;
+    }
 }
