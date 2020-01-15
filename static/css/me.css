@@ -3,11 +3,14 @@ body{
 }
 
 /*------ 间距padded ----------------------*/
-.m-padded-mini{
+.m-padded-mini {
     padding: 0.2em !important;
 }
-.m-padded-tiny{
+.m-padded-tiny {
     padding: 0.3em !important;
+}
+.m-padded {
+    padding: 1em !important;
 }
 .m-padded-tb-mini{ /*行间距 - 最小*/
     padding-top: 0.2em !important;
@@ -123,6 +126,17 @@ body{
     -webkit-box-shadow: 0px 4px 8px rgba(0, 0,0, 0.2) !important; 
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important; 
 }
+
+/*------ position ----------------*/
+.m-fixed { /*绝对*/
+    position: fixed !important;
+    z-index: 1;
+}
+.m-right-bottom { /*靠右靠底部*/
+    bottom: 0 !important;
+    right: 0 !important;
+}
+
 
 /*-----------color-----------*/
 .m-black{
