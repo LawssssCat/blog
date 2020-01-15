@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>后台管理</title>
+
+
+
     <!--CDN资源
         主要 : semantic-ui
     -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/me.css">
+    <!-- md 编辑器 -->
+    <link rel="stylesheet" href="../static/lib/editormd/css/editormd.min.css">
 </head>
 <body>
     
@@ -75,7 +80,7 @@
 </div>
 
 <!--mind 中间内容-->
-<div class="m-container-small m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+<div class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
     <!--container，外层容器，适合响应移动端-->
     <div class="ui container">
         <!--主体-->
@@ -101,7 +106,12 @@
             
             <!--2内容-->
             <div class="field">
-                <textarea name="content" placeholder="文章内容"></textarea>
+
+                <div id="md-content" style="z-index: 1 !important"> <!-- 第三方插件 Editor.md -->
+                    <textarea style="display:none;"></textarea>
+                    
+                </div>
+          
             </div>
 
             <!--3选项-->
@@ -236,7 +246,31 @@
 <!--CDN资源-->
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="../static/lib/editormd/editormd.min.js"></script>
 
+<script type="text/javascript"> //第三方 md editor
+//初始化 markdown 编辑器
+    var testEditor;
+    $(function() {
+        testEditor = editormd("md-content", {
+            width   : "100%",
+            height  : 640,
+            syncScrolling : "single",
+            path    : "../static/lib/editormd/lib/" , 
+            emoji   : true
+        });
+        
+        /*
+        // or
+        testEditor = editormd({
+            id      : "md-content",
+            width   : "90%",
+            height  : 640,
+            path    : "../lib/"
+        });
+        */
+    });
+</script>
 <script>
     //移动端 - 下拉
     $('.menu.toggle').on("click" , function() {
@@ -275,7 +309,10 @@
         inline : true,
         on     : 'blur'
     }) ;
+
 </script>
+
+
 
 
 </body>

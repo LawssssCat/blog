@@ -113,7 +113,10 @@ body{
     max-width: 72em !important;
     margin: auto !important;
 }
-
+.m-container-large{
+    max-width: auto !important;
+    margin: auto !important;
+}
 
 /*---- shadow ----------------*/
 .m-shadow-small{
