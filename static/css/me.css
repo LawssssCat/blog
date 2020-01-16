@@ -12,6 +12,9 @@ body{
 .m-padded {
     padding: 1em !important;
 }
+.m-padded-rel { /* 不太好 */
+    padding: 7% !important; 
+}
 .m-padded-tb-mini{ /*行间距 - 最小*/
     padding-top: 0.2em !important;
     padding-bottom: 0.2em !important;
