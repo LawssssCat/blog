@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/pages
+    suffix: .html
+
+mybatis:
+  mapper-locations:
+  - classpath:mapper/*/*.xml 
+
+
+
