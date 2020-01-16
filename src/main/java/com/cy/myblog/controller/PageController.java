@@ -8,6 +8,6 @@ public class PageController {
 	
 	@RequestMapping("/doIndexUI")
 	public String toPage() {
-		return "/index"; 
+		return "/starter"; 
 	}
 }

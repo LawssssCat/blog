@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+#  freemarker:#    template-loader-path:#    - classpath:/templates/pages
+#    suffix: .html
   thymeleaf:
     cache: false
     prefix: classpath:/templates/pages
