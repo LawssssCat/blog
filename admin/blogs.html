@@ -37,9 +37,9 @@
             <a href="#" class="m-item item m-mobile-hide "><i class=" idea icon"></i>分类</a>
             <a href="#" class="m-item item m-mobile-hide "><i class=" tags icon"></i>标签</a>
            
-            <a href="#" class="m-item item m-mobile-hide  right "> 
-                <button class="ui  teal  inverted  button">
-                    <i class="pencil alternate  icon"></i>写博客
+            <a href="#" class="item m-item m-mobile-hide right "> 
+                <button class="ui item teal  inverted button">
+                    <i class="pencil alternate icon "></i>写博客
                 </button>
             </a>
             <div class="  menu m-margin-bottom-small   " >
@@ -63,6 +63,15 @@
     </a>
 
 </nav>
+
+<div class="ui attached pointing menu">
+    <div class="ui container">
+        <div class="right menu">
+            <a href="#" class="item">发布</a>
+            <a href="#" class="teal active item">博客管理</a>
+        </div>
+    </div>
+</div>
 
 <!--mind 中间内容-->
 <div class="m-container-small m-padded-tb-big"><!--m-padded-tb-big 自定义-->
@@ -212,6 +221,7 @@
         $('.m-item').toggleClass('m-mobile-hide');
     }) ;
 
+    //响应式。暂时没用
     $(window).resize(function() {
         var windowWidth = $(window).width();
         if(windowWidth < 640){
