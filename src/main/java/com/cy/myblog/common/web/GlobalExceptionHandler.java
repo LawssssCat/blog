@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
 	public JsonResult doExceptionHandle(Exception e , HttpServletRequest r ) {
-		log.error("request URL : {} , Exception : {}" ,r.getRequestURL(), e); //URL 详尽的资源信息
+		log.error("request URL : {} , Exception : {}" ,r.getRequestURL(), e.getMessage()); //URL 详尽的资源信息
 		return new JsonResult(e) ; 
 	}
 }

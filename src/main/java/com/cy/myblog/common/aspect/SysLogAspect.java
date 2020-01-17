@@ -1,7 +1,9 @@
 package com.cy.myblog.common.aspect;
 
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -23,20 +25,35 @@ public class SysLogAspect {
 		log.info("######### doBefore #########");
 	}
 	
+	@Around("doLog()")
+	public Object doRound(ProceedingJoinPoint jp ) throws Throwable {
+		try {
+			log.info("######### doRound - before #########");
+			Object result = jp.proceed();
+			log.info("######### doRound - after #########");
+			return result ; 
+		} catch (Throwable e) {
+			log.info("######### doRound - exception #########");
+			throw e ; 
+		} finally {
+			log.info("######### doRound - finally #########");
+		}
+	}
+	
 	@After("doLog()")
 	public void doAfter() {
 		log.info("######### doAfter #########");
 	}
 	
 	@AfterReturning(pointcut = "doLog()" , returning = "result")
-	public void doAfterReturn(Object result) {
+	public Object doAfterReturn(Object result) {
 		log.info("######### doAfterReturn:resutl=[{}] #########", result);
+		return result  ; 
 	}
 	
-	@Around("doLog()")
-	public void doAround() {
-		log.info("######### doAround #########");
-		
+	@AfterThrowing(pointcut = "doLog()" , throwing = "e")
+	public void doAfterReturn(Exception e) {
+		log.info("######### doAfterReturn:exception=[{}] #########", e.getMessage());
 	}
 	
 }
