@@ -52,8 +52,9 @@ public class SysLogAspect {
 	}
 	
 	@AfterThrowing(pointcut = "doLog()" , throwing = "e")
-	public void doAfterReturn(Exception e) {
-		log.info("######### doAfterReturn:exception=[{}] #########", e.getMessage());
+	public void doAfterThrowing(Exception e) {
+		log.info("######### doAfterThrowing:exception=[{}] #########", e.getMessage());
+		
 	}
 	
 }
