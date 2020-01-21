@@ -10,6 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class PageController {
 	
+	@RequestMapping("/doLoginUI")
+	public String doLoginUI() {
+		return "/login"; 
+	}
+	
 	@RequestMapping("/doIndexUI")
 	public String toIndexUI() {
 		return "/starter"; 

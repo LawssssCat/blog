@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title> 后台管理入口 </title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" ><!-- 前端框架 -->
+<style type="text/css">
+  body {
+    background-color: #DADADA;
+  }
+  body > .grid {
+    height: 100%;
+  }
+  .image {
+    margin-top: -100px;
+  }
+  .column {
+    max-width: 450px;
+  }
+</style>
+
+
+</head>
+<body>
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+    <h2 class="ui teal image header">
+      <img src="dist/images/semantic-logo.png" class="image">
+      <div class="content">
+        Log-in to your account
+      </div>
+    </h2>
+    <div  class="ui negative message  hidden">
+    	 <i class="close icon"></i>
+    	  <div class="header">登录异常 </div>
+	<p id="login-exception-msg-box">请求已过期 </p></div>
+    	
+    <form class="ui large form">
+    	
+      <div class="ui stacked segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" id="emailId" placeholder="E-mail address">
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" id="passwordId" placeholder="Password">
+          </div>
+        </div>
+        <div class="field ">
+		  <div class="ui checkbox " >
+			  <input type="checkbox"  id="rememberMeId">
+		  	<label for="rememberMeId" >Remember Me !</label>
+		  </div>
+        </div>
+        <div class="ui fluid large teal submit button">Login</div>
+	
+      </div>
+      	<div class="ui error message"></div>
+
+    </form>
+
+    <div class="ui message">
+      New to us? <a href="#">Sign Up</a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!--CDN资源-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+
+
+<script>
+//登录
+  $(document)
+    .ready(function() {
+      $('.ui.form')
+        .form({
+          fields: {
+            email: {
+              identifier  : 'emailId', //标识 name
+              rules: [
+                {
+                  type   : 'empty', //非空
+                  prompt : 'Please enter your e-mail'
+                },
+                {
+                  type   : 'email', //email格式
+                  prompt : 'Please enter a valid e-mail'
+                }
+              ]
+            },
+            password: {
+              identifier  : 'passwordId', //标识 name
+              rules: [
+                {
+                  type   : 'empty', //非空
+                  prompt : 'Please enter your password'
+                },
+                {
+                  type   : 'length[6]', //长度 6
+                  prompt : 'Your password must be at least 6 characters'
+                }
+              ]
+            }
+          },//fields
+          setting : {
+        	  keyboardShortcuts: true
+          } , 
+          onSuccess : doLogin , 
+          onFailure: function(formErrors, fields){
+        	  console.log("formErrors" , formErrors);
+        	  console.log("fields" , fields);
+        	  return false ;
+          }
+        })
+      ;//form
+    })
+  ;
+  
+  function doLogin() {
+	  var params={
+			  email : $("#emailId").val(), 
+			  password:$('#passwordId').val(),
+			  isRememberMe:$("#rememberMeId").prop("checked")
+	  }
+	  console.log("params" , params);
+	  var url = "/user/doLogin" ; 
+	  $.post(url , params , function(result) {
+		  if(result.state==1){//登录成功！
+			  //转跳到index页面
+			  location.href="doAdminUI?t="+Math.random();//避免缓存
+		  }else{
+			  var a = $('.message .close').closest('.message') ; 
+			  if(a.hasClass("hidden")) {
+				  a.transition('fade') ;
+			  }
+			  $('#login-exception-msg-box').html(result.message);
+		  }
+	  });
+	  return false ; //防止刷新时重复提交
+  }
+  </script>
+
+
+<script type="text/javascript">
+//关闭提示
+$('.message .close')
+.on('click', function() {
+  $(this)
+    .closest('.message')
+    .transition('fade')
+  ;
+})
+;
+</script>
+
+
+
+</body>
+</html>
