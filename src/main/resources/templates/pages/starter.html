@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> 官人留步~ </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" ><!-- 前端框架 -->
+    <link rel="stylesheet" href="dist/css/me.css"><!-- 自定义CSS样式 -->
+</head>
+<body>
+
+<div id="topNavId">
+</div>
+
+<!--mind 中间内容-->
+<div id="mainContentId" class=" m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+</div>
+
+<br>
+<br>
+
+<div id="bottomFooterId">
+</div>
+
+<!--CDN资源-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script>
+	$('#topNavId').load("/common/topnav");//
+	$('#bottomFooterId').load('/common/bottomfooter'); //
+	$('#mainContentId').load('/blog/main');
+</script>
+
+</body>
+</html>

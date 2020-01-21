@@ -1,0 +1,25 @@
+#------- thymeleaf ==> 踩坑
+#spring:
+#  thymeleaf:
+#    mode: HTML
+#------- jpa ==> mybatis
+#spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://111.229.121.30:3306/blogdb?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: root
+
+server:
+  port: 80
+  servlet:
+    context-path: /
+    
+logging:  level: 
+    root: info 
+    com.cy: debug
