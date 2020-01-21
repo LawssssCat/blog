@@ -16,7 +16,7 @@ spring:
     password: root
 
 server:
-  port: 8088
+  port: 80
   servlet:
     context-path: /
     

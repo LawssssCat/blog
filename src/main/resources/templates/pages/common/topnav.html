@@ -1,0 +1,68 @@
+    
+<!--top 导航-->
+<!--
+    ui : 组件
+    container : 响应式容器
+    segment  : 片段 - 显示为一个占位框
+    attached : 贴图效果 - 两个segment联合
+    inverted ： 黑色(反转)
+    m-padded-tb-mini : 自己家的
+-->
+
+<nav  class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
+    <div class="ui container">
+        <!--
+        stackable 可堆叠，适应手机端
+        -->
+        <div class="ui inverted secondary stackable menu">
+
+            <!--teal:颜色-->
+            <h2 class="ui item header teal">Blog </h2>
+            <!--m-item为了选择-->
+            <a onclick="javascript:doLoadUrl('/blog/main')" class="active m-item item m-mobile-hide"><i class=" home icon"></i>首页</a>
+            <a onclick="javascript:doLoadUrl('/blog/types')" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
+            <a onclick="javascript:doLoadUrl('/blog/tags')" class="m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
+            <a onclick="javascript:doLoadUrl('/blog/archives.html')" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
+            <a onclick="javascript:doLoadUrl('/blog/about')" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
+            <div class="m-item right item m-mobile-hide">
+                <!--transparent:透明效果-->
+                <div class="ui icon transparent input">
+                    <input type="text" placeholder="Search....">
+                    <i class="search inverted icon link"></i>
+                </div>
+            </div>
+        </div>
+    <div>
+
+    <!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+
+</nav>
+
+
+
+
+
+
+<script type="text/javascript">
+
+//点击事件
+
+$(function() {
+	$('.menu.toggle').click(function() {
+	    //toggleClass 切换样式状态
+	    $('.m-item').toggleClass('m-mobile-hide');
+	}) ;
+	$("a.m-item").click(function() {
+		$("a.m-item").removeClass("active");
+		$(this).addClass("active");
+	});
+}) ; 
+</script>
+<script>
+function doLoadUrl(url) {
+	$('#mainContentId').load(url);
+} ; 
+</script>
