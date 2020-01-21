@@ -1,16 +1,20 @@
-spring:
-  profiles:
-    active: dev
-#  freemarker:#    template-loader-path:#    - classpath:/templates/pages
-#    suffix: .html
-  thymeleaf:
-    cache: false
-    prefix: classpath:/templates/pages
-    suffix: .html
 
 mybatis:
   mapper-locations:
   - classpath:mapper/*/*.xml 
+
+
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/pages
+    suffix: .html
+    servlet:
+      content-type: text/html; charset=utf-8   profiles:
+    active: dev
+    
+#  freemarker:#    template-loader-path:#    - classpath:/templates/pages
+#    suffix: .html
 
 
 
