@@ -1,4 +1,4 @@
-package com.cy.myblog.service;
+package com.cy.myblog.service.web;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
