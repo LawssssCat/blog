@@ -7,6 +7,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
 			r.setMessage("没有此操作权限");
 		}else {
 			r.setMessage("系统维护中");
-			e.printStackTrace();
+			log.error("ShiroException {}" , e.getMessage());
 		}
 		return r;
 	}
