@@ -13,8 +13,6 @@
     <link rel="stylesheet" href="dist/lib/tocbot/dist/tocbot.css"><!--文章目录-->
     <link rel="stylesheet" href="dist/css/typo.css"><!-- 内容排版 -->
     <link rel="stylesheet" href="dist/lib/prism/prism.css"> <!--代码高亮-->
-    
-    
 
 </head>
 <body>
@@ -76,11 +74,13 @@ animateCSS('#mainContentId', 'lightSpeedIn');
 
 
 
-
+<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script>
 
 <!-- 实现拖动效果，需引入 JQuery UI -->
 <script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js"></script>
 <script src="dist/lib/live2d-demo/assets/autoload.js"></script><!-- 看板娘 异步加载 -->
-
+<!-- 点击 炸裂 -->
+<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<script type="text/javascript" src="https://img.n-1.cn/blog/js/shubiao.js" > </script>
 </body>
 </html>

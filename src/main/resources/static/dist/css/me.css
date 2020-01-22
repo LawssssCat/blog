@@ -1,7 +1,7 @@
-body{
+/* body{
     background: url("../images/background.png");
 }
-
+ */
 /*------ 间距padded ----------------------*/
 .m-padded-mini {
     padding: 0.2em !important;
