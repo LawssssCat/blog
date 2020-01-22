@@ -13,4 +13,7 @@ public interface UserDao {
 	User findObjectById(
 			@Param("id") Integer id) ;
 	
+	User findObjectByUsername(
+			@Param("username") String username) ;
+	
 }

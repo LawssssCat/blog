@@ -43,8 +43,13 @@
 
 
 <script>
-	$('#topNavId').load("common/_sys_topnav");//
-	//$('#bottomFooterId').load('common/_bottomfooter'); //
+//加载页面
+	$('#topNavId').load("common/_sys_topnav" , function() {
+		$('#nicknameId').html('[[${nickname}]]'); //换昵称
+		$('#avatarUrlId').attr("src" , '[[${avatarUrl}]]'); //换头像
+	});
+	
+	//$('#bottomFooterId').load('common/_bottomfooter'); 
 	$('#mainContentId').load('sys/blogs');
 </script>
 <script type="text/javascript">
@@ -52,14 +57,19 @@ function doLoadUrl(url) {
 	$('#mainContentId').load(url);
 } ;
 </script>
-<script>
-    $(function() {
-    	//右上角 角色管理
-        $('.ui.dropdown').dropdown({
-            on: 'hover'
-        });
+
+<script type="text/javascript">
+<!--
+
+//-->
+$(function() {
+	//右上角 角色管理
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
     });
+});
 </script>
+
 
 
 </body>

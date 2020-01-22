@@ -9,7 +9,7 @@ public class JsonResult implements Serializable {
 	private static final long serialVersionUID = 7801773947571843766L;
 	
 	/**0:异常   1:正常*/
-	private Integer status = 1 ;
+	private Integer state = 1 ;
 	/**返回消息*/
 	private Object data ;
 	/**封装的控制层返回数据*/
@@ -23,6 +23,6 @@ public class JsonResult implements Serializable {
 	}
 	public JsonResult(Throwable e) {
 		message = e.getMessage() ; 
-		status = 0 ; //切换成异常状态
+		state = 0 ; //切换成异常状态
 	}
 }

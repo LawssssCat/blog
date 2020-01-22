@@ -51,8 +51,11 @@ public class Test_UserDao {
 		
 	}
 	
+	@Test
 	public void test_findObjectById() {
-		
+		Integer id = 1 ; //admin
+		User user = userDao.findObjectById(id); 
+		log.info("find Object by Id ok! user={}" , user.toString());
 	}
 	
 	

@@ -15,9 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	#{qq} , #{email }, #{avatarUrl }, #{valid }, now(), now()  )
 </insert>
 
-
-<select id="findObjectById" resultType="com.cy.myblog.pojo.po.User">
-	select 
+<sql id="allColumns" >
 	id , 
 	username , 
 	password , 
@@ -30,8 +28,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	valid , 
 	created_time createdTime , 
 	modified_time modifiedTime 
+</sql>
+
+
+<!-- 查找 id -->
+<select id="findObjectById" resultType="com.cy.myblog.pojo.po.User">
+	select 
+	<include refid="allColumns"></include>
 	from  b_user
 	where id = #{id}
+</select>
+
+<!-- 查找 username -->
+<select id="findObjectByUsername" resultType="com.cy.myblog.pojo.po.User">
+	select 
+	<include refid="allColumns"></include>
+	from b_user
+	<where> 
+		username = #{username}
+	</where>
 </select>
 
 </mapper>
