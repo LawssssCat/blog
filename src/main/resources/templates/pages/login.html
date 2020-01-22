@@ -42,7 +42,7 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" id="emailId" placeholder="E-mail address">
+            <input type="text" id="usernameId" placeholder="Username">
           </div>
         </div>
         <div class="field">
@@ -89,16 +89,16 @@
         .form({
           fields: {
             email: {
-              identifier  : 'emailId', //标识 name
+              identifier  : 'usernameId', //标识 name
               rules: [
                 {
                   type   : 'empty', //非空
-                  prompt : 'Please enter your e-mail'
+                  prompt : 'Please enter your username'
                 },
-                {
+                /* {
                   type   : 'email', //email格式
                   prompt : 'Please enter a valid e-mail'
-                }
+                } */
               ]
             },
             password: {
