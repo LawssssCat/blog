@@ -14,7 +14,8 @@ public class JsonResult implements Serializable {
 	private Object data ;
 	/**封装的控制层返回数据*/
 	private String message ; 
-	
+
+	public JsonResult() {}
 	public JsonResult(Object data) {
 		this.data= data ;
 	}
