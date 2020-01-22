@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<head >
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> 官人留步~ </title>
+    <title> 后台管理界面 </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" ><!-- 前端框架 -->
     <link rel="stylesheet" href="dist/css/me.css"><!-- 自定义CSS样式 -->
     <!-- blog -->
@@ -17,16 +16,18 @@
 <body>
 
 <div id="topNavId">
+<!--头顶标签-->
 </div>
 
-<!--mind 中间内容-->
 <div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+<!--mind 中间内容-->
 </div>
 
 <br>
 <br>
 
 <div id="bottomFooterId">
+<!-- 底部 -->
 </div>
 
 <!--CDN资源-->
@@ -42,33 +43,22 @@
 
 
 <script>
-	$('#topNavId').load("common/_topnav");//
-	$('#bottomFooterId').load('common/_bottomfooter'); //
-	$('#mainContentId').load('blog/main');
+	$('#topNavId').load("common/_sys_topnav");//
+	//$('#bottomFooterId').load('common/_bottomfooter'); //
+	$('#mainContentId').load('sys/blogs');
 </script>
-
-
-<script>
-//加载-动画
+<script type="text/javascript">
 function doLoadUrl(url) {
 	$('#mainContentId').load(url);
-	animateCSS('#mainContentId', 'lightSpeedIn');
-} ; 
-function animateCSS(element, animationName, callback) {
-    const node = document.querySelector(element)
-    node.classList.add('animated', animationName)
-
-    function handleAnimationEnd() {
-        node.classList.remove('animated', animationName)
-        node.removeEventListener('animationend', handleAnimationEnd)
-
-        if (typeof callback === 'function') callback()
-    }
-
-    node.addEventListener('animationend', handleAnimationEnd)
-}
-
-animateCSS('#mainContentId', 'lightSpeedIn');
+} ;
+</script>
+<script>
+    $(function() {
+    	//右上角 角色管理
+        $('.ui.dropdown').dropdown({
+            on: 'hover'
+        });
+    });
 </script>
 
 

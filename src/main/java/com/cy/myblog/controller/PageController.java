@@ -1,6 +1,7 @@
 package com.cy.myblog.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,18 +16,25 @@ public class PageController {
 		return "/login"; 
 	}
 	
+	@RequestMapping("/doSysUI")
+	public String doSysUI() { ///sys/blogs
+		return "/system";
+	}
+	
 	@RequestMapping("/doIndexUI")
 	public String toIndexUI() {
 		return "/starter"; 
 	}
 	
-	@RequestMapping("/{model}/{page}")
+	@RequestMapping("/{prefix}/{page}")
 	public String loadPage(
-			@PathVariable("model") String model , 
-			@PathVariable("page") String page) {
-		String msg = "/"+model+"/"+page ;  
-		log.debug(msg);
-		return msg; 
+			@PathVariable("prefix") String prefix , 
+			@PathVariable("page") String page , 
+			Model model ) {
+		String url = "/"+prefix+"/"+page ;
+		model.addAttribute("url", url);
+		log.debug(url);
+		return url; 
 	}
 	
 }

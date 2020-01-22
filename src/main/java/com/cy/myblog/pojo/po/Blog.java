@@ -15,7 +15,7 @@ public class Blog implements Serializable {
 	
 	/**图片*/
 	private String imgUrl ; 
-	/**转载 or 原创*/
+	/**转载 or 原创 or 翻译*/
 	private String flag ; 
 	/**浏览次数*/
 	private Integer views ; 
