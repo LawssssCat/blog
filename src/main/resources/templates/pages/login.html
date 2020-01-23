@@ -4,20 +4,62 @@
 <meta charset="UTF-8">
 <title> 后台管理入口 </title>
 
+<link rel="stylesheet" href="dist/css/me-login.css"> <!-- 登录样式 -->
+
+<!--看板娘-->
 <style type="text/css">
-  /* body {
-    background-color: #DADADA;
-  } */
-  body > .grid {
-    height: 100%;
-  }
-  .image {
-    margin-top: -100px;
-  }
-  .column {
-    max-width: 450px;
-  }
+#inner {
+	position: relative;
+	background-color: #999;
+	clip-path: circle(120px at center);
+	-webkit-clip-path: circle(120px at center);
+}
+#cover {
+	position: absolute;
+	background-color: #CB3837;
+	width: 100%;
+	height: 100%;
+	bottom: 10%;
+	transition: all 1s;
+	box-shadow: 0 0 0 5px rgba(0, 0, 0, .1);
+}
+#text {
+	position: absolute;
+	bottom: 30%;
+	font-size: 2em;
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0.4;
+	font-weight: bold;
+}
+#detail {
+	position: absolute;
+	background: rgba(255, 255, 255, .1);
+	width: 100%;
+	height: 10px;
+	bottom: 0;
+}
+#handle {
+	position: absolute;
+	background: #ccc;
+	bottom: -2px;
+	box-shadow: 0 1px 0 1px rgba(0, 0, 0, .1);
+	height: 8px;
+	left: 50%;
+	margin-left: -15px;
+	width: 30px;
+	cursor: pointer;
+}
+#live2d {
+	cursor: grab;
+}
+#live2d:active {
+	cursor: grabbing;
+}
 </style>
+
+
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" ><!-- 前端框架 -->
 <link rel="stylesheet" href="dist/css/me.css"><!-- 自定义CSS样式 -->
 
@@ -26,12 +68,35 @@
 <body>
 <div class="ui middle aligned center aligned grid">
   <div class="column">
-    <h2 class="ui teal image header">
+
+
+
+
+	<div id="stage">
+		<div id="inner">
+			<!-- 覆盖 -->
+			<div id="cover">
+				<div id="text">
+					<span style="color: cyan;">Login</span>
+					<span style="color: white">In</span>
+				</div>
+				<div id="detail"></div>
+				<div id="handle"></div>
+			</div>
+			<!-- 看板娘 -->
+			<canvas id="live2d" class="mb-4"  width="300" height="300"></canvas>
+		</div>
+	</div>
+
+  
+  
+  
+    <!-- <h2 class="ui teal image header">
       <img src="dist/images/semantic-logo.png" class="image">
       <div class="content">
         Log-in to your account
       </div>
-    </h2>
+    </h2> -->
     <div  class="ui negative message  hidden">
     	 <i class="close icon"></i>
     	  <div class="header">登录异常 </div>
@@ -65,12 +130,11 @@
 
     </form>
 
-    <div class="ui message">
+    <!-- <div class="ui message">
       New to us? <a href="#">Sign Up</a>
-    </div>
+    </div> -->
   </div>
 </div>
-
 
 
 
@@ -82,96 +146,120 @@
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
 
 
+<!-- 点击 换背景 -->
+<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+
+
+<!-- 点击 炸裂 -->
+<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<script type="text/javascript" src="dist/js/shubiao.js" > </script>
+
+
+<!-- 登录 -->
+<script type="text/javascript" src="dist/js/login.js"></script>
+
+
+
+
+
+
+
+
+
 <script>
-//登录
-  $(document)
-    .ready(function() {
-      $('.ui.form')
-        .form({
-          fields: {
-            email: {
-              identifier  : 'usernameId', //标识 name
-              rules: [
-                {
-                  type   : 'empty', //非空
-                  prompt : 'Please enter your username'
-                },
-                /* {
-                  type   : 'email', //email格式
-                  prompt : 'Please enter a valid e-mail'
-                } */
-              ]
-            },
-            password: {
-              identifier  : 'passwordId', //标识 name
-              rules: [
-                {
-                  type   : 'empty', //非空
-                  prompt : 'Please enter your password'
-                },
-                {
-                  type   : 'length[6]', //长度 6
-                  prompt : 'Your password must be at least 6 characters'
-                }
-              ]
-            }
-          },//fields
-          setting : {
-        	  keyboardShortcuts: true
-          } , 
-          onSuccess : doLogin , 
-          onFailure: function(formErrors, fields){
-        	  console.log("formErrors" , formErrors);
-        	  console.log("fields" , fields);
-        	  return false ;
-          }
-        })
-      ;//form
-    })
-  ;
-  
-  function doLogin() {
-	  var params={
-			  username : $("#usernameId").val(), 
-			  password:$('#passwordId').val(),
-			  isRememberMe:$("#rememberMeId").prop("checked")
-	  }
-	  console.log("params" , params);
-	  var url = "/user/doLogin" ; 
-	  $.post(url , params , function(result) {
-		  if(result.state==1){//登录成功！
-			  //转跳到index页面
-			  location.href="doSysUI?t="+Math.random();//避免缓存
-		  }else{
-			  var a = $('.message .close').closest('.message') ; 
-			  if(a.hasClass("hidden")) {
-				  a.transition('fade') ;
-			  }
-			  $('#login-exception-msg-box').html(result.message);
-		  }
-	  });
-	  return false ; //防止刷新时重复提交
-  }
-  </script>
+window.addEventListener("load", () => {//监听-window-加载	
+	var state 	= 1 , 
+		open 	= '83%', 
+		close 	= '20%';
 
+	$.ajax({url: "dist/lib/live2d-demo/assets/waifu-tips.js", dataType:"script", cache: true, success: function() {
+        $.ajax({url: "dist/lib/live2d-demo/assets/live2d.js", dataType:"script", cache: true, success: function() {
+            /* 可直接修改部分参数 */
+            /* 在 initModel 前添加 */
+            //initModel("dist/lib/live2d-demo/assets/waifu-tips.json");
+			var modelId 		= live2d_settings['modelId'] , //localStorage.getItem("modelId"),
+				modelTexturesId = live2d_settings['modelTexturesId'];//localStorage.getItem("modelTexturesId");
+				
+			doLoadModel(modelId, modelTexturesId);
+			
+        }});
+    }});
 
-<script type="text/javascript">
-//关闭提示
-$('.message .close')
-.on('click', function() {
-  $(this)
-    .closest('.message')
-    .transition('fade')
-  ;
-})
-;
+	function doLoadModel(modelId, modelTexturesId) {
+		loadModel(modelId, modelTexturesId);
+		setTimeout(() => {
+			coverPosition(open);
+			state = 2;
+		}, 2000);
+	}
+
+	function coverPosition(pos) {//函数-cover-移动
+		document.getElementById("cover").style.bottom = pos;
+	}
+
+	document.getElementById("handle").addEventListener("click", () => {//监听-handle-点击
+		if (state == 1) {
+			state = 2;
+			coverPosition(open);
+		}
+		else  {
+			state = 1;
+			coverPosition(close);
+		}
+	});
+
+	document.querySelector("input[type=password]").addEventListener("focus", () => {//监听-密码-选中
+		if (state == 2) {
+			state = 1;
+			coverPosition(close); //底
+		}
+	});
+	document.querySelector("input[type=password]").addEventListener("blur", () => {//监听-密码-放开
+		if (state == 1) {
+			state = 2;
+			coverPosition(open);
+		}
+	});
+});
 </script>
 
 
-<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script>
-<!-- 点击 炸裂 -->
-<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
-<script type="text/javascript" src="https://img.n-1.cn/blog/js/shubiao.js" > </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
