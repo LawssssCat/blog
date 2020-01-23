@@ -14,6 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class PageController {
 	
+	@RequestMapping({"/doIndexUI"  , "/article"})
+	public String toIndexUI() {
+		return "redirect:/"; 
+	}
+	@RequestMapping("/")
+	public String doIndexUI() {
+		return "/index";
+	}
+	
+	
+	
+	
 	@RequestMapping("/doLoginUI")
 	public String doLoginUI() {
 		return "/login"; 
@@ -32,19 +44,12 @@ public class PageController {
 		return "/system";
 	}
 	
-	@RequestMapping("/doIndexUI")
-	public String toIndexUI() {
-		return "/starter"; 
-	}
 	
-	@RequestMapping("/{prefix}/{page}")
-	public String loadPage(
-			@PathVariable("prefix") String prefix , 
-			@PathVariable("page") String page , 
-			Model model ) {
-		String url = "/"+prefix+"/"+page ;
-		model.addAttribute("url", url);
-		log.debug(url);
+	@RequestMapping("/{page}")
+	public String toCommonPage( 
+			@PathVariable("page") String page) {
+		String url = "/"+page ;
+		log.debug("toCommonPage url={}",url);
 		return url; 
 	}
 	

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- head -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>[[${title}]]</title>
+    <link rel="icon" type="image/x-icon" th:href="@{dist/images/favicon.ico}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css" ><!-- 前端框架 -->
+    <link rel="stylesheet" th:href="@{dist/css/me.css}"><!-- 自定义CSS样式 -->
+    
+    <!-- blog -->
+    <link rel="stylesheet" th:href="@{dist/css/animate.css}"><!-- 动画效果 -->
+    <link rel="stylesheet" th:href="@{dist/lib/tocbot/dist/tocbot.css}"><!--文章目录-->
+    <link rel="stylesheet" th:href="@{dist/css/typo.css}"><!-- 内容排版 -->
+    <link rel="stylesheet" th:href="@{dist/lib/prism/prism.css}"> <!--代码高亮-->
+
+</head>
+
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!--topnav-->
+<!--[解释]
+    ui : 组件
+    container : 响应式容器
+    segment  : 片段 - 显示为一个占位框
+    attached : 贴图效果 - 两个segment联合
+    inverted ： 黑色(反转)
+    m-padded-tb-mini : 自己家的
+-->
+<nav th:fragment="menu(n)"  class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
+    <div class="ui container">
+        <div class="ui inverted secondary stackable menu"><!--stackable 可堆叠，适应手机端-->
+            <h2 class="ui item header teal"> Blog~ </h2> <!--teal:颜色-->
+            <a th:href="@{/index}" 		th:classappend="${n==1} ? 'active'" class="m-item item m-mobile-hide" ><i class=" home icon"></i>首页</a><!--m-item为了选择-->
+            <a th:href="@{/types}"		th:classappend="${n==2} ? 'active'" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
+            <a th:href="@{/tags}" 		th:classappend="${n==3} ? 'active'" class="m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
+            <a th:href="@{/archives}" 	th:classappend="${n==4} ? 'active'" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
+            <a th:href="@{/about}" 		th:classappend="${n==5} ? 'active'" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
+            <div class="m-item right item m-mobile-hide">
+	            <div class="ui category  search">
+			    	<div class="ui icon input">
+				      <input class="prompt" type="text" placeholder="  Search ...">
+				      <i class="search icon"></i>
+				    </div>
+				    <div class="results"></div>
+		  		</div>
+            </div>
+        </div>
+    <div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show"><!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
+        <i class="sidebar icon"></i>
+    </a>
+</nav>
+
+
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- common-script -->
+<th:block th:fragment="common-script">
+ 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script>
+<!-- blog -->
+<script th:src="@{dist/lib/prism/prism.js}"></script><!--代码高亮-->
+
+<script type="text/javascript">//点击事件
+$(function() {
+	$('.menu.toggle').click(function() {//手机端响应
+	    $('.m-item').toggleClass('m-mobile-hide');//toggleClass 切换样式状态
+	}) ;
+	$("a.m-item").click(function() {//切换
+		$("a.m-item").removeClass("active");
+		$(this).addClass("active");
+	});
+}) ; 
+</script>
+
+
+<script>//加载+动画
+function doLoadUrl(url) {
+	$('#mainContentId').load(url);
+	animateCSS('#mainContentId', 'lightSpeedIn');
+} ; 
+function animateCSS(element, animationName, callback) {
+    const node = document.querySelector(element)
+    node.classList.add('animated', animationName)
+
+    function handleAnimationEnd() {
+        node.classList.remove('animated', animationName)
+        node.removeEventListener('animationend', handleAnimationEnd)
+
+        if (typeof callback === 'function') callback()
+    }
+
+    node.addEventListener('animationend', handleAnimationEnd)
+}
+animateCSS('#mainContentId', 'lightSpeedIn');
+</script>
+
+
+<!-- 点击 换背景 -->
+<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script>
+
+<!-- 实现拖动效果，需引入 JQuery UI -->
+<script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js"></script>
+
+<!-- 看板娘 异步加载 -->
+<script src="dist/lib/live2d-demo/assets/autoload.js"></script>
+
+<!-- 点击 炸裂 -->
+<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<script type="text/javascript" src="dist/js/shubiao.js" > </script>
+
+
+</th:block>
+
+
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<th:block th:fragment="article-script">
+<script th:src="@{dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
+<script th:src="@{dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
+<script th:src="@{dist/lib/waypoints/jquery.waypoints.min.js}"></script><!--检测工具。还有其他强大功能-->
+<script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script><!--top平滑滚动-->
+</th:block>
