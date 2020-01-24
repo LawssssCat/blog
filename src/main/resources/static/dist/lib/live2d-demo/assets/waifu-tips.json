@@ -46,7 +46,7 @@
         { "selector": ".next", "text": ["去下一页看看吧"] },
         { "selector": ".fui-home", "text": ["点击前往首页，想回到上一页可以使用浏览器的后退功能哦"] },
         { "selector": ".fui-eye", "text": ["嗯··· 要切换 看板娘 吗？"] },
-        { "selector": ".fui-chat", "text": ["一言一语，一颦一笑。一字一句，一颗赛艇。说什么骚话呢？"] },
+        { "selector": ".fui-chat", "text": ["想听骚话吗？少年 ⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄"] },
         { "selector": ".fui-user", "text": ["喜欢换装 Play 吗？"] },
         { "selector": ".fui-photo", "text": ["要拍张纪念照片吗？"] },
         { "selector": ".fui-info-circle", "text": ["这里有关于我的信息呢"] },

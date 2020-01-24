@@ -1,76 +1,152 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- 引入 -->
+<head th:replace="@{/fragments/_fragments} :: head('归档')"></head>
+<body>
+<!-- 引入 -->
+<nav th:replace="@{/fragments/_fragments} :: menu(4)"></nav>
+
+
+
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                       -->
+<!--mind 中间内容-->
+<div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+
+
 
 <!-- <title>归档</title> -->
-
-
-
 <!--mind 中间内容-->
-
 <!--container，外层容器，适合响应移动端-->
 <div class="ui container ">
-
-        <!--header-->
-        <div class="ui segment">
-
-            <h2 class="ui header">
-                <img src="dist/images/plugin.png">
-                <div class="content">
-                    归档
-                  <div class="sub header"> 共 <h2 class="ui orange header m-inline-block m-text-thin"> 114 </h2> 篇博客</div>
-                </div>
-              </h2>
-      
-
-        <h2 class="ui center aligned black justified  header">2020</h2>
-        <div class="ui vertical fluid menu">
-            <a href="#" class="item">
-                <span>
-                    <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
-                    <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
-                </span>
-                <div class="ui orange basic left pointing label m-padded-mini">原创</div>
-            </a>
-            <a href="#" class="item">
-                <span>
-                    <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
-                    <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
-                </span>
-                <div class="ui orange basic left pointing label m-padded-mini">原创</div>
-            </a>
-            <a href="#" class="item">
-                <span>
-                    <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
-                    <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
-                </span>
-                <div class="ui orange basic left pointing label m-padded-mini">原创</div>
-            </a>
-        </div>
-
-
-        <h2 class="ui center aligned justified header">2019</h2>
-        <div class="ui vertical fluid menu">
-            <a href="#" class="item">
-                <span>
-                    <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
-                    <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
-                </span>
-                <div class="ui orange basic left pointing label m-padded-mini">原创</div>
-            </a>
-            <a href="#" class="item">
-                <span>
-                    <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
-                    <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
-                </span>
-                <div class="ui orange basic left pointing label m-padded-mini">原创</div>
-            </a>
-            <a href="#" class="item">
-                <span>
-                    <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
-                    <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
-                </span>
-                <div class="ui orange basic left pointing label m-padded-mini">原创</div>
-            </a>
-        </div>
+  <!--header-->
+  <div class="ui segment">
+      <h2 class="ui header">
+          <img th:src="@{dist/images/icon/plugin.png}">
+          <div class="content">
+              归档
+            <div class="sub header"> 共 <h2 class="ui orange header m-inline-block m-text-thin"> 114 </h2> 篇博客</div>
+          </div>
+        </h2>
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+	    <h2 class="ui center aligned black justified  header">2020</h2>
+	    <div class="ui vertical fluid menu">
+	        <a href="#" class="item">
+	            <span>
+	                <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
+	                <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
+	            </span>
+	            <div class="ui orange basic left pointing label m-padded-mini">原创</div>
+	        </a>
+	        <a href="#" class="item">
+	            <span>
+	                <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
+	                <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
+	            </span>
+	            <div class="ui orange basic left pointing label m-padded-mini">原创</div>
+	        </a>
+	        <a href="#" class="item">
+	            <span>
+	                <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
+	                <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
+	            </span>
+	            <div class="ui orange basic left pointing label m-padded-mini">原创</div>
+	        </a>
+	    </div>
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+       	<!-- 年 -->
+	    <h2 class="ui center aligned black justified  header">2019</h2>
+	    <div class="ui vertical fluid menu">
+	        <a href="#" class="item">
+	            <span>
+	                <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
+	                <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
+	            </span>
+	            <div class="ui orange basic left pointing label m-padded-mini">原创</div>
+	        </a>
+	        <a href="#" class="item">
+	            <span>
+	                <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
+	                <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
+	            </span>
+	            <div class="ui orange basic left pointing label m-padded-mini">原创</div>
+	        </a>
+	        <a href="#" class="item">
+	            <span>
+	                <i class="mini teal circle icon"></i> linux系列之常用运维命令整理笔录
+	                <div class="ui teal basic left pointing label m-padded-mini">9月03</div>
+	            </span>
+	            <div class="ui orange basic left pointing label m-padded-mini">原创</div>
+	        </a>
+	    </div>
     </div>
+</div>
 
 
-    </div>
+
+
+
+
+
+</div>
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                       -->
+
+
+<br>
+<br>
+
+<!-- 引入 -->
+<script th:replace="@{/fragments/_fragments} :: common-script" type="text/javascript"></script>
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+

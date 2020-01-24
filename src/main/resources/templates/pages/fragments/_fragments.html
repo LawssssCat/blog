@@ -100,13 +100,31 @@ $('.menu.toggle').click(function() {//手机端响应
 }) ;
 </script>
 
-<script type="text/javascript">//manu 点击事件
+<!-- manu active 事件 -->
+<script type="text/javascript">
 $(function() {
 	$("a.m-item").click(function() {//切换
 		$("a.m-item").removeClass("active");
 		$(this).addClass("active");
 	});
 }) ; 
+</script>
+
+<!-- 图标 tips -->
+<div id="wechat-qr" class="ui flowing popup" style="width: 160px;padding:3px;">
+	<img th:src="@{dist/images/QRcode/wechat.jpg}" alt="" class="ui rounded image" >
+</div>
+<script  type="text/javascript">
+   $(function() {
+   	$('.qq').popup({
+        inline: true
+    });
+    $('.wechat').popup({
+        popup:$('#wechat-qr'),
+        on: 'hover',
+        position: 'bottom center'
+    });
+   })
 </script>
 
 <!-- 动画效果 主内容 -->
