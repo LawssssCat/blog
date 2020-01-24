@@ -101,17 +101,13 @@
 			<img th:src="@{dist/images/QRcode/wechat.jpg}" alt="" class="ui rounded image" >
 		</div>
 			<script  type="text/javascript">
-				window.onload = function() {
-					$('.qq').popup({
-				        inline: true
-				    });
-				    $('.wechat').popup({
-				        popup:$('#wechat-qr'),
-				        on: 'hover',
-				        position: 'bottom center'
-				    });
-				}
-				window.onload();
+				$('.qq').popup({
+			    });
+			    $('.wechat').popup({
+			        popup:$('#wechat-qr'),
+			        on: 'hover',
+			        position: 'bottom center'
+			    });
 			</script>
       </div>
   </div>

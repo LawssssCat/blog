@@ -28,7 +28,6 @@ try {
     $.ajax({url: "dist/lib/live2d-demo/assets/waifu-tips.js", dataType:"script", cache: true, success: function() {
         $.ajax({url: "dist/lib/live2d-demo/assets/live2d.js", dataType:"script", cache: true, success: function() {
             /* 可直接修改部分参数 */
-        	live2d_settings['screenshotCaptureName'] = 'live2d.png'; // 看板娘截图文件名，例如 'live2d.png'
             /* 在 initModel 前添加 */
             initModel("dist/lib/live2d-demo/assets/waifu-tips.json");
         }});

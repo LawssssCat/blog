@@ -2,6 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 
+<th:block th:fragment="base-script">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script><!-- jquery -->
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script><!-- semantic -->
+</th:block>
+
+
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- ***********                                                                     ************ -->
@@ -15,7 +21,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>[[${title}]]</title>
-    <link rel="icon" type="image/x-icon" th:href="@{dist/images/favicon.ico}" />
+    <!-- <link rel="icon" type="image/x-icon" th:href="@{dist/images/favicon.ico}" /> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css" ><!-- 前端框架 -->
     <link rel="stylesheet" th:href="@{dist/css/me.css}"><!-- 自定义CSS样式 -->
     
@@ -24,7 +30,8 @@
     <link rel="stylesheet" th:href="@{dist/lib/tocbot/dist/tocbot.css}"><!--文章目录-->
     <link rel="stylesheet" th:href="@{dist/css/typo.css}"><!-- 内容排版 -->
     <link rel="stylesheet" th:href="@{dist/lib/prism/prism.css}"> <!--代码高亮-->
-
+    <link rel="stylesheet" th:href="@{dist/lib/nprogress/nprogress.css}"> <!-- 进度条 -->
+    <th:block th:replace=":: base-script"></th:block>
 </head>
 
 <!-- ******************************************************************************************** -->
@@ -63,9 +70,9 @@
             </div>
         </div>
     <div>
-    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show"><!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
+    <button class="ui menu toggle black icon button m-right-top m-mobile-show"><!--这里的 menu toggle 没有任何显示效果，只是为了 后续的选择 方便 -->
         <i class="sidebar icon"></i>
-    </a>
+    </button>
 </nav>
 
 
@@ -79,19 +86,14 @@
 <!-- common-script -->
 <th:block th:fragment="common-script">
  
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script><!-- jquery -->
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script><!-- semantic -->
-<script th:src="@{dist/lib/prism/prism.js}"></script><!--代码高亮-->
-<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script><!-- 点击 换背景 -->
+<!-- 基本资源 -->
+<th:block th:replace=":: resource-script"></th:block>
 
 
 <!-- 看板娘 -->
 <script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js"></script><!-- 实现拖动效果，需引入 JQuery UI -->
-<script src="dist/lib/live2d-demo/assets/autoload.js"></script><!-- 看板娘 异步加载 -->
+<script th:src="@{dist/lib/live2d-demo/assets/autoload.js}"></script><!-- 看板娘 异步加载 -->
 
-<!-- 点击 炸裂 -->
-<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
-<script type="text/javascript" src="dist/js/shubiao.js" > </script>
 
 <!-- [显示]/[隐藏]手机端 侧边按钮 -->
 <script>
@@ -130,11 +132,45 @@ function animateCSS(element, animationName, callback) {
 animateCSS('#mainContentId', 'lightSpeedIn');
 </script>
 
+<!-- 进度条 配合pjax 香 -->
+<script th:src="@{dist/lib/nprogress/nprogress.js}" type="text/javascript"></script>
+<script>
+NProgress.configure({
+	ease:'ease-in-out',
+	speed:300 
+});
+NProgress.start();
+$(function() {
+	NProgress.done();	
+	$(document).on('pjax:start', NProgress.start).on('pjax:end', NProgress.done);
+});
+</script>
+
+<!-- pjax 异步加载 -->
+<script th:src="@{dist/lib/pjax/jquery.pjax.js}" type="text/javascript"></script>
+<script type="text/javascript">//menu 的 a
+$(function() {
+	$(document).on('click', 'nav a', function(event) {
+		 $.pjax.click(event, {
+			 container: '#mainContentId' , 
+			 fragment:'#mainContentId'
+		 });
+		 //animateCSS('#mainContentId', 'lightSpeedIn');
+	});
+})
+</script>
+
+<script th:src="@{dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
+<script th:src="@{dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
+<script th:src="@{dist/lib/waypoints/jquery.waypoints.min.js}"></script><!--检测工具。还有其他强大功能-->
+<script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script><!--top平滑滚动-->
+</th:block>
+
+<!-- [重要]主内容异步加载 --><!-- pjax代替 -->
 <!-- [重要]主内容异步加载 -->
 <!-- [重要]主内容异步加载 -->
 <!-- [重要]主内容异步加载 -->
-<!-- [重要]主内容异步加载 -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 $("nav").on("click","a",function(evt) {//
 	evt.preventDefault(); // 阻止默认的跳转操作
 	var uri=$(this).attr('href');
@@ -157,6 +193,8 @@ function doUpdateMainContent(uri){//更新要替换的内容
 				/*++++++++++++++++++++++++++++++++++++++++++*/
 				document.title=title; // 分配新的页面标题
 				var data = $(result).filter("#mainContentId").html() ;//获取 要替换的内容 
+				var a = $(result).filter("script") ; 
+				console.log("a" , a);
 				$("#mainContentId").html(data); //替换内容
 				
 				doScriptInHtml(data) ; // 执行 内容中包含的 script 
@@ -199,9 +237,26 @@ function doScriptInHtml(data) {// 执行 内容中包含的 script
 		}
 	}
 }
-</script>
+</script> -->
+
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- resource-script -->
+<th:block th:fragment="resource-script">
+
+<script th:src="@{dist/lib/prism/prism.js}"></script><!--代码高亮-->
+
+<script id="ribbon" size="150" alpha='0.3' zIndex="-2" th:src="@{dist/lib/canvas-ribbon/canvas-ribbon.js}"></script><!-- 点击 换背景 -->
+
+<!-- 点击 炸裂 -->
+<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<script type="text/javascript" th:src="@{dist/js/shubiao.js}" > </script>
 
 </th:block>
+
+
 
 
 <!-- ******************************************************************************************** -->
@@ -210,8 +265,4 @@ function doScriptInHtml(data) {// 执行 内容中包含的 script
 <!-- ******************************************************************************************** -->
 <!-- for 文章 -->
 <th:block th:fragment="article-script">
-<script th:src="@{dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
-<script th:src="@{dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
-<script th:src="@{dist/lib/waypoints/jquery.waypoints.min.js}"></script><!--检测工具。还有其他强大功能-->
-<script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script><!--top平滑滚动-->
 </th:block>

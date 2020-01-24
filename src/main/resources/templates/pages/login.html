@@ -3,8 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <title> 后台管理入口 </title>
+<!-- <link rel="icon" type="image/x-icon" th:href="@{dist/images/favicon.ico}" /> -->
 
-<link rel="stylesheet" href="dist/css/me-login.css"> <!-- 登录样式 -->
+<th:block th:replace="@{/fragments/_fragments} :: base-script"></th:block>
+
+
+
+
+<link rel="stylesheet" th:href="@{dist/css/me-login.css}"> <!-- 登录样式 -->
 
 <!--看板娘-->
 <style type="text/css">
@@ -61,17 +67,16 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" ><!-- 前端框架 -->
-<link rel="stylesheet" href="dist/css/me.css"><!-- 自定义CSS样式 -->
+<link rel="stylesheet" th:href="@{dist/css/me.css}"><!-- 自定义CSS样式 -->
 
 
 </head>
 <body>
 <div class="ui middle aligned center aligned grid">
   <div class="column">
-
-
-
-
+	<!-- 看板娘 -->
+	<!-- 看板娘 -->
+	<!-- 看板娘 -->
 	<div id="stage">
 		<div id="inner">
 			<!-- 覆盖 -->
@@ -87,73 +92,58 @@
 			<canvas id="live2d" class="mb-4"  width="300" height="300"></canvas>
 		</div>
 	</div>
-
-  
-  
-  
-    <!-- <h2 class="ui teal image header">
-      <img src="dist/images/semantic-logo.png" class="image">
-      <div class="content">
-        Log-in to your account
-      </div>
-    </h2> -->
+	<!-- 后台 异常提示 --> 
+	<!-- 后台 异常提示 --> 
+	<!-- 后台 异常提示 --> 
+	<!-- 后台 异常提示 --> 
     <div  class="ui negative message  hidden">
     	 <i class="close icon"></i>
     	  <div class="header">登录异常 </div>
 	<p id="login-exception-msg-box">请求已过期 </p></div>
-    	
+    <!-- 登录form -->
+    <!-- 登录form -->
+    <!-- 登录form -->
     <form class="ui large form">
-    	
       <div class="ui stacked segment">
+        <!-- 用户名 -->
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
             <input type="text" id="usernameId" placeholder="Username">
           </div>
         </div>
+        <!-- 密码 -->
         <div class="field">
           <div class="ui left icon input">
             <i class="lock icon"></i>
             <input type="password" id="passwordId" placeholder="Password">
           </div>
         </div>
+        <!-- remember me -->
         <div class="field ">
 		  <div class="ui checkbox " >
 			  <input type="checkbox"  id="rememberMeId">
 		  	<label for="rememberMeId" >Remember Me !</label>
 		  </div>
         </div>
+        <!-- 登录 -->
         <div class="ui fluid large teal submit button">Login</div>
-	
       </div>
-      	<div class="ui error message"></div>
-
+      <!-- 表单验证提示 -->
+      <!-- 表单验证提示 -->
+      <!-- 表单验证提示 -->
+      <!-- 表单验证提示 -->
+      <div class="ui error message"></div>
     </form>
-
-    <!-- <div class="ui message">
-      New to us? <a href="#">Sign Up</a>
-    </div> -->
   </div>
 </div>
 
 
 
+<!-- 基本资源 -->
+<th:block th:replace="@{/fragments/_fragments}:: resource-script"></th:block>
 
 
-
-<!--CDN资源-->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-
-
-<!-- 点击 换背景 -->
-<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script>
-
-
-
-<!-- 点击 炸裂 -->
-<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
-<script type="text/javascript" src="dist/js/shubiao.js" > </script>
 
 
 <!-- 登录 -->
@@ -223,13 +213,6 @@ window.addEventListener("load", () => {//监听-window-加载
 	});
 });
 </script>
-
-
-
-
-
-
-
 
 
 

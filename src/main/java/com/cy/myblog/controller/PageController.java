@@ -16,11 +16,13 @@ public class PageController {
 	
 	@RequestMapping({"/doIndexUI"  , "/article"})
 	public String toIndexUI() {
+		log.debug("toIndexUI redirect:/");
 		return "redirect:/"; 
 	}
 	@RequestMapping("/")
 	public String doIndexUI() {
-		return "/index";
+		log.debug("doIndexUI forward:/index");
+		return "forward:/index";
 	}
 	
 	
@@ -28,7 +30,8 @@ public class PageController {
 	
 	@RequestMapping("/doLoginUI")
 	public String doLoginUI() {
-		return "/login"; 
+		log.debug("doLoginUI forward:/login");
+		return "forward:/login"; 
 	}
 	
 	@RequestMapping("/doSysUI")
@@ -45,7 +48,7 @@ public class PageController {
 	}
 	
 	
-	@RequestMapping("/{page}")
+	@RequestMapping("/{page}") //index login
 	public String toCommonPage( 
 			@PathVariable("page") String page) {
 		String url = "/"+page ;

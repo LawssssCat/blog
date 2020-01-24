@@ -6,7 +6,7 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class Blog implements Serializable {
+public class Article implements Serializable {
 	private static final long serialVersionUID = -8759763340897328289L;
 
 	private Integer id ; 

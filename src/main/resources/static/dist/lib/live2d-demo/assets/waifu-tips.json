@@ -42,6 +42,7 @@
     },
     "mouseover": [
         { "selector": "nav a", "text": ["要看看 <span style=\"color:#0099cc;\">『{text}』</span> 么？"] },
+        { "selector": "h3 a", "text": ["点进去看这篇 <span style=\"color:#0099cc;\">『{text}』</span> 吧 ~ "] },
         { "selector": ".previous", "text": ["去 <span style=\"color:#0099cc;\">『上一页』</span>看看吧"] },
         { "selector": ".next", "text": ["去 <span style=\"color:#0099cc;\">『下一页』</span>看看吧"] },
         { "selector": ".fui-home", "text": ["点击<span style=\"color:#0099cc;\">『前往首页』</span>，想回到上一页可以使用浏览器的后退功能哦"] },
