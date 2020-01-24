@@ -96,6 +96,23 @@
                   <a  class="ui qq circular button icon" data-title="QQ" data-content="1191693505"><i class="qq icon"></i></a>
               </div>
           </div>
+          <!-- 图标 tips -->
+		<div id="wechat-qr" class="ui flowing popup" style="width: 160px;padding:3px;">
+			<img th:src="@{dist/images/QRcode/wechat.jpg}" alt="" class="ui rounded image" >
+		</div>
+			<script  type="text/javascript">
+				window.onload = function() {
+					$('.qq').popup({
+				        inline: true
+				    });
+				    $('.wechat').popup({
+				        popup:$('#wechat-qr'),
+				        on: 'hover',
+				        position: 'bottom center'
+				    });
+				}
+				window.onload();
+			</script>
       </div>
   </div>
 
