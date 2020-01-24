@@ -4,6 +4,9 @@
 
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
+<!-- ***********                                                                     ************ -->
+<!-- ***********                    h e a d ( t i t l e )                            ************ -->
+<!-- ***********                                                                     ************ -->
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- head -->
@@ -26,6 +29,9 @@
 
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
+<!-- ***********                                                                     ************ -->
+<!-- ***********                    m e n u ( n )                                    ************ -->
+<!-- ***********                                                                     ************ -->
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!--topnav-->
@@ -65,21 +71,37 @@
 
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
+<!-- ***********                                                                     ************ -->
+<!-- ***********                c o m m o n - s c r i p t                            ************ -->
+<!-- ***********                                                                     ************ -->
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- common-script -->
 <th:block th:fragment="common-script">
  
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script>
-<!-- blog -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script><!-- jquery -->
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script><!-- semantic -->
 <script th:src="@{dist/lib/prism/prism.js}"></script><!--代码高亮-->
+<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script><!-- 点击 换背景 -->
 
-<script type="text/javascript">//点击事件
+
+<!-- 看板娘 -->
+<script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js"></script><!-- 实现拖动效果，需引入 JQuery UI -->
+<script src="dist/lib/live2d-demo/assets/autoload.js"></script><!-- 看板娘 异步加载 -->
+
+<!-- 点击 炸裂 -->
+<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<script type="text/javascript" src="dist/js/shubiao.js" > </script>
+
+<!-- [显示]/[隐藏]手机端 侧边按钮 -->
+<script>
+$('.menu.toggle').click(function() {//手机端响应
+    $('.m-item').toggleClass('m-mobile-hide');//toggleClass 切换样式状态
+}) ;
+</script>
+
+<script type="text/javascript">//manu 点击事件
 $(function() {
-	$('.menu.toggle').click(function() {//手机端响应
-	    $('.m-item').toggleClass('m-mobile-hide');//toggleClass 切换样式状态
-	}) ;
 	$("a.m-item").click(function() {//切换
 		$("a.m-item").removeClass("active");
 		$(this).addClass("active");
@@ -87,12 +109,8 @@ $(function() {
 }) ; 
 </script>
 
-
-<script>//加载+动画
-function doLoadUrl(url) {
-	$('#mainContentId').load(url);
-	animateCSS('#mainContentId', 'lightSpeedIn');
-} ; 
+<!-- 动画效果 主内容 -->
+<script>
 function animateCSS(element, animationName, callback) {
     const node = document.querySelector(element)
     node.classList.add('animated', animationName)
@@ -109,20 +127,43 @@ function animateCSS(element, animationName, callback) {
 animateCSS('#mainContentId', 'lightSpeedIn');
 </script>
 
-
-<!-- 点击 换背景 -->
-<script id="ribbon" size="150" alpha='0.3' zIndex="-2" src="dist/lib/canvas-ribbon/canvas-ribbon.js"></script>
-
-<!-- 实现拖动效果，需引入 JQuery UI -->
-<script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js"></script>
-
-<!-- 看板娘 异步加载 -->
-<script src="dist/lib/live2d-demo/assets/autoload.js"></script>
-
-<!-- 点击 炸裂 -->
-<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
-<script type="text/javascript" src="dist/js/shubiao.js" > </script>
-
+<!-- [重要]主内容异步加载 -->
+<script type="text/javascript">
+$("nav").on("click","a",function(evt) {
+	evt.preventDefault(); // 阻止默认的跳转操作
+	var uri=$(this).attr('href');
+	doUpdateMainContent(uri);
+	return false;
+})
+;
+window.addEventListener('popstate', function(evt){
+	var url = window.location.href ; 
+	doUpdateMainContent(url) ; 
+},false) 
+;
+function doUpdateMainContent(uri){
+	if(history.pushState){// 检查浏览器版本-是否有此函数
+		$.ajax({ // 异步加载页面
+			url : uri , 
+			cache : true , //缓存
+			success : function(result) {
+				var title = $(result).filter("title").text();
+				/*++++++++++++++++++++++++++++++++++++++++++*/
+				document.title=title; // 分配新的页面标题
+				var a = $(result).filter("#mainContentId").html() ; 
+				$("#mainContentId").html(a);
+				animateCSS('#mainContentId', 'lightSpeedIn');
+				/*++++++++++++++++++++++++++++++++++++++++++*/
+				var state=({
+					url: uri, 
+					title: title
+					});
+				window.history.pushState(state, title, uri);
+			}
+		});
+	}else{ window.location.href=uri ;  } // 如果不支持，使用旧的解决方案-直接转跳
+}
+</script>
 
 </th:block>
 
@@ -131,6 +172,7 @@ animateCSS('#mainContentId', 'lightSpeedIn');
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
+<!-- for 文章 -->
 <th:block th:fragment="article-script">
 <script th:src="@{dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
 <script th:src="@{dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
