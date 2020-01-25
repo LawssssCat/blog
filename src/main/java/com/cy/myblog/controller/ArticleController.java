@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Controller("/article")
+@RequestMapping("/article")
+@Controller
 public class ArticleController {
 
-	final private String prefix = "/article" ;  
+	final static private String prefix = "/article" ;  
 	
 	@RequestMapping("detail/{id}")
 	public String getDetail(@PathVariable("id") Integer id) {

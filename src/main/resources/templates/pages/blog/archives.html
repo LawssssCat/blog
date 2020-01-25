@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <!-- 引入 -->
-<head th:replace="@{/fragments/_fragments} :: head('归档')"></head>
+<head th:replace="/fragments/_fragments :: head('归档')"></head>
 <body>
 <!-- 引入 -->
-<nav th:replace="@{/fragments/_fragments} :: menu(4)"></nav>
+<nav th:replace="/fragments/_fragments :: menu(4)"></nav>
 
 
 
@@ -37,7 +37,7 @@
   <!--header-->
   <div class="ui segment">
       <h2 class="ui header">
-          <img th:src="@{dist/images/icon/plugin.png}">
+          <img th:src="@{/dist/images/icon/plugin.png}">
           <div class="content">
               归档
             <div class="sub header"> 共 <h2 class="ui orange header m-inline-block m-text-thin"> 114 </h2> 篇博客</div>
@@ -135,7 +135,7 @@
 <br>
 
 <!-- 引入 -->
-<script th:replace="@{/fragments/_fragments} :: common-script" type="text/javascript"></script>
+<script th:replace="/fragments/_fragments :: common-script" type="text/javascript"></script>
 
 
 

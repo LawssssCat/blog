@@ -7,8 +7,6 @@ try {
     })
     .appendTo('head');
     
-    
-    
     $('body')
     .append('<div class="waifu">'+
     			'<div class="waifu-tips"></div>'+

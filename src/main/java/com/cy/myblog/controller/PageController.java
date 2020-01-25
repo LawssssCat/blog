@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class PageController {
+
+	
 	
 	@RequestMapping({"/doIndexUI"  , "/article"})
 	public String toIndexUI() {
@@ -21,20 +23,20 @@ public class PageController {
 	}
 	@RequestMapping("/")
 	public String doIndexUI() {
-		log.debug("doIndexUI forward:/index");
-		return "forward:/index";
+		log.debug("doIndexUI /index");
+		return "/blog/index";
 	}
 	
 	
 	
 	
-	@RequestMapping("/doLoginUI")
+	@RequestMapping({"/doLoginUI", "/login"})
 	public String doLoginUI() {
-		log.debug("doLoginUI forward:/login");
-		return "forward:/login"; 
+		log.debug("doLoginUI /login");
+		return "/blog/login"; 
 	}
 	
-	@RequestMapping("/doSysUI")
+	@RequestMapping({"/doSysUI" , "/sys"})
 	public String doSysUI(Model model ) { ///sys/blogs
 		
 		User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -48,10 +50,10 @@ public class PageController {
 	}
 	
 	
-	@RequestMapping("/{page}") //index login
+	@RequestMapping(value = "/blog/{page}" ) //index login forward:
 	public String toCommonPage( 
 			@PathVariable("page") String page) {
-		String url = "/"+page ;
+		String url = "/blog/"+page ;
 		log.debug("toCommonPage url={}",url);
 		return url; 
 	}

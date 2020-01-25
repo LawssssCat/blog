@@ -3,10 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <!-- 引入 -->
-<head th:replace="@{/fragments/_fragments} :: head('关于我')"></head>
+<head th:replace="/fragments/_fragments :: head('中文网页重设与排版：Typo.css')"></head>
 <body>
 <!-- 引入 -->
-<nav th:replace="@{/fragments/_fragments} :: menu(5)"></nav>
+<nav th:replace="/fragments/_fragments :: menu(null)"></nav>
 
 
 
@@ -32,13 +32,13 @@
 
 
 <!-- <title>博客详情</title> -->
-<link rel="stylesheet" href="dist/lib/prism/prism.css"> <!--代码高亮-->
+<link rel="stylesheet" th:href="@{/dist/lib/prism/prism.css}"> <!--代码高亮-->
 <div class="ui container"><!--container，外层容器，适合响应移动端-->
     <!--头部区域-->
     <div class="ui top attached segment">
         <div class="ui horizontal link list">
             <div class="item">
-                <img src="dist/images/placeholder.jpg" alt="" class="ui avatar image">
+                <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image">
                 <div class="content">
                     <a href="#" class="header">lawssssCat</a>
                 </div>
@@ -53,7 +53,7 @@
     </div>
     <!--图片-->
     <div class="ui attached segment">
-        <img src="dist/images/index-read.gif" alt="" class="ui fluid rounded image">
+        <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui fluid rounded image">
     </div>
     <div class="ui attached segment padded" >
         <!--内容顶部-->
@@ -476,11 +476,11 @@ h5,h6{font-size:1em;}
                 <!--inherit：继承上级-->
                 <div class="ui images" style="font-size: inherit !important;">
                     <div class="image">
-                        <img src="dist/images/wechat.jpg" alt="" class="ui rounded bordered image" style="width:120px">
+                        <img th:src="@{/dist/images/QRcode/wechat.jpg }" alt="" class="ui rounded bordered image" style="width:120px">
                         <div>支付宝</div>
                     </div>
                     <div class="image">
-                        <img src="dist/images/wechat.jpg" alt="" class="ui  rounded bordered image" style="width:120px">
+                        <img th:src="@{/dist/images/QRcode/wechat.jpg }" alt="" class="ui  rounded bordered image" style="width:120px">
                         <!--这里sementic不显示，自己设计-->
                         <div>微信</div>
                     </div>
@@ -500,7 +500,7 @@ h5,h6{font-size:1em;}
                 </ui>
             </div>
             <div class="five wide column">
-                <img src="dist/images/wechat.jpg" alt="" class="ui right floated rounded bordered image" style="width: 110px;"><!--floated：向右浮动-->
+                <img th:src="@{/dist/images/QRcode/wechat.jpg }" alt="" class="ui right floated rounded bordered image" style="width: 110px;"><!--floated：向右浮动-->
             </div>
         </div>
     </div>
@@ -511,7 +511,7 @@ h5,h6{font-size:1em;}
                 <h3 class="ui dividing header">Comments</h3>
                 <div class="comment">
                   <a class="avatar">
-                    <img src="dist/images/matt.jpg">
+                    <img th:src="@{/dist/images/avatar/matt.jpg}">
                   </a>
                   <div class="content">
                     <a class="author">Matt</a>
@@ -528,7 +528,7 @@ h5,h6{font-size:1em;}
                 </div>
                 <div class="comment">
                   <a class="avatar">
-                    <img src="dist/images/elliot.jpg">
+                    <img th:src="@{dist/images/avatar/elliot.jpg}">
                   </a>
                   <div class="content">
                     <a class="author">Elliot Fu</a>
@@ -545,7 +545,7 @@ h5,h6{font-size:1em;}
                   <div class="comments">
                     <div class="comment">
                       <a class="avatar">
-                        <img src="dist/images/jenny.jpg">
+                        <img src="dist/images/avatar/jenny.jpg">
                       </a>
                       <div class="content">
                         <a class="author">Jenny Hess</a>
@@ -564,7 +564,7 @@ h5,h6{font-size:1em;}
                 </div>
                 <div class="comment">
                   <a class="avatar">
-                    <img src="dist/images/joe.jpg">
+                    <img th:src="@{/dist/images/avatar/joe.jpg}">
                   </a>
                   <div class="content">
                     <a class="author">Joe Henderson</a>
@@ -640,8 +640,41 @@ h5,h6{font-size:1em;}
 
 
 
-<!--CDN资源-->
-<script src="dist/lib/prism/prism.js"></script><!--代码高亮-->
+
+
+
+    
+</div>
+
+<br>
+<br>
+
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                     -->
+
+
+
+
+<!-- 引入 -->
+<script th:replace="/fragments/_fragments :: common-script" type="text/javascript"></script>
+
+
+
+
 <script>
 
 
@@ -704,34 +737,6 @@ h5,h6{font-size:1em;}
       
     });
   </script>
-
-
-
-    
-</div>
-<!--                                                                                        
-                                                                                       
-                                                                                       
-      ,---,                        ,---,                        ,---,                  
-    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
-    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
-    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
-  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
- /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
-.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
-'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
-|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
-|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
- \   \  /                     \   \  /                     \   \  /                    
-  `----'                       `----'                       `----'                     
-                                                                                     -->
-
-
-<br>
-<br>
-
-<!-- 引入 -->
-<script th:replace="@{/fragments/_fragments} :: common-script" type="text/javascript"></script>
 
 </body>
 </html>

@@ -12,7 +12,9 @@ spring:
     servlet:
       content-type: text/html; charset=utf-8   profiles:
     active: dev
-    
+  mvc:
+    favicon:
+      enabled: true   
 #  freemarker:#    template-loader-path:#    - classpath:/templates/pages
 #    suffix: .html
 

@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <!-- 引入 -->
-<head th:replace="@{/fragments/_fragments} :: head('关于我')"></head>
+<head th:replace="/fragments/_fragments :: head('关于我')"></head>
 <body>
 <!-- 引入 -->
-<nav th:replace="@{/fragments/_fragments} :: menu(5)"></nav>
+<nav th:replace="/fragments/_fragments :: menu(5)"></nav>
 
 
 
@@ -34,7 +34,7 @@
       <div class="ui stackable grid">
           <div class="eleven wide column">
              <div class="ui segment">
-              <img th:src="@{dist/images/wallpaper/cat.jpg}" alt="" class="ui rounded image">
+              <img th:src="@{/dist/images/wallpaper/cat.jpg}" alt="" class="ui rounded image">
              </div>
           </div>
           <div class="five wide column">
@@ -98,7 +98,7 @@
           </div>
           <!-- 图标 tips -->
 		<div id="wechat-qr" class="ui flowing popup" style="width: 160px;padding:3px;">
-			<img th:src="@{dist/images/QRcode/wechat.jpg}" alt="" class="ui rounded image" >
+			<img th:src="@{/dist/images/QRcode/wechat.jpg}" alt="" class="ui rounded image" >
 		</div>
 			<script  type="text/javascript">
 				$('.qq').popup({
@@ -136,7 +136,7 @@
 <br>
 
 <!-- 引入 -->
-<script th:replace="@{/fragments/_fragments} :: common-script" type="text/javascript"></script>
+<script th:replace="/fragments/_fragments :: common-script" type="text/javascript"></script>
 
 </body>
 </html>

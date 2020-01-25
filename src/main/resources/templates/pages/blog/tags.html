@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <!-- 引入 -->
-<head th:replace="@{/fragments/_fragments} :: head('标签')"></head>
+<head th:replace="/fragments/_fragments :: head('标签')"></head>
 <body>
 <!-- 引入 -->
-<nav th:replace="@{/fragments/_fragments} :: menu(3)"></nav>
+<nav th:replace="/fragments/_fragments :: menu(3)"></nav>
 
 
 
@@ -84,7 +84,7 @@
                                 <div class="eleven wide column"><!--semantic width 16-->
                                     <div class="ui horizontal link list"><!--horizontal:水平布局-->
                                         <div class="item">
-                                            <img th:src="@{dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                            <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
                                             <div class="content"><!--content 加一些文字 -->
                                                 <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                             </div>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="five wide column"><!--图片-->
                             <a href="#" target="_blank">
-                                <img th:src="@{dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
+                                <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -134,7 +134,7 @@
                                 <div class="eleven wide column"><!--semantic width 16-->
                                     <div class="ui horizontal link list"><!--horizontal:水平布局-->
                                         <div class="item">
-                                            <img th:src="@{dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                            <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
                                             <div class="content"><!--content 加一些文字 -->
                                                 <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                             </div>
@@ -154,7 +154,7 @@
                         </div>
                         <div class="five wide column"><!--图片-->
                             <a href="#" target="_blank">
-                                <img th:src="@{dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
+                                <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                                 <div class="eleven wide column"><!--semantic width 16-->
                                     <div class="ui horizontal link list"><!--horizontal:水平布局-->
                                         <div class="item">
-                                            <img th:src="@{dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                            <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
                                             <div class="content"><!--content 加一些文字 -->
                                                 <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                             </div>
@@ -204,7 +204,7 @@
                         </div>
                         <div class="five wide column"><!--图片-->
                             <a href="#" target="_blank">
-                                <img th:src="@{dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
+                                <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
                             </a>
                         </div>
                     </div>
@@ -256,7 +256,7 @@
 <br>
 
 <!-- 引入 -->
-<script th:replace="@{/fragments/_fragments} :: common-script" type="text/javascript"></script>
+<script th:replace="/fragments/_fragments :: common-script" type="text/javascript"></script>
 
 
 
