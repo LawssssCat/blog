@@ -25,7 +25,6 @@
 <!-- head -->
 <head th:fragment="head(title)">
 	<!-- <base th:href="${#request.getContextPath()}+'/'" > --><!-- 解决路径头疼问题 (弃用:导致锚有问题)-->
-	
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -59,16 +58,17 @@
     inverted ： 黑色(反转)
     m-padded-tb-mini : 自己家的
 -->
-<nav th:fragment="menu(n)"  class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
-    <div class="ui container">
-        <div class="ui inverted secondary stackable menu"><!--stackable 可堆叠，适应手机端-->
-            <h2 class="ui item header teal"> Blog~ </h2> <!--teal:颜色-->
+<nav th:fragment="menu(n)"  class="ui inverted attached segment m-padded-tb-mini  m-shadow-small"> 
+    <div class="ui container ">
+        <div class="ui inverted secondary stackable menu m-margin-bottom-tiny"><!--stackable 可堆叠，适应手机端-->
+            <h2 class="ui item header basic"> lassss <font color="teal"> Cat </font> ~ </h2> <!--teal:颜色-->
             <a data-pjax waifu th:href="@{/blog/index}" 	th:classappend="${n==1} ? 'active'" class="m-item item m-mobile-hide" ><i class=" home icon"></i>首页</a><!-- waifu --><!--m-item为了选择-->
             <a data-pjax waifu th:href="@{/blog/types}"		th:classappend="${n==2} ? 'active'" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
             <a data-pjax waifu th:href="@{/blog/tags}" 		th:classappend="${n==3} ? 'active'" class="m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
             <a data-pjax waifu th:href="@{/blog/archives}" 	th:classappend="${n==4} ? 'active'" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
             <a data-pjax waifu th:href="@{/blog/about}" 	th:classappend="${n==5} ? 'active'" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
-            <div class="m-item right item m-mobile-hide">
+            <!-- 搜索栏 -->
+            <div class="m-item right aligned item m-mobile-hide">
 	            <div class="ui category  search">
 			    	<div class="ui icon input">
 				      <input class="prompt" type="text" placeholder="  Search ...">
@@ -82,30 +82,7 @@
             <!-- ****             login             **** -->
             <!-- ****                               **** -->
 		    <th:block th:if="${user} ne null">
-		    <!-- 写博客按钮 -->
-	    	<button class="item m-item m-mobile-hide right "> 
-			    <button waifu onclick="javascript:doLoadUrl('sys/blogs-input')" class="ui item teal  inverted button">
-			        <i class="pencil alternate icon "></i>写博客
-			    </button>
-			</button>
-			<!-- user栏 -->
-			<div class="menu m-margin-bottom-small" >
-			    <div class="ui m-item item m-mobile-hide dropdown m-margin-lr-no">
-			        <div  class="text">
-			            <img id="avatarUrlId" src="" class="ui avatar image" ><font id="nicknameId">[[${user!=null?user.nickname:'???'}]]</font>
-			        </div>
-			        <i class="dropdown icon"></i>
-			        <div class="menu">
-			            <a th:href="@{/system}" class="item">博客管理</a>
-			            <a th:href="@{/doLogout}" class="item">注销</a>
-			        </div>
-			    </div>
-			</div>	
-			<script type="text/javascript">//角色管理(上面) 下拉框
-		    $('.ui.dropdown').dropdown({
-		        on: 'hover'
-		    });
-			</script>
+		   	<th:block th:replace="/fragments/_sys_fragments :: sys_menu"></th:block> 
 		    </th:block>
             <!-- *************************************** -->
             <!-- *************************************** -->
@@ -227,7 +204,7 @@ $(function() {
 <script th:src="@{/dist/lib/pjax/jquery.pjax.js}" type="text/javascript"></script>
 <script type="text/javascript">//menu 的 a
 $(function() {
-	$(document).on('click', 'nav a[data-pjax] , h3 a[data-pjax]', function(event) {
+	$(document).on('click', 'a[data-pjax]', function(event) {
 		 $.pjax.click(event, {
 			 container: '#mainContentId' , 
 			 fragment:'#mainContentId' 

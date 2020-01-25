@@ -27,6 +27,6 @@ logging:  level:
     com.cy: debug
 web-service:
   loginUrl: /doLoginUI
-  logoutUrl: /doLoginUI
+  logoutUrl: /
   systemPrefix: /system
   

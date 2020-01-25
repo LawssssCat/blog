@@ -69,6 +69,10 @@
     margin-top: 2em !important;
 }
 
+
+.m-margin-bottom-tiny{
+    margin-bottom: 0.3em !important;
+}
 .m-margin-bottom-small{
     margin-bottom: 0.5em !important;
 }
