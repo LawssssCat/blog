@@ -1,7 +1,7 @@
 try {
     $("<link>")
     .attr({
-    	href: "dist/lib/live2d-demo/assets/waifu.css", 
+    	href: "/dist/lib/live2d-demo/assets/waifu.css", 
     	rel: "stylesheet", 
     	type: "text/css"
     })
@@ -23,11 +23,11 @@ try {
 			'</div>');
     
     
-    $.ajax({url: "dist/lib/live2d-demo/assets/waifu-tips.js", dataType:"script", cache: true, success: function() {
-        $.ajax({url: "dist/lib/live2d-demo/assets/live2d.js", dataType:"script", cache: true, success: function() {
+    $.ajax({url: "/dist/lib/live2d-demo/assets/waifu-tips.js", dataType:"script", cache: true, success: function() {
+        $.ajax({url: "/dist/lib/live2d-demo/assets/live2d.js", dataType:"script", cache: true, success: function() {
             /* 可直接修改部分参数 */
             /* 在 initModel 前添加 */
-            initModel("dist/lib/live2d-demo/assets/waifu-tips.json");
+            initModel("/dist/lib/live2d-demo/assets/waifu-tips.json");
         }});
     }});
     

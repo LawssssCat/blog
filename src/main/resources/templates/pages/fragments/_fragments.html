@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-
+      
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
+<!-- ***********                                                                     ************ -->
+<!-- ***********                    b a s e - s c r i p t                            ************ -->
+<!-- ***********                                                                     ************ -->
+<!-- ******************************************************************************************** -->
+<!-- ******************************************************************************************** -->
 <th:block th:fragment="base-script">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script><!-- jquery -->
 <script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script><!-- semantic -->
@@ -17,7 +24,7 @@
 <!-- ******************************************************************************************** -->
 <!-- head -->
 <head th:fragment="head(title)">
-	<base th:href="${#request.getContextPath()}+'/'" ><!-- 解决路径头疼问题 -->
+	<!-- <base th:href="${#request.getContextPath()}+'/'" > --><!-- 解决路径头疼问题 (弃用:导致锚有问题)-->
 	
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,15 +32,15 @@
     <title>[[${title}]]</title>
     <!-- <link rel="icon" type="image/x-icon" th:href="@{/dist/images/favicon.ico}" /> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css" ><!-- 前端框架 -->
-    <link rel="stylesheet" href="dist/css/me.css"><!-- 自定义CSS样式 -->
+    <link rel="stylesheet" th:href="@{/dist/css/me.css}"><!-- 自定义CSS样式 -->
     
 
 
-    <link rel="stylesheet" href="dist/css/animate.css"><!-- 动画效果 -->
-    <link rel="stylesheet" href="dist/lib/tocbot//dist/tocbot.css"><!--文章目录-->
-    <link rel="stylesheet" href="dist/css/typo.css"><!-- 内容排版 -->
-    <link rel="stylesheet" href="dist/lib/prism/prism.css"> <!--代码高亮-->
-    <link rel="stylesheet" href="dist/lib/nprogress/nprogress.css"> <!-- 进度条 -->
+    <link rel="stylesheet" th:href="@{/dist/css/animate.css}"><!-- 动画效果 -->
+    <link rel="stylesheet" th:href="@{/dist/lib/tocbot//dist/tocbot.css}"><!--文章目录-->
+    <link rel="stylesheet" th:href="@{/dist/css/typo.css}"><!-- 内容排版 -->
+    <link rel="stylesheet" th:href="@{/dist/lib/prism/prism.css}"> <!--代码高亮-->
+    <link rel="stylesheet" th:href="@{/dist/lib/nprogress/nprogress.css}"> <!-- 进度条 -->
     
     
     <th:block th:replace=":: base-script"></th:block><!-- semantic、jquery -->
@@ -86,6 +93,22 @@
 
 
 
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                     -->
 
 
 
@@ -96,28 +119,28 @@
 
 
 
-
-
+<!-- base > resource > common -->
 
 
 
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- ***********                                                                     ************ -->
-<!-- ***********                r e s o u r c e - s c r i p t                        ************ -->
+<!-- ***********                r e s o u r c e - s c r i p t       (页面必备)          ************ -->
 <!-- ***********                                                                     ************ -->
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- resource-script -->
 <th:block th:fragment="resource-script">
 
-<script th:src="@{/dist/lib/prism/prism.js}" async></script><!--代码高亮-->
-
-<script id="ribbon" size="150" alpha='0.3' zIndex="-2" th:src="@{/dist/lib/canvas-ribbon/canvas-ribbon.js}" async></script><!-- 点击 换背景 -->
+<script async id="ribbon" size="150" alpha='0.3' zIndex="-2" th:src="@{/dist/lib/canvas-ribbon/canvas-ribbon.js}"></script><!-- 点击 换背景 -->
 
 <!-- 点击 炸裂 -->
-<canvas id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;" async></canvas>
-<script type="text/javascript" th:src="@{/dist/js/shubiao.js}" async> </script>
+<canvas async id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<script async type="text/javascript" th:src="@{/dist/js/shubiao.js}"> </script>
+
+<!-- 进度条 配合pjax 香 -->
+<script th:src="@{/dist/lib/nprogress/nprogress.js}" type="text/javascript"></script>
 
 
 </th:block>
@@ -128,7 +151,7 @@
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <!-- ***********                                                                     ************ -->
-<!-- ***********                c o m m o n - s c r i p t                            ************ -->
+<!-- ***********                c o m m o n - s c r i p t         (                   ************ -->
 <!-- ***********                                                                     ************ -->
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
@@ -140,26 +163,15 @@
 
 
 <!-- 看板娘 -->
-<script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js" ></script><!-- 实现拖动效果，需引入 JQuery UI -->
-<script src="dist/lib/live2d-demo/assets/autoload.js" ></script><!-- 看板娘 异步加载 -->
+<script async src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js" ></script><!-- 实现拖动效果，需引入 JQuery UI -->
+<script async th:src="@{/dist/lib/live2d-demo/assets/autoload.js}" ></script><!-- 看板娘 异步加载 -->
 
+<script async th:src="@{/dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
+<script async th:src="@{/dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
+<script async th:src="@{/dist/lib/waypoints/jquery.waypoints.min.js}"></script><!--检测工具。还有其他强大功能-->
+<script async src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script><!--top平滑滚动-->
+    <script async th:src="@{/dist/lib/prism/prism.js}"></script><!--代码高亮-->
 
-<!-- [显示]/[隐藏]手机端 侧边按钮 -->
-<script>
-$('.menu.toggle').click(function() {//手机端响应
-    $('.m-item').toggleClass('m-mobile-hide');//toggleClass 切换样式状态
-}) ;
-</script>
-
-<!-- manu active 事件 -->
-<script type="text/javascript">
-$(function() {
-	$("a.m-item").click(function() {//切换
-		$("a.m-item").removeClass("active");
-		$(this).addClass("active");
-	});
-}) ; 
-</script>
 
 
 
@@ -185,11 +197,10 @@ $(document).on('pjax:end', function(event) {
 </script>
 
 <!-- 进度条 配合pjax 香 -->
-<script th:src="@{/dist/lib/nprogress/nprogress.js}" type="text/javascript"></script>
 <script>
 NProgress.configure({
 	ease:'ease-in-out',
-	speed:300 
+	speed:300  //进度条速度
 });
 NProgress.start();
 $(function() {
@@ -199,7 +210,7 @@ $(function() {
 </script>
 
 <!-- pjax 异步加载 -->
-<script src="dist/lib/pjax/jquery.pjax.js" type="text/javascript"></script>
+<script th:src="@{/dist/lib/pjax/jquery.pjax.js}" type="text/javascript"></script>
 <script type="text/javascript">//menu 的 a
 $(function() {
 	$(document).on('click', 'nav a[data-pjax] , h3 a[data-pjax]', function(event) {
@@ -208,16 +219,27 @@ $(function() {
 			 fragment:'#mainContentId' 
 		 });
 	});
-
 })
-
-
-
 </script>
-<script src="dist/lib/tocbot/dist/tocbot.js"></script><!--文章目录-->
-<script th:src="@{/dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
-<script th:src="@{/dist/lib/waypoints/jquery.waypoints.min.js}"></script><!--检测工具。还有其他强大功能-->
-<script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script><!--top平滑滚动-->
+
+
+
+<!-- [显示]/[隐藏]手机端 侧边按钮 -->
+<script>
+$('.menu.toggle').click(function() {//手机端响应
+    $('.m-item').toggleClass('m-mobile-hide');//toggleClass 切换样式状态
+}) ;
+</script>
+
+<!-- manu active 事件 -->
+<script type="text/javascript">
+$(function() {
+	$("a.m-item").click(function() {//切换
+		$("a.m-item").removeClass("active");
+		$(this).addClass("active");
+	});
+}) ; 
+</script>
 
 </th:block>
 
@@ -305,9 +327,9 @@ function doScriptInHtml(data) {// 执行 内容中包含的 script
 <!-- ******************************************************************************************** -->
 <!-- for 文章 -->
 <th:block th:fragment="article-script">
-
 <script>
 $(function() {
+	
   $('#tocButton').popup({
     popup : $('#tocScreen'),
     on    : 'hover' ,
@@ -332,8 +354,8 @@ $(function() {
   $("#toTopButton,#comment-container").click(function() {
     $.scrollTo(0 , 500 );
   }) ; 
-
-  tocbot.init({
+  Prism.highlightAll();
+  tocbot.init({//目录
       // Where to render the table of contents.
       tocSelector: '.js-toc',
       // Where to grab the headings to build the table of contents.
@@ -343,8 +365,12 @@ $(function() {
       // For headings inside relative or absolute positioned containers within content.
       hasInnerContainers: true,
   });
+
 })
 </script>
+
+
+<!-- 二维码 -->
 <script type="text/javascript">
 $(function() {
   var qrcode = new QRCode(document.getElementById("phone-qr"), {
@@ -357,6 +383,7 @@ $(function() {
 	  });
 })
 </script>
+
 <script>//检测工具。还有其他强大功能
 $(function() {
     var waypoint = new Waypoint({
@@ -368,7 +395,6 @@ $(function() {
           $('#toolbar').hide(500) ;
         }
       }
-      
     });
 })
 </script>

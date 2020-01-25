@@ -70,12 +70,6 @@
         
                 <pre><code class="language-css">p { color: red }</code></pre>
                 <pre><code class="language-css">p { color: red }</code></pre>
-                <div id="github">
-                    <iframe src="http://ghbtns.com/github-btn.html?user=sofish&repo=typo.css&type=watch&count=true"
-                            allowtransparency="true" frameborder="0" scrolling="0" width="98" height="20"></iframe>
-                    <iframe src="http://ghbtns.com/github-btn.html?user=sofish&type=follow&count=true"
-                            allowtransparency="true" frameborder="0" scrolling="0" width="156" height="20"></iframe>
-                  </div>
                   
                   <div id="wrapper" class="typo typo-selection">
                   
@@ -528,7 +522,7 @@ h5,h6{font-size:1em;}
                 </div>
                 <div class="comment">
                   <a class="avatar">
-                    <img th:src="@{dist/images/avatar/elliot.jpg}">
+                    <img th:src="@{/dist/images/avatar/elliot.jpg}">
                   </a>
                   <div class="content">
                     <a class="author">Elliot Fu</a>
@@ -545,7 +539,7 @@ h5,h6{font-size:1em;}
                   <div class="comments">
                     <div class="comment">
                       <a class="avatar">
-                        <img src="dist/images/avatar/jenny.jpg">
+                        <img th:src="@{/dist/images/avatar/jenny.jpg}">
                       </a>
                       <div class="content">
                         <a class="author">Jenny Hess</a>
@@ -623,7 +617,7 @@ h5,h6{font-size:1em;}
         <a href="#comment-container" class="ui teal button">留言</a>
         <!--二维码-->
         <button class="ui wechat icon button"><i class="share alternate icon"></i></button>
-        <a id="toTopButton"  class="ui icon button"><i class="icon chevron up"></i></a>
+        <a id="toTopButton" href='#top' class="ui icon button"><i class="icon chevron up"></i></a>
     </div>
 </div>
 <!--目录 隐藏-->
