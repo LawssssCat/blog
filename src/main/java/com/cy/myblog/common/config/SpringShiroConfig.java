@@ -1,8 +1,6 @@
 package com.cy.myblog.common.config;
 
 
-import javax.servlet.Filter;
-
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -42,31 +40,11 @@ public class SpringShiroConfig {
 		ShiroFilterFactoryBean shiroFilterFactory = new ShiroFilterFactoryBean(); 
 		shiroFilterFactory.setSecurityManager(securityManager);
 		
-		//定义map指定请求过滤规则(哪些资源允许匿名访问,哪些必须认证访问)
-		
-		//静态资源允许匿名访问:"anon"
-		//map.put("/dist/**", "anon");
-		//map.put("/common/**" , "anon") ;
-		
-		
-		//map.put("/blog/**", "anon"); //游客浏览博客 
-		//map.put("/doIndexUI", "anon") ; 
-		
-		//map.put("/user/doLogin" , "anon") ; //登录
-		//map.put("/doLogout", "logout") ; 
-		
-		//其它都要认证("authc")后访问  
-		//其它都要认证("user")后访问  
-		//map.put("/sys/**", "user") ; //controller 转跳 x
-		//map.put("/doSysUI", "user") ; //controller 转跳 x
-		
-		
-		
-		shiroFilterFactory.getFilterChainDefinitionMap().put("/doLogout", "logout") ; 
-		shiroFilterFactory.getFilterChainDefinitionMap().put("/sys/**", "user") ; 
-		shiroFilterFactory.getFilterChainDefinitionMap().put("/doSysUI", "user")  ; 
-		
-		
+		/**定义map指定请求过滤规则(哪些资源允许匿名访问,哪些必须认证访问)*/
+		shiroFilterFactory.getFilterChainDefinitionMap().put("/doLogout", "logout") ;//设置登出 logout
+		shiroFilterFactory.getFilterChainDefinitionMap().
+		put(webServerProperties.getSystemPrefix()+"/**"  , "user") ; 
+		//webServerProperties.getSystemPrefix()+"/**"  => /system/**
 		
 		shiroFilterFactory.setLoginUrl(webServerProperties.getLoginUrl());
 

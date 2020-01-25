@@ -59,7 +59,7 @@
 	  $.post(url , params , function(result) {
 		  if(result.state==1){//登录成功！
 			  //转跳到index页面
-			  location.href="doSysUI?t="+Math.random();//避免缓存
+			  location.href="/system?t="+Math.random();//避免缓存
 		  }else{
 			  var a = $('.message .close').closest('.message') ; 
 			  if(a.hasClass("hidden")) {

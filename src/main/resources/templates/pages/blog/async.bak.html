@@ -1,0 +1,73 @@
+
+<!-- [重要]主内容异步加载 --><!-- pjax代替 -->
+<!-- [重要]主内容异步加载 -->
+<!-- [重要]主内容异步加载 -->
+<!-- [重要]主内容异步加载 -->
+<!-- <script type="text/javascript">
+$("nav").on("click","a",function(evt) {//
+	evt.preventDefault(); // 阻止默认的跳转操作
+	var uri=$(this).attr('href');
+	doUpdateMainContent(uri);
+	return false;
+})
+;
+window.addEventListener('popstate', function(evt){//前进/后退 记录转跳
+	var url = window.location.href ; 
+	doUpdateMainContent(url) ; 
+},false) 
+;
+function doUpdateMainContent(uri){//更新要替换的内容
+	if(history.pushState){// 检查浏览器版本-是否有此函数
+		$.ajax({ // 异步加载页面
+			url : uri , 
+			cache : true , //缓存
+			success : function(result) {
+				var title = $(result).filter("title").text();
+				/*++++++++++++++++++++++++++++++++++++++++++*/
+				document.title=title; // 分配新的页面标题
+				var data = $(result).filter("#mainContentId").html() ;//获取 要替换的内容 
+				var a = $(result).filter("script") ; 
+				console.log("a" , a);
+				$("#mainContentId").html(data); //替换内容
+				
+				doScriptInHtml(data) ; // 执行 内容中包含的 script 
+
+				animateCSS('#mainContentId', 'lightSpeedIn');
+				/*++++++++++++++++++++++++++++++++++++++++++*/
+				var state=({
+					url: uri, 
+					title: title
+					});
+				window.history.pushState(state, title, uri);
+			}
+		});
+	}else{ window.location.href=uri ;  } // 如果不支持，使用旧的解决方案-直接转跳
+}
+function doScriptInHtml(data) {// 执行 内容中包含的 script 
+	// 第一步：匹配加载的页面中是否含有js
+	var regDetectJs = /<script(.|\n)*?>(.|\n|\r\n)*?<\/script>/ig;
+	var jsContained = data.match(regDetectJs);
+
+	// 第二步：如果包含js，则一段一段的取出js再加载执行
+	if(jsContained) {
+		// 分段取出js正则
+		var regGetJS = /<script(.|\n)*?>((.|\n|\r\n)*)?<\/script>/im;
+
+		// 按顺序分段执行js
+		var jsNums = jsContained.length;
+		for (var i=0; i<jsNums; i++) {
+			var jsSection = jsContained[i].match(regGetJS);
+
+			if(jsSection[2]) {
+				if(window.execScript) {
+					// 给IE的特殊待遇
+					window.execScript(jsSection[2]);
+				} else {
+					// 给其他大部分浏览器用的
+					window.eval(jsSection[2]);
+				}
+			}
+		}
+	}
+}
+</script> -->

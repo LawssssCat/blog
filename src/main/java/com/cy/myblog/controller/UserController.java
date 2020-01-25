@@ -25,7 +25,6 @@ public class UserController {
 						username, 
 						password, 
 						isRememberMe);
-		
 		subject.login(token);//登录
 		return new JsonResult("login OK !") ; 
 	}

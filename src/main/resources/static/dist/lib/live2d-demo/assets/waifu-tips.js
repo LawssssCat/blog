@@ -227,7 +227,7 @@ function loadTipsMessage(result) {
         $(document).on("mouseover", tips.selector, function (){//鼠标覆盖事件
             var text = getRandText(tips.text);
             text = text.render({text: $(this).text()});
-            showMessage(text, 3000 , false); 
+            showMessage(text, 5000 , false); 
         });
     });
     $.each(result.click, function (index, tips){
