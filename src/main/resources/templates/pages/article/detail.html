@@ -623,7 +623,7 @@ h5,h6{font-size:1em;}
         <a href="#comment-container" class="ui teal button">留言</a>
         <!--二维码-->
         <button class="ui wechat icon button"><i class="share alternate icon"></i></button>
-        <a id="toTopButton" href="#top" class="ui icon button"><i class="icon chevron up"></i></a>
+        <a id="toTopButton"  class="ui icon button"><i class="icon chevron up"></i></a>
     </div>
 </div>
 <!--目录 隐藏-->
@@ -637,8 +637,8 @@ h5,h6{font-size:1em;}
 
 
 
-
-
+<!-- 引入 -->
+<script th:replace="/fragments/_fragments :: article-script" type="text/javascript"></script>
 
 
 
@@ -675,68 +675,6 @@ h5,h6{font-size:1em;}
 
 
 
-<script>
-
-
-  $('#tocButton').popup({
-    popup : $('#tocScreen'),
-    on    : 'hover' ,
-    inline   : true, 
-    hoverable: true,
-    position : 'left center'
-  }) ; 
-  $('.wechat').popup({
-    popup:$('#phone-qr'),
-    on: 'hover',
-    hoverable: true,
-    inline   : true,
-    position : 'left center'
-  });
-  $('#payButton').popup({
-      popup : $('#payScreen'),
-      on    : 'hover' , 
-      inline   : true,
-      hoverable: true,
-      position : 'top center'
-  }) ; 
-  $("#toTopButton,#comment-container").click(function() {
-    $.scrollTo(0 , 500 );
-  }) ; 
-
-  tocbot.init({
-      // Where to render the table of contents.
-      tocSelector: '.js-toc',
-      // Where to grab the headings to build the table of contents.
-      contentSelector: '.js-toc-content',
-      // Which headings to grab inside of the contentSelector element.
-      headingSelector: 'h1, h2, h3',
-      // For headings inside relative or absolute positioned containers within content.
-      hasInnerContainers: true,
-  });
-</script>
-<script type="text/javascript">
-  var qrcode = new QRCode(document.getElementById("phone-qr"), {
-    text: "http://jindo.dev.naver.com/collie",
-    width: 110,
-    height: 110,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-  });
-  </script>
-  <script>//检测工具。还有其他强大功能
-    var waypoint = new Waypoint({
-      element: document.getElementById('mainContentId'),
-      handler: function(direction) {
-        if(direction == 'down' ) {
-          $('#toolbar').show(300) ;
-        }else  {
-          $('#toolbar').hide(500) ;
-        }
-      }
-      
-    });
-  </script>
 
 </body>
 </html>
