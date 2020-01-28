@@ -14,7 +14,7 @@ spring:
     active: dev
   mvc:
     favicon:
-      enabled: true   
+      enabled: false   
 #  freemarker:#    template-loader-path:#    - classpath:/templates/pages
 #    suffix: .html
 

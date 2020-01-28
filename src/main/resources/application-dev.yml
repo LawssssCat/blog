@@ -12,8 +12,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://111.229.121.30:3306/blogdb?useUnicode=true&characterEncoding=utf-8
-    username: root
-    password: root
+    username: home
+    password: BiliBili
     
     
 

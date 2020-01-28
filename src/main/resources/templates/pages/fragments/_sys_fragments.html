@@ -3,120 +3,32 @@
       xmlns:th="http://www.thymeleaf.org">
       
 <th:block th:fragment="sys_menu">
- <!-- 写博客按钮 -->
-		    <button waifu class="ui item m-item teal inverted button right aligned m-mobile-hide">
-		        <a th:href="@{/system/md}"><i class="pencil alternate icon "></i>写博客</a>
-		    </button>
-			<!-- user栏 -->
-			<div class="ui  inverted menu" >
-			    <div class="ui item  m-item  dropdown m-mobile-hide">
-			        <div  class="text">
-			            <img th:src='@{${user.avatarUrl}}' class="ui avatar image" ><font id="nicknameId">[[${user!=null?user.nickname:'???'}]]</font>
-			        </div>
-			        <i class="dropdown icon"></i>
-			        <div class="menu">
-			            <a data-pjax th:href="@{/system}" class="item m-item active">博客管理</a>
-			            <a data-pjax th:href="@{/system/types}" class="item m-item">分类管理</a>
-			            <a data-pjax th:href="@{/system/tags}" class="item m-item">标签管理</a>
-			            <a th:href="@{/doLogout}" class="item error">注销</a>
-			        </div>
-			    </div>
-			</div>	
-			<script type="text/javascript">//角色管理(上面) 下拉框
-		    $('.ui.dropdown').dropdown({
-		        on: 'hover' , 
-		        action: 'select'
-		    });
-			</script>
+<!-- 写博客按钮 -->
+<button waifu class="ui item m-item teal inverted button right aligned m-mobile-hide">
+    <a data-pjax th:href="@{/system/md}" target="_blank"><i class="pencil alternate icon "></i>写博客</a>
+</button>
+<!-- user栏 -->
+<div class="ui inverted menu" >
+    <div class="ui item m-item  dropdown m-mobile-hide">
+        <div  class="text">
+            <img th:src='@{${user.avatarUrl}}' class="ui avatar image" ><font id="nicknameId">[[${user!=null?user.nickname:'???'}]]</font>
+        </div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+            <a data-pjax th:href="@{/system}" class="item m-item active">博客管理</a>
+            <a data-pjax th:href="@{/system/types}" class="item m-item">分类管理</a>
+            <a data-pjax th:href="@{/system/tags}" class="item m-item">标签管理</a>
+            <a th:href="@{/doLogout}" class="item">注销</a>
+        </div>
+    </div>
+</div>	
+<script type="text/javascript">//角色管理(上面) 下拉框
+$('.ui.dropdown').dropdown({
+    on: 'hover' , 
+    action: 'select' , 
+    transition: 'drop'
+});
+</script>
 </th:block>
 
 
-
-
-
-
-<!--top 导航-->
-    <!--
-        ui : 组件
-        container : 响应式容器
-        segment  : 片段 - 显示为一个占位框
-        attached : 贴图效果 - 两个segment联合
-        inverted ： 黑色(反转)
-        m-padded-tb-mini : 自己家的
-    -->
-    
-<nav  class="ui inverted attached segment m-padded-tb-mini m-shadow-small"> 
-   
-
-
-    <div class="ui container">
-        <!--
-        stackable 可堆叠，适应手机端 labeled icon
-        -->
-        
-        <div class="ui inverted secondary stackable menu">
-
-            <!--teal:颜色-->
-            <h2 class="ui item header teal">后台管理 </h2>
-            <!--m-item为了选择-->
-            <a onclick="javascript:doLoadUrl('blog/main')" class="m-item item m-mobile-hide "><i class=" home icon"></i>首页</a>
-            <a onclick="javascript:doLoadUrl('blog/types')" class="m-item item m-mobile-hide "><i class=" idea icon"></i>分类</a>
-            <a onclick="javascript:doLoadUrl('blog/tags')" class="m-item item m-mobile-hide "><i class=" tags icon"></i>标签</a>
-                 <a onclick="javascript:doLoadUrl('blog/archives.html')" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
-            <a onclick="javascript:doLoadUrl('blog/about')" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
-            <div class="m-item right item m-mobile-hide">
-                <!--transparent:透明效果-->
-                <div class="ui icon transparent input">
-                    <input type="text" placeholder="Search....">
-                    <i class="search inverted icon link"></i>
-                </div>
-            </div>
-           
-           
-            
-            
-            
-        </div>
-</nav>
-
-
-
-<div class="ui attached pointing menu">
-    <div class="ui container">
-        <div class="right menu">
-            <a href="#" class="item">发布</a>
-            <a onclick="javascript:doLoadUrl('sys/types')" class="teal item m-item">分类管理</a>
-            <a onclick="javascript:doLoadUrl('sys/blogs')" class="teal active item m-item">博客管理</a>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-<!--
-
-//-->
-$(function() {
-	//右上角 角色管理
-    $('.ui.dropdown').dropdown({
-        on: 'hover'
-    });
-});
-</script>
-
-
-
-<script type="text/javascript">
-
-//点击事件
-
-$(function() {
-	$('.menu.toggle').click(function() {
-	    //toggleClass 切换样式状态
-	    $('.m-item').toggleClass('m-mobile-hide');
-	}) ;
-	$("a.m-item").click(function() {
-		$("a.m-item").removeClass("active");
-		$(this).addClass("active");
-	});
-}) ; 
-</script>

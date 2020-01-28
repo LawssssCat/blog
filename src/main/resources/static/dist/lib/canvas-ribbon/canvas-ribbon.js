@@ -1,4 +1,77 @@
 /**
  * Created by zproo on 2017/4/8.
  */
-!function(){function a(a,b,c){return Number(a.getAttribute(b))||c}function p(){for(e.clearRect(0,0,g,h),j=[{x:0,y:.7*h+i},{x:0,y:.7*h-i}];j[1].x<g+i;)q(j[0],j[1])}function q(a,b){e.beginPath(),e.moveTo(a.x,a.y),e.lineTo(b.x,b.y);var c=b.x+(2*o()-.25)*i,d=r(b.y);e.lineTo(c,d),e.closePath(),l-=m/-50,e.fillStyle="#"+(127*n(l)+128<<16|127*n(l+m/3)+128<<8|127*n(l+2*(m/3))+128).toString(16),e.fill(),j[0]=j[1],j[1]={x:c,y:d}}function r(a){var b=a+(2*o()-1.1)*i;return b>h||0>b?r(a):b}var b,c,j,d,e,f,g,h,i,k,l,m,n,o;document.addEventListener("touchmove",function(a){a.preventDefault()}),b=document.getElementById("ribbon"),config={zindex:a(b,"zIndex",-1),alpha:a(b,"alpha",.6),ribbon_width:a(b,"size",90)},c=document.createElement("canvas"),c.style.cssText="position:fixed;top:0;left:0;z-index:"+config.zindex,document.getElementsByTagName("body")[0].appendChild(c),d=c,e=d.getContext("2d"),f=window.devicePixelRatio||1,g=window.innerWidth,h=window.innerHeight,i=config.ribbon_width,k=Math,l=0,m=2*k.PI,n=k.cos,o=k.random,d.width=g*f,d.height=h*f,e.scale(f,f),e.globalAlpha=config.alpha,document.onclick=p,document.ontouchstart=p,p()}();
+!function () {
+//    document.addEventListener('touchmove', function (e) {//(默认打开)
+//        e.preventDefault() // 取消事件的默认动作
+//    });
+
+    function getAttr(script, attr, default_val) {
+        return Number(script.getAttribute(attr)) || default_val;
+    }
+
+    // 获取自定义配置
+    var ribbon = document.getElementById('ribbon');  // 当前加载的script
+    config = {
+        zIndex: getAttr(ribbon, "zIndex", -1), // z-index
+        alpha: getAttr(ribbon, "alpha", 0.6), // alpha
+        ribbon_width: getAttr(ribbon, "size", 90), // size
+    };
+
+    var canvas = document.createElement("canvas");
+    canvas.style.cssText = "position:fixed;top:0;left:0;z-index:"+config.zIndex;
+    document.getElementsByTagName("body")[0].appendChild(canvas);
+
+    var canvasRibbon = canvas,
+        ctx = canvasRibbon.getContext('2d'),    // 获取canvas 2d上下文
+        dpr = window.devicePixelRatio || 1, // the size of one CSS pixel to the size of one physical pixel.
+        width = window.innerWidth,     // 返回窗口的文档显示区的宽高
+        height = window.innerHeight,
+        RIBBON_WIDTH = config.ribbon_width,
+        path,
+        math = Math,
+        r = 0,
+        PI_2 = math.PI * 2,    // 圆周率*2
+        cos = math.cos,   // cos函数返回一个数值的余弦值（-1~1）
+        random = math.random;   // 返回0-1随机数
+
+    canvasRibbon.width = width * dpr;     // 返回实际宽高
+    canvasRibbon.height = height * dpr;
+    ctx.scale(dpr, dpr);    // 水平、竖直方向缩放
+    ctx.globalAlpha = config.alpha;  // 图形透明度
+
+    function init() {
+        ctx.clearRect(0, 0, width, height);     // 擦除之前绘制内容
+        path = [{x: 0, y: height * 0.7 + RIBBON_WIDTH}, {x: 0, y: height * 0.7 - RIBBON_WIDTH}];
+        // 路径没有填满屏幕宽度时，绘制路径
+        while (path[1].x < width + RIBBON_WIDTH) {
+            draw(path[0], path[1])
+        }
+    }
+
+    function draw(start, end) {
+        ctx.beginPath();    // 创建一个新的路径
+        ctx.moveTo(start.x, start.y);   // path起点
+        ctx.lineTo(end.x, end.y);   // path终点
+        var nextX = end.x + (random() * 2 - 0.25) * RIBBON_WIDTH,
+            nextY = geneY(end.y);
+        ctx.lineTo(nextX, nextY);
+        ctx.closePath();
+
+        r -= PI_2 / -50;
+        // 随机生成并设置canvas路径16进制颜色
+        ctx.fillStyle = '#' + (cos(r) * 127 + 128 << 16 | cos(r + PI_2 / 3) * 127 + 128 << 8 | cos(r + PI_2 / 3 * 2) * 127 + 128).toString(16);
+        ctx.fill();     // 根据当前样式填充路径
+        path[0] = path[1];    // 起点更新为当前终点
+        path[1] = {x: nextX, y: nextY}     // 更新终点
+    }
+
+    function geneY(y) {
+        var temp = y + (random() * 2 - 1.1) * RIBBON_WIDTH;
+        return (temp > height || temp < 0) ? geneY(y) : temp;
+    }
+
+    //document.onclick = init;//(默认打开)
+    //document.ontouchstart = init;//(默认打开)
+    init();
+}();

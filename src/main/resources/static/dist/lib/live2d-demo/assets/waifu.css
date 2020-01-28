@@ -10,20 +10,20 @@
     -webkit-transform: translateY(0);
     transform: translateY(0);
 }
-.waifu-tips {
+.waifu-tips {/*提示栏*/
     opacity: 0;
     margin: -30px 30px;
     padding: 10px 20px;
     border: 1px solid rgba(224, 200, 140, 0.62);
-    border-radius: 12px;
+    border-radius: 12px;/*四角倒角*/
     background-color: rgba(236, 217, 188, 0.5);
     box-shadow: 0 3px 15px 2px rgba(191, 158, 118, 0.2);
-    text-overflow: ellipsis;
-    overflow: hidden;
+    text-overflow: ellipsis;/*省略超文本框内容*/
+    overflow: hidden;/*隐藏滚动条(超文本框)*/
     position: absolute;
     animation-delay: 5s;
     animation-duration: 50s;
-    animation-iteration-count: infinite;
+    animation-iteration-count: infinite;/*无限次播放动画*/
     animation-name: shake;
     animation-timing-function: ease-in-out;
 }

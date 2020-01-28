@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <!-- 引入 -->
 <head th:insert="/fragments/_fragments :: head('首页')"></head>
-<body>
+<body class="vsc-initialized">
 <!-- 引入 -->
 <nav th:replace="/fragments/_fragments :: menu(1)"></nav>
 
@@ -28,101 +28,79 @@
 <!--mind 中间内容-->
 <div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
 
-<div class="ui container">
-    <div class="ui stackable grid">
-        <!--左-->
-        <!--左-->
-        <!--左-->
-        <!--左-->
-        <!--左-->
-        <!--左-->
-        <!--左-->
-        <!--左-->
-        <div class="eleven wide column">
-             <!--左header-->
-            <div class="ui attached segment">
-                <div class="ui middle aligned two column grid"><!--middle aligned:垂直方向居中-->
-                    <div class="column">
-                        <h3 class="ui teal header ">最近发布</h3>
-                    </div>
-                    <div class="right aligned column">
-						共 <h3 class="ui orange m-text-thin m-inline-block header">14</h3> 篇<!--m-inline-block : 自定义，改为行内元素-->
-                    </div>
-                </div>
-            </div>
-            <!--左main-->
-            <div class="ui attached segment">
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <div class="ui padded segment">
-                    <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
-                        <div class="eleven wide column">
-                            <h3 class="ui nagitive item"><a data-pjax th:href="@{/article/detail/001}">linux系列之常用运维命令整理笔录</a></h3>
-                            <br>
-                            <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客....https://blog.csdn.net/u014427391/article/details/102785219</p>
-                            <div class="ui stackable grid"><!-- 下标 -->
-                                <div class="eleven wide column"><!--semantic width 16-->
-                                    <div class="ui horizontal link list"><!--horizontal:水平布局-->
-                                        <div class="item">
-                                            <img th:src="@{/dist/images/avatar/jenny.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
-                                            <div class="content"><!--content 加一些文字 -->
-                                                <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <i class="calendar icon"></i>2017-10-01
-                                        </div>
-                                        <div class="item">
-                                            <i class="eye icon"></i>2342
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="right aligned five wide column">
-                                    <a href="#" target="_blank" class="ui teal basic label m-padded-mini m-text-thin">认知升级</a>
+<div class="ui stackable segment container">
+    <!--左header-->
+    <h2 class="ui dividing  header">
+	    <img th:src="@{/dist/images/icon/plugin.png}">
+	    <div class="content">
+			最近发布
+	    <div class="sub header">共 <font class="ui orange  header">14</font> 篇</div>
+	  </div>
+	</h2>
+    <!--左main-->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <div class="ui padded segment">
+        <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
+            <div class="eleven wide column">
+                <h3 class="ui nagitive item"><a data-pjax th:href="@{/article/detail/001}">linux系列之常用运维命令整理笔录</a></h3>
+                <br>
+                <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客....https://blog.csdn.net/u014427391/article/details/102785219</p>
+                <div class="ui stackable grid"><!-- 下标 -->
+                    <div class="eleven wide column"><!--semantic width 16-->
+                        <div class="ui horizontal link list"><!--horizontal:水平布局-->
+                            <div class="item">
+                                <img th:src="@{/dist/images/avatar/jenny.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                <div class="content"><!--content 加一些文字 -->
+                                    <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                 </div>
                             </div>
-                        </div>
-                        <div class="five wide column">
-                            <a href="#" target="_blank">
-                                <!--image:图片在div内-->
-                                <!--备选占位图:href=https://unsplash.it/800/450?image=1005-->
-                                <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
-                            </a>
+                            <div class="item">
+                                <i class="calendar icon"></i>2017-10-01
+                            </div>
+                            <div class="item">
+                                <i class="eye icon"></i>2342
+                            </div>
                         </div>
                     </div>
+                    <div class="right aligned five wide column">
+                        <a href="#" target="_blank" class="ui teal basic label m-padded-mini m-text-thin">认知升级</a>
+                    </div>
                 </div>
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
-                <!-- 文章1 -->
             </div>
-            <!--左footer-->
-            <div class="ui bottom attached segment">
-                <div class="ui middle aligned two column grid">
-                    <div class="column">
-                        <button waifu href="#" class="ui mini teal basic button ">上一页</button><!-- basic:按钮变白--><!-- next previous 看板娘 -->
-                    </div>
-                    <div class="right aligned column">
-                        <button waifu href="#" class="ui mini teal basic button ">下一页</button>
-                    </div>
-                </div>
+            <div class="five wide column">
+                <a href="#" target="_blank">
+                    <!--image:图片在div内-->
+                    <!--备选占位图:href=https://unsplash.it/800/450?image=1005-->
+                    <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
+                </a>
             </div>
         </div>
-        <!--右-->
-        <!--右-->
-        <!--右-->
-        <!--右-->
-        <!--右-->
-        <!--右-->
-        <!--右-->
-        <!--右-->
-        <div class="five wide column ">
+    </div>
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!-- 文章1 -->
+    <!--左footer-->
+    <div class="ui bottom">
+        <div class="ui middle aligned two column grid">
+            <div class="column">
+                <button waifu href="#" class="ui mini teal basic button ">上一页</button><!-- basic:按钮变白--><!-- next previous 看板娘 -->
+            </div>
+            <div class="right aligned column">
+                <button waifu href="#" class="ui mini teal basic button ">下一页</button>
+            </div>
+        </div>
+    </div>
+            
+            
+                    <div class="right ui rail">
             <!--分类-->
             <div class="ui segments"><!--segments : segment的容器（注意，这里有s）-->
                 <!--右边 - 侧边栏 - 标题-->
@@ -250,6 +228,20 @@
             </di>
 
         </div>
+   
+            
+            
+        </div>
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+       
+
     </div>
 </div>
 

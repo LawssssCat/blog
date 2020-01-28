@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title> 后台管理入口 </title>
-<!-- <link rel="icon" type="image/x-icon" th:href="@{/dist/images/favicon.ico}" /> -->
-
-<th:block th:replace="/fragments/_fragments :: base-script"></th:block>
-
-
-
+<!-- 引入 -->
+<th:block th:insert="/fragments/_fragments :: head('后台管理入口')"></th:block>
 
 <link rel="stylesheet" th:href="@{/dist/css/me-login.css}"> <!-- 登录样式 -->
 
@@ -66,7 +60,6 @@
 
 
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" ><!-- 前端框架 -->
 <link rel="stylesheet" th:href="@{/dist/css/me.css}"><!-- 自定义CSS样式 -->
 
 

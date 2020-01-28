@@ -104,11 +104,13 @@ function getRandText(text) {return Array.isArray(text) ? text[Math.floor(Math.ra
 function showMessage(text, timeout, flag) {
     if(flag //强行输出 
     || sessionStorage.getItem('waifu-text') === ''  //or 目前没有文字
-    || sessionStorage.getItem('waifu-text') === null)
-    {
+    || sessionStorage.getItem('waifu-text') === null
+    ){
         if(Array.isArray(text)) text = text[Math.floor(Math.random() * text.length + 1)-1];//随机选择
         if (live2d_settings.showF12Message) console.log('[Message]', text.replace(/<[^<>]+>/g,'')); //设置:控制台输出
-        if(flag) sessionStorage.setItem('waifu-text', text);//强行输出 存储起来
+        //if(flag)
+        sessionStorage.removeItem('waifu-text') ;
+        sessionStorage.setItem('waifu-text', text);//输出的text 存储起来(表示正在输出,别说其他话)
         
         $('.waifu-tips').stop();//停止所有在指定元素上的动画
         $('.waifu-tips').html(text).fadeTo(200, 1 ,  function() {//显示tips板,内容为text
@@ -227,7 +229,7 @@ function loadTipsMessage(result) {
         $(document).on("mouseover", tips.selector, function (){//鼠标覆盖事件
             var text = getRandText(tips.text);
             text = text.render({text: $(this).text()});
-            showMessage(text, 5000 , false); 
+            showMessage(text, 5000 , false); //不强制输出
         });
     });
     $.each(result.click, function (index, tips){
