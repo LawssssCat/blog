@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- 引入 -->
+<head th:insert="/fragments/_fragments :: head('首页')"></head>
+<body>
+<!-- 引入 -->
+<nav th:replace="/fragments/_fragments :: menu(1)"></nav>
+
+
+
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                       -->
+<!--mind 中间内容-->
+<div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+
+<div class="ui container">
+    <div class="ui stackable grid">
+        <!--左-->
+        <!--左-->
+        <!--左-->
+        <!--左-->
+        <!--左-->
+        <!--左-->
+        <!--左-->
+        <!--左-->
+        <div class="eleven wide column">
+             <!--左header-->
+            <div class="ui attached segment">
+                <div class="ui middle aligned two column grid"><!--middle aligned:垂直方向居中-->
+                    <div class="column">
+                        <h3 class="ui teal header ">最近发布</h3>
+                    </div>
+                    <div class="right aligned column">
+						共 <h3 class="ui orange m-text-thin m-inline-block header">14</h3> 篇<!--m-inline-block : 自定义，改为行内元素-->
+                    </div>
+                </div>
+            </div>
+            <!--左main-->
+            <div class="ui attached segment">
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <div class="ui padded segment">
+                    <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
+                        <div class="eleven wide column">
+                            <h3 class="ui nagitive item"><a data-pjax th:href="@{/article/detail/001}">linux系列之常用运维命令整理笔录</a></h3>
+                            <br>
+                            <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，所以现在整理成博客....https://blog.csdn.net/u014427391/article/details/102785219</p>
+                            <div class="ui stackable grid"><!-- 下标 -->
+                                <div class="eleven wide column"><!--semantic width 16-->
+                                    <div class="ui horizontal link list"><!--horizontal:水平布局-->
+                                        <div class="item">
+                                            <img th:src="@{/dist/images/avatar/jenny.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                            <div class="content"><!--content 加一些文字 -->
+                                                <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <i class="calendar icon"></i>2017-10-01
+                                        </div>
+                                        <div class="item">
+                                            <i class="eye icon"></i>2342
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="right aligned five wide column">
+                                    <a href="#" target="_blank" class="ui teal basic label m-padded-mini m-text-thin">认知升级</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="five wide column">
+                            <a href="#" target="_blank">
+                                <!--image:图片在div内-->
+                                <!--备选占位图:href=https://unsplash.it/800/450?image=1005-->
+                                <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+                <!-- 文章1 -->
+            </div>
+            <!--左footer-->
+            <div class="ui bottom attached segment">
+                <div class="ui middle aligned two column grid">
+                    <div class="column">
+                        <button waifu href="#" class="ui mini teal basic button ">上一页</button><!-- basic:按钮变白--><!-- next previous 看板娘 -->
+                    </div>
+                    <div class="right aligned column">
+                        <button waifu href="#" class="ui mini teal basic button ">下一页</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <!--右-->
+        <div class="five wide column ">
+            <!--分类-->
+            <div class="ui segments"><!--segments : segment的容器（注意，这里有s）-->
+                <!--右边 - 侧边栏 - 标题-->
+                <div class="ui secondary segment">
+                    <div class="ui two column grid">
+                        <div class="column">
+                            <i class="idea icon"></i>分类
+                        </div>
+                        <div class="right aligned column">
+                            <a href="#" target="_blank">more <i class="angle double right icon"></i></a><!--angle double right icon - 来自 - https://semantic-ui.com/elements/icon.html-->
+                        </div>
+                    </div>
+                </div>
+                <!--右边 - 侧边栏 - 内容-->
+                <div class="ui teal segment">
+                    <!--
+                    竖的 vertical 
+                    菜单 menu
+                    填充 fluid
+                    -->
+                    <div class="ui vertical fluid menu">
+                        <!--item特性：文字后，随便内容向右对齐-->
+                        <!--
+                        teal basic : 颜色、样式
+                        left pointing : 小尖角
+                        -->
+                        <a href="#" class="item">
+                            学习日志
+                            <div class="ui teal basic left pointing label">13</div>
+                        </a>
+                        <a href="#" class="item">
+                            思考与感悟
+                            <div class="ui teal basic left pointing label">13</div>
+                        </a>
+                        <a href="#" class="item">
+                            学习日志
+                            <div class="ui teal basic left pointing label">13</div>
+                        </a>
+                        <a href="#" class="item">
+                            学习日志
+                            <div class="ui teal basic left pointing label">13</div>
+                        </a>
+                        <a href="#" class="item">
+                            学习日志
+                            <div class="ui teal basic left pointing label">13</div>
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+
+             <!--
+             标签
+             -->
+            <div class="ui segments m-margin-top-large">
+                 <!-- 标签: 头  -->
+                <div class="ui secondary segment">
+                    <div class="ui two column grid">
+                        <div class="column">
+                            <i class="tags icon"></i>标签
+                        </div>
+                        <div class="right aligned column">
+                            <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+                 <!--标签：列表-->
+                <div class="ui teal segment ">
+
+                    <!-- 标签：item -->
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        方法论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        法论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        法论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        方法论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        法论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        法论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        论ss <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        法ss论 <div class="detail">23</div></a>
+                    <a href="#" target="_blank" class="ui teal basic left pointing label m-margin-tb-tiny">
+                        论ssssss <div class="detail">23</div></a>
+
+                </div>
+            </div>
+
+             <!--最新推荐-->
+            <div class="ui segments m-margin-top-large">
+                 <!--头部-->
+                <div class="ui secondary segment">
+                    <i class="bookmark icon"></i>
+                        最新推荐
+                </div>
+                 <!--内容-->
+
+                <div class="ui segment ">
+                    <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                </div>
+                <div class="ui segment ">
+                    <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                </div>
+                <div class="ui segment ">
+                    <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                </div>
+                <div class="ui segment ">
+                    <a href="#" target="_blank" class="m-black m-text-thin" >用户故事 (User Story)</a>
+                </div>
+
+            </div>
+            <h4 class="ui horizontal divider header m-margin-top-large">扫码关注我</h4><!--二维码-->
+                <div class="ui centered card" style="width: 11em"><!--card:边框,centered :居中-->
+                    <img th:src="@{/dist/images/QRcode/wechat.jpg}" alt="" class="ui rounded image"  >
+                </div>
+            </di>
+
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                       -->
+
+
+<br>
+<br>
+
+<!-- 引入 -->
+<script th:replace="/fragments/_fragments :: common-script" type="text/javascript"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,7 +1,7 @@
-body{
+/* body{
     background: url("../images/background.png");
 }
-
+ */
 /*------ 间距padded ----------------------*/
 .m-padded-mini {
     padding: 0.2em !important;
@@ -47,8 +47,6 @@ body{
     padding-top: 5em !important;
     padding-bottom: 5em !important;
 }
-
-
 .m-padded-lr{
     padding-left: 4em !important;
     padding-right: 4em !important;
@@ -69,6 +67,10 @@ body{
     margin-top: 2em !important;
 }
 
+
+.m-margin-bottom-tiny{
+    margin-bottom: 0.3em !important;
+}
 .m-margin-bottom-small{
     margin-bottom: 0.5em !important;
 }
