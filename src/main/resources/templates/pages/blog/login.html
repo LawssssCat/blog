@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 引入 -->
+<th:block th:insert="/fragments/_fragments :: head('后台管理入口')"></th:block>
+
+<link rel="stylesheet" th:href="@{/dist/css/me-login.css}"> <!-- 登录样式 -->
+
+<!--看板娘-->
+<style type="text/css">
+#inner {
+	position: relative;
+	background-color: #999;
+	clip-path: circle(120px at center);
+	-webkit-clip-path: circle(120px at center);
+}
+#cover {
+	position: absolute;
+	background-color: #CB3837;
+	width: 100%;
+	height: 100%;
+	bottom: 10%;
+	transition: all 1s;
+	box-shadow: 0 0 0 5px rgba(0, 0, 0, .1);
+}
+#text {
+	position: absolute;
+	bottom: 30%;
+	font-size: 2em;
+	left: 50%;
+	transform: translateX(-50%);
+	opacity: 0.4;
+	font-weight: bold;
+}
+#detail {
+	position: absolute;
+	background: rgba(255, 255, 255, .1);
+	width: 100%;
+	height: 10px;
+	bottom: 0;
+}
+#handle {
+	position: absolute;
+	background: #ccc;
+	bottom: -2px;
+	box-shadow: 0 1px 0 1px rgba(0, 0, 0, .1);
+	height: 8px;
+	left: 50%;
+	margin-left: -15px;
+	width: 30px;
+	cursor: pointer;
+}
+#live2d {
+	cursor: grab;
+}
+#live2d:active {
+	cursor: grabbing;
+}
+</style>
+
+
+
+<link rel="stylesheet" th:href="@{/dist/css/me.css}"><!-- 自定义CSS样式 -->
+
+
+</head>
+<body>
+<div class="ui middle aligned center aligned grid">
+  <div class="column">
+	<!-- 看板娘 -->
+	<!-- 看板娘 -->
+	<!-- 看板娘 -->
+	<div id="stage">
+		<div id="inner">
+			<!-- 覆盖 -->
+			<div id="cover">
+				<div id="text">
+					<span style="color: cyan;">Login</span>
+					<span style="color: white">In</span>
+				</div>
+				<div id="detail"></div>
+				<div id="handle"></div>
+			</div>
+			<!-- 看板娘 -->
+			<canvas id="live2d" class="mb-4"  width="300" height="300"></canvas>
+		</div>
+	</div>
+	<!-- 后台 异常提示 --> 
+	<!-- 后台 异常提示 --> 
+	<!-- 后台 异常提示 --> 
+	<!-- 后台 异常提示 --> 
+    <div  class="ui negative message  hidden">
+    	 <i class="close icon"></i>
+    	  <div class="header">登录异常 </div>
+	<p id="login-exception-msg-box">请求已过期 </p></div>
+    <!-- 登录form -->
+    <!-- 登录form -->
+    <!-- 登录form -->
+    <form class="ui large form">
+      <div class="ui stacked segment">
+        <!-- 用户名 -->
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="user icon"></i>
+            <input type="text" id="usernameId" placeholder="Username">
+          </div>
+        </div>
+        <!-- 密码 -->
+        <div class="field">
+          <div class="ui left icon input">
+            <i class="lock icon"></i>
+            <input type="password" id="passwordId" placeholder="Password">
+          </div>
+        </div>
+        <!-- remember me -->
+        <div class="field ">
+		  <div class="ui checkbox " >
+			  <input type="checkbox"  id="rememberMeId">
+		  	<label for="rememberMeId" >Remember Me !</label>
+		  </div>
+        </div>
+        <!-- 登录 -->
+        <div class="ui fluid large teal submit button">Login</div>
+      </div>
+      <!-- 表单验证提示 -->
+      <!-- 表单验证提示 -->
+      <!-- 表单验证提示 -->
+      <!-- 表单验证提示 -->
+      <div class="ui error message"></div>
+    </form>
+  </div>
+</div>
+
+
+
+<!-- 基本资源 -->
+<th:block th:replace="/fragments/_fragments:: resource-script"></th:block>
+
+
+
+
+<!-- 登录 -->
+<script type="text/javascript" th:src="@{/dist/js/login.js}"></script>
+
+
+
+
+
+
+
+
+
+<script>
+window.addEventListener("load", () => {//监听-window-加载	
+	var state 	= 1 , 
+		open 	= '83%', 
+		close 	= '20%';
+
+	$.ajax({url: "[[@{/dist/lib/live2d-demo/assets/waifu-tips.js}]]", dataType:"script", cache: true, success: function() {
+        $.ajax({url: "[[@{/dist/lib/live2d-demo/assets/live2d.js}]]", dataType:"script", cache: true, success: function() {
+            /* 可直接修改部分参数 */
+            /* 在 initModel 前添加 */
+            //initModel("/dist/lib/live2d-demo/assets/waifu-tips.json");
+			var modelId 		= live2d_settings['modelId'] , //localStorage.getItem("modelId"),
+				modelTexturesId = live2d_settings['modelTexturesId'];//localStorage.getItem("modelTexturesId");
+				
+			doLoadModel(modelId, modelTexturesId);
+			
+        }});
+    }});
+
+	function doLoadModel(modelId, modelTexturesId) {
+		loadModel(modelId, modelTexturesId);
+		setTimeout(() => {
+			coverPosition(open);
+			state = 2;
+		}, 2000);
+	}
+
+	function coverPosition(pos) {//函数-cover-移动
+		document.getElementById("cover").style.bottom = pos;
+	}
+
+	document.getElementById("handle").addEventListener("click", () => {//监听-handle-点击
+		if (state == 1) {
+			state = 2;
+			coverPosition(open);
+		}
+		else  {
+			state = 1;
+			coverPosition(close);
+		}
+	});
+	
+	document.querySelector("input[type=password]").addEventListener("focus", () => {//监听-密码-选中
+		if (state == 2) {
+			state = 1;
+			coverPosition(close); //底
+		}
+	});
+	document.querySelector("input[type=password]").addEventListener("blur", () => {//监听-密码-放开
+		if (state == 1) {
+			state = 2;
+			coverPosition(open);
+		}
+	});
+});
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

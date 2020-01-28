@@ -1,9 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- 引入 -->
+<head th:insert="/fragments/_fragments :: head('分类')"></head>
+<body>
+<!-- 引入 -->
+<nav th:replace="/fragments/_fragments :: menu(2)"></nav>
 
-<!--     <title>分类</title> -->
 
-    <!--container，外层容器，适合响应移动端-->
-    <div class="ui container ">
 
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                     -->
+<!--mind 中间内容-->
+<div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+
+
+	<!--     <title>分类</title> -->
+    <div class="ui container "><!--container，外层容器，适合响应移动端-->
         <!--header-->
         <div class="ui top attached segment">
             <div class="ui middle aligned two column grid">
@@ -15,18 +42,13 @@
                 </div>
             </div>
         </div>
-
-         <!--标签s-->
-        <!-- tb: top bottom -->
-        <div class="ui attached segment m-padded-tb-large ">
-
-             <!--选中用 teal-->
-            <div class="ui labeled button m-margin-tb-tiny">
+        <!--标签s-->
+        <div class="ui attached segment m-padded-tb-large "><!-- tb: top bottom -->
+            <div class="ui labeled button m-margin-tb-tiny"><!--选中用 teal-->
                 <a href="#" class="ui basic teal button">思考与感慨</a>
                 <div class="ui basic teal left pointing label">24</div>
             </div>
-            <!--没选中 没teal-->
-            <div class="ui labeled button m-margin-tb-tiny">
+            <div class="ui labeled button m-margin-tb-tiny"><!--没选中 没teal-->
                 <a href="#" class="ui basic button">思考与感慨</a>
                 <div class="ui basic left pointing label">24</div>
             </div>
@@ -58,22 +80,20 @@
                 <a href="#" class="ui basic button">菜单</a>
                 <div class="ui basic left pointing label">24</div>
             </div>
-
         </div>
-        
-         <!--正文-->
+        <!--正文-->
+        <!--正文-->
+        <!--正文-->
+        <!--正文-->
+        <!--正文-->
         <div class="ui teal  top segment">
-
-            <!--文章容器-->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
             <div class="ui padded vertical segment m-padded-tb-large m-padded-lr-mobile-clear">
-                <!--
-                padded
-                m-padded-lr-mobile-clear
-                自定义，移动端左右padded清除
-                -->
-                <!-- 文章1 -->
-               <!--  mobile reversed:图片上面显示 -->
-               <div class="ui mobile reversed stackable grid">
+               <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
                     <div class="eleven wide column">
                        <h3 class="ui header">linux系列之常用运维命令整理笔录</h3>
                        <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，
@@ -82,17 +102,12 @@
                            https://blog.csdn.net/u014427391/article/details/102785219
                        </p>
                        <div class="ui stackable grid"><!-- 下标 -->
-                           <!--semantic width 16-->
-                           <div class="eleven wide column">
-                               <!--horizontal:水平布局-->
-                               <div class="ui horizontal link list">
+                           <div class="eleven wide column"><!--semantic width 16-->
+                               <div class="ui horizontal link list"><!--horizontal:水平布局-->
                                    <div class="item">
-                                       <!--avatar : 小圆形-->
-                                       <img src="dist/images/placeholder.jpg" alt="" class="ui avatar image">
-                                       <!--content 加一些文字 -->
-                                       <div class="content">
-                                           <!--原先h3, 现在a标签，让颜色变蓝-->
-                                           <a href="#" class="header">lawssssCat</a>
+                                       <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                       <div class="content"><!--content 加一些文字 -->
+                                           <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                        </div>
                                    </div>
                                    <div class="item">
@@ -114,21 +129,18 @@
                            <!--备选占位图:
                                href=https://unsplash.it/800/450?image=1005
                            -->
-                           <img src="dist/images/index-read.gif" alt="" class="ui rounded image">
+                           <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
                        </a>
                    </div>
-   
                </div>
             </div>
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
             <div class="ui padded vertical segment m-padded-tb-large m-padded-lr-mobile-clear">
-                <!--
-                padded
-                m-padded-lr-mobile-clear
-                自定义，移动端左右padded清除
-                -->
-                <!-- 文章1 -->
-               <!--  mobile reversed:图片上面显示 -->
-               <div class="ui mobile reversed stackable grid">
+               <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
                     <div class="eleven wide column">
                        <h3 class="ui header">linux系列之常用运维命令整理笔录</h3>
                        <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，
@@ -137,17 +149,12 @@
                            https://blog.csdn.net/u014427391/article/details/102785219
                        </p>
                        <div class="ui stackable grid"><!-- 下标 -->
-                           <!--semantic width 16-->
-                           <div class="eleven wide column">
-                               <!--horizontal:水平布局-->
-                               <div class="ui horizontal link list">
+                           <div class="eleven wide column"><!--semantic width 16-->
+                               <div class="ui horizontal link list"><!--horizontal:水平布局-->
                                    <div class="item">
-                                       <!--avatar : 小圆形-->
-                                       <img src="dist/images/placeholder.jpg" alt="" class="ui avatar image">
-                                       <!--content 加一些文字 -->
-                                       <div class="content">
-                                           <!--原先h3, 现在a标签，让颜色变蓝-->
-                                           <a href="#" class="header">lawssssCat</a>
+                                       <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                       <div class="content"><!--content 加一些文字 -->
+                                           <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                        </div>
                                    </div>
                                    <div class="item">
@@ -169,21 +176,18 @@
                            <!--备选占位图:
                                href=https://unsplash.it/800/450?image=1005
                            -->
-                           <img src="dist/images/index-read.gif" alt="" class="ui rounded image">
+                           <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
                        </a>
                    </div>
-   
                </div>
             </div>
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
             <div class="ui padded vertical segment m-padded-tb-large m-padded-lr-mobile-clear">
-                <!--
-                padded
-                m-padded-lr-mobile-clear
-                自定义，移动端左右padded清除
-                -->
-                <!-- 文章1 -->
-               <!--  mobile reversed:图片上面显示 -->
-               <div class="ui mobile reversed stackable grid">
+               <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
                     <div class="eleven wide column">
                        <h3 class="ui header">linux系列之常用运维命令整理笔录</h3>
                        <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，
@@ -192,17 +196,12 @@
                            https://blog.csdn.net/u014427391/article/details/102785219
                        </p>
                        <div class="ui stackable grid"><!-- 下标 -->
-                           <!--semantic width 16-->
-                           <div class="eleven wide column">
-                               <!--horizontal:水平布局-->
-                               <div class="ui horizontal link list">
+                           <div class="eleven wide column"><!--semantic width 16-->
+                               <div class="ui horizontal link list"><!--horizontal:水平布局-->
                                    <div class="item">
-                                       <!--avatar : 小圆形-->
-                                       <img src="dist/images/placeholder.jpg" alt="" class="ui avatar image">
-                                       <!--content 加一些文字 -->
-                                       <div class="content">
-                                           <!--原先h3, 现在a标签，让颜色变蓝-->
-                                           <a href="#" class="header">lawssssCat</a>
+                                       <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                       <div class="content"><!--content 加一些文字 -->
+                                           <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
                                        </div>
                                    </div>
                                    <div class="item">
@@ -224,28 +223,100 @@
                            <!--备选占位图:
                                href=https://unsplash.it/800/450?image=1005
                            -->
-                           <img src="dist/images/index-read.gif" alt="" class="ui rounded image">
+                           <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
                        </a>
                    </div>
-   
                </div>
             </div>
-            
-            
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <!-- 文章1 -->
+            <div class="ui padded vertical segment m-padded-tb-large m-padded-lr-mobile-clear">
+               <div class="ui mobile reversed stackable grid"><!--  mobile reversed:图片上面显示 -->
+                    <div class="eleven wide column">
+                       <h3 class="ui header">linux系列之常用运维命令整理笔录</h3>
+                       <p>本博客记录工作中需要的linux运维命令，大学时候开始接触linux，
+                           会一些基本操作，可是都没有整理起来，加上是做开发，不做运维，有些命令忘记了，
+                           所以现在整理成博客....
+                           https://blog.csdn.net/u014427391/article/details/102785219
+                       </p>
+                       <div class="ui stackable grid"><!-- 下标 -->
+                           <div class="eleven wide column"><!--semantic width 16-->
+                               <div class="ui horizontal link list"><!--horizontal:水平布局-->
+                                   <div class="item">
+                                       <img th:src="@{/dist/images/placeholder.jpg}" alt="" class="ui avatar image"><!--avatar : 小圆形-->
+                                       <div class="content"><!--content 加一些文字 -->
+                                           <a href="#" class="header">lawssssCat</a><!--原先h3, 现在a标签，让颜色变蓝-->
+                                       </div>
+                                   </div>
+                                   <div class="item">
+                                       <i class="calendar icon"></i>2017-10-01
+                                   </div>
+                                   <div class="item">
+                                       <i class="eye icon"></i>2342
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="right aligned five wide column">
+                               <a href="#" target="_blank" class="ui teal basic label m-padded-mini m-text-thin">认知升级</a>
+                           </div>
+                       </div>
+                   </div>
+                    <div class="five wide column"><!--图片-->
+                       <a href="#" target="_blank">
+                           <!--image:图片在div内-->
+                           <!--备选占位图:
+                               href=https://unsplash.it/800/450?image=1005
+                           -->
+                           <img th:src="@{/dist/images/wallpaper/index-read.gif}" alt="" class="ui rounded image">
+                       </a>
+                   </div>
+               </div>
+            </div>
         </div>
-        <!--
-        内容 - footer！
-        -->
+        <!--内容 - footer-->
         <div class="ui  bottom attached segment">
             <div class="ui middle aligned two column grid">
                 <div class="column">
-                    <!-- basic:按钮变白-->
-                    <a href="#" class="ui mini teal basic button">上一页</a>
+                    <a href="#" class="ui mini teal basic button previous">上一页</a><!-- basic:按钮变白-->
                 </div>
                 <div class="right aligned column">
-                    <a href="#" class="ui mini teal basic button">下一页</a>
+                    <a href="#" class="ui mini teal basic button next">下一页</a>
                 </div>
             </div>
         </div>
-
     </div>
+    
+    
+</div>
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                     -->
+
+
+<br>
+<br>
+
+<!-- 引入 -->
+<script th:replace="/fragments/_fragments :: common-script" type="text/javascript"></script>
+
+</body>
+</html>
+
+
+
