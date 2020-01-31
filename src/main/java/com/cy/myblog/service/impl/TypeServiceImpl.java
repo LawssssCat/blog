@@ -1,0 +1,57 @@
+package com.cy.myblog.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.cy.myblog.common.config.PaginationProperties;
+import com.cy.myblog.common.utils.Assert;
+import com.cy.myblog.common.vo.PageObject;
+import com.cy.myblog.dao.TypeDao;
+import com.cy.myblog.pojo.po.Type;
+import com.cy.myblog.service.TypeService;
+
+@Transactional(propagation = Propagation.REQUIRED)
+@Service
+public class TypeServiceImpl implements TypeService {
+	
+	@Autowired
+	private TypeDao typeDao ;
+	
+	@Autowired
+	private PaginationProperties paginationProperties ; 
+	
+	@Override
+	public int doInsertObject(Type type) {
+		Assert.isArgumentValid(type==null, "不能为空!");
+		Assert.isEmpty(type.getName(), "名字不能为空!");
+		Assert.isArgumentValid(doIsExistName(type.getName()), "名字重复!");
+		int rows = typeDao.insertObject(type) ;  
+		Assert.isServiceValid(rows==0, "插入失败!") ;
+		return rows;
+	}
+
+	@Override
+	public boolean doIsExistName(String name) {
+		int n = typeDao.countObjectByName(name);
+		return n>0;
+	}
+
+	@Override
+	public PageObject<Type> doFindPageObject(String name, Integer pageCurrent) {
+		Assert.isArgumentValid(pageCurrent<1, "页码值异常!");
+		Integer startIndex = paginationProperties.getStartIndex(pageCurrent);
+		Integer pageSize = paginationProperties.getPageSize();
+		Integer totalDataCount = typeDao.countObjectLikeName(name);
+		Assert.isServiceValid(totalDataCount==null||totalDataCount==0, "没有数据!");  
+		List<Type> datas = typeDao.findPageObject(name, startIndex, pageSize);
+		Assert.isServiceValid(datas==null||datas.size()==0, "没有数据!");  
+		return new PageObject<Type>(datas, totalDataCount, pageCurrent, pageSize);
+	}
+
+	
+
+}

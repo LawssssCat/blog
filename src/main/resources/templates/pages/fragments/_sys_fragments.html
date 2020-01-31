@@ -4,9 +4,9 @@
       
 <th:block th:fragment="sys_menu">
 <!-- 写博客按钮 -->
-<button waifu class="ui item m-item teal inverted button right aligned m-mobile-hide">
-    <a data-pjax th:href="@{/system/md}" target="_blank"><i class="pencil alternate icon "></i>写博客</a>
-</button>
+<a waifu th:href="@{/system/md}" target="_blank" class="ui item m-item teal inverted button right aligned m-mobile-hide">
+    <i class="pencil alternate icon "></i>写博客
+</a>
 <!-- user栏 -->
 <div class="ui inverted menu" >
     <div class="ui item m-item  dropdown m-mobile-hide">
@@ -22,13 +22,6 @@
         </div>
     </div>
 </div>	
-<script type="text/javascript">//角色管理(上面) 下拉框
-$('.ui.dropdown').dropdown({
-    on: 'hover' , 
-    action: 'select' , 
-    transition: 'drop'
-});
-</script>
 </th:block>
 
 

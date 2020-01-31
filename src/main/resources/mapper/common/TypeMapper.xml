@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cy.myblog.dao.TypeDao">
+<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
+<!-- *************                                                         ************** -->
+<!-- *************           c o m m o n                                   ************** -->
+<!-- *************                                                         ************** -->
+<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
+
+<!-- 表名 -->
+<sql id="tableId">
+	b_type
+</sql>
+<!-- 全列名 -->
+<sql id="columnSqlId">
+	id , name 
+</sql>
+
+<sql id="whereLikeNameId">
+	<where>
+		<if test="name!=null and name!=''">
+		name like concat('%' , #{name} , '%')
+		</if>
+	</where>
+</sql>
+
+<!-- 全列名映射 -->
+<resultMap id="typeMapId" type="com.cy.myblog.pojo.po.Type">
+	<id property="id" column="id" />
+	<result property="name" column="name" />
+</resultMap>
+
+
+
+<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
+<!-- *************                                                         ************** -->
+<!-- *************           S i n g l e - T a b l e                       ************** -->
+<!-- *************                                                         ************** -->
+<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
+
+
+
+
+
+
+<!-- 插入 -->
+<insert id="insertObject" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+	INSERT INTO <include refid="tableId" />
+	(<include refid="columnSqlId" />) 
+	value
+	(#{id} , #{name})
+</insert>
+
+<!-- 查名字数量 -->
+<select id="countObjectByName" resultType="int">
+	select count(id)
+	from <include refid="tableId" /> 
+	where name = #{name}
+</select>
+
+<!-- 查全部 -->
+<select id="findObjects" resultMap="typeMapId">
+	select <include refid="columnSqlId" />
+	from <include refid="tableId" /> 
+</select>
+
+<!-- 查分页 -->
+<select id="findPageObject" resultMap="typeMapId">
+	select <include refid="columnSqlId"/> 
+	from <include refid="tableId"/>
+	<include refid="whereLikeNameId" />
+	order by name asc 
+	limit #{startIndex} , #{pageSize}
+
+</select>
+
+<!-- 查likename -->
+<select id="countObjectLikeName" resultType="int">
+	select count(id)
+	from <include refid="tableId" /> 
+	<include refid="whereLikeNameId" />
+</select>
+
+
+<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
+<!-- *************                                                         ************** -->
+<!-- *************             J o i n t - T a b l e                       ************** -->
+<!-- *************                                                         ************** -->
+<!-- ************************************************************************************ -->
+<!-- ************************************************************************************ -->
+
+</mapper>

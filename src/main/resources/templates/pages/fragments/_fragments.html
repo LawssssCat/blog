@@ -224,6 +224,30 @@ $('nav').on('click' , "a.m-item" ,function(e) {//切换
 	$("a.m-item").removeClass("active");
 	$(this).addClass("active");
 });
+/*
+ * 下拉框
+ */
+function a() {
+	//qq
+	$('.qq').popup({
+	    on: 'hover' , 
+	    transition: 'drop'
+    });
+	//wetchat
+    $('.wechat').popup({
+        popup:$('#wechat-qr'),
+        on: 'hover',
+        position: 'bottom center'
+    });
+	//下拉框
+	$('.ui.dropdown').dropdown({
+	    on: 'hover' , 
+	    action: 'select' , 
+	    transition: 'drop'
+	});
+}
+$(document).on('pjax:end' , a);
+$(document).ready(a);
 </script>
 </th:block>
 

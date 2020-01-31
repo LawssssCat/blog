@@ -68,7 +68,7 @@ public class PageController {
 	public String toSysUI(
 			@PathVariable(required = false ,value = "page") String page  , 
 			Model model) {
-		if(!ShiroUtils.isLogin()) throw new UserLogoutException("没有登录");
+		if(!ShiroUtils.isLogin()) throw new UserLogoutException("用户没有登录");
 		model.addAttribute("user", SecurityUtils.getSubject().getPrincipal()) ; 
 		if(StringUtils.isEmpty(page)) page = webServerProperties.getSystemIndex() ; 
 		log.debug("model add user and to system page: [{}] " ,  page);

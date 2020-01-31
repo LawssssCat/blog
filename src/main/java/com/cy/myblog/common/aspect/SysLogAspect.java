@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class SysLogAspect {
 
-	@Pointcut("execution(* com.cy.myblog.controller.*.*(..))")
+	@Pointcut("execution(* com.cy.myblog.service.*.*(..))")
 	public void doLog() {}  
 	
 	@Before("doLog()")
@@ -54,7 +54,6 @@ public class SysLogAspect {
 	@AfterThrowing(pointcut = "doLog()" , throwing = "e")
 	public void doAfterThrowing(Exception e) {
 		log.info("######### doAfterThrowing:exception=[{}] #########", e.getMessage());
-		
 	}
 	
 }

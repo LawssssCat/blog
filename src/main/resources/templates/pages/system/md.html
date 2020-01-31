@@ -61,6 +61,7 @@
                 <textarea style="display:none;"></textarea>
             </div>
         </div>
+        <div class="ui segment">
         <!--3选项-->
         <div class="two fields">
             <div class="field ">
@@ -128,9 +129,10 @@
         <!--5操作按钮-->
         <div class="ui right aligned container">
             <!--不写type:默认submit-->
-            <button type="button" class="ui red button" oncanplay="window.history.go(-1)">返回</button>
+            <!-- <button type="button" class="ui red button" oncanplay="window.history.go(-1)">返回</button> -->
             <button class="ui secondary button" >保存</button>
             <button class="ui primary submit button" >发布</button>
+        </div>
         </div>
     </form>
 </div>
@@ -153,10 +155,6 @@ $(function() {
         emoji   : false
     });
 });
-</script>
-
-
-<script>
 /*
  * 表格验证
  */
