@@ -52,6 +52,14 @@ public class TypeServiceImpl implements TypeService {
 		return new PageObject<Type>(datas, totalDataCount, pageCurrent, pageSize);
 	}
 
+	@Override
+	public int doDeleteObject(Integer id) {
+		Assert.isArgumentValid(id<1, "id输入异常!");
+		int rows = typeDao.deleteObject(id) ;
+		Assert.isServiceValid(rows==0, "数据可能不存在了!");
+		return rows;
+	}
+
 	
 
 }

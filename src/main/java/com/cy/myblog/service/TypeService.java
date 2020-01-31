@@ -11,4 +11,6 @@ public interface TypeService {
 
 	/**查分页*/
 	PageObject<Type> doFindPageObject(String name, Integer pageCurrent);
+
+	int doDeleteObject(Integer id);
 }

@@ -2,6 +2,7 @@ package com.cy.myblog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,12 @@ public class TypeController {
 	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
 		PageObject<Type> pageObject = typeService.doFindPageObject(name , pageCurrent) ;
 		return new JsonResult(pageObject);
+	}
+	
+	@DeleteMapping("/deleteObject")
+	public JsonResult doDeleteObject(Integer id) {
+		int rows = typeService.doDeleteObject(id) ; 
+		return new JsonResult("delete ok! rows="+rows);
 	}
 	
 }

@@ -10,8 +10,8 @@
 <!-- ******************************************************************************************** -->
 <!-- ******************************************************************************************** -->
 <th:block th:fragment="base-script">
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script><!-- jquery -->
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.js"></script><!-- semantic -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><!-- jquery -->
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script><!-- semantic -->
 </th:block>
 
 
@@ -30,7 +30,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>[[${title}]]</title>
     <!-- <link rel="icon" type="image/x-icon" th:href="@{/dist/images/favicon.ico}" /> --><!-- springboot配置(头疼) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui-css@2.4.1/semantic.min.css" ><!-- semantic css框架 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" ><!-- semantic css框架 -->
     <link rel="stylesheet" th:href="@{/dist/css/me.css}"><!-- 自定义CSS样式 -->
     <link rel="stylesheet" th:href="@{/dist/lib/tocbot//dist/tocbot.css}"><!--文章目录-->
     <link rel="stylesheet" th:href="@{/dist/css/typo.css}"><!-- 内容排版 -->
@@ -62,11 +62,11 @@
     <div class="ui container ">
         <div class="ui inverted secondary stackable menu m-margin-bottom-tiny"><!--stackable 可堆叠，适应手机端-->
             <h2 class="ui item header basic"> lassss <font color="#39CCCC"> Cat </font> ~ </h2> <!--teal:颜色-->
-            <a data-pjax waifu th:href="@{/blog/index}" 	th:classappend="${n==1} ? 'active'" class="m-item item m-mobile-hide" ><i class=" home icon"></i>首页</a><!-- waifu --><!--m-item为了选择-->
-            <a data-pjax waifu th:href="@{/blog/types}"		th:classappend="${n==2} ? 'active'" class="m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
-            <a data-pjax waifu th:href="@{/blog/tags}" 		th:classappend="${n==3} ? 'active'" class="m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
-            <a data-pjax waifu th:href="@{/blog/archives}" 	th:classappend="${n==4} ? 'active'" class="m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
-            <a data-pjax waifu th:href="@{/blog/about}" 	th:classappend="${n==5} ? 'active'" class="m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
+            <a data-pjax waifu th:href="@{/blog/index}" 	th:classappend="${n==1} ? 'active'" class="ui m-item item m-mobile-hide" ><i class=" home icon"></i>首页</a><!-- waifu --><!--m-item为了选择-->
+            <a data-pjax waifu th:href="@{/blog/types}"		th:classappend="${n==2} ? 'active'" class="ui m-item item m-mobile-hide"><i class=" idea icon"></i>分类</a>
+            <a data-pjax waifu th:href="@{/blog/tags}" 		th:classappend="${n==3} ? 'active'" class="ui m-item item m-mobile-hide"><i class=" tags icon"></i>标签</a>
+            <a data-pjax waifu th:href="@{/blog/archives}" 	th:classappend="${n==4} ? 'active'" class="ui m-item item m-mobile-hide"><i class=" clone icon"></i>归档</a>
+            <a data-pjax waifu th:href="@{/blog/about}" 	th:classappend="${n==5} ? 'active'" class="ui m-item item m-mobile-hide"><i class=" info icon"></i>关于我</a>
             <!-- 搜索栏 -->
             <div class="m-item right aligned item m-mobile-hide">
 	            <div class="ui category  search">
@@ -221,7 +221,9 @@ $('nav').on('click' , '.menu.toggle' , function(e) {//手机端响应
  * manu active 事件 
  */
 $('nav').on('click' , "a.m-item" ,function(e) {//切换
-	$("a.m-item").removeClass("active");
+	$.each($("a.m-item.active") , function(index, item) {
+		$(this).removeClass("active");
+	});
 	$(this).addClass("active");
 });
 /*

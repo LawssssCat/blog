@@ -34,48 +34,40 @@
 
 <div class="ui container"><!--container，外层容器，适合响应移动端-->
     <!--1-->
-    <form action="javascript:doFindPageObjects()" method="POST" class="ui segment form">
-        <div class="fields inline"><!--inline：宽度非全-->
+    <form action="javascript:doFindPageObjects(1)" class="ui segment form">
+        <div class=" fields inline"><!--inline：宽度非全-->
         	<!-- 输入框 -->
-            <div class="field">
+            <div class=" field">
                 <input type="text" placeholder="类型" name="searchName">
             </div>
             <!-- 搜索按钮 -->
             <div class="field">
-                <button class="ui teal basic button" ><i class="search icon"></i>搜索</button>
+                <button class="ui teal  button" ><i class="search icon"></i>搜索</button>
             </div>
+        	<div>
+        		<font id="totalDataCountId" >xx</font> 条数据
+			</div>
         </div>
     </form>
     <!--2-->
-    <table class="ui celled table"><!--celled网格-->
+    <table class="ui celled teal table "><!--celled网格-->
         <thead>
             <tr>
                 <th>序号</th>
                 <th>名称</th>
-               <!--  <th>类型</th>
-                <th>推荐</th>
-                <th>更新时间</th> -->
                 <th>操作</th>
             </tr>
         </thead>
         <tbody id="dataBodyId">
+        	<!-- 主数据 -->
             <tr><td>loading...</td></tr>
         </tbody>
         <tfoot id="dataFootId">
             <tr>
                 <th colspan="3" class="actions"><!--colspan合并列-->
-                   	<a href="javascript:doShowEditModel()" class="ui positive button item left aligned">添加</a>
+                   	<a href="javascript:doShowEditModal()" class="ui green inverted button item left aligned">添加</a>
                     <div id="pageCurrentMenuId" class="ui right floated pagination menu">
-                        <a class="icon item previous">
-                            <i class="left chevron icon"></i>
-                        </a>
-                        <a class="item active">1</a>
-                        <a class="item">2</a>
-                        <a class="item">3</a>
-                        <a class="item">4</a>
-                        <a class="icon item next">
-                            <i class="right chevron icon"></i>
-                        </a>
+                        
                     </div>
                 </th>
             </tr>
@@ -92,25 +84,25 @@
 	<!-- 表格 -->
 	<div class="header">添加分类</div>
 	<div class="content">
-	  <div id="editForm" class="ui form ">
+	  <div class="ui form">
 	  	<div class="field" style="display:none;">
 	  		<input id="editId">
 	  	</div>
 		<div class="field">
 			<div class="ui left labeled input">
-		 	<label for="editName" class="ui teal basic label">名称</label>
-		   <input id="editName" placeholder="分类名称" type="text" >
+			 	<label for="editName" class="ui teal basic label">名称</label>
+			    <input id="editName" placeholder="分类名称" type="text" >
 			</div>
 		</div>
 		<div class="actions aligned right">
-			<div onclick="javascript:doHideEditModel()" class="ui button">Cancel</div>
+			<div onclick="javascript:doHideEditModal()" class="ui button">Cancel</div>
 			<div class="ui green button submit">确认</div>
 		</div>
 	  </div>
 	</div>
 </div>
 <!-- 结果~弹窗 -->
-<div id="resultModel" class="ui mini second coupled modal transition" style="margin-top: -98px;">
+<div id="resultModel" class="ui mini second coupled modal transition" >
 	<div class="ui header">处理结果</div>
   <div class="content">
     <div class="description">
@@ -122,29 +114,61 @@
   </div>
 </div>
 
+
 <script type="text/javascript">
+/*
+ * 编辑
+ */
+ $("#dataBodyId").on("click" , ".edit" , function() {
+	alert("编辑") ;
+}) ; 
+/*
+ * 删除
+ */
+$("#dataBodyId").on("click" , ".delete" , function(e) {
+	var $tr = $(this).parents("tr") ; 
+	var data = $tr.data("rowData");
+	if(confirm("确认删除 "+data.name + "?")) {
+		var id = data.id ;
+		deleteObject(id) ; 
+	}
+}) ;
+//ajax - delete
+function deleteObject(id) {
+	var url = "[[@{/type/deleteObject}]]" ; 
+	$.ajax({
+		url : url ,
+		data: {id:id} , 
+		type: "delete" , 
+		success: function(result) {
+			doShowResultModel(result);
+		}
+	}) ;
+}
 /*
  * 分页
  */
-//page-menu
-$(document).on("click","#pageCurrentMenuId a", function(e) {
-	var $active = $("#pageCurrentMenuId a.active") ; 
+//init
+$(document).ready(doFindPageObjects(1));
+$("#pageCurrentMenuId").on("click","a", function(e) {
+	var page = 1 ;  
+	var $active = $(this).siblings(".active") ; 
 	if($(this).hasClass("previous")){
-		if($active.prev().hasClass("previous"))return ; 
-		$active.prev().addClass("active") ; 
-	} else if($(this).hasClass("next")){
-		if($active.next().hasClass("next"))return ; 
-		$active.next().addClass("active") ; 
-	}else{
-		$(this).addClass("active") ; 
+		if($active.prev().hasClass("previous")) return ;
+		page = $active.prev().html() ;  
+	}else if($(this).hasClass("next")) {
+		debugger;
+		if($active.next().hasClass("next")) return ; 
+		page = $active.next().html() ;  
+	}else {
+		page = $(this).html() ;
 	}
-	$active.removeClass("active");
-	doFindPageObjects();
+	doFindPageObjects(page);
 });
 //find - page - ajax
-function doFindPageObjects() {
-	var name = $("[name='searchName']").val() ; 
-	var pageCurrent = $("#pageCurrentMenuId a.active").html();
+function doFindPageObjects( pageCurrent , name ) {
+	if(pageCurrent==null) pageCurrent = $("#pageCurrentMenuId a.active").html();
+	if(name==null) name = $("[name='searchName']").val() ; 
 	var url = "[[@{/type/findPageObject}]]" ; 
 	$.ajax({
 		url: url , 
@@ -155,56 +179,67 @@ function doFindPageObjects() {
 		type: "GET" ,
 		dataType: "json" , 
 		success: function(result) {
-			showResultData(result)
+			showResultData(result) ; 
 		}
-	}) 
-}
-//更新页面
+	});
+};
+//展示页面数据
 function showResultData(result) {
-	if(result.state==1) {
+	var totalDataCount = 0 ; // 总数据 
+	if(result.state==1) { //查找成功
 		$("#dataBodyId").empty();
 		var pageObject = result.data ;
+		//-------------------------- 数据(主题)
 		$.each(pageObject.datas , function(index , item) {
-			var $id = $("<td></td>").html(index); 
+			var $index = $("<td></td>").html(index+1); 
 			var $name = $("<td></td>").html(item.name); 
-			var $operation = $("<td></td>")
-			.html("<a href='javascript:doShowEditModel()' class='ui mini teal basic button'>编辑</a>"
-				+"<a href='#' class='ui mini red basic button'>删除</a>") ;
-			var $tr = $("<tr></tr>")
-			.append($id)
+			var $operation = $("<td></td>") //
+			.html("<a class='ui mini blue inverted button edit'>编辑</a>"
+				 +"<a class='ui mini red inverted button delete'>删除</a>") ;
+			var $tr = $("<tr></tr>") // 行节点
+			.append($index)
 			.append($name)
 			.append($operation);
 			$("#dataBodyId").append($tr);
+			//--------------- data 存id
+			$tr.data("rowData" , item);
 		}); 
-		
-	}else if(result.state==0) {
+		//---------------------
+		showPageMenu(pageObject.pageTotal, pageObject.pageCurrent); //页码
+		totalDataCount = pageObject.totalDataCount//总数据
+	}else if(result.state==0) {//查找失败
 		$td = $("<td></td>").html(result.message);
 		$tr = $("<tr></tr>").append($td);
 		$("#dataBodyId").html($tr);
 	}
-	
-	
-/* 	<tr>
-	    <td>1</td>
-	    <td>linux系列之常用运维命令整理笔录</td>
-	    <td>
-	        <a href="javascript:doShowEditModel()" class="ui mini teal basic button">编辑</a>
-	        <a href="#" class="ui mini red basic button">删除</a>
-	    </td>
-	</tr> */
+	$("#totalDataCountId").html(totalDataCount);
 }
-
-
-
+//更新页码
+//page-menu
+function showPageMenu(pageTotal , pageCurrent) {
+	var menu = $("#pageCurrentMenuId") ; 
+	menu.empty();
+	menu.append("<a class='icon item previous'><i class='left chevron icon'></i></a>");
+	for(var i=1 ; i<=pageTotal ; i++) {
+		var n = $("<a class='item'>"+i+"</a>") ;
+		if(i==pageCurrent){
+			n.addClass("active");
+		}
+		menu.append(n);
+	}
+	menu.append("<a class='icon item next'><i class='right chevron icon'></i></a>");
+}
 
 /*
  * 弹框 - ajax
  */
-function doHideEditModel() {
+//[隐藏]编辑弹窗
+function doHideEditModal() {
 	$('#editModal').modal('hide');
-	$('#editForm').form("clear");//reset重置,clear清空
+	$('#editModal .form ').form("clear");//reset重置,clear清空
 }
-function doShowEditModel(id) {
+//[显示]编辑弹窗
+function doShowEditModal(id) {
 	$('#editModal')
 	.modal({
 		closable  : false ,
@@ -215,6 +250,7 @@ function doShowEditModel(id) {
 		alert("doEditUI");
 	}
 }
+//ajax 更新数据
 function doUpdateData(){
 	$("#editLoader").addClass("active");
 	var id = null ; 
@@ -241,14 +277,23 @@ function doUpdateData(){
 			alert("error");
 		} , 
 		complete : function(XMLHttpRequest, textStatus) {
-			doHideEditModel();
-			$("#editLoader").removeClass("active");
+			doHideEditModal();
+			$("#editLoader").removeClass("active"); // dimmer
 		}
 	});
 }
+/*
+ * 展示结果信息
+ */
+function doShowMessageModel(message) {
+	$("#resultMessage").html(message);
+	$('#resultModel').modal('show');
+}
+//显示 并 刷新 - 用于 ajax 后
 function doShowResultModel(result) {
 	if(result.state==1) {
 		$("#resultMessage").html(result.message);
+		doFindPageObjects() ; //更新页面数据
 	}else if(result.state==0) {
 		$("#resultMessage").html("<font color='red'>"+result.message+"</font>");
 	}
@@ -257,7 +302,7 @@ function doShowResultModel(result) {
 /*
  * 表单检验
  */
-$('#editForm').form({ // 指定一些规则
+$('#editModal .form').form({ // 指定一些规则
 	fields: {
 	     name : {
 	         identifier : 'editName' ,  //name
@@ -282,7 +327,7 @@ function isExistName(e) {
     	name : name 
     }
     $.ajax({
-    	async: false  , 
+    	async: true , 
     	type: "GET" , 
     	url: url , 
     	data: params , 
@@ -294,8 +339,8 @@ function isExistName(e) {
 			}
     	} 
     });
-}
-$(document).on("change" , "#editName" , function(e) {
+};
+$("#editModal").on("change" , "#editName" , function(e) {
 	isExistName(e) ;
 });
 </script>

@@ -46,7 +46,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
-
+<delete id="deleteObject">
+	delete from <include refid="tableId" />
+	<where> 
+		1=2
+		<if test="id != null">
+		or id=#{id}
+		</if> 
+	</where>
+</delete>
 
 
 <!-- 插入 -->
