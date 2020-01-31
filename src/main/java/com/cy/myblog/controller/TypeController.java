@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,9 +25,9 @@ public class TypeController {
 	@Autowired
 	private TypeService typeService ; 
 
-	@PostMapping("/insertType")
+	@PostMapping("/insertObject")
 	public JsonResult doInsertType(Type type) {
-		int rows = typeService.doInsertObject(type) ; 
+		int rows = typeService.doInsertObject(type) ;
 		return new JsonResult("add ok! rows="+rows);
 	}
 	
@@ -44,8 +45,16 @@ public class TypeController {
 	
 	@DeleteMapping("/deleteObject")
 	public JsonResult doDeleteObject(Integer id) {
+		log.debug("delete id={}" , id);
 		int rows = typeService.doDeleteObject(id) ; 
 		return new JsonResult("delete ok! rows="+rows);
+	}
+	
+	@PutMapping("/updateObject")
+	public JsonResult doUpdateObject(Type type) {
+		log.debug("update type={}" , type);
+		int rows = 0 ; 
+		return new JsonResult("update ok! rows="+rows) ; 
 	}
 	
 }

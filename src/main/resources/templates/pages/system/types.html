@@ -119,8 +119,10 @@
 /*
  * 编辑
  */
- $("#dataBodyId").on("click" , ".edit" , function() {
-	alert("编辑") ;
+ $("#dataBodyId").on("click" , ".edit" , function(e) {
+	var $tr = $(this).parents("tr");
+	var data = $tr.data("rowData");
+	doShowEditModal(data);
 }) ; 
 /*
  * 删除
@@ -237,32 +239,43 @@ function showPageMenu(pageTotal , pageCurrent) {
 function doHideEditModal() {
 	$('#editModal').modal('hide');
 	$('#editModal .form ').form("clear");//reset重置,clear清空
+	$("#editModal").removeData("id"); 
 }
 //[显示]编辑弹窗
-function doShowEditModal(id) {
-	$('#editModal')
+function doShowEditModal(data) {
+	if(data!=null&&data.id!=null){//修改
+		$("#editModal .header").html("修改分类");
+		$("#editName").val(data.name);
+		$("#editModal").data("id" , data.id);
+	}else{
+		$("#editModal .header").html("添加分类");
+	}
+	
+	$('#editModal') //modal - 显示
 	.modal({
 		closable  : false ,
 		allowMultiple: true
 	})
 	.modal('show');
-	if(id!=null){
-		alert("doEditUI");
-	}
+}
+function doGetId() {
+	var id = $("#editModal").data("id");
+	$("#editModal").removeData("id"); 
+	return id ;
 }
 //ajax 更新数据
 function doUpdateData(){
-	$("#editLoader").addClass("active");
-	var id = null ; 
+	$("#editLoader").addClass("active"); // 进度条
+	var id = doGetId() ;
 	var name = $("#editName").val() ; 
 	var params = {
 		id: id , 
 		name : name
 	} ; 
-	var url = "[[@{/type/insertType}]]" ; //添加
+	var url = "[[@{/type/insertObject}]]" ; //添加
 	var type = "POST" ; 
 	if(id!=null&&id!=''){
-		url="[[@{/type/editType}]]" ; //修改
+		url="[[@{/type/updateObject}]]" ; //修改
 		type="PUT" ; 
 	}
 	$.ajax({
@@ -273,8 +286,9 @@ function doUpdateData(){
 		success: function(result) {
 			doShowResultModel(result);
 		}, 
-		error: function(result) {
-			alert("error");
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(XMLHttpRequest.responseText) ;
+			console.log(XMLHttpRequest);
 		} , 
 		complete : function(XMLHttpRequest, textStatus) {
 			doHideEditModal();
@@ -319,7 +333,7 @@ $('#editModal .form').form({ // 指定一些规则
     },
     inline : true,
 	//on     : 'blur' //马上提示
-}) ;
+});
 function isExistName(e) {
 	var name = $("#editName").val() ;
     var url = '[[@{/type/isExistName}]]' ; 
