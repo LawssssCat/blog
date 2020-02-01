@@ -3,10 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <!-- 后台管理界面 -->
 <!-- 引入 -->
-<head th:insert="/fragments/_fragments :: head('分类管理界面')"></head>
+<head th:insert="/fragments/_fragments :: head('标签管理界面')"></head>
 <body>
 <!-- 引入 -->
-<nav th:replace="/fragments/_fragments :: menu(7)"></nav>
+<nav th:replace="/fragments/_fragments :: menu(8)"></nav>
 
 
 
@@ -53,8 +53,14 @@
     <table class="ui celled teal table "><!--celled网格-->
         <thead>
             <tr>
+                <th>
+	                <div class="ui  toggle checkbox">
+					    <input type="checkbox" id="checkAll">
+					    <label for="checkAll">全选</label>
+					</div>
+                </th>
                 <th>序号</th>
-                <th>分类</th>
+                <th>标签</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -64,8 +70,8 @@
         </tbody>
         <tfoot id="dataFootId">
             <tr>
-                <th colspan="3" class="actions"><!--colspan合并列-->
-                   	<a href="javascript:toEditPage()" class="ui green inverted button item left aligned">添加</a>
+                <th colspan="100" class="actions"><!--colspan合并列-->
+                   	<a href="javascript:doShowEditModal()" class="ui green inverted button item left aligned">添加</a>
                     <div id="pageCurrentMenuId" class="ui right floated pagination menu">
                         
                     </div>
@@ -75,21 +81,55 @@
     </table>
 </div>
 
+<!-- 填写~弹窗 -->
+<div id="editModal" class="ui modal small transition coupled first">
+	<!-- 表格 -->
+	<div class="header">添加标签</div>
+	<div class="content">
+	  <div class="ui form">
+	  	<div class="field" style="display:none;">
+	  		<input id="editId">
+	  	</div>
+		<div class="field">
+			<div class="ui left labeled input">
+			 	<label for="editName" class="ui teal basic label">名称</label>
+			    <input id="editName" placeholder="新增标签名称" type="text" >
+			</div>
+		</div>
+		<div class="actions aligned right">
+			<div onclick="javascript:doHideEditModal()" class="ui button">Cancel</div>
+			<div class="ui green button submit">确认</div>
+		</div>
+	  </div>
+	</div>
+</div>
+<!-- 结果~弹窗 -->
+<div id="resultModel" class="ui mini second coupled modal transition" >
+	<div class="ui header">处理结果</div>
+	<div class="content">
+	  <div class="description">
+	    <p id="resultMessage">這是全部了！</p>
+	  </div>
+	</div>
+	<div class="actions">
+	  <div class="ui approve button"><i class="checkmark icon"></i> 知道了 </div>
+	</div>
+</div>
 
 
 <script type="text/javascript">
 /*
  * 编辑
  */
- $("#dataBodyId").on("click" , ".edit" , function(e) {
+$(document).on("click" , "#dataBodyId .edit" , function(e) {
 	var $tr = $(this).parents("tr");
 	var data = $tr.data("rowData");
-	toEditPage(data.id);
+	doShowEditModal(data);
 }) ; 
 /*
  * 删除
  */
-$("#dataBodyId").on("click" , ".delete" , function(e) {
+$(document).on("click" , "#dataBodyId .delete" , function(e) {
 	var $tr = $(this).parents("tr") ; 
 	var data = $tr.data("rowData");
 	if(confirm("确认删除 "+data.name + "?")) {
@@ -99,16 +139,13 @@ $("#dataBodyId").on("click" , ".delete" , function(e) {
 }) ;
 //ajax - delete
 function deleteObject(id) {
-	var url = "[[@{/type/deleteObject}]]" ; 
+	var url = "[[@{/tag/deleteObject}]]" ; 
 	$.ajax({
 		url : url ,
 		data: {id:id} , 
 		type: "delete" , 
 		success: function(result) {
-			if(result.state==1||result.state==0) {
-				alert(result.message);
-				doFindPageObjects();
-			}
+			doShowResultModel(result);
 		}
 	}) ;
 }
@@ -117,7 +154,7 @@ function deleteObject(id) {
  */
 //init
 $(document).ready(doFindPageObjects(1));
-$("#pageCurrentMenuId" ).on("click"," a", function(e) {
+$(document).on("click","#pageCurrentMenuId a", function(e) {
 	var page = 1 ;  
 	var $active = $(this).siblings(".active") ; 
 	if($(this).hasClass("previous")){
@@ -136,7 +173,7 @@ $("#pageCurrentMenuId" ).on("click"," a", function(e) {
 function doFindPageObjects( pageCurrent , name ) {
 	if(pageCurrent==null) pageCurrent = $("#pageCurrentMenuId a.active").html();
 	if(name==null) name = $("[name='searchName']").val() ; 
-	var url = "[[@{/type/findPageObject}]]" ; 
+	var url = "[[@{/tag/findPageObject}]]" ; 
 	$.ajax({
 		url: url , 
 		data: {
@@ -158,12 +195,15 @@ function showResultData(result) {
 		var pageObject = result.data ;
 		//-------------------------- 数据(主题)
 		$.each(pageObject.datas , function(index , item) {
+			var $checkbox = $("<td></td>")
+			.html("<div class='ui toggle checkbox'><input type='checkbox'><label></label></div>");
 			var $index = $("<td></td>").html(index+1); 
 			var $name = $("<td></td>").html(item.name); 
 			var $operation = $("<td></td>") //
 			.html("<a class='ui mini blue inverted button edit'>编辑</a>"
 				 +"<a class='ui mini red inverted button delete'>删除</a>") ;
 			var $tr = $("<tr></tr>") // 行节点
+			.append($checkbox)
 			.append($index)
 			.append($name)
 			.append($operation);
@@ -201,15 +241,126 @@ function showPageMenu(pageTotal , pageCurrent) {
  * 弹框 - ajax
  */
 //[隐藏]编辑弹窗
-function toEditPage(id) {
-	var url = "[[@{/system/types_edit}]]"  ;
-	if(id!=null&&id>0) url = url + "/" + id ; 
-	$.pjax({
+function doHideEditModal() {
+	$('#editModal').modal('hide');
+	$('#editModal .form ').form("clear");//reset重置,clear清空
+	$("#editModal").removeData("id"); 
+}
+//[显示]编辑弹窗
+function doShowEditModal(data) {
+	if(data!=null&&data.id!=null){//修改
+		$("#editModal .header").html("修改标签");
+		$("#editName").val(data.name);
+		$("#editModal").data("id" , data.id);
+	}else{
+		$("#editModal .header").html("添加标签");
+	}
+	
+	$('#editModal') //modal - 显示
+	.modal({
+		context: $("body"),
+		closable: false,
+		allowMultiple: true
+	})
+	.modal('show');
+}
+function doGetId() {
+	var id = $("#editModal").data("id");
+	$("#editModal").removeData("id"); 
+	return id ;
+}
+//ajax 更新数据
+function doUpdateData(){
+	var id = doGetId() ;
+	var name = $("#editName").val() ; 
+	var params = {
+		id: id , 
+		name : name
+	} ; 
+	var url = "[[@{/tag/insertObject}]]" ; //添加
+	var type = "POST" ; 
+	if(id!=null&&id!=''){
+		url="[[@{/tag/updateObject}]]" ; //修改
+		type="PUT" ; 
+	}
+	$.ajax({
 		url: url , 
-		container: '#mainContentId' , 
-		fragment:'#mainContentId' 
+		data: params, 
+		type: type , 
+		async: true , 
+		success: function(result) {
+			doShowResultModel(result);
+		}, 
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(XMLHttpRequest.responseText) ;
+			console.log(XMLHttpRequest);
+		} , 
+		complete : function(XMLHttpRequest, textStatus) {
+			doHideEditModal();
+		}
 	});
 }
+/*
+ * 展示结果信息
+ */
+function doShowMessageModel(message) {
+	$("#resultMessage").html(message);
+	$('#resultModel').modal('show');
+}
+//显示 并 刷新 - 用于 ajax 后
+function doShowResultModel(result) {
+	if(result.state==1) {
+		$("#resultMessage").html(result.message);
+		doFindPageObjects() ; //更新页面数据
+	}else if(result.state==0) {
+		$("#resultMessage").html("<font color='red'>"+result.message+"</font>");
+	}
+	$('#resultModel').modal('show');
+}
+/*
+ * 表单检验
+ */
+$('#editModal .form').form({ // 指定一些规则
+	fields: {
+	     name : {
+	         identifier : 'editName' ,  //name
+	         rules : [{
+	             type: 'empty' ,
+	             prompt : '名称:请输入名称'
+	         }]
+	     }
+    } , //fields
+    setting:{
+    },
+    onSuccess : function(event) {
+    	doUpdateData() ; //更新
+    },
+    inline : true,
+	//on     : 'blur' //马上提示
+});
+$(document).on("change" , "#editModal #editName" , function(e) {
+	isExistName(e) ;
+});
+function isExistName(e) {
+	var name = $("#editName").val() ;
+    var url = '[[@{/tag/isExistName}]]' ; 
+    var params = {
+    	name : name 
+    }
+    $.ajax({
+    	async: true , 
+    	type: "GET" , 
+    	url: url , 
+    	data: params , 
+    	success: function(result) {
+	    	if(result.state==1){
+	    		if(result.data) {
+	    			alert("名字重复!");
+	    		}
+			}
+    	} 
+    });
+};
 </script>
 
 

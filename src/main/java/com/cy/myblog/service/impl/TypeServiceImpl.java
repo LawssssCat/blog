@@ -1,5 +1,6 @@
 package com.cy.myblog.service.impl;
 
+import java.rmi.ServerException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cy.myblog.common.config.PaginationProperties;
+import com.cy.myblog.common.exception.ServiceException;
 import com.cy.myblog.common.utils.Assert;
 import com.cy.myblog.common.vo.PageObject;
 import com.cy.myblog.dao.TypeDao;
@@ -36,7 +38,7 @@ public class TypeServiceImpl implements TypeService {
 
 	@Override
 	public boolean doIsExistName(String name) {
-		int n = typeDao.countObjectByName(name);
+		int n = typeDao.countObjectByName(name);//准确
 		return n>0;
 	}
 
@@ -58,6 +60,28 @@ public class TypeServiceImpl implements TypeService {
 		int rows = typeDao.deleteObject(id) ;
 		Assert.isServiceValid(rows==0, "数据可能不存在了!");
 		return rows;
+	}
+
+	@Override
+	public int doUpdateObject(Type type) {
+		Assert.isArgumentValid(type==null||type.getName()==null, "请输入");
+		Assert.isArgumentValid(type.getId()<1, "id异常");
+		int rows =0 ; 
+		try{
+			rows = typeDao.updataObject(type);
+		}catch(Exception e) {
+			throw new ServiceException("操作异常") ; 
+		}
+		Assert.isServiceValid(rows==0, "数据可能不存在了!");
+		return rows;
+	}
+
+	@Override
+	public Type dofindObjectById(Integer id) {
+		Assert.isArgumentValid(id==null||id<0, "id输入异常");
+		Type type = typeDao.findObjectById(id) ;
+		Assert.isServiceValid(type==null||type.getName()==null, "数据可能不存在!");
+		return type;
 	}
 
 	

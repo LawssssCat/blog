@@ -9,15 +9,15 @@
 </a>
 <!-- user栏 -->
 <div class="ui inverted menu" >
-    <div class="ui item m-item  dropdown m-mobile-hide">
+    <div class="ui item m-item dropdown m-mobile-hide">
         <div  class="text">
             <img th:src='@{${user.avatarUrl}}' class="ui avatar image" ><font id="nicknameId">[[${user!=null?user.nickname:'???'}]]</font>
         </div>
         <i class="dropdown icon"></i>
         <div class="menu">
-            <a data-pjax th:href="@{/system}" class="item m-item active">博客管理</a>
-            <a data-pjax th:href="@{/system/types}" class="item m-item">分类管理</a>
-            <a data-pjax th:href="@{/system/tags}" class="item m-item">标签管理</a>
+            <a data-pjax th:classappend="${n==6} ? 'active'" th:href="@{/system}" class="item m-item">博客管理</a>
+            <a data-pjax th:classappend="${n==7} ? 'active'" th:href="@{/system/types}" class="item m-item">分类管理</a>
+            <a data-pjax th:classappend="${n==8} ? 'active'" th:href="@{/system/tags}" class="item m-item">标签管理</a>
             <a th:href="@{/doLogout}" class="item">注销</a>
         </div>
     </div>

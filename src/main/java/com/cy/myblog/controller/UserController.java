@@ -19,12 +19,12 @@ public class UserController {
 	@RequestMapping("/doLogin")
 	public JsonResult doLogin(String username , String password , Boolean isRememberMe) {
 		log.debug("doLogin - username={}, password={}, rememberMe={}",username,password,isRememberMe);
-		Subject subject = SecurityUtils.getSubject();//subject
-		AuthenticationToken token = 
+		AuthenticationToken token = //封装用户信息
 				new UsernamePasswordToken(
 						username, 
 						password, 
 						isRememberMe);
+		Subject subject = SecurityUtils.getSubject();//subject 提交用户信息
 		subject.login(token);//登录
 		return new JsonResult("login OK !") ; 
 	}

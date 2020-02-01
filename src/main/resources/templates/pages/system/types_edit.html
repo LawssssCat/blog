@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<!-- 后台管理界面 -->
+<!-- 引入 -->
+<head th:insert="/fragments/_fragments :: head(${id ne null ? '修改分类':'添加分类' })" > </head>
+<body>
+<!-- 引入 -->
+<nav th:replace="/fragments/_fragments :: menu(7)"></nav>
+
+
+
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                       -->
+
+<!--mind 中间内容-->
+<div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+<!-- 填写~弹窗 -->
+<div id="editContainer" class="ui segment container">
+	<!-- 表格 -->
+	<div class="ui header">[[${id ne null ? '修改分类':'添加分类' }]]</div>
+	<div class="ui form">
+		<div class="field" style="display:none;">
+	 		<input id="editId">
+	 	</div>
+		<div class="field">
+			<div class="ui left labeled input">
+			 	<label for="editName" class="ui teal basic label">名称</label>
+			    <input id="editName" placeholder="分类名称" type="text" >
+			</div>
+		</div>
+		<div class="actions aligned right">
+			<a data-pjax href="javascript:history.back();" class="ui button">Cancel</a>
+			<div class="ui green button submit">确认</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	var id = [[${id ne null ? id : 0 }]] ;  
+	if(id!=null && id>0) {
+		$("#editContainer").data("id" , id);
+		doFindObjectById(id) ;  
+	}
+})
+//find - page - ajax
+function doFindObjectById( id ) {
+	if(id==null||id<0) id = $("#editContainer").data("id" );
+	var url = "[[@{/type/findObjectById}]]" ; 
+	$.ajax({
+		url: url , 
+		data: {id: id  }, 
+		type: "GET" ,
+		dataType: "json" , 
+		success: function(result) {
+			showResultData(result) ; 
+		} , 
+		error: function() {
+			alert("error");
+		}
+	});
+};
+//展示页面数据
+function showResultData(result) {
+	if(result.state==1) { //查找成功
+		var data = result.data ;
+		$("#editName").val(data.name) ; 
+	}else if(result.state==0) {//查找失败
+		alert(result.message);
+	}
+}
+
+/*
+ * ajax 更新数据
+ */
+function doUpdateData(){
+	$("#editLoader").addClass("active"); // 进度条
+	var id = $("#editContainer").data("id" );
+	var name = $("#editName").val() ; 
+	var params = {
+		id: id , 
+		name : name
+	} ; 
+	var url = "[[@{/type/insertObject}]]" ; //添加
+	var type = "POST" ; 
+	if(id!=null&&id!=''){
+		url="[[@{/type/updateObject}]]" ; //修改
+		type="PUT" ; 
+	}
+	$.ajax({
+		url: url , 
+		data: params, 
+		type: type , 
+		async: true , 
+		complete : function(XMLHttpRequest, textStatus) {
+		},
+		success: function(result) { //更新成功!
+			if(result.state==1) {//成功
+				history.back();
+				alert(result.message);
+			}else if(result.state == 0) { //失败
+				alert(result.message);
+			}
+		}, 
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(XMLHttpRequest.responseText) ;
+			console.log(XMLHttpRequest);
+		}  
+	});
+}
+/*
+ * 表单检验
+ */
+$('#editContainer .form').form({ // 指定一些规则
+	fields: {
+	     name : {
+	         identifier : 'editName' ,  //name
+	         rules : [{
+	             type: 'empty' ,
+	             prompt : '名称:请输入名称'
+	         }]
+	     }
+    } , //fields
+    setting:{
+    },
+    onSuccess : function(event) {
+    	doUpdateData() ; //更新
+    },
+    inline : true,
+	//on     : 'blur' //马上提示
+});
+/*
+ * 名字校验
+ */
+$("#editContainer").on("change" , " #editName" , function(e) {
+	isExistName(e) ;
+});
+function isExistName(e) {
+	var name = $("#editName").val() ;
+    var url = '[[@{/type/isExistName}]]' ; 
+    var params = {
+    	name : name 
+    }
+    $.ajax({
+    	async: true , 
+    	type: "GET" , 
+    	url: url , 
+    	data: params , 
+    	success: function(result) {
+	    	if(result.state==1){
+	    		if(result.data) {
+	    			alert("名字重复!");
+	    		}
+			}
+    	} 
+    });
+};
+</script>
+
+
+</div>
+
+
+<!--                                                                                        
+                                                                                       
+                                                                                       
+      ,---,                        ,---,                        ,---,                  
+    ,---.'|   ,---.              ,---.'|   ,---.              ,---.'|   ,---.          
+    |   | :  '   ,'\             |   | :  '   ,'\             |   | :  '   ,'\         
+    |   | | /   /   |            |   | | /   /   |            |   | | /   /   |        
+  ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :          ,--.__| |.   ; ,. :        
+ /   ,'   |'   | |: :         /   ,'   |'   | |: :         /   ,'   |'   | |: :        
+.   '  /  |'   | .; :        .   '  /  |'   | .; :        .   '  /  |'   | .; :        
+'   ; |:  ||   :    |        '   ; |:  ||   :    |        '   ; |:  ||   :    |        
+|   | '/  ' \   \  /         |   | '/  ' \   \  /         |   | '/  ' \   \  /         
+|   :    :|  `----'          |   :    :|  `----'          |   :    :|  `----'          
+ \   \  /                     \   \  /                     \   \  /                    
+  `----'                       `----'                       `----'                     
+                                                                                       -->
+
+
+<th:block th:replace="/fragments/_fragments :: common-script"></th:block>
+
+
+
+
+</body>
+</html>

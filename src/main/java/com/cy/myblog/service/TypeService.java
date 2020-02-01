@@ -13,4 +13,8 @@ public interface TypeService {
 	PageObject<Type> doFindPageObject(String name, Integer pageCurrent);
 
 	int doDeleteObject(Integer id);
+
+	int doUpdateObject(Type type);
+
+	Type dofindObjectById(Integer id);
 }

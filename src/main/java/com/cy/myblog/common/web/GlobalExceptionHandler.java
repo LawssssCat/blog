@@ -43,8 +43,9 @@ public class GlobalExceptionHandler {
 	
 	//放最后,异常按顺序触发
 	@ExceptionHandler(Exception.class)
-	public JsonResult doExceptionHandle(Exception e , HttpServletRequest r ) {
-		log.error("request URL : {} , Exception : {}" ,r.getRequestURL(), e.getMessage()); //URL 详尽的资源信息
+	public JsonResult doExceptionHandle(Exception e , HttpServletRequest r )  {
+		log.error("request URL:{} , Exception:{}" ,r.getRequestURL(), e.toString()); //URL 详尽的资源信息
+		//if(e instanceof NullPointerException) throw e ;
 		return new JsonResult(e) ; 
 	}
 	

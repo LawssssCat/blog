@@ -1,5 +1,6 @@
 package com.cy.myblog.controller;
 
+import org.apache.commons.collections.functors.FalsePredicate;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,18 +65,18 @@ public class PageController {
 	/*********                                                                                  *********/
 	/****************************************************************************************************/
 	/****************************************************************************************************/
-	@RequestMapping({"/system/{page}" , "/system"}) 
+	@RequestMapping({"/system/{page}/{id}" , "/system/{page}" , "/system"}) 
 	public String toSysUI(
 			@PathVariable(required = false ,value = "page") String page  , 
+			@PathVariable(required = false , value = "id") Integer id , 
 			Model model) {
 		if(!ShiroUtils.isLogin()) throw new UserLogoutException("用户没有登录");
-		model.addAttribute("user", SecurityUtils.getSubject().getPrincipal()) ; 
-		if(StringUtils.isEmpty(page)) page = webServerProperties.getSystemIndex() ; 
+		model.addAttribute("user", SecurityUtils.getSubject().getPrincipal()) ; //添加用户
+		if(StringUtils.isEmpty(page)) page = webServerProperties.getSystemIndex() ;
+		if(id!=null&&0<id) model.addAttribute("id", id) ; 
 		log.debug("model add user and to system page: [{}] " ,  page);
-		return webServerProperties.getSystemPrefix()+"/"+page ; 
+		return webServerProperties.getSystemPrefix()+"/"+page ; //默认 /sytem/xxx
 	}
-	
-	
 	
 	
 	/****************************************************************************************************/
@@ -92,7 +93,7 @@ public class PageController {
 		String url = "/blog/"+page ;
 		if(ShiroUtils.isLogin()) {
 			Object user = SecurityUtils.getSubject().getPrincipal();
-			model.addAttribute("user", user);
+			model.addAttribute("user", user);//添加用户
 			log.debug("toCommonPage url={} and is log user={}",url , user.toString());
 		}else {
 			log.debug("toCommonPage url={}",url);

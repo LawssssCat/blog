@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cy.myblog.dao.TypeDao">
+<mapper namespace="com.cy.myblog.dao.TagDao">
 <!-- ************************************************************************************ -->
 <!-- ************************************************************************************ -->
 <!-- *************                                                         ************** -->
@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- 表名 -->
 <sql id="tableId">
-	b_type
+	b_tag
 </sql>
 <!-- 全列名 -->
 <sql id="columnSqlId">
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </sql>
 
 <!-- 全列名映射 -->
-<resultMap id="typeMapId" type="com.cy.myblog.pojo.po.Type">
+<resultMap id="tagMapId" type="com.cy.myblog.pojo.po.Tag">
 	<id property="id" column="id" />
 	<result property="name" column="name" />
 </resultMap>
@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- ************************************************************************************ -->
 
 
-<!-- 删除 -->
+
 <delete id="deleteObject">
 	delete from <include refid="tableId" />
 	<where> 
@@ -65,15 +65,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	(#{id} , #{name})
 </insert>
 
-<!-- 查id -->
-<select id="findObjectById" resultMap="typeMapId">
-	select <include refid="columnSqlId" />
-	from <include refid="tableId" /> 
-	<where>
-		id = #{id}
-	</where>
-</select>
-
 <!-- 查名字数量 -->
 <select id="countObjectByName" resultType="int">
 	select count(id)
@@ -82,13 +73,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select>
 
 <!-- 查全部 -->
-<select id="findObjects" resultMap="typeMapId">
+<select id="findObjects" resultMap="tagMapId">
 	select <include refid="columnSqlId" />
 	from <include refid="tableId" /> 
 </select>
 
 <!-- 查分页 -->
-<select id="findPageObject" resultMap="typeMapId">
+<select id="findPageObject" resultMap="tagMapId">
 	select <include refid="columnSqlId"/> 
 	from <include refid="tableId"/>
 	<include refid="whereLikeNameId" />

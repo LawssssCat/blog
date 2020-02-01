@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cy.myblog.common.vo.JsonResult;
 import com.cy.myblog.common.vo.PageObject;
+import com.cy.myblog.pojo.po.Tag;
 import com.cy.myblog.pojo.po.Type;
+import com.cy.myblog.service.TagService;
 import com.cy.myblog.service.TypeService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,48 +21,42 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 @ResponseBody
-@RequestMapping("/type")
-public class TypeController {
+@RequestMapping("/tag")
+public class TagController {
 	
 	@Autowired
-	private TypeService typeService ; 
+	private TagService tagService ; 
 
 	@PostMapping("/insertObject")
-	public JsonResult doInsertType(Type type) {
-		int rows = typeService.doInsertObject(type) ;
+	public JsonResult doInsertType(Tag tag) {
+		int rows = tagService.doInsertObject(tag) ;
 		return new JsonResult("add ok! rows="+rows);
 	}
 	
 	@GetMapping("/isExistName")
 	public JsonResult IsExistName(String name ) {
-		Boolean statement = typeService.doIsExistName(name);
+		Boolean statement = tagService.doIsExistName(name);
 		return new JsonResult(statement); 
-	}
-	
-	@GetMapping("/findObjectById")
-	public JsonResult doFindObjectById(Integer id ) {
-		Type type = typeService.dofindObjectById(id) ;
-		return new JsonResult(type); 
 	}
 	
 	@GetMapping("/findPageObject")
 	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
-		PageObject<Type> pageObject = typeService.doFindPageObject(name , pageCurrent) ;
+		PageObject<Tag> pageObject = tagService.doFindPageObject(name , pageCurrent) ;
 		return new JsonResult(pageObject);
 	}
-	
-	@DeleteMapping("/deleteObject")
-	public JsonResult doDeleteObject(Integer id) {
-		log.debug("delete id={}" , id);
-		int rows = typeService.doDeleteObject(id) ; 
-		return new JsonResult("delete ok! rows="+rows);
-	}
-	
-	@PutMapping("/updateObject")
-	public JsonResult doUpdateObject(Type type) {
-		log.debug("update type={}" , type);
-		int rows = typeService.doUpdateObject(type) ; 
-		return new JsonResult("update ok! rows="+rows) ; 
-	}
+//	
+//	@DeleteMapping("/deleteObject")
+//	public JsonResult doDeleteObject(Integer id) {
+//		log.debug("delete id={}" , id);
+//		int rows = typeService.doDeleteObject(id) ; 
+//		return new JsonResult("delete ok! rows="+rows);
+//	}
+//	
+//	@PutMapping("/updateObject")
+//	public JsonResult doUpdateObject(Type type) {
+//		log.debug("update type={}" , type);
+//		int rows = typeService.doUpdateObject(type) ; 
+//		return new JsonResult("update ok! rows="+rows) ; 
+//	}
 	
 }

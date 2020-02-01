@@ -24,5 +24,9 @@ public interface TypeDao {
 	int countObjectLikeName(@Param("name")  String name) ;
 	int countObjectByName(@Param("name") String name) ;
 
-	int deleteObject(@Param("id") Integer id); 
+	int deleteObject(@Param("id") Integer id);
+
+	int updataObject(Type type);
+
+	Type findObjectById(Integer id); 
 }

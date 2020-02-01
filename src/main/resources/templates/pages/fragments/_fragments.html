@@ -170,7 +170,7 @@
 
 <!-- 看板娘 -->
 <script async src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js" ></script><!-- 实现拖动效果，需引入 JQuery UI -->
-<script async th:src="@{/dist/lib/live2d-demo/assets/autoload.js}" ></script><!-- 看板娘 异步加载 -->
+<script async id="waifu" lib="@{/dist/lib}" th:src="@{/dist/lib/live2d-demo/assets/autoload.js}" ></script><!-- 看板娘 异步加载 -->
 <!-- 文章(我弱我有理..) -->
 <script async th:src="@{/dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
 <script async th:src="@{/dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
