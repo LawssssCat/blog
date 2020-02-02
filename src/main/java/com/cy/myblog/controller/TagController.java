@@ -15,6 +15,7 @@ import com.cy.myblog.pojo.po.Tag;
 import com.cy.myblog.pojo.po.Type;
 import com.cy.myblog.service.TagService;
 import com.cy.myblog.service.TypeService;
+import com.fasterxml.jackson.core.json.JsonReadContext;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,24 +40,30 @@ public class TagController {
 		return new JsonResult(statement); 
 	}
 	
+	@GetMapping("/findObjectById")
+	public JsonResult doFindObjectById(Integer id ) {
+		Tag tag = tagService.doFindObjectById(id) ; 
+		return new JsonResult(tag) ; 
+	}
+	
 	@GetMapping("/findPageObject")
 	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
 		PageObject<Tag> pageObject = tagService.doFindPageObject(name , pageCurrent) ;
 		return new JsonResult(pageObject);
 	}
-//	
-//	@DeleteMapping("/deleteObject")
-//	public JsonResult doDeleteObject(Integer id) {
-//		log.debug("delete id={}" , id);
-//		int rows = typeService.doDeleteObject(id) ; 
-//		return new JsonResult("delete ok! rows="+rows);
-//	}
-//	
-//	@PutMapping("/updateObject")
-//	public JsonResult doUpdateObject(Type type) {
-//		log.debug("update type={}" , type);
-//		int rows = typeService.doUpdateObject(type) ; 
-//		return new JsonResult("update ok! rows="+rows) ; 
-//	}
+	
+	@DeleteMapping("/deleteObject")
+	public JsonResult doDeleteObject(Integer id) {
+		log.debug("delete id={}" , id);
+		int rows = tagService.doDeleteObject(id) ; 
+		return new JsonResult("delete ok! rows="+rows);
+	}
+	
+	@PutMapping("/updateObject")
+	public JsonResult doUpdateObject(Type type) {
+		log.debug("update type={}" , type);
+		int rows = tagService.doUpdateObject(type) ; 
+		return new JsonResult("update ok! rows="+rows) ; 
+	}
 	
 }

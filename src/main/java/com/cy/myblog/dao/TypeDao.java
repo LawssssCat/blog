@@ -21,12 +21,13 @@ public interface TypeDao {
 			@Param("startIndex") Integer startIndex , 
 			@Param("pageSize") Integer pageSize);
 
-	int countObjectLikeName(@Param("name")  String name) ;
-	int countObjectByName(@Param("name") String name) ;
+	int countObjectLikeName(@Param("name")  String name ) ;
+	int countObjectByName(@Param("name") String name,@Param("id") Integer id) ;
 
 	int deleteObject(@Param("id") Integer id);
 
 	int updataObject(Type type);
 
-	Type findObjectById(Integer id); 
+	Type findObjectById(Integer id);
+
 }

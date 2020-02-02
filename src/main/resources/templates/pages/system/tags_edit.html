@@ -3,10 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <!-- 后台管理界面 -->
 <!-- 引入 -->
-<head th:insert="/fragments/_fragments :: head(${id ne null ? '修改分类':'添加分类' })" > </head>
+<head th:insert="/fragments/_fragments :: head(${id ne null ? '修改标签':'添加标签' })" > </head>
 <body>
 <!-- 引入 -->
-<nav th:replace="/fragments/_fragments :: menu(7)"></nav>
+<nav th:replace="/fragments/_fragments :: menu(6)"></nav>
 
 
 
@@ -32,7 +32,7 @@
 <!-- 填写~弹窗 -->
 <div id="editContainer" class="ui segment container">
 	<!-- 表格 -->
-	<div class="ui header">[[${id ne null ? '修改分类':'添加分类' }]]</div>
+	<div class="ui header">[[${id ne null ? '修改标签':'添加标签' }]]</div>
 	<div class="ui form">
 		<div class="field" style="display:none;">
 	 		<input id="editId">
@@ -63,7 +63,7 @@ $(document).ready(function() {
 //find - page - ajax
 function doFindObjectById( id ) {
 	if(id==null||id<0) id = $("#editContainer").data("id" );
-	var url = "[[@{/type/findObjectById}]]" ; 
+	var url = "[[@{/tag/findObjectById}]]" ; 
 	$.ajax({
 		url: url , 
 		data: {id: id  }, 
@@ -98,10 +98,10 @@ function doUpdateData(){
 		id: id , 
 		name : name
 	} ; 
-	var url = "[[@{/type/insertObject}]]" ; //添加
+	var url = "[[@{/tag/insertObject}]]" ; //添加
 	var type = "POST" ; 
 	if(id!=null&&id!=''){
-		url="[[@{/type/updateObject}]]" ; //修改
+		url="[[@{/tag/updateObject}]]" ; //修改
 		type="PUT" ; 
 	}
 	$.ajax({
@@ -155,7 +155,7 @@ $("#editContainer").on("change" , " #editName" , function(e) {
 function isExistName(e) {
 	var name = $("#editName").val() ;
 	var id = $("#editContainer").data("id" );
-    var url = '[[@{/type/isExistName}]]' ; 
+    var url = '[[@{/tag/isExistName}]]' ; 
     var params = {
     	id: id , 
     	name : name 

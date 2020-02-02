@@ -78,8 +78,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <select id="countObjectByName" resultType="int">
 	select count(id)
 	from <include refid="tableId" /> 
-	where name = #{name}
+	<where>
+		name = #{name}
+		<if test="id != null">
+			and id!=#{id}
+		</if>
+	</where>
 </select>
+
 
 <!-- 查全部 -->
 <select id="findObjects" resultMap="typeMapId">

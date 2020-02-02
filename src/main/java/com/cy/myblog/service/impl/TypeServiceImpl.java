@@ -30,15 +30,20 @@ public class TypeServiceImpl implements TypeService {
 	public int doInsertObject(Type type) {
 		Assert.isArgumentValid(type==null, "不能为空!");
 		Assert.isEmpty(type.getName(), "名字不能为空!");
-		Assert.isArgumentValid(doIsExistName(type.getName()), "名字重复!");
+		Assert.isArgumentValid(doIsExistName(type.getName() , null), "名字重复!");
 		int rows = typeDao.insertObject(type) ;  
 		Assert.isServiceValid(rows==0, "插入失败!") ;
 		return rows;
 	}
 
 	@Override
-	public boolean doIsExistName(String name) {
-		int n = typeDao.countObjectByName(name);//准确
+	public boolean doIsExistName(String name , Integer id) {
+		int n = 0 ;
+		if(id==null||id<1) {
+			n = typeDao.countObjectByName(name , null);//准确
+		}else {
+			n = typeDao.countObjectByName(name , id);//准确
+		}
 		return n>0;
 	}
 
@@ -66,6 +71,7 @@ public class TypeServiceImpl implements TypeService {
 	public int doUpdateObject(Type type) {
 		Assert.isArgumentValid(type==null||type.getName()==null, "请输入");
 		Assert.isArgumentValid(type.getId()<1, "id异常");
+		Assert.isArgumentValid(doIsExistName(type.getName() , type.getId()), "名字重复!");
 		int rows =0 ; 
 		try{
 			rows = typeDao.updataObject(type);

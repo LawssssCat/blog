@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.cy.myblog.pojo.po.Tag;
+import com.cy.myblog.pojo.po.Type;
 
 @Mapper
 public interface TagDao {
@@ -20,5 +21,11 @@ public interface TagDao {
 			@Param("name") String name, 
 			@Param("startIndex") Integer startIndex, 
 			@Param("pageSize") Integer pageSize);
+
+	int deleteObject(Integer id);
+
+	int updataObject(Type type);
+
+	Tag findObjectById(Integer id);
 
 }

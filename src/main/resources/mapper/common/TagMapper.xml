@@ -72,6 +72,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	where name = #{name}
 </select>
 
+<!-- 查id-->
+<select id="findObjectById" resultMap="tagMapId">
+	select <include refid="columnSqlId" />
+	from <include refid="tableId" />
+	<where>
+		id=#{id}
+	</where>
+</select>
 <!-- 查全部 -->
 <select id="findObjects" resultMap="tagMapId">
 	select <include refid="columnSqlId" />

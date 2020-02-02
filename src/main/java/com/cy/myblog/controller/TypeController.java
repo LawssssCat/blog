@@ -32,8 +32,8 @@ public class TypeController {
 	}
 	
 	@GetMapping("/isExistName")
-	public JsonResult IsExistName(String name ) {
-		Boolean statement = typeService.doIsExistName(name);
+	public JsonResult IsExistName(String name  , Integer id ) {
+		Boolean statement = typeService.doIsExistName(name , id);
 		return new JsonResult(statement); 
 	}
 	

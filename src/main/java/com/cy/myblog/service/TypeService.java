@@ -7,7 +7,8 @@ public interface TypeService {
 
 	int doInsertObject(Type type);
 
-	boolean doIsExistName(String name ) ;
+	/**id以外的名字,是否重复*/
+	boolean doIsExistName(String name, Integer id ) ;
 
 	/**查分页*/
 	PageObject<Type> doFindPageObject(String name, Integer pageCurrent);

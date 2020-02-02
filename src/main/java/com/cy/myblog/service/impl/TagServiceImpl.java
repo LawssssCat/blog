@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.cy.myblog.common.config.PaginationProperties;
 import com.cy.myblog.common.utils.Assert;
@@ -55,23 +56,33 @@ public class TagServiceImpl implements TagService {
 		Assert.isServiceValid(datas==null||datas.size()==0, "没有数据!");  
 		return new PageObject<Tag>(datas, totalDataCount, pageCurrent, pageSize);
 	}
-//
-//	@Override
-//	public int doDeleteObject(Integer id) {
-//		Assert.isArgumentValid(id<1, "id输入异常!");
-//		int rows = typeDao.deleteObject(id) ;
-//		Assert.isServiceValid(rows==0, "数据可能不存在了!");
-//		return rows;
-//	}
-//
-//	@Override
-//	public int doUpdateObject(Type type) {
-//		Assert.isArgumentValid(type==null||type.getName()==null, "请输入");
-//		Assert.isArgumentValid(type.getId()<1, "id异常");
-//		int rows = typeDao.updataObject(type);
-//		Assert.isServiceValid(rows==0, "数据可能不存在了!");
-//		return rows;
-//	}
+
+	@Override
+	public int doDeleteObject(Integer id) {
+		Assert.isArgumentValid(id<1, "id输入异常!");
+		int rows = tagDao.deleteObject(id) ;
+		Assert.isServiceValid(rows==0, "数据可能不存在了!");
+		return rows;
+	}
+
+	@Override
+	public int doUpdateObject(Type type) {
+		Assert.isArgumentValid(type==null||type.getName()==null, "请输入");
+		Assert.isArgumentValid(type.getId()<1, "id异常");
+		int rows = tagDao.updataObject(type);
+		Assert.isServiceValid(rows==0, "数据可能不存在了!");
+		return rows;
+	}
+
+
+	@Override
+	public Tag doFindObjectById(Integer id) {
+		Assert.isArgumentValid(id==null||id<1, "id异常");
+		Tag tag = tagDao.findObjectById(id) ;
+		Assert.isServiceValid(tag==null||StringUtils.isEmpty(tag.getName()), "数据可能不存在了!");
+		return tag;
+	}
+
 
 	
 
