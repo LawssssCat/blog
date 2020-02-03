@@ -50,12 +50,12 @@
         </div>
     </form>
     <!--2-->
-    <table class="ui celled teal table "><!--celled网格-->
+    <table id="dataTableId" class="ui compact celled teal table "><!--celled网格-->
         <thead>
             <tr>
                 <th>
 	                <div class="ui  toggle checkbox">
-					    <input type="checkbox" id="checkAll">
+					    <input type="checkbox" id="checkAll" >
 					    <label for="checkAll">全选</label>
 					</div>
                 </th>
@@ -72,8 +72,8 @@
             <tr>
                 <th colspan="100" class="actions"><!--colspan合并列-->
                    	<a href="javascript:toEditPage()" class="ui green inverted button item left aligned">添加</a>
+                   	<a href="javascript:deleteObjects()" class='ui red inverted button delete'>删除</a>
                     <div id="pageCurrentMenuId" class="ui right floated pagination menu">
-                        
                     </div>
                 </th>
             </tr>
@@ -100,24 +100,61 @@ $("#dataBodyId").on("click" , " .delete" , function(e) {
 	var data = $tr.data("rowData");
 	if(confirm("确认删除 "+data.name + "?")) {
 		var id = data.id ;
-		deleteObject(id) ; 
+		doDeleteObjects(id) ; 
 	}
 }) ;
 //ajax - delete
-function deleteObject(id) {
-	var url = "[[@{/tag/deleteObject}]]" ; 
+function doDeleteObjects(ids) {
+	//if(ids!=null&&(isNaN(ids)||ids instanceof Array)){}
+	var url = "[[@{/tag/deleteObjects}]]" ; 
 	$.ajax({
 		url : url ,
-		data: {id:id} , 
+		data: {ids:ids.toString()} , 
 		type: "delete" , 
 		success: function(result) {
-			if(result.state==1||result.state==0) {
+			if(result.state==1) {
+				var page = getPageCurrent() ; 
+				if(page!=null&&page>1) {
+					doFindPageObjects(page-1);
+				}else{
+					doFindPageObjects(1);
+				}
 				alert(result.message);
-				doFindPageObjects();
+			}else if(result.state==0){
+				alert(result.message);
 			}
 		}
 	}) ;
 }
+//批量删除
+function deleteObjects() {
+	var ids = [] ; //new Array() ;
+	var names = [] ; 
+	$.each($("#dataBodyId tr td input[type='checkbox']:checked") , function() {
+		var o = $(this).parents("tr").data("rowData"); 
+		ids.push(o.id);
+		names.push(o.name);
+	})
+	//console.log(ids);
+	if(confirm("确定要删除："+names.toString()+"?"))doDeleteObjects(ids) ;
+}
+//批量选中
+$("#dataBodyId").on('click' , "tr td input[type='checkbox']" , function() {
+	if($(this).prop('checked')){
+		var flag = true ; 
+		var cs = $("#dataBodyId tr td input[type='checkbox']") ; 
+		$.each(cs , function() {
+			flag = flag && $(this).prop('checked') ;
+		});
+		$('#checkAll').prop('checked',flag);
+	}else{
+		$('#checkAll').prop('checked',false);
+	}
+});
+$('#checkAll').on("click", function() {
+	var flag = $(this).prop("checked");
+	$("#dataBodyId tr td input[type='checkbox']").prop('checked' , flag) ;
+})
 /*
  * 分页
  */
@@ -138,9 +175,12 @@ $("#pageCurrentMenuId").on("click"," a", function(e) {
 	}
 	doFindPageObjects(page);
 });
+function getPageCurrent() {
+	return $("#pageCurrentMenuId a.active").html();
+}
 //find - page - ajax
 function doFindPageObjects( pageCurrent , name ) {
-	if(pageCurrent==null) pageCurrent = $("#pageCurrentMenuId a.active").html();
+	if(pageCurrent==null) pageCurrent = getPageCurrent() ; 
 	if(name==null) name = $("[name='searchName']").val() ; 
 	var url = "[[@{/tag/findPageObject}]]" ; 
 	$.ajax({
@@ -152,6 +192,7 @@ function doFindPageObjects( pageCurrent , name ) {
 		type: "GET" ,
 		dataType: "json" , 
 		success: function(result) {
+			$('#checkAll').prop('checked' , false) ;
 			showResultData(result) ; 
 		}
 	});
@@ -193,7 +234,7 @@ function showResultData(result) {
 //更新页码
 //page-menu
 function showPageMenu(pageTotal , pageCurrent) {
-	var menu = $("#pageCurrentMenuId") ; 
+	var menu = $("#pageCurrentMenuId") ;
 	menu.empty();
 	menu.append("<a class='icon item previous'><i class='left chevron icon'></i></a>");
 	for(var i=1 ; i<=pageTotal ; i++) {

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-
+<head>
 <!-- 引入 -->
-<head th:insert="/fragments/_fragments :: head('写博客')"></head>
+<th:block th:replace="/fragments/_fragments :: head('写博客')"></th:block>
+<!-- md 编辑器 -->
+<link rel="stylesheet" th:href="@{/dist/lib/editormd/css/editormd.min.css}">
+</head>
 <body>
 <!-- 引入 -->
 <nav th:replace="/fragments/_fragments :: menu(null)"></nav>
 
-
-<!-- md 编辑器 -->
-<link rel="stylesheet" th:href="@{/dist/lib/editormd/css/editormd.min.css}">
 
 
 <!--                                                                                        
@@ -36,11 +36,11 @@
 
 
 
-<div class="ui container"><!--container，外层容器，适合响应移动端-->
+<div class="ui segment"><!--container，外层容器，适合响应移动端-->
     <!--主体-->
     <form  class="ui form">
         <!--1标题-->
-        <div class="required field">
+        <div class="required field ">
             <div class="ui left labeled input">
                 <div class="ui teal basic compact selection dropdown label">
                     <input type="hidden">
@@ -57,7 +57,8 @@
         </div>
         <!--2内容-->
         <div class="field">
-            <div id="md-content" style="z-index: 1 !important"> <!-- 第三方插件 Editor.md -->
+            <div id="md-content" style="z-index:1 !important;" > <!-- 第三方插件 Editor.md -->
+             	<!-- Server-side output Markdown text -->
                 <textarea style="display:none;"></textarea>
             </div>
         </div>
@@ -146,15 +147,214 @@
  * 初始化 markdown 编辑器
  */
 var testEditor; //第三方 md edit
-$(function() {
-    testEditor = editormd("md-content", {
-        width   : "100%",
-        height  : 640,
-        syncScrolling : "single",
-        path    : "[[${#request.getContextPath()}]]/dist/lib/editormd/lib/" , 
-        emoji   : false
+$(function() { 
+    testEditor = editormd("md-content", {	//详细配置: https://github.com/pandao/editor.md
+    										//案例:http://editor.md.ipandao.com/examples/#customs
+    	mode					: "gfm",          	// gfm or markdown
+    	//name          		: "",             	// Form element name for post
+    	//value             	: "",             	// value for CodeMirror, if mode not gfm/markdown
+    	//theme                	: "",             	// 主题, 		可选: 'dark'				Editor.md self themes, before v1.5.0 is CodeMirror theme, default empty 
+    	editorTheme          	: "blackboard",     	// 编辑主题, 	可选: 'pastel-on-dark'	全部:http://editor.md.ipandao.com/examples/themes.html	Editor area, this is CodeMirror theme at v1.5.0 
+    	//previewTheme         	: "dark",          	// 预览主题, 	可选: 'dark', 'default' 				Preview area theme, default empty 
+    	//markdown             	: "",            	// 内容, Markdown source code
+    	//appendMarkdown       	: "",             	// if in init textarea value not empty, append markdown to textarea
+        width					: "100%",
+        height					: 740,
+        path    				: "[[@{/dist/lib/editormd/lib/}]]" ,    // Dependents module file directory 你的path路径（原资源文件中lib包在我们项目中所放的位置）
+        //pluginPath           	: "",             	// If this empty, default use settings.path + "../plugins/"
+        delay                	: 300,            	// Delay parse markdown to html, Uint : ms
+        //autoLoadModules      	: true,           	// Automatic load dependent module files
+        //watch 				: false,          	// 关闭实时预览
+        placeholder          	: "Enjoy Markdown! coding now...",
+        //gotoLine             	: true,           	// 可转跳到行 Enable / disable goto a line
+        //codeFold 				: true,				// 可代码折叠
+        //autoHeight           	: true,				// 自动高度
+        //autoFocus            	: true,           	// Enable / disable auto focus editor left input area
+        //autoCloseTags        	: true,
+        //searchReplace        	: true,           	// 可搜索替换 Enable / disable (CodeMirror) search and replace function
+	    syncScrolling        	: true,           	// options: true | false | "single", default true
+	    //readOnly             	: true,          	// 只读			Enable / disable readonly mode 
+	    //tabSize              	: 4,
+	    //indentUnit           	: 4,
+	    //lineNumbers          	: false,           	// Display editor line numbers
+	    //lineWrapping         	: true,
+        htmlDecode 				: "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启    
+        //toolbar  				: false,         	// 关闭工具栏
+        //previewCodeHighlight 	: false, 			// 关闭预览 HTML 的代码块高亮，默认开启
+        emoji 					: true,
+        taskList 				: true,
+        tocm            		: true,         	// Using [TOCM]
+        tex 					: true,          	// 开启科学公式TeX语言支持，默认关闭
+        flowChart 				: true,             // 开启流程图支持，默认关闭
+        sequenceDiagram 		: true,       		// 开启时序/序列图支持，默认关闭,
+        //dialogLockScreen 		: false,   			// 设置弹出层对话框不锁屏，全局通用，默认为true
+        //dialogShowMask 		: false,     		// 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+        //dialogDraggable 		: false,    		// 设置弹出层对话框不可拖动，全局通用，默认为true
+        dialogMaskBgColor 		: "#000", 			// 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+        dialogMaskOpacity 		: 0.4,    			// 设置透明遮罩层的透明度，全局通用，默认值为0.1
+        fontSize             	: "14px",
+        saveHTMLToTextarea 		: true,    			// 保存 HTML 到 Textarea
+        imageUpload				: true,				// 图片上传功能
+        imageFormats 			: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL 			: "./php/upload.php",
+        
+        //toolbar              	: true,           // show or hide toolbar
+        //toolbarAutoFixed     	: true,           // 工具栏自动固定定位的开启与禁用 on window scroll auto fixed position
+        toolbarIcons 			: function() {	
+        	// 工具栏图标  Toolbar icons mode, options: full, simple, mini, See `editormd.toolbarModes` property.
+        	// or `editormd.toolbarIconsClass`
+            // Or return editormd.toolbarModes[name]; // full, simple, mini
+            // Using "||" set icons align right.
+            return ["undo", "redo", 
+            		"|", "bold", "del","italic", "quote", "ucwords", "uppercase", "lowercase",
+            		"|", "h1", "h2", "h3", "h4", "h5", "h6", 
+            		"|", "list-ul", "list-ol", "hr", 
+            		"|", "table", "datetime", "emoji", "html-entities", "pagebreak",
+            		"|", "clear", "loadfile", 'savefile' , // "testIcon1", "testIcon2",  "faicon", 
+            		"|", "watch", "preview", "fullscreen", //"watch", "fullscreen", "preview" 
+            		"||", "help", "info"
+            		]
+            
+        },
+		/* toolbarIconsClass : {
+            testIcon1 : "fa fa-gears"  // 指定一个FontAawsome的图标类
+        },
+        toolbarIconTexts : {
+            testIcon2 : "测试按钮"  // 如果没有图标，则可以这样直接插入内容，可以是字符串或HTML标签
+        }, */
+     	// 用于增加自定义工具栏的功能，可以直接插入HTML标签，不使用默认的元素创建图标
+        toolbarCustomIcons : {
+        	loadfile   : `<div class='ui button mini' onclick='javascript:$(this).next().click()'>上传md文件</div><input type='file' accept='.md' style='display:none'  />` ,
+        	savefile   : `<div class='ui button mini' onclick='javascript:$(this).next().click()'>保存到本地</div><input type='file' accept='.md' style='display:none'  />` ,
+            /* faicon : `<i class="fa fa-star" onclick="javascript:alert('faicon');"></i>` */
+        },
+        // 自定义工具栏按钮的事件处理
+        toolbarHandlers : {
+            /**
+             * @param {Object}      cm         CodeMirror对象
+             * @param {Object}      icon       图标按钮jQuery元素对象
+             * @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
+             * @param {String}      selection  编辑器选中的文本
+             */
+             /*testIcon1 : function(cm, icon, cursor, selection) {
+
+                //var cursor    = cm.getCursor();     //获取当前光标对象，同cursor参数
+                //var selection = cm.getSelection();  //获取当前选中的文本，同selection参数
+
+                // 替换选中文本，如果没有选中文本，则直接插入
+                cm.replaceSelection("[" + selection + ":testIcon]");
+
+                // 如果当前没有选中的文本，将光标移到要输入的位置
+                if(selection === "") {
+                    cm.setCursor(cursor.line, cursor.ch + 1);
+                }
+
+                // this == 当前editormd实例
+                console.log("testIcon =>", this, cm, icon, cursor, selection);
+            },
+
+			testIcon2 : function(cm, icon, cursor, selection) {
+                cm.replaceSelection("[" + selection + ":testIcon2](" + icon.html() + ")");
+                console.log("testIcon2 =>", this, icon.html());
+            } */
+        },
+        lang : { //hover 提示 // Language data, you can custom your language.
+        	//name        : "zh-cn",
+            //description : "开源在线Markdown编辑器<br/>Open source online Markdown editor.",
+            //tocTitle    : "目录",
+            toolbar : {
+            	loadfile : "上传文件",
+                //testIcon1 : "自定义按钮testIcon",  // 自定义按钮的提示文本，即title属性
+                //testIcon2 : "自定义按钮testIcon2",  
+                undo : "撤销 (Ctrl+Z)"
+            },
+            button: {
+                //...
+            },
+            dialog : {
+                //...
+            }
+            //...
+        },
+        onload : function(){ //加载时候运行的函数
+        	console.log('onload', this);
+            //this.fullscreen();
+            //this.unwatch();
+            //this.watch().fullscreen();
+
+            //this.setMarkdown("#PHP");
+            //this.width("100%");
+            //this.height(480);
+            //this.resize("100%", 640);
+            
+            /*
+             * 导入
+             */
+            loadFileListener() ; 
+            /*
+             * 拖入
+             */
+            dropFileListener()
+        }
     });
 });
+function loadFileListener() {
+	$('[type=\"file\"]').bind("change", function(){ //加载md文件
+    	console.log("load path" , $(this).val());
+    	var $target = $(this)  ; 
+        var files = this.files;
+        if(files.length){
+            let file = files[0];
+            let name = file.name;//读取选中文件的文件名
+            let size = file.size;//读取选中文件的大小
+            let reader = new FileReader();//这里是核心！！！读取操作就是由它完成的。
+            reader.onload = function(){ //当读取完成之后会回调这个函数，然后此时文件的内容存储到了result中。直接操作即可。
+            	//console.log(this.result) 
+                testEditor.cm.replaceSelection(this.result); //cm - CodeMirror
+                $target.val(null);
+                //在最后load
+                //testEditor.gotoLine("last");
+                // or
+                //testEditor.gotoLine(testEditor.cm.lineCount());
+            };
+            reader.readAsText(file);//加载
+          }
+    });
+}
+function dropFileListener() {
+	var dropbox = document.getElementById("md-content");  
+    dropbox.addEventListener("dragenter", dragenter, false);   // true 捕捉, false 冒泡
+    dropbox.addEventListener("dragover", dragover, false);  
+    dropbox.addEventListener("drop", drop, false);   
+
+	function dragenter(e) {  
+	    e.stopPropagation();  
+	    e.preventDefault();  
+	}  
+
+	function dragover(e) {  
+	    e.stopPropagation();  
+	    e.preventDefault();  
+	}
+	
+	function drop(e) {  
+	    e.stopPropagation();  
+	    e.preventDefault();   
+	    var dt = e.dataTransfer;  
+	    var files = dt.files;
+	    if(files.length)
+	    {
+	       var file = files[0];
+	       var reader = new FileReader();
+	       reader.onload = function()
+	       {
+	    	   testEditor.cm.replaceSelection(this.result); //cm - CodeMirror
+	           //document.getElementById("filecontent").innerHTML = this.result;
+	       };
+	       reader.readAsText(file);
+	    }
+	} 
+}
 /*
  * 表格验证
  */
@@ -185,6 +385,8 @@ $('.ui.form').form({ // 指定一些规则
     setting:{
     },
     onSuccess : function(event, fields) {
+    	var m = testEditor.getMarkdown();
+    	console.log(m);
     	return false ;
     },
     inline : true,

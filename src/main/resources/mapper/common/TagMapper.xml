@@ -46,13 +46,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 
-<delete id="deleteObject">
+<delete id="deleteObjects">
 	delete from <include refid="tableId" />
 	<where> 
 		1=2
-		<if test="id != null">
-		or id=#{id}
-		</if> 
+		<foreach collection="ids" item="id">
+			<if test="id != null">
+			or id=#{id}
+			</if> 
+		</foreach>
 	</where>
 </delete>
 

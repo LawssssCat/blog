@@ -36,7 +36,12 @@
     <link rel="stylesheet" th:href="@{/dist/css/typo.css}"><!-- 内容排版 -->
     <link rel="stylesheet" th:href="@{/dist/lib/prism/prism.css}"> <!--代码高亮-->
     <link rel="stylesheet" th:href="@{/dist/lib/nprogress/nprogress.css}"> <!-- 进度条 -->
-    
+    <style>
+    	/* .ui.form input{
+    		width: auto !important ; /*semantic editormd 冲突*/
+    		padding: 0 !important ; 
+    	} */
+    </style>
     
     <!-- 引入 b a s e - s c r i p t -->
 	<th:block th:replace=":: base-script"></th:block><!-- semantic、jquery -->
@@ -147,7 +152,7 @@
 <!-- 点击 换背景 -->
 <script async id="ribbon" size="150" alpha='0.3' zIndex="-2" th:src="@{/dist/lib/canvas-ribbon/canvas-ribbon.js}"></script>
 <!-- 点击 炸裂 -->
-<canvas async id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;"></canvas>
+<canvas async id="fireworks" style="position:fixed;left:0;top:0;pointer-events:none;z-index:600 !important;"></canvas>
 <script async type="text/javascript" th:src="@{/dist/js/shubiao.js}"> </script>
 <!-- 进度条 配合pjax 香 -->
 <script th:src="@{/dist/lib/nprogress/nprogress.js}" type="text/javascript"></script>
@@ -170,7 +175,7 @@
 
 <!-- 看板娘 -->
 <script async src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js" ></script><!-- 实现拖动效果，需引入 JQuery UI -->
-<script async id="waifu" lib="@{/dist/lib}" th:src="@{/dist/lib/live2d-demo/assets/autoload.js}" ></script><!-- 看板娘 异步加载 -->
+<script async id="waifu" th:lib="@{/dist/lib}" th:project="@{/}" th:src="@{/dist/lib/live2d-demo/assets/autoload.js}" ></script><!-- 看板娘 异步加载 -->
 <!-- 文章(我弱我有理..) -->
 <script async th:src="@{/dist/lib/tocbot/dist/tocbot.js}"></script><!--文章目录-->
 <script async th:src="@{/dist/lib/qrcodejs/qrcode.js}"></script><!--生成二维码-->
@@ -247,9 +252,16 @@ function a() {
 	    action: 'select' , 
 	    transition: 'drop'
 	});
+	//下拉框
+	$('.ui.dropdown.selection').dropdown({
+	    on: 'hover' , 
+	    //action: 'select' , 
+	    transition: 'drop'
+	});
 }
-$(document).on('pjax:end' , a);
-$(document).ready(a);
+//$(document).on('pjax:start' , a); //换页
+$(document).on('pjax:end' , a);//换页完成
+$(document).ready(a); //刷新
 </script>
 </th:block>
 

@@ -1,5 +1,7 @@
 package com.cy.myblog.controller;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cy.myblog.common.vo.JsonResult;
@@ -52,10 +55,10 @@ public class TagController {
 		return new JsonResult(pageObject);
 	}
 	
-	@DeleteMapping("/deleteObject")
-	public JsonResult doDeleteObject(Integer id) {
-		log.debug("delete id={}" , id);
-		int rows = tagService.doDeleteObject(id) ; 
+	@DeleteMapping("/deleteObjects")
+	public JsonResult doDeleteObjects(Integer ... ids) {
+		log.debug("delete ids={}" , Arrays.toString(ids));
+		int rows = tagService.doDeleteObjects(ids) ; 
 		return new JsonResult("delete ok! rows="+rows);
 	}
 	

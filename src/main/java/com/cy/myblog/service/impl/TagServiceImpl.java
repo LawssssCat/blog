@@ -58,9 +58,12 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public int doDeleteObject(Integer id) {
-		Assert.isArgumentValid(id<1, "id输入异常!");
-		int rows = tagDao.deleteObject(id) ;
+	public int doDeleteObjects(Integer ... ids) {
+		Assert.isArgumentValid(ids==null||ids.length<1, "请选择一个!");
+		for (Integer id : ids) {
+			Assert.isArgumentValid(id<1, "id输入异常!");
+		}
+		int rows = tagDao.deleteObjects(ids) ;
 		Assert.isServiceValid(rows==0, "数据可能不存在了!");
 		return rows;
 	}

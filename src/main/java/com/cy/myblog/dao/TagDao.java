@@ -22,10 +22,10 @@ public interface TagDao {
 			@Param("startIndex") Integer startIndex, 
 			@Param("pageSize") Integer pageSize);
 
-	int deleteObject(Integer id);
+	int deleteObjects(@Param("ids") Integer ... ids);
 
 	int updataObject(Type type);
 
-	Tag findObjectById(Integer id);
+	Tag findObjectById(@Param("id") Integer id);
 
 }

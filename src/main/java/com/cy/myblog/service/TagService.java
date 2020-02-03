@@ -9,7 +9,7 @@ public interface TagService {
 	int doInsertObject(Tag tag);
 	boolean doIsExistName(String name)  ;
 	PageObject<Tag> doFindPageObject(String name, Integer pageCurrent);
-	int doDeleteObject(Integer id);
+	int doDeleteObjects(Integer ... ids);
 	int doUpdateObject(Type type);
 	Tag doFindObjectById(Integer id); 
 }
