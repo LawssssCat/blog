@@ -219,6 +219,7 @@
             unwatch          : "fa-eye",
             preview          : "fa-desktop",
             search           : "fa-search",
+            syncScrolling    : "fa-arrows-v" , 
             fullscreen       : "fa-arrows-alt",
             clear            : "fa-eraser",
             help             : "fa-question-circle",
@@ -264,6 +265,7 @@
                 watch            : "关闭实时预览",
                 unwatch          : "开启实时预览",
                 preview          : "全窗口预览HTML（按 Shift + ESC还原）",
+                syncScrolling    : "同步滚动",
                 fullscreen       : "全屏（按ESC还原）",
                 clear            : "清空",
                 search           : "搜索",
@@ -936,6 +938,7 @@
          */
         
         config : function(key, value) {
+        	debugger ;
             var settings = this.settings;
             
             if (typeof key === "object")
@@ -1002,6 +1005,7 @@
          */
         
         showToolbar : function(callback) {
+        	debugger ;
             var settings = this.settings;
             
             if(settings.readOnly) {
@@ -1105,6 +1109,7 @@
          */
         
         setToolbar : function() {
+        	debugger ;
             var settings    = this.settings;  
             
             if(settings.readOnly) {
@@ -1140,7 +1145,7 @@
             var toolbarMenu = toolbar.find("." + this.classPrefix + "menu"), menu = "";
             var pullRight   = false;
             
-            for (var i = 0, len = icons.length; i < len; i++)
+            for (var i = 0, len = icons.length; i < len; i++) // 遍历toolbar设置
             {
                 var name = icons[i];
 
@@ -1184,7 +1189,9 @@
 
                     menuItem += "</li>";
 
-                    menu = pullRight ? menuItem + menu : menu + menuItem;
+                    menu = 	pullRight 		?
+                    		menuItem + menu : //右
+                    		menu + menuItem ; 
                 }
             }
 
@@ -1659,17 +1666,21 @@
          */
         
         bindScrollEvent : function() {
-            
+            debugger 
             var _this            = this;
-            var preview          = this.preview;
+            var preview          = this.preview; //预览
             var settings         = this.settings;
             var codeMirror       = this.codeMirror;
-            var mouseOrTouch     = editormd.mouseOrTouch;
+            var mouseOrTouch     = editormd.mouseOrTouch; 
+            var toolbar          = this.toolbar ; 
             
-            if (!settings.syncScrolling) {
+            if (!settings.syncScrolling) { //是否绑定滚动
+            	toolbar.find(".fa[name=syncScrolling]").parent().removeClass("active");
                 return this;
+            }else{
+            	toolbar.find(".fa[name=syncScrolling]").parent().addClass("active"); //active 图标
             }
-                
+            
             var cmBindScroll = function() {    
                 codeMirror.find(".CodeMirror-scroll").bind(mouseOrTouch("scroll", "touchmove"), function(event) {
                     var height    = $(this).height();
@@ -1763,7 +1774,7 @@
             var cm               = this.cm;
             var settings         = this.settings;
             
-            if (!settings.syncScrolling) {
+            if (!settings.syncScrolling) { //是否同步滚动
                 return this;
             }
             
@@ -1818,7 +1829,7 @@
                 _this.resize();
             });
             
-            this.bindScrollEvent().bindChangeEvent();
+            this.bindScrollEvent().bindChangeEvent(); //屏幕同步滚动
             
             if (!recreate)
             {
@@ -2592,7 +2603,26 @@
             
             return this;
         },
-        
+        /**
+         * 同步滚动
+         */
+        syncScrolling : function() {
+        	debugger;
+        	var _this            = this ; 
+        	var editor           = this.editor;
+        	var settings         = this.settings;
+        	var toolbar          = this.toolbar; //工具栏
+        	
+        	if (toolbar) {
+                toolbar.find(".fa[name=syncScrolling]").parent().toggleClass("active"); 
+            }
+        	
+        	if(settings.syncScrolling) {
+        		_this.config('syncScrolling' , false);
+        	}else {
+        		_this.config('syncScrolling' , true);
+        	}
+        },
         /**
          * 编辑器全屏显示
          * Fullscreen show
@@ -2601,7 +2631,7 @@
          */
         
         fullscreen : function() {
-            
+            debugger ; 
             var _this            = this;
             var state            = this.state;
             var editor           = this.editor;
@@ -3161,7 +3191,12 @@
         preview : function() {
             this.previewing();
         },
-
+        
+        syncScrolling : function() { //同步滚动
+        	debugger ;
+        	this.syncScrolling() ;
+        },
+        
         fullscreen : function() {
             this.fullscreen();
         },
