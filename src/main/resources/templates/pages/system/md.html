@@ -175,6 +175,18 @@ $(function() {
         //dialogDraggable 		: false,    		// 设置弹出层对话框不可拖动，全局通用，默认为true
         dialogMaskBgColor 		: "#000", 			// 设置透明遮罩层的背景颜色，全局通用，默认为#fff
         dialogMaskOpacity 		: 0.4,    			// 设置透明遮罩层的透明度，全局通用，默认值为0.1
+        imageUpload				: true,				// 图片上传功能
+        imageFormats 			: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL 			: "./php/upload.php",
+        /*
+         * 上传的后台只需要返回一个 JSON 数据，结构如下：
+         {
+            success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
+            message : "提示的信息，上传成功或上传失败及错误信息等。",
+            url     : "图片地址"        // 上传成功时才返回
+         }
+         */
+        
         fontSize             	: "14px",
         
         //pageBreak 			: true , 			// 默认 true , 分页符
@@ -182,9 +194,6 @@ $(function() {
         //emailLink 			: false,    		// disable email address auto link
         
         saveHTMLToTextarea 		: true,    			// 保存 HTML 到 Textarea
-        imageUpload				: true,				// 图片上传功能
-        imageFormats 			: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL 			: "./php/upload.php",
         
         //toolbarAutoFixed     	: true,           // 工具栏自动固定定位的开启与禁用 on window scroll auto fixed position
         toolbarIcons 			: function() {	
@@ -363,7 +372,7 @@ $('.ui.form').form({ // 指定一些规则
  */
 function waifuCallback() {
 	var waifu = $('.waifu');
-	waifu.css({"left":"50%"});
+	waifu.css({"left":"20%"});
 }
 </script>
 

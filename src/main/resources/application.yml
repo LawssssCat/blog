@@ -1,4 +1,5 @@
 mybatis:
+  type-aliases-package: com.cy.myblog.pojo.* # vo 可写全名
   mapper-locations:
   - classpath:/mapper/**/**.xml
     

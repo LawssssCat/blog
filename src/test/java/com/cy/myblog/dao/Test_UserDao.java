@@ -19,11 +19,11 @@ public class Test_UserDao {
 	private UserDao userDao ; 
 	
 	@Test
-	public void test_insertObject() {
+	public void test_insertObject() { 
 		//Universally Unique Identifier
 		String salt = UUID.randomUUID().toString();
-		String password = "123456" ;
-		String username = "admin"; //org.springframework.dao.DuplicateKeyException
+		String password = "111111" ;
+		String username = "alan"; //org.springframework.dao.DuplicateKeyException
 		
 		//加密
 		int hashIterations =1 ;//加密次数
@@ -33,7 +33,7 @@ public class Test_UserDao {
 		
 		User user = 
 				new User()
-				.setAvatarUrl("https://avatar.csdnimg.cn/D/A/9/2_lawsssscat_1578788256.jpg")
+				.setAvatarUrl("https://i.loli.net/2020/02/04/UF9dp6MvGAoaCDS.jpg") //https://avatar.csdnimg.cn/D/A/9/2_lawsssscat_1578788256.jpg
 				.setCreatedTime(null)
 				.setEmail("1191693505@qq.com")
 				.setId(null)

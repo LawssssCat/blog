@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </sql>
 
 <!-- 全列名映射 -->
-<resultMap id="tagMapId" type="com.cy.myblog.pojo.po.Tag">
+<resultMap id="tagMapId" type="Tag">
 	<id property="id" column="id" />
 	<result property="name" column="name" />
 </resultMap>
