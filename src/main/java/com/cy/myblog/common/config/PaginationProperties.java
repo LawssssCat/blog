@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Configuration
-@ConfigurationProperties("page.config")
+@ConfigurationProperties(prefix = "page.config")
 public class PaginationProperties {
 
 	final static private Integer DEFAULT_PAGESIZE = 10 ;  

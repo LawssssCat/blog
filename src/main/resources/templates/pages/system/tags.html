@@ -28,11 +28,11 @@
                                                                                        -->
 
 <!--mind 中间内容-->
-<div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+<div id="mainContentId"><!--m-padded-tb-big 自定义-->
 
 
 
-<div class="ui container"><!--container，外层容器，适合响应移动端-->
+<div class="ui container m-container-large m-padded-tb-big"><!--container，外层容器，适合响应移动端-->
     <!--1-->
     <form action="javascript:doFindPageObjects(1)" class="ui segment form">
         <div class=" fields inline"><!--inline：宽度非全-->
@@ -135,8 +135,18 @@ function deleteObjects() {
 		ids.push(o.id);
 		names.push(o.name);
 	})
+	if(ids==null||ids.length==0) {alert('请选择一个!') ; return ;} 
+	let str = "确定要删除以下选项？\n"; 
+	$.each(names , function(index , item ) {
+		str+= (index+1) + ". "+ item +"\n" ; 
+	})
 	//console.log(ids);
-	if(confirm("确定要删除："+names.toString()+"?"))doDeleteObjects(ids) ;
+	if(confirm(str)){
+		doDeleteObjects(ids)
+	}else{
+		$('#checkAll').prop('checked',false);
+		$("#dataBodyId tr td input[type='checkbox']:checked").prop('checked' , false );
+	} ;
 }
 //批量选中
 $("#dataBodyId").on('click' , "tr td input[type='checkbox']" , function() {

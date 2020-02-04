@@ -212,7 +212,7 @@
             table            : "fa-table",
             datetime         : "fa-clock-o",
             emoji            : "fa-smile-o",
-            "html-entities"  : "fa-copyright",
+            "html-entities"  : "fa-copyright", //"fa-copyright", fa 
             pagebreak        : "fa-newspaper-o",
             "goto-line"      : "fa-terminal", // fa-crosshairs
             watch            : "fa-eye-slash",
@@ -1181,8 +1181,9 @@
                         menuItem += settings.toolbarCustomIcons[name];
                     }
                     else 
-                    {
-                        menuItem += "<a href=\"javascript:;\" title=\"" + title + "\" unselectable=\"on\">";
+                    {	//class='active'
+                    	let astr = "<a href=\"javascript:;\" title=\"" + title + "\" unselectable=\"on\">";
+                        menuItem += astr ; 
                         menuItem += "<i class=\"fa " + iconClass + "\" name=\""+name+"\" unselectable=\"on\">"+((isHeader) ? name.toUpperCase() : ( (iconClass === "") ? iconTexts : "") ) + "</i>";
                         menuItem += "</a>";
                     }
@@ -1264,7 +1265,7 @@
                 if (name === "") {
                     return ;
                 }
-                
+                debugger ;
                 _this.activeIcon = icon;
 
                 if (typeof toolbarIconHandlers[name] !== "undefined") 
@@ -2724,12 +2725,12 @@
          */
         
         executePlugin : function(name, path) {
-            
+            debugger
             var _this    = this;
             var cm       = this.cm;
             var settings = this.settings;
             
-            path = settings.pluginPath + path;
+            path = settings.pluginPath + path; //拼路径
             
             if (typeof define === "function") 
             {            
@@ -2747,14 +2748,14 @@
             
             if ($.inArray(path, editormd.loadFiles.plugin) < 0)
             {
-                editormd.loadPlugin(path, function() {
+                editormd.loadPlugin(path, function() { //加载
                     editormd.loadPlugins[name] = _this[name];
                     _this[name](cm);
                 });
             }
             else
             {
-                $.proxy(editormd.loadPlugins[name], this)(cm);
+                $.proxy(editormd.loadPlugins[name], this)(cm); //代理
             }
             
             return this;

@@ -83,7 +83,7 @@
 			var classPrefix = this.classPrefix;
 
 			$.extend(true, this.lang, langs[this.lang.name]);
-			this.setToolbar();
+			//this.setToolbar(); // 重置 工具栏 目的？
 
 			var lang        = this.lang;
 			var dialogName  = classPrefix + pluginName, dialog;

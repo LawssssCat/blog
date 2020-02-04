@@ -28,11 +28,11 @@
                                                                                        -->
 
 <!--mind 中间内容-->
-<div id="mainContentId" class="m-container-large m-padded-tb-big"><!--m-padded-tb-big 自定义-->
+<div id="mainContentId"><!--m-padded-tb-big 自定义-->
 
 
 
-<div class="ui container"><!--container，外层容器，适合响应移动端-->
+<div class="ui container m-container-large m-padded-tb-big"><!--container，外层容器，适合响应移动端-->
     <!--1-->
     <form action="javascript:doFindPageObjects(1)" class="ui segment form">
         <div class=" fields inline"><!--inline：宽度非全-->
@@ -81,7 +81,7 @@
 /*
  * 编辑
  */
- $("#dataBodyId").on("click" , ".edit" , function(e) {
+$("#dataBodyId").on("click" , ".edit" , function(e) {
 	var $tr = $(this).parents("tr");
 	var data = $tr.data("rowData");
 	toEditPage(data.id);

@@ -19,7 +19,7 @@ try {
     .appendTo('head');
     
     $('body')//添加waifu主体
-    .append('<div class="waifu" style="z-index:500 !important;">'+
+    .append('<div class="waifu" style="z-index:500 !important;">'+ //最前面
     			'<div class="waifu-tips"></div>'+
     			'<canvas id="live2d" class="live2d"></canvas>'+
     			'<div class="waifu-tool">'+
@@ -41,6 +41,8 @@ try {
         	live2d_settings['aboutPageUrl']         = config.project+"blog/about";   // 关于页地址, '{URL 网址}' ,例如 'https://www.fghrsh.net/post/123.html'(来源-大佬博客)
             /* 在 initModel 前添加 */
             initModel(config.lib+"/live2d-demo/assets/waifu-tips.json");
+            
+            if(typeof waifuCallback === 'function') waifuCallback();
         }});
     }});
     

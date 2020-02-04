@@ -2,6 +2,8 @@
     background: url("../images/background.png");
 }
  */
+/*------ 清除 semantic 样式 -----------------*/
+ 
 /*------ 间距padded ----------------------*/
 .m-padded-mini {
     padding: 0.2em !important;
