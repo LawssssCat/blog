@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cy.myblog.common.config.WebServerProperties;
-import com.cy.myblog.common.exception.UserLogoutException;
+import com.cy.myblog.common.ex.UserLogoutException;
 import com.cy.myblog.common.utils.ShiroUtils;
 import com.cy.myblog.pojo.po.User;
 

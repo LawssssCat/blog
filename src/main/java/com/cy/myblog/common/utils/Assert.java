@@ -2,7 +2,7 @@ package com.cy.myblog.common.utils;
 
 import org.springframework.util.StringUtils;
 
-import com.cy.myblog.common.exception.ServiceException;
+import com.cy.myblog.common.ex.ServiceException;
 
 public class Assert {
 	

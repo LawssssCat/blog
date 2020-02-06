@@ -1,4 +1,4 @@
-package com.cy.myblog.common.exception;
+package com.cy.myblog.common.ex;
 
 public class ServiceException extends RuntimeException {
 

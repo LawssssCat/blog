@@ -1,7 +1,13 @@
-mybatis:
-  type-aliases-package: com.cy.myblog.pojo.* # vo 可写全名
+#mybatis-plus
+mybatis-plus:
+  configuration:
+    #暂时不要缓存
+    cache-enabled: false
+    #下划线转驼峰    map-underscore-to-camel-case: true 
+  #vo可写全名
+  type-aliases-package: com.cy.myblog.pojo.* 
   mapper-locations:
-  - classpath:/mapper/**/**.xml
+  - classpath:/mapper/**/*.xml
     
 
 spring:

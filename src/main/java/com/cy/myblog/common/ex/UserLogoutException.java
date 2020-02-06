@@ -1,4 +1,4 @@
-package com.cy.myblog.common.exception;
+package com.cy.myblog.common.ex;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

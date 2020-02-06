@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cy.myblog.common.config.PaginationProperties;
-import com.cy.myblog.common.exception.ServiceException;
+import com.cy.myblog.common.ex.ServiceException;
 import com.cy.myblog.common.utils.Assert;
 import com.cy.myblog.common.vo.PageObject;
 import com.cy.myblog.dao.TypeDao;
