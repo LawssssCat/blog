@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/user")
 public class UserController {
 
-	@RequestMapping("/doLogin")
+	@RequestMapping("/login")
 	public JsonResult doLogin(String username , String password , Boolean isRememberMe) {
 		log.debug("doLogin - username={}, password={}, rememberMe={}",username,password,isRememberMe);
 		AuthenticationToken token = //封装用户信息

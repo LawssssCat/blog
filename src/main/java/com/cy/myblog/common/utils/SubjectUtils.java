@@ -6,9 +6,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.subject.WebSubject;
 
+import com.cy.myblog.controller.ex.NoLoginException;
 import com.cy.myblog.pojo.po.User;
 
-public abstract class ShiroUtils {
+public abstract class SubjectUtils {
 
 	public static String getIP() {
 		Subject subject = SecurityUtils.getSubject();
@@ -23,29 +24,27 @@ public abstract class ShiroUtils {
 	}
 	
 	public static String getUsername() {
-		Subject subject = SecurityUtils.getSubject();
-		if(subject != null) {
-			Object principal = subject.getPrincipal();
-			if(principal instanceof User) {
-				User user = (User) principal ; 
-				return  user.getUsername() ; 
-			}
-		}
-		return null ;
+		return  getUser().getUsername() ;
 	}
 	
-	public static boolean isLogin() {
+	public static String getAvatarUrl() {
+		return  getUser().getAvatarUrl() ;
+	}
+	
+	public static Integer getUserId() {
+		return getUser().getId();
+	}
+	
+	public static User getUser() {
 		Subject subject = SecurityUtils.getSubject();
 		if(subject != null) {
 			Object principal = subject.getPrincipal();
 			if(principal instanceof User) {
-				User user = (User) principal ;
-				if(user.getValid()==1) {
-					return  true; 
-				}
+				return  (User) principal ;
 			}
 		}
-		return false ; 
+		throw new NoLoginException("没有登录");
 	}
+	
 	
 }

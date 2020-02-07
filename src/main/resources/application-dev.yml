@@ -14,11 +14,6 @@ server:
 logging:  level: 
     root: info 
     com.cy: debug
-web-service:
-  loginUrl: /doLoginUI
-  logoutUrl: /
-  systemPrefix: /system
-
 page:
   config: 
     pageSize: 5

@@ -5,18 +5,26 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class JsonResult<T> implements Serializable {
+public class JsonResult implements Serializable {
 	private static final long serialVersionUID = 7801773947571843766L;
 	
-	/**0:异常   1:正常*/
-	private Integer state = 1 ;
+	/**
+	 * 参考 BaseController
+	 * 400:异常   
+	 * 200:正常
+	 */
+	private Integer state = 200 ;
 	/**返回消息*/
-	private T data ;
+	private Object data ;
 	/**封装的控制层返回数据*/
 	private String message ; 
 
 	public JsonResult() {}
-	public JsonResult(T data) {
+	public JsonResult(Object data) {
+		this.data= data ;
+	}
+	public JsonResult(Integer state , Object data) {
+		this.state = state ; 
 		this.data= data ;
 	}
 	public JsonResult(String message) {
@@ -24,6 +32,6 @@ public class JsonResult<T> implements Serializable {
 	}
 	public JsonResult(Throwable e) {
 		message = e.getMessage() ; 
-		state = 0 ; //切换成异常状态
+		state = 400 ; //切换成异常状态
 	}
 }

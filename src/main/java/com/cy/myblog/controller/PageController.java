@@ -1,27 +1,57 @@
 package com.cy.myblog.controller;
 
-import org.apache.commons.collections.functors.FalsePredicate;
-import org.apache.shiro.SecurityUtils;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.cy.myblog.common.config.WebServerProperties;
-import com.cy.myblog.common.ex.UserLogoutException;
-import com.cy.myblog.common.utils.ShiroUtils;
-import com.cy.myblog.pojo.po.User;
+import com.cy.myblog.common.config.WebUrlProperties;
+import com.cy.myblog.common.utils.SubjectUtils;
+import com.cy.myblog.controller.ex.NoPageFountException;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-public class PageController {
+public class PageController extends BaseController {
 	
 	@Autowired
-	private WebServerProperties webServerProperties ; 
+	private WebUrlProperties webUrlProperties ; 
+	
+	@RequestMapping("/{page}")
+	public String parsePath(
+			@PathVariable("page") String page, 
+			Model model ) {
+		//to 登录
+		if(webUrlProperties.getLogin().equals(page)) {
+			return toLoginPage(page) ;
+		}else if(
+				Arrays.asList(webUrlProperties.getSystems())
+				.contains(page)) { 
+		//to 管理
+			return toSystemPage(page , model );
+		}else {
+			throw new NoPageFountException("没有页面") ;
+		}
+	}
+	
+	
+	@RequestMapping("/{page}/edit")
+	public String parsePathEdit(
+			@PathVariable("page") String page, 
+			Model model ) {
+		//to 管理
+		String[] systems = 
+				webUrlProperties.getSystems();
+		if(Arrays.asList(systems).contains(page)) {
+			return toSystemPageEdit(page , model );
+		}
+		throw new NoPageFountException("没有页面") ;
+	}
+	
 	
 	/****************************************************************************************************/
 	/****************************************************************************************************/
@@ -30,16 +60,19 @@ public class PageController {
 	/*********                                                                                  *********/
 	/****************************************************************************************************/
 	/****************************************************************************************************/
-	@RequestMapping({"/doIndexUI"  , "/article"})
-	public String toIndexUI() {
-		log.debug("toIndexUI redirect:/");
-		return "redirect:/"; 
-	}
-	@RequestMapping("/")
-	public String doIndexUI() {
-		log.debug("doIndexUI /index");
-		return "forward:/blog/index";//骚操作..模仿csdn..
-	}
+
+	//TODO
+	
+//	@RequestMapping({"/doIndexUI"  , "/article"})
+//	public String toIndexUI() {
+//		log.debug("toIndexUI redirect:/");
+//		return "redirect:/"; 
+//	}
+//	@RequestMapping("/")
+//	public String doIndexUI() {
+//		log.debug("doIndexUI /index");
+//		return "forward:/blog/index";//骚操作..模仿csdn..
+//	}
 	
 	/****************************************************************************************************/
 	/****************************************************************************************************/
@@ -49,14 +82,10 @@ public class PageController {
 	/****************************************************************************************************/
 	/****************************************************************************************************/
 	/**到登录界面*/
-	@RequestMapping({"/doLoginUI", "/login"})
-	public String doLoginUI() {
-		log.debug("doLoginUI /login");
-		return "/blog/login"; 
+	public String toLoginPage(String page) {
+		log.debug("toLoginPage");
+		return "/" + page ; 
 	}
-	
-	
-	
 	
 	/****************************************************************************************************/
 	/****************************************************************************************************/
@@ -65,17 +94,21 @@ public class PageController {
 	/*********                                                                                  *********/
 	/****************************************************************************************************/
 	/****************************************************************************************************/
-	@RequestMapping({"/system/{page}/{id}" , "/system/{page}" , "/system"}) 
-	public String toSysUI(
-			@PathVariable(required = false ,value = "page") String page  , 
-			@PathVariable(required = false , value = "id") Integer id , 
-			Model model) {
-		if(!ShiroUtils.isLogin()) throw new UserLogoutException("用户没有登录");
-		model.addAttribute("user", SecurityUtils.getSubject().getPrincipal()) ; //添加用户
-		if(StringUtils.isEmpty(page)) page = webServerProperties.getSystemIndex() ;
-		if(id!=null&&0<id) model.addAttribute("id", id) ; 
-		log.debug("model add user and to system page: [{}] " ,  page);
-		return webServerProperties.getSystemPrefix()+"/"+page ; //默认 /sytem/xxx
+	/**到管理页面*/
+	public String toSystemPage(String page  , Model model) {
+		model.addAttribute("username", SubjectUtils.getUsername()) ; //添加用户名
+		model.addAttribute("avatarUrl", SubjectUtils.getAvatarUrl()) ; //添加头像 url
+		log.debug("toSystemPage [page={}] " ,  page);
+		return webUrlProperties.getSystemPrefix() + "/" + page ;
+	}
+	
+	
+	/**到管理编辑页面*/
+	public String toSystemPageEdit(String page  , Model model) {
+		model.addAttribute("username", SubjectUtils.getUsername()) ; //添加用户名
+		model.addAttribute("avatarUrl", SubjectUtils.getAvatarUrl()) ; //添加头像 url
+		log.debug("toSystemPageEdit [page={}] " ,  page );
+		return webUrlProperties.getSystemPrefix() + "/" + page + "_edit"  ;
 	}
 	
 	
@@ -86,19 +119,19 @@ public class PageController {
 	/*********                                                                                  *********/
 	/****************************************************************************************************/
 	/****************************************************************************************************/
-	@RequestMapping(value = "/blog/{page}" ) //index login forward:
-	public String toCommonPage( 
-			@PathVariable("page") String page , 
-			Model model) {
-		String url = "/blog/"+page ;
-		if(ShiroUtils.isLogin()) {
-			Object user = SecurityUtils.getSubject().getPrincipal();
-			model.addAttribute("user", user);//添加用户
-			log.debug("toCommonPage url={} and is log user={}",url , user.toString());
-		}else {
-			log.debug("toCommonPage url={}",url);
-		}
-		return url; 
-	}
+//	@RequestMapping(value = "/blog/{page}" ) //index login forward:
+//	public String toCommonPage( 
+//			@PathVariable("page") String page , 
+//			Model model) {
+//		String url = "/blog/"+page ;
+//		if(SubjectUtils.isLogin()) {
+//			Object user = SecurityUtils.getSubject().getPrincipal();
+//			model.addAttribute("user", user);//添加用户
+//			log.debug("toCommonPage url={} and is log user={}",url , user.toString());
+//		}else {
+//			log.debug("toCommonPage url={}",url);
+//		}
+//		return url; 
+//	}
 	
 }
