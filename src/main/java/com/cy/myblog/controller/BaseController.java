@@ -14,10 +14,6 @@ public class BaseController {
 	 * 响应正确 - 状态码
 	 */
 	public static final Integer OK  = 200 ; 
-	/**
-	 * 响应异常 - 状态码
-	 */
-	public static final Integer ERROR = 400 ; 
 	
 	
 	/**

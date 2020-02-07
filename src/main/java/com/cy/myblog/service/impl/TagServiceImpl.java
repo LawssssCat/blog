@@ -31,9 +31,10 @@ public class TagServiceImpl implements TagService {
 	@Override
 	public int doInsertObject(Tag tag) {
 		Assert.isArgumentValid(tag==null, "不能为空!");
-		Assert.isEmpty(tag.getName(), "名字不能为空!");
-		Assert.isArgumentValid(doIsExistName(tag.getName()), "名字重复!");
-		int rows = tagDao.insertObject(tag) ;  
+		Assert.isArgumentValid(StringUtils.isEmpty(tag.getName()), "名字不能为空!");
+		Assert.isDuplicationKey(doIsExistName(tag.getName()), "名字重复!");
+		int rows = 
+				tagDao.insertObject(tag) ;  
 		Assert.isServiceValid(rows==0, "插入失败!") ;
 		return rows;
 	}

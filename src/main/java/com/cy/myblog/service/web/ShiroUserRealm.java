@@ -16,6 +16,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.cy.myblog.common.utils.Assert;
 import com.cy.myblog.dao.UserDao;
@@ -35,18 +36,31 @@ public class ShiroUserRealm  extends AuthorizingRealm{
 
 	@Override//认证
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+		/**
+		 * 查找 user
+		 */
+		UsernamePasswordToken upToken = 
+				(UsernamePasswordToken) token ; 
+		String username = 
+				upToken.getUsername(); 
+		User user = //用户名 查找数据库 用户
+				userDao.findObjectByUsername(username);
 		
-		UsernamePasswordToken upToken = (UsernamePasswordToken) token ; 
-		String username = upToken.getUsername(); 
+		/**
+		 * 校验
+		 */
+		if(user==null
+		||(user.getUsername()==null)
+		||(!user.getUsername().equals(username))) 
+			new UnknownAccountException("用户名错误!");
+		if(user.getValid()!=200) 
+			new LockedAccountException("用户被状态异常!");  
 		
-		User user = userDao.findObjectByUsername(username);
-		
-		Assert.isNull(user, new UnknownAccountException("用户名错误!"));
-		Assert.isTrue(user.getValid()==0 , new LockedAccountException("用户被禁用!") ) ; //0=禁用,1=启用 
-		
-		ByteSource credentialsSalt = ByteSource.Util.bytes(user.getSalt()); 
-		
-		
+		/**
+		 * 封装 
+		 */
+		ByteSource credentialsSalt = // 盐-类型转换
+				ByteSource.Util.bytes(user.getSalt()); 
 		SimpleAuthenticationInfo info = 
 				new SimpleAuthenticationInfo(
 						user, //principal-当事人 

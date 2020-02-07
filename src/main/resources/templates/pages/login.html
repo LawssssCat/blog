@@ -4,10 +4,28 @@
 <!-- 引入 -->
 <th:block th:insert="/fragments/_fragments :: head('后台管理入口')"></th:block>
 
-<link rel="stylesheet" th:href="@{/dist/css/me-login.css}"> <!-- 登录样式 -->
 
-<!--看板娘-->
+
 <style type="text/css">
+/*登录界面css*/
+/* 
+body {
+  background-color: #DADADA;
+} 
+*/
+body > .grid {
+  height: 100%;
+}
+.image {
+  margin-top: -100px;
+}
+.column {
+  max-width: 450px;
+}
+
+
+
+/*看板娘*/
 #inner {
 	position: relative;
 	background-color: #999;
@@ -59,8 +77,6 @@
 </style>
 
 
-
-<link rel="stylesheet" th:href="@{/dist/css/me.css}"><!-- 自定义CSS样式 -->
 
 
 </head>
@@ -139,18 +155,108 @@
 
 
 
-<!-- 登录 -->
-<script type="text/javascript" th:src="@{/dist/js/login.js}"></script>
-
-
-
-
-
-
-
-
 
 <script>
+/**
+ * 
+ */
+
+//登录
+$(function() {
+	$('.ui.form')
+	  .form({
+	    fields: {
+	      email: {
+	        identifier  : 'usernameId', //标识 name
+	        rules: [
+	          {
+	            type   : 'empty', //非空
+	            prompt : 'Please enter your username'
+	          },
+	          /* {
+	            type   : 'email', //email格式
+	            prompt : 'Please enter a valid e-mail'
+	          } */
+	        ]
+	      },
+	      password: {
+	        identifier  : 'passwordId', //标识 name
+	        rules: [
+	          {
+	            type   : 'empty', //非空
+	            prompt : 'Please enter your password'
+	          },
+	          {
+	            type   : 'length[6]', //长度 6
+	            prompt : 'Your password must be at least 6 characters'
+	          }
+	        ]
+	      }
+	    },//fields
+	    setting : {
+	  	  keyboardShortcuts: true
+	    } , 
+	    onSuccess : doLogin , 
+	    onFailure: function(formErrors, fields){
+	  	  console.log("formErrors" , formErrors);
+	  	  console.log("fields" , fields);
+	  	  return false ;
+	    }
+	  })
+	;//form
+})
+;
+  
+function doLogin() {
+	var params={
+			username : $("#usernameId").val(), 
+			password:$('#passwordId').val(),
+			isRememberMe:$("#rememberMeId").prop("checked")
+	}
+	console.log("params" , params);
+	var url = "[[@{/user/login}]]" ; 
+	$.post(url , params , function(result) {
+		if( false ){ //result.state==200){//登录成功！
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		//TODO 重写 后 打开
+		
+		
+		
+		
+		
+		
+			//转跳到index页面
+			location.href="/user?t="+Math.random();//避免缓存
+		}else{
+			var a = $('.message .close').closest('.message') ; 
+			if(a.hasClass("hidden")) {
+				a.transition('fade') ;
+			}
+			$('#login-exception-msg-box').html(result.message);
+		}
+	});
+	return false ; //防止刷新时重复提交
+}
+//关闭提示
+$('.message .close')
+.on('click', function() {
+	$(this)
+	.closest('.message')
+	.transition('fade')
+	;
+})
+;
+
+
+
 window.addEventListener("load", () => {//监听-window-加载	
 	var state 	= 1 , 
 		open 	= '83%', 

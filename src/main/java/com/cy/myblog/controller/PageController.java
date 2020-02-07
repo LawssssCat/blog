@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cy.myblog.common.config.WebUrlProperties;
 import com.cy.myblog.common.utils.SubjectUtils;
-import com.cy.myblog.controller.ex.NoPageFountException;
+import com.cy.myblog.controller.ex.PageUnfoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ public class PageController extends BaseController {
 		//to 管理
 			return toSystemPage(page , model );
 		}else {
-			throw new NoPageFountException("没有页面") ;
+			throw new PageUnfoundException("没有页面") ;
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class PageController extends BaseController {
 		if(Arrays.asList(systems).contains(page)) {
 			return toSystemPageEdit(page , model );
 		}
-		throw new NoPageFountException("没有页面") ;
+		throw new PageUnfoundException("没有页面") ;
 	}
 	
 	

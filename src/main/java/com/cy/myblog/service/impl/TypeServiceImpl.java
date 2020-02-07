@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.cy.myblog.common.config.PaginationProperties;
 import com.cy.myblog.common.ex.ServiceException;
@@ -29,9 +30,10 @@ public class TypeServiceImpl implements TypeService {
 	@Override
 	public int doInsertObject(Type type) {
 		Assert.isArgumentValid(type==null, "不能为空!");
-		Assert.isEmpty(type.getName(), "名字不能为空!");
-		Assert.isArgumentValid(doIsExistName(type.getName() , null), "名字重复!");
-		int rows = typeDao.insertObject(type) ;  
+		Assert.isArgumentValid(StringUtils.isEmpty(type.getName()), "名字不能为空!");
+		Assert.isDuplicationKey(doIsExistName(type.getName() , null), "名字重复!");
+		int rows = 
+				typeDao.insertObject(type) ;  
 		Assert.isServiceValid(rows==0, "插入失败!") ;
 		return rows;
 	}

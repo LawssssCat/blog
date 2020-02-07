@@ -1,39 +1,38 @@
-package com.cy.myblog.controller.ex;
+package com.cy.myblog.service.ex;
 
 import com.cy.myblog.common.ex.ServiceException;
 
-public class NoPageFountException  extends ServiceException {
+public class DuplicationKeyException extends ServiceException {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6810691864268733765L;
+	private static final long serialVersionUID = 5094533950913467634L;
 
-	public NoPageFountException() {
+	public DuplicationKeyException() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public NoPageFountException(String message, Throwable cause, boolean enableSuppression,
+	public DuplicationKeyException(String message, Throwable cause, boolean enableSuppression,
 			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		// TODO Auto-generated constructor stub
 	}
 
-	public NoPageFountException(String message, Throwable cause) {
+	public DuplicationKeyException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	public NoPageFountException(String message) {
+	public DuplicationKeyException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
 
-	public NoPageFountException(Throwable cause) {
+	public DuplicationKeyException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
 
-	
 }
