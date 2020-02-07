@@ -29,7 +29,7 @@ public class UserStateServiceImpl implements UserStateService{
 		Assert.isArgumentValid(id==null||id<1, "id异常");
 		UserState us = 
 				userStateDao.selectById(id);
-		Assert.isNoFound(us==null||us.getState()==null, "数据不存在");
+		Assert.isNoFound(us==null||us.getState()==null, "不存在此用户状态");
 		return us;
 	}
 

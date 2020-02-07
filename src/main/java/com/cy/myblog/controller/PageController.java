@@ -34,7 +34,7 @@ public class PageController extends BaseController {
 		//to 管理
 			return toSystemPage(page , model );
 		}else {
-			throw new PageUnfoundException("没有页面") ;
+			throw new PageUnfoundException("404 页面找不到了") ;
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class PageController extends BaseController {
 		if(Arrays.asList(systems).contains(page)) {
 			return toSystemPageEdit(page , model );
 		}
-		throw new PageUnfoundException("没有页面") ;
+		throw new PageUnfoundException("404 页面找不到了") ;
 	}
 	
 	
