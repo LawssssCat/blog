@@ -2,6 +2,7 @@ package com.cy.myblog.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.cy.myblog.common.utils.Assert;
@@ -9,6 +10,7 @@ import com.cy.myblog.dao.AvatarDao;
 import com.cy.myblog.pojo.po.Avatar;
 import com.cy.myblog.service.AvatarService;
 
+@Transactional
 @Service
 public class AvatarServiceImpl implements AvatarService {
 

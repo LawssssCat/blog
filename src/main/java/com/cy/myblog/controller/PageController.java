@@ -21,6 +21,12 @@ public class PageController extends BaseController {
 	@Autowired
 	private WebUrlProperties webUrlProperties ; 
 	
+	/**
+	 * 转发 /xxx 请求 
+	 * @param page
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/{page}")
 	public String parsePath(
 			@PathVariable("page") String page, 
@@ -38,7 +44,12 @@ public class PageController extends BaseController {
 		}
 	}
 	
-	
+	/**
+	 * 转发 /xxx/edit 请求
+	 * @param page
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/{page}/edit")
 	public String parsePathEdit(
 			@PathVariable("page") String page, 

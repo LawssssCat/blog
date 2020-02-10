@@ -14,7 +14,12 @@ public class BaseController {
 	 * 响应正确 - 状态码
 	 */
 	public static final Integer OK  = 200 ; 
-	
+	public static final String OK_MSG = "success" ; 
+	/**
+	 * 响应错误 - 状态码
+	 */
+	public static final Integer FAIL = 400 ; 
+	public static final String FAIL_MSG = "fail" ; 
 	
 	/**
 	 * 获取当前登录用户的id

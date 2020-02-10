@@ -21,6 +21,6 @@ public class AvatarController extends BaseController {
 	@RequestMapping("/{id}")
 	public JsonResult findObjectById(@PathVariable("id") Long id)  {
 		Avatar avatar = avatarService.doFindObjectById(id) ;
-		return new JsonResult(OK,"success",avatar);
+		return new JsonResult(OK,OK_MSG,avatar);
 	}
 }

@@ -1,4 +1,4 @@
-package com.cy.myblog.dao;
+package com.cy.myblog.common.aspect;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -21,16 +21,23 @@ public class BaseEntityHandler extends MetaObjectHandler {
 
 	@Override
 	public void insertFill(MetaObject metaObject) {
+		//TODO
+		Integer id = null ; 
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		setFieldValByName("createdTime", timestamp, metaObject) ; 
+		setFieldValByName("createdUserId", id, metaObject);
 		setFieldValByName("modifiedTime", timestamp, metaObject) ; 
+		setFieldValByName("modifiedUserId", id, metaObject);
 		log.debug("insertFull time={}" , timestamp);
 	}
 
 	@Override
 	public void updateFill(MetaObject metaObject) {
+		//TODO
+		Integer id = null ; 
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		setFieldValByName("modifiedTime",timestamp , metaObject) ; 
+		setFieldValByName("modifiedTime",timestamp , metaObject) ;
+		setFieldValByName("modifiedUserId", id, metaObject);
 		log.debug("updateFull time={}" , timestamp);
 	}
 

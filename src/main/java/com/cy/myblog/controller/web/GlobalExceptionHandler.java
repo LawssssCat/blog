@@ -13,24 +13,26 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.cy.myblog.common.ex.ServiceException;
 import com.cy.myblog.common.vo.JsonResult;
+import com.cy.myblog.controller.BaseController;
 import com.cy.myblog.controller.ex.NoLoginException;
 import com.cy.myblog.controller.ex.PageUnfoundException;
 import com.cy.myblog.service.ex.ArgumentValidFaildException;
 import com.cy.myblog.service.ex.DataUnfoundException;
 import com.cy.myblog.service.ex.DuplicationKeyException;
+import com.cy.myblog.service.ex.PropertyValidFaildException;
 
 import lombok.extern.slf4j.Slf4j;
 
 //异常(last) -> view
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends BaseController{
 	
 	@ExceptionHandler({ServiceException.class , ShiroException.class})
 	public JsonResult doExceptionHandle(Throwable e , HttpServletRequest r )  {
 		log.error("request URL:{} , Exception:{}" ,r.getRequestURL(), e.toString()); //URL 详尽的资源信息
 		JsonResult j = new JsonResult();
-		j.setState(400);
+		j.setState(FAIL);
 		
 		//shrio 异常
 		if(e instanceof UnknownAccountException) {
@@ -55,6 +57,10 @@ public class GlobalExceptionHandler {
 			setMessage(j, e, "数据不存在");
 		}else if(e instanceof DuplicationKeyException) {
 			setMessage(j, e, "键值不能重复");
+		}else if(e instanceof PropertyValidFaildException) {//校验异常
+			setMessage(j, e, "校验异常!");
+			PropertyValidFaildException ex = (PropertyValidFaildException) e; 
+			j.setData(ex.getErrors());
 		}
 		else {
 			setMessage(j, e, "系统维护中");

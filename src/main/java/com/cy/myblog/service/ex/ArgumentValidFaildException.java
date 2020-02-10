@@ -2,6 +2,11 @@ package com.cy.myblog.service.ex;
 
 import com.cy.myblog.common.ex.ServiceException;
 
+/**
+ * 普通参数校验异常
+ * @author uu
+ *
+ */
 public class ArgumentValidFaildException extends ServiceException {
 
 	/**

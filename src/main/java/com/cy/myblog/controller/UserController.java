@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController{
 
 	//post: http://localhost/user/login?username=admin&&password=123456&&rememberMe=false
 	@PostMapping("/login")
@@ -32,7 +32,7 @@ public class UserController {
 						isRememberMe);
 		Subject subject = SecurityUtils.getSubject();//subject 提交用户信息
 		subject.login(token);//登录
-		return new JsonResult("login OK !") ; 
+		return new JsonResult(OK,"登录成功!") ; 
 	}
 	
 }
