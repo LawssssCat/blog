@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class PageObject<T> implements Serializable {
+public class Page<T> implements Serializable{
 	private static final long serialVersionUID = 7844855365725887051L;
 	/**数据s*/
 	private List<T> datas ;
@@ -18,14 +18,12 @@ public class PageObject<T> implements Serializable {
 	private Integer pageCurrent = 1 ; 
 	/**当前页数据量*/
 	private Integer pageSize = 3;
-	public PageObject(List<T> datas, Integer totalDataCount, Integer pageCurrent, Integer pageSize) {
+	public Page(List<T> datas, Integer totalDataCount, Integer pageCurrent, Integer pageSize) {
 		this.datas = datas;
 		this.totalDataCount = totalDataCount;
 		this.pageCurrent = pageCurrent;
 		this.pageSize = pageSize;
-		
 		this.pageTotal = (totalDataCount-1)/pageSize + 1;
 	}
-	
 	
 }

@@ -1,4 +1,4 @@
-package com.cy.myblog.common.aspect;
+package com.cy.myblog.dao.aspect;
 
 import java.sql.Timestamp;
 import java.util.Date;

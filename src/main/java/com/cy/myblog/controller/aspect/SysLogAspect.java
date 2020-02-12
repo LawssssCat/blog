@@ -1,4 +1,4 @@
-package com.cy.myblog.common.aspect;
+package com.cy.myblog.controller.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;

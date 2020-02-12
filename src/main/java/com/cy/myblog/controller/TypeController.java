@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cy.myblog.common.vo.JsonResult;
-import com.cy.myblog.common.vo.PageObject;
+import com.cy.myblog.common.vo.Page;
 import com.cy.myblog.pojo.po.Type;
 import com.cy.myblog.service.TypeService;
 
@@ -45,7 +45,7 @@ public class TypeController {
 	
 	@GetMapping("/findPageObject")
 	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
-		PageObject<Type> pageObject = typeService.doFindPageObject(name , pageCurrent) ;
+		Page<Type> pageObject = typeService.doFindPageObject(name , pageCurrent) ;
 		return new JsonResult(pageObject);
 	}
 	

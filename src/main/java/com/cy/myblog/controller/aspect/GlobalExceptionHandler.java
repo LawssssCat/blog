@@ -1,4 +1,4 @@
-package com.cy.myblog.controller.web;
+package com.cy.myblog.controller.aspect;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,7 +68,13 @@ public class GlobalExceptionHandler extends BaseController{
 		}
 		return j;
 	}
-	private void setMessage(JsonResult j  , Throwable e , String message) {
+	/**
+	 * 如果没有异常描述,使用默认异常描述
+	 * @param j json 结果串,往message添加异常描述
+	 * @param e 异常
+	 * @param message 默认异常描述
+	 */
+	private void setMessage(JsonResult j , Throwable e , String message) {
 		if(StringUtils.isEmpty(e.getMessage())) {
 			j.setMessage(message);
 		}else{

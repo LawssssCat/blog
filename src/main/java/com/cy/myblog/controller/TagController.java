@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cy.myblog.common.vo.JsonResult;
-import com.cy.myblog.common.vo.PageObject;
+import com.cy.myblog.common.vo.Page;
 import com.cy.myblog.pojo.po.Tag;
 import com.cy.myblog.pojo.po.Type;
 import com.cy.myblog.service.TagService;
@@ -51,7 +51,7 @@ public class TagController {
 	
 	@GetMapping("/findPageObject")
 	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
-		PageObject<Tag> pageObject = tagService.doFindPageObject(name , pageCurrent) ;
+		Page<Tag> pageObject = tagService.doFindPageObject(name , pageCurrent) ;
 		return new JsonResult(pageObject);
 	}
 	
