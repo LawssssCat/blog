@@ -7,6 +7,8 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.mapper.MetaObjectHandler;
+import com.cy.myblog.common.utils.SubjectUtils;
+import com.cy.myblog.pojo.po.User;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,8 +23,8 @@ public class BaseEntityHandler extends MetaObjectHandler {
 
 	@Override
 	public void insertFill(MetaObject metaObject) {
-		//TODO
-		Integer id = null ; 
+		User user = SubjectUtils.getUser();
+		Long id = user!=null? user.getId() : null ;  
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		setFieldValByName("createdTime", timestamp, metaObject) ; 
 		setFieldValByName("createdUserId", id, metaObject);
@@ -33,8 +35,8 @@ public class BaseEntityHandler extends MetaObjectHandler {
 
 	@Override
 	public void updateFill(MetaObject metaObject) {
-		//TODO
-		Integer id = null ; 
+		User user = SubjectUtils.getUser();
+		Long id = user!=null? user.getId() : null ; 
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		setFieldValByName("modifiedTime",timestamp , metaObject) ;
 		setFieldValByName("modifiedUserId", id, metaObject);

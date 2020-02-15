@@ -36,7 +36,7 @@ public class BlogApplication implements CommandLineRunner {
 		String[] names = applicationContext.getBeanDefinitionNames();
 		int index = 1 ; 
 		for (String name : names) {
-			log.info("{}: {}", index++ , name );
+			log.info("{}: name=[{}] || class=[{}]", index++ , name ,applicationContext.getBean(name).getClass());
 		}
 		log.info("容器注入javaBean:{}个.",applicationContext.getBeanDefinitionCount());
 	}

@@ -3,14 +3,20 @@ package com.cy.myblog.pojo.po;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class User implements Serializable {
+@TableName("user")
+public class User extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 3952133709839414786L;
-	private Integer id ; 
+	@TableId(type = IdType.AUTO)
+	private Long id ; 
 	/**账号*/
 	private String username ;
 	/**密码*/
@@ -22,11 +28,11 @@ public class User implements Serializable {
 	private String mobile ; 
 	private String qq ; 
 	private String email ; 
+	private String remark ; 
+	private String address ; 
+	private Date birthday ; 
 	/**头像-url*/
-	private String avatarUrl; 
-	/**1=启用,0=禁用*/
-	private Integer valid=1; //状态 1=OK 0=禁用
-
-	private Date createdTime  ; 
-	private Date modifiedTime ; 
+	private Long avatarId;
+	/**200正常*/
+	private Integer userState ;  
 }

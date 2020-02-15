@@ -22,8 +22,8 @@ public class Test_UserDao {
 	public void test_insertObject() { 
 		//Universally Unique Identifier
 		String salt = UUID.randomUUID().toString();
-		String password = "111111" ;
-		String username = "alan"; //org.springframework.dao.DuplicateKeyException
+		String password = "123456" ;
+		String username = "admin"; //org.springframework.dao.DuplicateKeyException
 		
 		//加密
 		int hashIterations =1 ;//加密次数
@@ -31,32 +31,30 @@ public class Test_UserDao {
 		password = sh.toHex() ; 
 		
 		
+		//.setAvatarUrl("https://i.loli.net/2020/02/04/UF9dp6MvGAoaCDS.jpg") //https://avatar.csdnimg.cn/D/A/9/2_lawsssscat_1578788256.jpg
+		//.setValid(1);
 		User user = 
 				new User()
-				.setAvatarUrl("https://i.loli.net/2020/02/04/UF9dp6MvGAoaCDS.jpg") //https://avatar.csdnimg.cn/D/A/9/2_lawsssscat_1578788256.jpg
-				.setCreatedTime(null)
 				.setEmail("1191693505@qq.com")
-				.setId(null)
 				.setMobile("13710399189")
-				.setModifiedTime(null)
 				.setNickname("lawsssscat")
 				.setPassword(password)
 				.setQq("1191693505")
 				.setSalt(salt)
 				.setUsername(username)
-				.setValid(1);
-		
-		int rows = userDao.insertObject(user);
-		log.info("insert ok ! rows={} , user={}" , rows , user.toString());
+				.setUserState(200);
+		log.info("before insert user={}" ,user);
+		int rows = userDao.insert(user);
+		log.info("insert ok ! rows={} , user={}" , rows , user);
 		
 	}
-	
-	@Test
-	public void test_findObjectById() {
-		Integer id = 1 ; //admin
-		User user = userDao.findObjectById(id); 
-		log.info("find Object by Id ok! user={}" , user.toString());
-	}
+//	
+//	@Test
+//	public void test_findObjectById() {
+//		Integer id = 1 ; //admin
+//		User user = userDao.findObjectById(id); 
+//		log.info("find Object by Id ok! user={}" , user.toString());
+//	}
 	
 	
 }

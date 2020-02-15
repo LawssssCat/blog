@@ -34,14 +34,12 @@ public class PageController extends BaseController {
 		//to 登录
 		if(webUrlProperties.getLogin().equals(page)) {
 			return toLoginPage(page) ;
-		}else if(
-				Arrays.asList(webUrlProperties.getSystems())
+		}else if(Arrays.asList(webUrlProperties.getSystems())
 				.contains(page)) { 
 		//to 管理
 			return toSystemPage(page , model );
-		}else {
-			throw new PageUnfoundException("404 页面找不到了") ;
 		}
+		return null ; 
 	}
 	
 	/**
@@ -60,7 +58,7 @@ public class PageController extends BaseController {
 		if(Arrays.asList(systems).contains(page)) {
 			return toSystemPageEdit(page , model );
 		}
-		throw new PageUnfoundException("404 页面找不到了") ;
+		return null ;
 	}
 	
 	
@@ -107,8 +105,8 @@ public class PageController extends BaseController {
 	/****************************************************************************************************/
 	/**到管理页面*/
 	public String toSystemPage(String page  , Model model) {
-		model.addAttribute("username", SubjectUtils.getUsername()) ; //添加用户名
-		model.addAttribute("avatarUrl", SubjectUtils.getAvatarUrl()) ; //添加头像 url
+		model.addAttribute("username", getUsername()) ; //添加用户名
+		//model.addAttribute("avatarUrl", getUerAvatarUrl()) ; //添加头像 url
 		log.debug("toSystemPage [page={}] " ,  page);
 		return webUrlProperties.getSystemPrefix() + "/" + page ;
 	}
@@ -116,8 +114,8 @@ public class PageController extends BaseController {
 	
 	/**到管理编辑页面*/
 	public String toSystemPageEdit(String page  , Model model) {
-		model.addAttribute("username", SubjectUtils.getUsername()) ; //添加用户名
-		model.addAttribute("avatarUrl", SubjectUtils.getAvatarUrl()) ; //添加头像 url
+		model.addAttribute("username", getUsername()) ; //添加用户名
+		//model.addAttribute("avatarUrl", getUerAvatarUrl()) ; //添加头像 url
 		log.debug("toSystemPageEdit [page={}] " ,  page );
 		return webUrlProperties.getSystemPrefix() + "/" + page + "_edit"  ;
 	}

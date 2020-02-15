@@ -10,9 +10,18 @@ import com.cy.myblog.controller.ex.NoLoginException;
 import com.cy.myblog.pojo.po.User;
 
 public abstract class SubjectUtils {
+	
+	private static Subject getSubject() {
+		Subject subject = null ; 
+		try {
+			subject = SecurityUtils.getSubject();
+		}catch(Exception ex) {}
+		return subject ; 
+	}
+	
 
 	public static String getIP() {
-		Subject subject = SecurityUtils.getSubject();
+		Subject subject = getSubject();
 		if(subject instanceof WebSubject) {
 			WebSubject weSubject = (WebSubject) subject ;
 			ServletRequest request = weSubject.getServletRequest() ;
@@ -23,27 +32,15 @@ public abstract class SubjectUtils {
 		return null ; 
 	}
 	
-	public static String getUsername() {
-		return  getUser().getUsername() ;
-	}
-	
-	public static String getAvatarUrl() {
-		return  getUser().getAvatarUrl() ;
-	}
-	
-	public static Integer getUserId() {
-		return getUser().getId();
-	}
-	
 	public static User getUser() {
-		Subject subject = SecurityUtils.getSubject();
+		Subject subject = getSubject();
 		if(subject != null) {
 			Object principal = subject.getPrincipal();
 			if(principal instanceof User) {
 				return  (User) principal ;
 			}
 		}
-		throw new NoLoginException("没有登录");
+		return null ; 
 	}
 	
 	
