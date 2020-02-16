@@ -3,6 +3,7 @@ package com.cy.myblog.controller;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,26 +22,40 @@ public class PageController extends BaseController {
 	@Autowired
 	private WebUrlProperties webUrlProperties ; 
 	
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+	/*********                                                                                  *********/
+	/*********     l o g i n                                                                    *********/
+	/*********                                                                                  *********/
+	/****************************************************************************************************/
+	/****************************************************************************************************/
+	
+	@RequestMapping("/login")
+	public String toLoginPage() {
+		log.info("to login page");
+		return "/" +webUrlProperties.getLogin() ; 
+	}
+	
 	/**
 	 * 转发 /xxx 请求 
 	 * @param page
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/{page}")
-	public String parsePath(
-			@PathVariable("page") String page, 
-			Model model ) {
-		//to 登录
-		if(webUrlProperties.getLogin().equals(page)) {
-			return toLoginPage(page) ;
-		}else if(Arrays.asList(webUrlProperties.getSystems())
-				.contains(page)) { 
-		//to 管理
-			return toSystemPage(page , model );
-		}
-		return null ; 
-	}
+//	@RequestMapping(value="/{page}" )
+//	public String parsePath(
+//			@PathVariable("page") String page, 
+//			Model model ) {
+//		//to 登录
+//		if(webUrlProperties.getLogin().equals(page)) {
+//			return toLoginPage(page) ;
+//		}else if(Arrays.asList(webUrlProperties.getSystems())
+//				.contains(page)) { 
+//		//to 管理
+//			return toSystemPage(page , model );
+//		}
+//		throw new PageUnfoundException("404 页面找不到了") ; 
+//	}
 	
 	/**
 	 * 转发 /xxx/edit 请求
@@ -48,18 +63,18 @@ public class PageController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/{page}/edit")
-	public String parsePathEdit(
-			@PathVariable("page") String page, 
-			Model model ) {
-		//to 管理
-		String[] systems = 
-				webUrlProperties.getSystems();
-		if(Arrays.asList(systems).contains(page)) {
-			return toSystemPageEdit(page , model );
-		}
-		return null ;
-	}
+//	@RequestMapping(value="/{page}/edit")
+//	public String parsePathEdit(
+//			@PathVariable("page") String page, 
+//			Model model ) {
+//		//to 管理
+//		String[] systems = 
+//				webUrlProperties.getSystems();
+//		if(Arrays.asList(systems).contains(page)) {
+//			return toSystemPageEdit(page , model );
+//		}
+//		throw new PageUnfoundException("404 页面找不到了") ; 
+//	}
 	
 	
 	/****************************************************************************************************/
@@ -83,42 +98,9 @@ public class PageController extends BaseController {
 //		return "forward:/blog/index";//骚操作..模仿csdn..
 //	}
 	
-	/****************************************************************************************************/
-	/****************************************************************************************************/
-	/*********                                                                                  *********/
-	/*********     l o g i n                                                                    *********/
-	/*********                                                                                  *********/
-	/****************************************************************************************************/
-	/****************************************************************************************************/
-	/**到登录界面*/
-	public String toLoginPage(String page) {
-		log.debug("toLoginPage");
-		return "/" + page ; 
-	}
+
 	
-	/****************************************************************************************************/
-	/****************************************************************************************************/
-	/*********                                                                                  *********/
-	/*********     s y s t e m                                                                  *********/
-	/*********                                                                                  *********/
-	/****************************************************************************************************/
-	/****************************************************************************************************/
-	/**到管理页面*/
-	public String toSystemPage(String page  , Model model) {
-		model.addAttribute("username", getUsername()) ; //添加用户名
-		//model.addAttribute("avatarUrl", getUerAvatarUrl()) ; //添加头像 url
-		log.debug("toSystemPage [page={}] " ,  page);
-		return webUrlProperties.getSystemPrefix() + "/" + page ;
-	}
-	
-	
-	/**到管理编辑页面*/
-	public String toSystemPageEdit(String page  , Model model) {
-		model.addAttribute("username", getUsername()) ; //添加用户名
-		//model.addAttribute("avatarUrl", getUerAvatarUrl()) ; //添加头像 url
-		log.debug("toSystemPageEdit [page={}] " ,  page );
-		return webUrlProperties.getSystemPrefix() + "/" + page + "_edit"  ;
-	}
+
 	
 	
 	/****************************************************************************************************/

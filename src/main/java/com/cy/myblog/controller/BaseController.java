@@ -10,8 +10,7 @@ import com.cy.myblog.pojo.po.User;
 /**
  * 控制器的基类
  */
-@Controller
-public class BaseController {
+public abstract class BaseController {
 
 	/**
 	 * 响应正确 - 状态码

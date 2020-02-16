@@ -51,14 +51,14 @@ public class UserStateController extends BaseController {
 	}
 	
 	@ResponseBody
-	@PostMapping("")
+	@PostMapping
 	public JsonResult saveObject(UserState userState) {
 		int rows = userStateService.doSaveObject(userState);
 		return new JsonResult(OK,OK_MSG,rows);
 	}
 	
 	@ResponseBody
-	@PutMapping("") 
+	@PutMapping
 	public JsonResult updateObject(UserState userState) {
 		int rows = userStateService.doUpdateObject(userState);
 		return new JsonResult(OK,OK_MSG,rows);

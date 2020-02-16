@@ -8,12 +8,4 @@ spring:
 
 server:
   port: 80
-  servlet:
-    context-path: /
     
-logging:  level: 
-    root: info 
-    com.cy: debug
-page:
-  config: 
-    pageSize: 5

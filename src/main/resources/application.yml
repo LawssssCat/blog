@@ -1,4 +1,8 @@
-#mybatis-plus
+################################
+#
+#        mybatis-plus
+# 
+################################
 mybatis-plus:
   configuration:
     #暂时不要缓存
@@ -9,20 +13,45 @@ mybatis-plus:
   mapper-locations:
   - classpath:/mapper/**/*.xml
     
+    
+    
+################################
+#
+#        spring - mvc
+# 
+################################
+server:
+  servlet:
+    # 项目路径名
+    context-path: /
+
 
 spring:
   thymeleaf:
     cache: false
     prefix: classpath:/templates/pages
     suffix: .html
-    servlet:
-      content-type: text/html; charset=utf-8   profiles:
+  profiles:
     active: dev
-  mvc:
-    favicon:
-      enabled: false   
-#  freemarker:#    template-loader-path:#    - classpath:/templates/pages
-#    suffix: .html
 
-
-
+################################
+#
+#        log
+# 
+################################
+logging:
+  level: 
+    root: info 
+    com.cy: debug
+    
+    
+    
+    
+################################
+#
+#        自定义
+# 
+################################
+page:
+  config: 
+    pageSize: 5
