@@ -18,16 +18,25 @@ public class WebUrlProperties {
 	
 	
 	/**登录*/
-	private String login  = "login"; //登录
+	private String login  = "/login"; //登录
 	/**登出*/
-	private String logout = "logout" ; // 登出
+	private String logout = "/logout" ; // 登出
 	
 	/**
-	 * 下列 url:/xxx
-	 * 转跳到 
-	 * /system/xxx
+	 * 要求 anon
 	 */
-	private String[] systems = {"user" , "userState"} ;
+	private String[] anons = {
+		"/dist/**", // 静态资源
+		"/*.ico" //图标
+	};
+	
+	/**
+	 * 要求 user 
+	 */
+	private String[] systems = {
+			"/user" , // 用户 
+			"/us" // 用户状态
+			} ;
 	
 	
 	

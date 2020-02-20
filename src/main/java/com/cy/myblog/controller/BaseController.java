@@ -1,8 +1,8 @@
 package com.cy.myblog.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 
+import com.cy.myblog.common.constant.ServiceState;
 import com.cy.myblog.common.utils.SubjectUtils;
 import com.cy.myblog.controller.ex.NoLoginException;
 import com.cy.myblog.pojo.po.User;
@@ -13,15 +13,15 @@ import com.cy.myblog.pojo.po.User;
 public abstract class BaseController {
 
 	/**
-	 * 响应正确 - 状态码
+	 * 响应正确 - 状态码 200
 	 */
-	public static final Integer OK  = 200 ; 
-	public static final String OK_MSG = "success" ; 
+	public static final int OK  = ServiceState.OK.getCode();
+	public static final String OK_MSG = ServiceState.OK.getRemark();
 	/**
-	 * 响应错误 - 状态码
+	 * 响应错误 - 状态码 500
 	 */
-	public static final Integer FAIL = 400 ; 
-	public static final String FAIL_MSG = "fail" ; 
+	public static final Integer ERROR = ServiceState.ERROR.getCode();
+	public static final String ERROR_MSG = ServiceState.ERROR.getRemark(); 
 	
 	/**
 	 * 获取当前登录用户

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.cy.myblog.common.constant.UserStateMenu;
 import com.cy.myblog.pojo.po.User;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,19 +43,20 @@ public class Test_UserDao {
 				.setQq("1191693505")
 				.setSalt(salt)
 				.setUsername(username)
-				.setUserState(200);
+				.setUserState(UserStateMenu.ROOT.getCode());
 		log.info("before insert user={}" ,user);
 		int rows = userDao.insert(user);
 		log.info("insert ok ! rows={} , user={}" , rows , user);
 		
 	}
-//	
-//	@Test
-//	public void test_findObjectById() {
-//		Integer id = 1 ; //admin
-//		User user = userDao.findObjectById(id); 
-//		log.info("find Object by Id ok! user={}" , user.toString());
-//	}
+	
+	@Test
+	public void test_findObjectById() {
+		Integer id = 2 ; //admin
+		User user1 = userDao.selectById(id);
+		User user2 = userDao.selectById(id);
+		log.info("find Object by Id ok!  true={} ,  user={} ," , user1==user2 ,user1.toString());
+	}
 	
 	
 }

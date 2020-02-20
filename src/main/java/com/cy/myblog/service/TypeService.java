@@ -1,6 +1,6 @@
 package com.cy.myblog.service;
 
-import com.cy.myblog.common.vo.Page;
+import com.cy.myblog.common.vo.PageVo;
 import com.cy.myblog.pojo.po.Type;
 
 public interface TypeService {
@@ -11,7 +11,7 @@ public interface TypeService {
 	boolean doIsExistName(String name, Integer id ) ;
 
 	/**查分页*/
-	Page<Type> doFindPageObject(String name, Integer pageCurrent);
+	PageVo<Type> doFindPageObject(String name, Integer pageCurrent);
 
 	int doDeleteObject(Integer id);
 

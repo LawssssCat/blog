@@ -5,7 +5,6 @@ spring:
     username: home
     password: BiliBili
 
-
 server:
   port: 80
     

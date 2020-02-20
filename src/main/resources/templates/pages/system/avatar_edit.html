@@ -7,14 +7,40 @@
 <body>
 
 <h3>图片上传</h3>
-<form action="/avatar/" >
+<form action="/avatar/" enctype="multipart/form-data">
 	<input type="file" name="file">
-	<input type="submit">
+	<input type="submit" value="裁剪并保存">
 </form>
+
+<hr>
+<img id="image" style="width: 400px; height: 359px;" >
+
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script><!-- jquery -->
 <script type="text/javascript">
-alert("hello!")
+$(`[type='file']`).bind("change", function(){ //加载md文件
+    let files = this.files;
+    if(files.length){
+    	let file = files[0] ;
+    	let name = file.name;//读取选中文件的文件名
+        let size = file.size;//读取选中文件的大小
+        let formData = new FormData() ; 
+        formData.append("avatar" , file) ;
+        formData.append("name" , name) ; 
+    	$.ajax({
+    		url : '[[@{/avatar/upload}]]' , 
+    		type: "POST" , 
+    		data: formData,
+    		processData: false , //告诉 jQuery 不要对参数进行处理
+    		contentType: false , //高数jQuery 不要对contentType做处理，服务器会处理
+    		success: function(result) {
+    			console.log(result)
+    		}
+    	}) ;
+        
+    	console.log(url , name , avatar);
+    }
+});
 </script>
 </body>
 </html>

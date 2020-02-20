@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cy.myblog.common.vo.JsonResult;
-import com.cy.myblog.common.vo.Page;
+import com.cy.myblog.common.vo.OkVo;
+import com.cy.myblog.common.vo.PageVo;
 import com.cy.myblog.pojo.po.Type;
 import com.cy.myblog.service.TypeService;
 
@@ -26,41 +26,41 @@ public class TypeController {
 	private TypeService typeService ; 
 
 	@PostMapping("/insertObject")
-	public JsonResult doInsertType(Type type) {
+	public OkVo doInsertType(Type type) {
 		int rows = typeService.doInsertObject(type) ;
-		return new JsonResult("add ok! rows="+rows);
+		return new OkVo("add ok! rows="+rows);
 	}
 	
 	@GetMapping("/isExistName")
-	public JsonResult IsExistName(String name  , Integer id ) {
+	public OkVo IsExistName(String name  , Integer id ) {
 		Boolean statement = typeService.doIsExistName(name , id);
-		return new JsonResult(statement); 
+		return new OkVo(statement); 
 	}
 	
 	@GetMapping("/findObjectById")
-	public JsonResult doFindObjectById(Integer id ) {
+	public OkVo doFindObjectById(Integer id ) {
 		Type type = typeService.dofindObjectById(id) ;
-		return new JsonResult(type); 
+		return new OkVo(type); 
 	}
 	
 	@GetMapping("/findPageObject")
-	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
-		Page<Type> pageObject = typeService.doFindPageObject(name , pageCurrent) ;
-		return new JsonResult(pageObject);
+	public OkVo doFindPageObject(String name , Integer pageCurrent) {
+		PageVo<Type> pageObject = typeService.doFindPageObject(name , pageCurrent) ;
+		return new OkVo(pageObject);
 	}
 	
 	@DeleteMapping("/deleteObject")
-	public JsonResult doDeleteObject(Integer id) {
+	public OkVo doDeleteObject(Integer id) {
 		log.debug("delete id={}" , id);
 		int rows = typeService.doDeleteObject(id) ; 
-		return new JsonResult("delete ok! rows="+rows);
+		return new OkVo("delete ok! rows="+rows);
 	}
 	
 	@PutMapping("/updateObject")
-	public JsonResult doUpdateObject(Type type) {
+	public OkVo doUpdateObject(Type type) {
 		log.debug("update type={}" , type);
 		int rows = typeService.doUpdateObject(type) ; 
-		return new JsonResult("update ok! rows="+rows) ; 
+		return new OkVo("update ok! rows="+rows) ; 
 	}
 	
 }

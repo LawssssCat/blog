@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.cy.myblog.common.vo.JsonResult;
-import com.cy.myblog.common.vo.Page;
+import com.cy.myblog.common.vo.OkVo;
+import com.cy.myblog.common.vo.PageVo;
 import com.cy.myblog.pojo.po.Tag;
 import com.cy.myblog.pojo.po.Type;
 import com.cy.myblog.service.TagService;
@@ -32,41 +32,41 @@ public class TagController {
 	private TagService tagService ; 
 
 	@PostMapping("/insertObject")
-	public JsonResult doInsertType(Tag tag) {
+	public OkVo doInsertType(Tag tag) {
 		int rows = tagService.doInsertObject(tag) ;
-		return new JsonResult("add ok! rows="+rows);
+		return new OkVo("add ok! rows="+rows);
 	}
 	
 	@GetMapping("/isExistName")
-	public JsonResult IsExistName(String name ) {
+	public OkVo IsExistName(String name ) {
 		Boolean statement = tagService.doIsExistName(name);
-		return new JsonResult(statement); 
+		return new OkVo(statement); 
 	}
 	
 	@GetMapping("/findObjectById")
-	public JsonResult doFindObjectById(Integer id ) {
+	public OkVo doFindObjectById(Integer id ) {
 		Tag tag = tagService.doFindObjectById(id) ; 
-		return new JsonResult(tag) ; 
+		return new OkVo(tag) ; 
 	}
 	
 	@GetMapping("/findPageObject")
-	public JsonResult doFindPageObject(String name , Integer pageCurrent) {
-		Page<Tag> pageObject = tagService.doFindPageObject(name , pageCurrent) ;
-		return new JsonResult(pageObject);
+	public OkVo doFindPageObject(String name , Integer pageCurrent) {
+		PageVo<Tag> pageObject = tagService.doFindPageObject(name , pageCurrent) ;
+		return new OkVo(pageObject);
 	}
 	
 	@DeleteMapping("/deleteObjects")
-	public JsonResult doDeleteObjects(Integer ... ids) {
+	public OkVo doDeleteObjects(Integer ... ids) {
 		log.debug("delete ids={}" , Arrays.toString(ids));
 		int rows = tagService.doDeleteObjects(ids) ; 
-		return new JsonResult("delete ok! rows="+rows);
+		return new OkVo("delete ok! rows="+rows);
 	}
 	
 	@PutMapping("/updateObject")
-	public JsonResult doUpdateObject(Type type) {
+	public OkVo doUpdateObject(Type type) {
 		log.debug("update type={}" , type);
 		int rows = tagService.doUpdateObject(type) ; 
-		return new JsonResult("update ok! rows="+rows) ; 
+		return new OkVo("update ok! rows="+rows) ; 
 	}
 	
 }

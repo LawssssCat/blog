@@ -19,12 +19,23 @@
 	</properties>
 
 	<dependencies>
-		
-		<dependency><!-- Mybatis-plus -->
-		   <groupId>com.baomidou</groupId>
-		   <artifactId>mybatis-plus-boot-starter</artifactId>
-		   <version>2.3</version>
+		<!-- https://mvnrepository.com/artifact/org.mybatis.caches/mybatis-ehcache -->
+		<dependency><!-- 开启二级缓存 --><!-- mybatis 整合 ehcache -->
+		    <groupId>org.mybatis.caches</groupId>
+		    <artifactId>mybatis-ehcache</artifactId>
+		    <version>1.0.3</version>
 		</dependency>
+		<dependency><!-- Mybatis-plus --> <!-- MP核心库 2.0.8版本以上,CRUD不支持二级缓存 -->
+		    <groupId>com.baomidou</groupId>
+		    <artifactId>mybatis-plus-boot-starter</artifactId>
+		    <version>3.2.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter -->
+        <dependency><!-- 分页 -->
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.13</version>
+        </dependency>
 		<dependency><!-- shiro -->
 		   <groupId>org.apache.shiro</groupId>
 		   <artifactId>shiro-spring</artifactId>
@@ -34,12 +45,6 @@
 	       <groupId>org.springframework.boot</groupId>
 	       <artifactId>spring-boot-starter-aop</artifactId>
 	   </dependency>
-		<!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter -->
-		<!-- <dependency>[插件]》分页
-		    <groupId>com.github.pagehelper</groupId>
-		    <artifactId>pagehelper-spring-boot-starter</artifactId>
-		    <version>1.2.13</version>
-		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -81,6 +86,7 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
 	</dependencies>
 
 	<build>

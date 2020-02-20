@@ -1,15 +1,16 @@
 package com.cy.myblog.common.vo;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class Page<T> implements Serializable{
+public class PageVo<T> implements Serializable {
 	private static final long serialVersionUID = 7844855365725887051L;
 	/**数据s*/
-	private List<T> datas ;
+	private List<T> datas  = Collections.emptyList();
 	/**(分页前)总数据数*/
 	private Integer totalDataCount = 0 ; 
 	/**总页数*/
@@ -18,12 +19,13 @@ public class Page<T> implements Serializable{
 	private Integer pageCurrent = 1 ; 
 	/**当前页数据量*/
 	private Integer pageSize = 3;
-	public Page(List<T> datas, Integer totalDataCount, Integer pageCurrent, Integer pageSize) {
+	public PageVo(List<T> datas, Integer totalDataCount, Integer pageCurrent, Integer pageSize) {
 		this.datas = datas;
 		this.totalDataCount = totalDataCount;
 		this.pageCurrent = pageCurrent;
 		this.pageSize = pageSize;
 		this.pageTotal = (totalDataCount-1)/pageSize + 1;
 	}
+	
 	
 }

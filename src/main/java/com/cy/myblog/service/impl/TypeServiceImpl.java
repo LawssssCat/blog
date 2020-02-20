@@ -12,7 +12,7 @@ import org.springframework.util.StringUtils;
 import com.cy.myblog.common.config.PaginationProperties;
 import com.cy.myblog.common.ex.ServiceException;
 import com.cy.myblog.common.utils.Assert;
-import com.cy.myblog.common.vo.Page;
+import com.cy.myblog.common.vo.PageVo;
 import com.cy.myblog.dao.TypeDao;
 import com.cy.myblog.pojo.po.Type;
 import com.cy.myblog.service.TypeService;
@@ -50,7 +50,7 @@ public class TypeServiceImpl implements TypeService {
 	}
 
 	@Override
-	public Page<Type> doFindPageObject(String name, Integer pageCurrent) {
+	public PageVo<Type> doFindPageObject(String name, Integer pageCurrent) {
 		Assert.isArgumentValid(pageCurrent<1, "页码值异常!");
 		Integer startIndex = paginationProperties.getStartIndex(pageCurrent);
 		Integer pageSize = paginationProperties.getPageSize();
@@ -58,7 +58,7 @@ public class TypeServiceImpl implements TypeService {
 		Assert.isServiceValid(totalDataCount==null||totalDataCount==0, "没有数据!");  
 		List<Type> datas = typeDao.findPageObject(name, startIndex, pageSize);
 		Assert.isServiceValid(datas==null||datas.size()==0, "没有数据!");  
-		return new Page<Type>(datas, totalDataCount, pageCurrent, pageSize);
+		return new PageVo<Type>(datas, totalDataCount, pageCurrent, pageSize);
 	}
 
 	@Override

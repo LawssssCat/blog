@@ -10,7 +10,7 @@ import org.springframework.util.StringUtils;
 
 import com.cy.myblog.common.config.PaginationProperties;
 import com.cy.myblog.common.utils.Assert;
-import com.cy.myblog.common.vo.Page;
+import com.cy.myblog.common.vo.PageVo;
 import com.cy.myblog.dao.TagDao;
 import com.cy.myblog.dao.TypeDao;
 import com.cy.myblog.pojo.po.Tag;
@@ -47,7 +47,7 @@ public class TagServiceImpl implements TagService {
 	}
 
 	@Override
-	public Page<Tag> doFindPageObject(String name, Integer pageCurrent) {
+	public PageVo<Tag> doFindPageObject(String name, Integer pageCurrent) {
 		Assert.isArgumentValid(pageCurrent<1, "页码值异常!");
 		Integer startIndex = paginationProperties.getStartIndex(pageCurrent);
 		Integer pageSize = paginationProperties.getPageSize();
@@ -55,7 +55,7 @@ public class TagServiceImpl implements TagService {
 		Assert.isServiceValid(totalDataCount==null||totalDataCount==0, "没有数据!");  
 		List<Tag> datas = tagDao.findPageObject(name, startIndex, pageSize);
 		Assert.isServiceValid(datas==null||datas.size()==0, "没有数据!");  
-		return new Page<Tag>(datas, totalDataCount, pageCurrent, pageSize);
+		return new PageVo<Tag>(datas, totalDataCount, pageCurrent, pageSize);
 	}
 
 	@Override

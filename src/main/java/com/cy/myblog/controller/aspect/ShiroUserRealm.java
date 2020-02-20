@@ -1,4 +1,4 @@
-package com.cy.myblog.service.aspect;
+package com.cy.myblog.controller.aspect;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -18,15 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.cy.myblog.common.constant.UserStateMenu;
 import com.cy.myblog.common.utils.Assert;
 import com.cy.myblog.dao.UserDao;
 import com.cy.myblog.pojo.po.User;
+import com.cy.myblog.service.UserService;
 
 @Service("shiroUserRealm")
 public class ShiroUserRealm  extends AuthorizingRealm{
 	
 	@Autowired
-	private UserDao userDao ; 
+	private UserService userService;
 
 	@Override//授权
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -43,18 +47,17 @@ public class ShiroUserRealm  extends AuthorizingRealm{
 				(UsernamePasswordToken) token ; 
 		String username = 
 				upToken.getUsername(); 
-		User user = //用户名 查找数据库 用户
-				userDao.selectOne(new User().setUsername(username));
-		
+		User user = null ;//用户名 查找数据库 用户
+		user = userService.findObjectByName(username);
 		/**
 		 * 校验
 		 */
 		if(user==null
 		||(user.getUsername()==null)
 		||(!user.getUsername().equals(username))) 
-			new UnknownAccountException("用户名错误!");
-		if(user.getUserState()!=200) 
-			new LockedAccountException("用户被状态异常!");  
+			throw new UnknownAccountException("用户名错误!");
+		if(user.getUserState()>UserStateMenu.USER.getCode()) 
+			throw new LockedAccountException("用户状态异常!");  
 		
 		/**
 		 * 封装 

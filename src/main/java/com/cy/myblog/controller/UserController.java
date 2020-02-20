@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cy.myblog.common.vo.JsonResult;
+import com.cy.myblog.common.vo.OkVo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,7 @@ public class UserController extends BaseController{
 
 	//post: http://localhost/user/login?username=admin&&password=123456&&rememberMe=false
 	@PostMapping("/login")
-	public JsonResult doLogin(
+	public OkVo doLogin(
 			String username , 
 			String password ,
 			@RequestParam(defaultValue = "false") Boolean isRememberMe) {
@@ -32,7 +32,7 @@ public class UserController extends BaseController{
 						isRememberMe);
 		Subject subject = SecurityUtils.getSubject();//subject 提交用户信息
 		subject.login(token);//登录
-		return new JsonResult(OK,"登录成功!") ; 
+		return new OkVo(OK,"登录成功!") ; 
 	}
 	
 }

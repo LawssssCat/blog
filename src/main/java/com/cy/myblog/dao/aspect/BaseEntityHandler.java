@@ -1,12 +1,11 @@
 package com.cy.myblog.dao.aspect;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
-import com.baomidou.mybatisplus.mapper.MetaObjectHandler;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.cy.myblog.common.utils.SubjectUtils;
 import com.cy.myblog.pojo.po.User;
 
@@ -19,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
-public class BaseEntityHandler extends MetaObjectHandler {
+public class BaseEntityHandler implements MetaObjectHandler {
 
 	@Override
 	public void insertFill(MetaObject metaObject) {

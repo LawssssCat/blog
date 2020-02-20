@@ -1,6 +1,7 @@
 package com.cy.myblog.service;
 
-import com.cy.myblog.common.vo.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.cy.myblog.common.vo.PageVo;
 import com.cy.myblog.pojo.po.Avatar;
 
 public interface AvatarService {
@@ -18,6 +19,6 @@ public interface AvatarService {
 	 * @param name 名字 模糊查询 可 null
 	 * @return 分页对象
 	 */
-	Page<Avatar> doFondPageObject(Integer pageCurrent, String name);
+	PageVo<Avatar> doFondPageObject(Integer pageCurrent, String name);
 
 }
