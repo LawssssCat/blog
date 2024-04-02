@@ -8,6 +8,9 @@ devDependencies:
   '@vuepress/bundler-vite':
     specifier: 2.0.0-rc.9
     version: 2.0.0-rc.9
+  '@vuepress/plugin-shiki':
+    specifier: 2.0.0-rc.22
+    version: 2.0.0-rc.22(vuepress@2.0.0-rc.9)
   vue:
     specifier: ^3.4.21
     version: 3.4.21
@@ -750,6 +753,10 @@ packages:
     dev: true
     optional: true
 
+  /@shikijs/core@1.2.3:
+    resolution: {integrity: sha512-SM+aiQVaEK2P53dEcsvhq9+LJPr0rzwezHbMQhHaSrPN4OlOB4vp1qTdhVEKfMg6atdq8s9ZotWW/CSCzWftwg==}
+    dev: true
+
   /@sindresorhus/merge-streams@2.3.0:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
@@ -1238,6 +1245,15 @@ packages:
       vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9)(vue@3.4.21)
     transitivePeerDependencies:
       - typescript
+    dev: true
+
+  /@vuepress/plugin-shiki@2.0.0-rc.22(vuepress@2.0.0-rc.9):
+    resolution: {integrity: sha512-L1L0GXaJgvOqqh1MnSavxbhTS/qR1y5/aeK/jQYCLQbo7I0l8e0FgxEEyqXfc+2aZmyouMzAGI0eCuw8I7mlIw==}
+    peerDependencies:
+      vuepress: 2.0.0-rc.9
+    dependencies:
+      shiki: 1.2.3
+      vuepress: 2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9)(vue@3.4.21)
     dev: true
 
   /@vuepress/plugin-sitemap@2.0.0-rc.21(vuepress@2.0.0-rc.9):
@@ -2316,6 +2332,12 @@ packages:
   /shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+    dev: true
+
+  /shiki@1.2.3:
+    resolution: {integrity: sha512-+v7lO5cJMeV2N2ySK4l+51YX3wTh5I49SLjAOs1ch1DbUfeEytU1Ac9KaZPoZJCVBGycDZ09OBQN5nbcPFc5FQ==}
+    dependencies:
+      '@shikijs/core': 1.2.3
     dev: true
 
   /signal-exit@3.0.7:

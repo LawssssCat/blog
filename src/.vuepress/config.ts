@@ -1,5 +1,6 @@
 import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
+import { shikiPlugin } from "@vuepress/plugin-shiki";
 
 export default defineUserConfig({
   base: "/",
@@ -18,6 +19,16 @@ export default defineUserConfig({
   },
 
   theme,
+
+  plugins: [
+    shikiPlugin({
+      // 你的选项
+      themes: {
+        light: "github-light",
+        dark: "one-dark-pro",
+      },
+    }),
+  ]
 
   // Enable it with pwa
   // shouldPrefetch: false,

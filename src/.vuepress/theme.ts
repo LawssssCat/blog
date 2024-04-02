@@ -115,6 +115,7 @@ export default hopeTheme({
   // hotReload: true,
 
   plugins: {
+    prismjs: false,
     blog: true,
 
     // install @waline/client before enabling it
