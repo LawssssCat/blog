@@ -6,7 +6,7 @@ title: 主页
 heroImage: /logo.svg
 heroText: Steven's 个人博客
 heroFullScreen: true
-tagline: Stay hungry, stay foolish 📌
+tagline: Stay hungry, stay foolish 🍎
 projects:
   # - icon: project
   #   name: 项目名称
