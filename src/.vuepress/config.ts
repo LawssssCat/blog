@@ -3,7 +3,7 @@ import theme from "./theme.js";
 import { shikiPlugin } from "@vuepress/plugin-shiki";
 
 export default defineUserConfig({
-  base: "/",
+  base: "/blog/",
 
   locales: {
     "/": {
