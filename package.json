@@ -1,7 +1,10 @@
 {
-  "name": "vuepress-theme-hope-template",
-  "version": "2.0.0",
-  "description": "A project of vuepress-theme-hope",
+  "name": "blog",
+  "version": "0.0.0",
+  "description": "null...",
+  "repository": {
+    "url": "https://github.com/LawssssCat/blog"
+  },
   "license": "MIT",
   "type": "module",
   "scripts": {

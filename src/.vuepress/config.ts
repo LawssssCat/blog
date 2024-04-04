@@ -8,16 +8,16 @@ export default defineUserConfig({
   locales: {
     "/zh/": {
       lang: "zh-CN",
-      title: "博客演示",
-      description: "vuepress-theme-hope 的博客演示",
+      title: "个人博客",
+      description: "学习、生活",
     },
   },
 
   theme,
 
   plugins: [
+    // 代码高亮
     shikiPlugin({
-      // 你的选项
       themes: {
         light: "github-light",
         dark: "one-dark-pro",
