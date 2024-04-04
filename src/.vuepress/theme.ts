@@ -4,6 +4,7 @@ import { zhSidebar } from "./sidebar/index.js";
 import { MR_HOPE_AVATAR } from "./logo.js";
 import common from "./config/common.js"
 import footer from "./config/footer.js"
+import mdInclude from "./config/md-include.js";
 
 export default hopeTheme({
   hostname: common.github.blog,
@@ -116,7 +117,9 @@ export default hopeTheme({
       figure: true,
       imgLazyload: true,
       imgSize: true,
-      include: true,
+      include: {
+        resolvePath: mdInclude.resolvePath
+      },
       mark: true,
       stylize: [
         {

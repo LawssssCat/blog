@@ -5,4 +5,6 @@ cover: /assets/images/cover3.jpg
 
 # 介绍页
 
-努力中...
+玩的开心~
+
+<!-- @include: @project/README.md -->
