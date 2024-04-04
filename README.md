@@ -17,3 +17,9 @@ pnpm run docs:dev
 | `tagItem`      | 特定标签列表 | `/tag/:name/`      |
 | `star`         | 星标文章列表 | `/star/`           |
 | `timeline`     | 时间线列表   | `/timeline/`       |
+
+图标 
+
++ Iconify: https://icon-sets.iconify.design/
++ Iconfont: https://www.iconfont.cn/
++ Fontawesome: https://fontawesome.com/icons
