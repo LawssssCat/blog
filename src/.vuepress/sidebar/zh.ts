@@ -12,4 +12,5 @@ export const zhSidebar = sidebar({
     },
     "intro",
   ],
+  "/zh/dev-rpc-thrift/": "structure",
 });

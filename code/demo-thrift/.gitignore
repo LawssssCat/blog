@@ -1,0 +1,7 @@
+/target/
+/thrift-*/target/
+
+# idea
+/.idea/
+/demo-thrift.iml
+/thrift-server.iml
