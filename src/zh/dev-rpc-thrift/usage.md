@@ -41,7 +41,7 @@ thrift -gen java -o target user.thrift
 
 ## 例子：简单 C/S 通信
 
-代码： todo
+代码： <RepoLink path="/code/demo-thrift/" />
 
 ### 生成接口文件
 

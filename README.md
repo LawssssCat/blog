@@ -1,4 +1,3 @@
-
 ```bash
 pnpm run docs:dev
 ```
@@ -42,13 +41,15 @@ pnpm run docs:dev
 | `star`         | 星标文章列表 | `/star/`           |
 | `timeline`     | 时间线列表   | `/timeline/`       |
 
-永久链接（permalink） 
+永久链接（permalink）
 
-+ <https://vuepress.vuejs.org/zh/guide/permalinks.html>
-+ <https://v2.vuepress.vuejs.org/zh/reference/frontmatter.html#permalink>
+- <https://vuepress.vuejs.org/zh/guide/permalinks.html>
+- <https://v2.vuepress.vuejs.org/zh/reference/frontmatter.html#permalink>
 
-图标 
+图标
 
-+ Iconify: https://icon-sets.iconify.design/
-+ Iconfont: https://www.iconfont.cn/
-+ Fontawesome: https://fontawesome.com/icons
+- Iconify: https://icon-sets.iconify.design/
+- Iconfont: https://www.iconfont.cn/
+- Fontawesome: https://fontawesome.com/icons
+
+组件库 https://plugin-components.vuejs.press/zh/
