@@ -23,7 +23,7 @@ export default defineUserConfig({
         dark: "one-dark-pro",
       },
     }),
-  ]
+  ],
 
   // Enable it with pwa
   // shouldPrefetch: false,

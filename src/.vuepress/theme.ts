@@ -2,8 +2,8 @@ import { hopeTheme } from "vuepress-theme-hope";
 import { zhNavbar } from "./navbar/index.js";
 import { zhSidebar } from "./sidebar/index.js";
 import { MR_HOPE_AVATAR } from "./logo.js";
-import common from "./config/common.js"
-import footer from "./config/footer.js"
+import common from "./config/common.js";
+import footer from "./config/footer.js";
 import mdInclude from "./config/md-include.js";
 
 export default hopeTheme({
@@ -84,7 +84,7 @@ export default hopeTheme({
         editLink: "在 GitHub 上编辑此页",
       },
 
-      copyright: footer.locales["/zh/"].copyright
+      copyright: footer.locales["/zh/"].copyright,
     },
   },
 
@@ -118,7 +118,7 @@ export default hopeTheme({
       imgLazyload: true,
       imgSize: true,
       include: {
-        resolvePath: mdInclude.resolvePath
+        resolvePath: mdInclude.resolvePath,
       },
       mark: true,
       stylize: [
