@@ -39,7 +39,7 @@ thrift -gen js:node user.thrift
 thrift -gen java -o target user.thrift
 ```
 
-## 例子：简单 C/S 通信 - java/python
+## 例子：简单 C/S 通信
 
 代码： todo
 
@@ -65,7 +65,7 @@ thrift-api/
 9 directories, 3 files
 ```
 
-### 客户端/服务端代码
+### 客户端/服务端代码 java/java
 
 引入依赖
 
@@ -105,3 +105,19 @@ thrift-api/
 ```
 
 :::
+
+### 客户端/服务端代码 python/java
+
+服务端用上面的 java，下面写 python 客户端代码。
+
+首先，下载 thrift 的 python 模块
+
+```bash
+pip install thrift
+```
+
+客户端 - 传输层/协议层/处理层
+
+```py
+<!-- @include: @project/code/demo-thrift/thrift-client-python/SimpleClient.py -->
+```

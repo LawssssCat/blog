@@ -15,9 +15,10 @@ public class SimpleClient {
         int port = 19090;
         try (TTransport socket = new TSocket(host, port); // 传输层，阻塞io
         ) {
-            socket.open();
             TProtocol protocol = new TBinaryProtocol(socket); // 协议层，二进制编码格式
             UserService.Client client = new UserService.Client(protocol);
+            // Connect!
+            socket.open();
             try {
                 User user = client.getById(1);
                 System.out.println("user = " + user);
