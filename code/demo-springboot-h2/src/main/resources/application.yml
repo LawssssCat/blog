@@ -1,0 +1,20 @@
+server:
+  port: 9088
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test #配置 h2 数据库的连接地址
+    # schema: # 过时
+    # data: # 过时
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true #开启 web console 功能。需要 spring-boot-starter-web 依赖
+      # path: /h2-console
+  sql:
+    init:
+      schema-locations: classpath:db/schema.sql #，每次启动程序，程序都会运行
+      data-locations: classpath:db/data.sql #，每次启动程序，程序都会运行
+      # mode: always # 在所有 bean 初始化完成后执行 SQL 脚本
