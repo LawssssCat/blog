@@ -1,0 +1,81 @@
+// from https://github.com/vuejs/vitepress/blob/c8cffc53232d6eb28f926927e6628a0fd4ab4833/src/client/theme-default/styles/components/vp-doc.css
+
+// highlighted
+
+.vp-page [class*="language-"] code .highlighted {
+  --vp-code-line-highlight-color: rgba(101, 117, 133, 0.16);
+  background-color: var(--vp-code-line-highlight-color) !important;
+  span {
+    background-color: transparent !important;
+  }
+  transition: background-color 0.5s;
+  margin: 0 -24px;
+  padding: 0 24px;
+  width: calc(100% + 2 * 24px);
+  display: inline-block;
+}
+
+// diff
+
+.vp-page [class*="language-"] {
+  --vp-code-line-diff-remove-color: rgba(244, 63, 94, 0.16);
+  --vp-code-line-diff-remove-symbol-color: #cb7676;
+  --vp-code-line-diff-add-color: rgba(16, 185, 129, 0.16);
+  --vp-code-line-diff-add-symbol-color: #3dd68c;
+  code {
+    .diff {
+      transition: background-color 0.5s;
+      margin: 0 -16px;
+      padding: 0 32px;
+      width: calc(100%);
+      display: inline-block;
+    }
+    .diff span {
+      background-color: transparent !important;
+    }
+
+    .diff::before {
+      position: absolute;
+      left: 10px;
+    }
+
+    .diff.remove {
+      background-color: var(--vp-code-line-diff-remove-color) !important;
+      opacity: 0.7;
+    }
+
+    .diff.remove::before {
+      content: "-";
+      color: var(--vp-code-line-diff-remove-symbol-color);
+    }
+
+    .diff.add {
+      background-color: var(--vp-code-line-diff-add-color) !important;
+    }
+
+    .diff.add::before {
+      content: "+";
+      color: var(--vp-code-line-diff-add-symbol-color);
+    }
+  }
+}
+
+// focus
+
+.vp-page [class*="language-"] {
+  .has-focused-lines .line:not(.has-focus) {
+    filter: blur(0.095rem);
+    opacity: 0.4;
+    transition: filter 0.35s, opacity 0.35s;
+  }
+
+  .has-focused-lines .line:not(.has-focus) {
+    opacity: 0.7;
+    transition: filter 0.35s, opacity 0.35s;
+  }
+
+  &:hover .has-focused-lines .line:not(.has-focus) {
+    filter: blur(0);
+    opacity: 1;
+  }
+}

@@ -5,6 +5,7 @@ import { MR_HOPE_AVATAR } from "./logo.js";
 import common from "./config/common.js";
 import footer from "./config/footer.js";
 import mdInclude from "./config/md-include.js";
+import mdCode from "./config/md-code.js";
 
 export default hopeTheme({
   hostname: common.github.blog,
@@ -92,7 +93,7 @@ export default hopeTheme({
   // hotReload: true,
 
   plugins: {
-    prismjs: false,
+    prismjs: mdCode.prismjs.prismjs,
     blog: true,
 
     // install @waline/client before enabling it

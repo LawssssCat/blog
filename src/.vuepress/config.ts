@@ -1,6 +1,6 @@
 import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
-import { shikiPlugin } from "@vuepress/plugin-shiki";
+import mdCode from "./config/md-code.js";
 
 export default defineUserConfig({
   base: "/blog/",
@@ -17,12 +17,7 @@ export default defineUserConfig({
 
   plugins: [
     // 代码高亮
-    shikiPlugin({
-      themes: {
-        light: "github-light",
-        dark: "one-dark-pro",
-      },
-    }),
+    mdCode.shiki.shikiPlugin,
   ],
 
   // Enable it with pwa
