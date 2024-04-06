@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
-
 @Slf4j
 @Configuration
 public class ThriftServer {
@@ -22,7 +20,6 @@ public class ThriftServer {
     private int thriftServerPort;
     @Autowired
     private UserServiceImpl userServiceImpl;
-    @PostConstruct
     public void startThriftServer() {
         UserService.Processor<UserServiceImpl> userServiceProcessor = new UserService.Processor<>(userServiceImpl);
         try (TServerSocket socket = new TServerSocket(thriftServerPort)){
