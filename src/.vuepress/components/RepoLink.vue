@@ -7,5 +7,7 @@ import common from "../config/common";
 
 const props = defineProps(["path"]);
 const url =
-  common.github.repo.replace(/\/$/, "") + "/" + props.path.replace(/^\//, "");
+  common.github.repo.replace(/\/$/, "") +
+  "/tree/master/" +
+  props.path.replace(/^\//, "");
 </script>
