@@ -1,0 +1,9 @@
+server:
+  port: 12233
+
+thrift:
+  service:
+    message-host: localhost
+    message-port: 19091
+    user-host: localhost
+    user-port: 19090

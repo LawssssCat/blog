@@ -20,7 +20,7 @@ if __name__ == '__main__':
     processor = MessageService.Processor(handler)
     # 2
     host = "localhost"
-    port = 19090
+    port = 19091
     socket = TSocket.TServerSocket(host, port)
     # 3
     transportFactory = TTransport.TTransportFactoryBase()
