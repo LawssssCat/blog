@@ -44,3 +44,9 @@ console.log("Not focused");
 console.log("Focused"); // [!code focus]
 console.log("Not focused");
 ```
+
+## 2024 年 4 月 4 日 新增 url 组件
+
+`<RepoLink path="/path/to/src/" />` —— 生成路由到代码仓库源码的地址
+
+当前页源码链接： <RepoLink path="/src/zh/intro.md" />
