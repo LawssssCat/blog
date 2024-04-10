@@ -49,4 +49,9 @@ console.log("Not focused");
 
 `<RepoLink path="/path/to/src/" />` —— 生成路由到代码仓库源码的地址
 
-当前页源码链接： <RepoLink path="/src/zh/intro.md" />
+链接 `<RepoLink path="/src/zh/changelog.md" />`：
+<RepoLink path="/src/zh/changelog.md" />
+链接 `<RepoLink path="./" />`：
+<RepoLink path="./" />
+链接 `<RepoLink path="./intro.md" />`：
+<RepoLink path="./intro.md" />
