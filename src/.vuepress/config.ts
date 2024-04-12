@@ -1,3 +1,6 @@
+/**
+ * vuepress 配置（入口）
+ */
 import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
 import mdCode from "./config/md-code.js";
@@ -22,4 +25,6 @@ export default defineUserConfig({
 
   // Enable it with pwa
   // shouldPrefetch: false,
+
+  extendsPage: (page) => {},
 });

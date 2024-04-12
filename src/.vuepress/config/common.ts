@@ -1,3 +1,6 @@
+/**
+ * 站点通用变量
+ */
 export default {
   site: {
     srcPath: "/src/",
