@@ -1,4 +1,5 @@
 <!--
+  生成指向代码仓库的 <a> 链接：
   path —— 相对代码仓库的源码路径
   name —— （可选）连接展示名称
 -->
@@ -19,21 +20,22 @@ const props = defineProps({
   name: String,
 });
 
-let path: String = props.path;
-if (path == "." || path == "./") {
-  path = common.site.srcPath + "/" + pageData.value.filePathRelative;
-} else if (path.startsWith("./")) {
-  path =
-    common.site.srcPath +
-    ("/" + pageData.value.filePathRelative).replace(/\/[^/]+$/, "/") +
-    path.replace(/^\.\//, "");
-}
-
 const url: String = normalizeUrl(
   pattern
     .replace(/:repo/u, common.github.repo)
     .replace(/:branch/u, "tree/master")
-    .replace(/:path/u, path)
+    .replace(
+      /:path/u,
+      props.path.startsWith("/")
+        ? props.path
+        : normalizeUrl(
+            common.site.srcPath +
+              "/" +
+              usePageData().value.filePathRelative.replace(/\/[^/]+$/, "") +
+              "/" +
+              props.path.replace(/^\.\/?/, "")
+          )
+    )
 );
 const name: String = props.name || url;
 </script>
