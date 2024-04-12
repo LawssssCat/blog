@@ -8,6 +8,17 @@ article: false
 
 <!-- more -->
 
+## 2024 年 4 月 9 日 新增 site info / url 组件
+
+`<SiteLink path="/path/to/link/" />` —— 生成站点链接，以标题名显示
+
+链接 `<SiteLink path="./" />`：
+<SiteLink path="./" />
+链接 `<SiteLink path="./intro.md" />`：
+<SiteLink path="./intro.md" />
+链接 `<SiteLink path="/zh/changelog.md" />`：
+<SiteLink path="/zh/changelog.md" />
+
 ## 2024 年 4 月 6 日 代码高亮
 
 引入来自 shiki 的 transformers。
