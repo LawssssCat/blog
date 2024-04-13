@@ -2,6 +2,8 @@
 title: 容器化微服务 Demo 项目开发笔记
 date: 2024-04-06
 category:
+  - 示例项目
+tags:
   - 微服务
 order: 1
 index: false
@@ -82,3 +84,21 @@ index: false
 ```java title="ThriftServer.java in user-thrift-java-service"
 <!-- @include: @project/code/demo-microk8s/microservice/user-thrift-java-service/src/main/java/org/example/thrift/user/thrift/ThriftServer.java -->
 ```
+
+## 用户 Edge Service
+
+::: tabs
+
+@tab thrift 服务客户端
+
+```java title="ServiceProvider.java"
+<!-- @include: @project/code/demo-microk8s/microservice/user-edge-java-service/src/main/java/org/example/thrift/user/thrift/ServiceProvider.java -->
+```
+
+@tab 用户边缘接口
+
+```java title="UserController.java"
+<!-- @include: @project/code/demo-microk8s/microservice/user-edge-java-service/src/main/java/org/example/thrift/user/controller/UserController.java -->
+```
+
+:::

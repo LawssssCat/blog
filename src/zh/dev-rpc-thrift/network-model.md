@@ -1,7 +1,7 @@
 ---
 title: Thrift 网络模型 (java)
 date: 2024-04-06
-category:
+tags:
   - thrift
 order: 4
 ---
