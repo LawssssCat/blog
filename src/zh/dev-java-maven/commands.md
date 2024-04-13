@@ -1,8 +1,7 @@
 ---
-title: Maven 基本使用
+title: Maven 命令行
 date: 2024-04-13
 tags:
-  - java
   - maven
 order: 2
 ---

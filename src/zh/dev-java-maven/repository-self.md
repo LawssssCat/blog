@@ -1,37 +1,14 @@
 ---
-title: Maven 仓库管理
+title: Maven 私有仓库
 date: 2024-04-13
 tags:
-  - java
   - maven
-order: 4
+order: 15
 ---
 
-介绍 Maven 仓库的概念、管理和私有仓库的搭建。
+介绍 Maven 私有仓库的搭建和管理。
 
 <!-- more -->
-
-## Maven 仓库
-
-Maven 仓库是用来存放项目中依赖的软件包（jar、war、pom）和元素据（坐标信息、源码、作者、SCM、许可证）等信息
-
-Maven 仓库有三种类型：
-
-- **本地（Local）** —— 本地缓存
-- **远程（Remote）** —— 企业级内部构建的仓库，主要是为了统一管理和加快下载速度
-- **中央（Central）** —— 开源仓库
-
-优先级： 本地 > 远程 > 中央
-
-仓库配置：
-
-一般在 `.m2/repository/settings.xml` 上配置远程仓库，也可以在 pom.xml 上配置。
-优先级： pom.xml > user settings > global settings
-
-```bash
-mvn -X # 查看 settings.xml 文件的读取顺序
-mvn help:effective-settings # 查看当前生效的 settings.xml
-```
 
 ## Maven 私服
 
