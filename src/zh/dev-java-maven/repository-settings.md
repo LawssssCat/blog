@@ -158,17 +158,23 @@ e.g.
 ## Maven 国内镜像源
 
 ```
-http://maven.ibiblio.org/maven2/
-http://central.maven.org/maven2/
-http://repo1.maven.apache.org/maven2/
-http://repo1.maven.org/maven2/
-http://mirrors.ibiblio.org/pub/mirrors/maven2/
+https://maven.aliyun.com/nexus/content/groups/public/
+https://maven.aliyun.com/nexus/content/repositories/central/
+https://maven.ibiblio.org/maven2/
+https://mirrors.ibiblio.org/pub/mirrors/maven2/
+https://mirrors.huaweicloud.com/repository/maven/
 https://repository.jboss.org/nexus/content/groups/public/
-http://repo2.maven.org/maven2/
+https://maven.net.cn/content/groups/public/
+https://maven.oschina.net/content/groups/public/
+https://central.maven.org/maven2/
+https://repo1.maven.apache.org/maven2/
+https://repo1.maven.org/maven2/
+https://repo2.maven.org/maven2/
 ```
 
 ---
 
 参考：
 
-- <https://www.cnblogs.com/kelelipeng/p/11733903.html>
+- maven | Using Mirrors for Repositories - <https://maven.apache.org/guides/mini/guide-mirror-settings.html>
+- cnblogs | 浅谈 maven setting.xml 设置的 mirrorof 标签作用 - <https://www.cnblogs.com/kelelipeng/p/11733903.html>
