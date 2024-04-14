@@ -18,15 +18,15 @@ order: 1
 
 具体实现：
 
-| 实现    | 三方件                                    | 读  | 写  | 应用                     | 备注     |
-| ------- | ----------------------------------------- | --- | --- | ------------------------ | -------- |
-| 🟢 jaxp | dom（`org.w3c.dom`）, xpath               | ✅  | ✅  | Mybatis:XMLConfigBuilder | JDK 原生 |
-| 🟢 jaxp | sax（Simple API for XML）                 | ✅  | ❌  |                          | 流操作   |
+| 实现    | 三方件                                    | 读  | 写  | 应用                     | 备注      |
+| ------- | ----------------------------------------- | --- | --- | ------------------------ | --------- |
+| 🟢 jaxp | dom（`org.w3c.dom`）, xpath               | ✅  | ✅  | Mybatis:XMLConfigBuilder | JDK 原生  |
+| 🟢 jaxp | sax（Simple API for XML）                 | ✅  | ❌  |                          | 流操作    |
 | 🟢 jaxp | dom4j                                     | ✅  | ✅  |
 | 🟢 jaxp | jdom                                      | ✅  | ✅  |
-| 🔵 jaxb | jaxb（Java Architecture for XML Binding） | ✅  | ✅  |                          | JDK 原生 |
+| 🔵 jaxb | jaxb（Java Architecture for XML Binding） | ✅  | ✅  |                          | JDK 原生  |
 | 🔵 jaxb | xstream                                   | ✅  | ✅  |
-| 🔵 jaxb | apache digester                           | ✅  | ❌  | Tomcat                   |
+| 🔵 jaxb | apache digester                           | ✅  | ❌  | Tomcat                   | sax + oxm |
 | 🔵 jaxb | spring oxm（Object XML Mapping）          | ✅  | ✅  |
 
 ---

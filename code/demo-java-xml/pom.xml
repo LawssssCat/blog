@@ -13,6 +13,7 @@
         <module>n02-dom4j-usage</module>
         <module>common-api</module>
         <module>n03-jdom-usage</module>
+        <module>n11-digester-usage</module>
     </modules>
 
     <dependencies>
