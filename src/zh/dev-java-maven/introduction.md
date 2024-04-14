@@ -1,7 +1,7 @@
 ---
 title: Maven 基本概念
 date: 2024-04-13
-tags:
+tag:
   - maven
 order: 1
 ---

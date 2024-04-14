@@ -4,7 +4,7 @@ shortTitle: 整合 H2 数据库
 date: 2024-04-06
 category:
   - 示例项目
-tags:
+tag:
   - springboot
   - mybatis
   - h2database

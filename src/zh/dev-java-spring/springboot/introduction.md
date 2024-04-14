@@ -1,7 +1,7 @@
 ---
 title: SpringBoot 介绍
 date: 2024-04-05
-tags:
+tag:
   - springboot
 order: 1
 ---

@@ -1,7 +1,7 @@
 ---
 title: Thrift 介绍
 date: 2024-04-05
-tags:
+tag:
   - thrift
 order: 1
 ---
