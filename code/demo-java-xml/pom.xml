@@ -12,6 +12,7 @@
         <module>n01-original-usage</module>
         <module>n02-dom4j-usage</module>
         <module>common-api</module>
+        <module>n03-jdom-usage</module>
     </modules>
 
     <dependencies>
@@ -62,20 +63,5 @@
                 <directory>../test-resources</directory>
             </testResource>
         </testResources>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>
