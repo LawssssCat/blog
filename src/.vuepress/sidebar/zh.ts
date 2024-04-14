@@ -5,6 +5,7 @@ export const zhSidebar = sidebar({
   "/zh/dev-rpc-thrift/": "structure",
   "/zh/demo-record/demo-microk8s/": "structure",
   "/zh/dev-java-maven/": "structure",
+  "/zh/dev-java-xml/": "structure",
   "/zh/dev-java-spring/": "structure",
   "/zh/security-vulnerability-management/": "structure",
 });

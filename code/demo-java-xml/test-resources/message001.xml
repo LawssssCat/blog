@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<my-content>
+    <web-site>http://www.example.org</web-site>
+    <owner>steven</owner>
+    <description>原生 java xml 操作测试消息</description>
+    <posts>
+        <!-- 我是注释 -->
+        <post id="P001">
+            <title>文章标题01</title>
+            <content>hello world 01！</content>
+        </post>
+        <post id="P002">
+            <title>文章标题02</title>
+            <content>hello world 02！</content>
+        </post>
+    </posts>
+</my-content>
