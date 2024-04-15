@@ -14,6 +14,8 @@
         <module>common-api</module>
         <module>n03-jdom-usage</module>
         <module>n11-digester-usage</module>
+        <module>n12-xstream-usage</module>
+        <module>n13-springoxm-usage</module>
     </modules>
 
     <dependencies>
