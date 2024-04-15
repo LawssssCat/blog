@@ -84,21 +84,3 @@ index: false
 ```java title="ThriftServer.java in user-thrift-java-service"
 <!-- @include: @project/code/demo-microk8s/microservice/user-thrift-java-service/src/main/java/org/example/thrift/user/thrift/ThriftServer.java -->
 ```
-
-## 用户 Edge Service
-
-::: tabs
-
-@tab thrift 服务客户端
-
-```java title="ServiceProvider.java"
-<!-- @include: @project/code/demo-microk8s/microservice/user-edge-java-service/src/main/java/org/example/thrift/user/thrift/ServiceProvider.java -->
-```
-
-@tab 用户边缘接口
-
-```java title="UserController.java"
-<!-- @include: @project/code/demo-microk8s/microservice/user-edge-java-service/src/main/java/org/example/thrift/user/controller/UserController.java -->
-```
-
-:::
