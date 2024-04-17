@@ -23,6 +23,7 @@ export default hopeTheme({
   logo: "/logo.svg",
 
   repo: "LawssssCat/blog",
+  docsBranch: "master",
 
   docsDir: "src",
 
