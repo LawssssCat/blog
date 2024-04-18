@@ -13,9 +13,11 @@ order: 1
 
 ## XML 简介
 
+官方教程： <https://www.w3school.com.cn/xml/index.asp>
+
 XML 是 W3C 制定的标准，被设计用来传输和存储数据。
 XML 被设计为具有自我描述性，本身没有预定义标签。
-我们使用时需要自行定义标签，所以很多使用 XML 作为配置的工具都有一套自己的 XML 标签语法（Schema）。
+我们使用时需要自定义标签，所以很多使用 XML 作为配置的工具都有一套自己的 XML 标签语法（Schema）。
 
 > **GML, SGML, HTML, XML, XHTML, HTML5**
 >
@@ -44,49 +46,13 @@ XHTML
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 ```
 
-### 命名空间（namespace）
+## XML 约束文档
 
-在 XML 中，元素名称由开发者定义。
-当两个不同的文档使用相同的元素名时，就会发生命名冲突。
-在同一份 XML 文档中也可能出现多个同名的标签和属性，而这些标签和属性又不完全相同。
+为了标准化编写的 XML 文件，一般 XML 文件头部会引入 DTD 格式或者 XSD 格式的 XML 约束文档。
 
-e.g.
+### DTD 介绍
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<root>
-<!-- 上传 -->
-<file>
-  <path>http://example.org</path>
-</file>
-<!-- 下载 -->
-<file>
-  <path>./example.txt</path>
-</file>
-</root>
-```
-
-区分两个 file 需要用命名空间（`namespace`）
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  xmlns（XML NameSpace）后加命名空间名
-  等号（"="）后的路径无特殊要求，只需保证唯一即可。 —— 也就是说，也不一定需要为网络路径，只是业界习惯，方便规则查看
- -->
-<root xmlns:upload="http://example.org/xxxupdate"> <!-- [!code highlight] -->
-<!-- 上传 -->
-<upload:file> <!-- [!code highlight] -->
-  <path>http://example.org</path>
-</upload:file>
-<!-- 下载 -->
-<download:file xmlns:download="http://example.org/xxxdownload"> <!-- [!code highlight] -->
-  <path>./example.txt</path>
-</download:file>
-</root>
-```
-
-## DTD 介绍
+官方教程： <https://www.w3school.com.cn/dtd/index.asp>
 
 DTD（文档类型定义）使用一系列的元素来定义文档的合法结构，可定义合法的 XML 文档构建模块。
 
@@ -94,7 +60,7 @@ DTD（文档类型定义）使用一系列的元素来定义文档的合法结�
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 ```
 
-### 引用 DTD
+#### 引用 DTD
 
 DTD 可被成行地声明于 XML 文档中，也可以作为一个外部引用。
 
@@ -144,7 +110,7 @@ DTD 可被成行地声明于 XML 文档中，也可以作为一个外部引用�
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"></html>
 ```
 
-### 定义 DTD
+#### 定义 DTD
 
 - 元素
 - 属性
@@ -229,7 +195,140 @@ name CDATA #FIXED "1">
 
 :::
 
-## Java 操作 XML
+### XSD 介绍（Schema）
+
+官方教程： <https://www.w3school.com.cn/schema/index.asp>
+
+XSD（XML Schemas Definition，XML 结构定义） 是一种用于定义和描述 XML 文档结构与内容的模式语言（约束文档）。
+XSD 文件自身就是一个 XML 文件，扩展名为 `.xsd`。
+
+::: info
+Schema 克服了 DTD 的局限性：
+
+- XML Schema 符合 XML 语法结构，DOM、SAX 等 XML API 容易解析 XML Schema 文档内容，开发者也只需要掌握一套 xml 语法即可开发
+- XML Schema 对命名空间支持更好
+- XML Schema 比 XML DTD 支持更多的数据类型，**并且支持用户自定义数据类型**
+- XML Schema 定义约束的能力更强，可以对 XML 实例问昂做出非常细致的语义限制
+- XML Schema 结构上比 DTD 复杂。
+  :::
+
+::: tabs
+
+@tab Schema 定义
+
+```xml title="book.xsd"
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  targetNamespace 属性用于指定 schema 文档中声明的元素属于哪个命名空间
+  elementFormatDefault 属性用于指定该 schema 文档中声明的根元素以及其所有子元素都属于 targetNamespace 所指定的命名空间
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://example.org"
+elementFormDefault="qualified">
+  <xs:element name="书架">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element name="书">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="书名" type="xs:string" />
+              <xs:element name="作者" type="xs:string" />
+              <xs:element name="售价" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:compleType>
+  </xs:element>
+</xs:schema>
+```
+
+@tab XML 编写
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<example:书架
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:example="http://example.org"
+  xmlns:schemaLocation="http://example.org book.xsd">
+  <example:书>
+    <example:书名>JavaScript 网页开发</example:书名>
+    <example:作者>Steven</example:作者>
+    <example:售价>28.00元</example:售价>
+  </example:书>
+</example>
+```
+
+> `schemaLocation` 指明命名空间对应的 xsd 文件位置
+
+:::
+
+::: info
+在 XML Schema 中，每个约束模式文档都可以被赋予一个 “唯一的” 命名空间，命名空间用 URI（Uniform Resource Identifier，统一资源标识符）表示。
+在 XML 文件中，通过命名空间声明（xmlns）来声明当前编写的标签来自哪个 Schema 约束文档。
+:::
+
+#### 命名空间（namespace）
+
+在 XML 中，元素名称由开发者定义。
+当两个不同的文档使用相同的元素名时，就会发生命名冲突。
+在同一份 XML 文档中也可能出现多个同名的标签和属性，而这些标签和属性又不完全相同。
+
+e.g.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<!-- 上传 -->
+<file>
+  <path>http://example.org</path>
+</file>
+<!-- 下载 -->
+<file>
+  <path>./example.txt</path>
+</file>
+</root>
+```
+
+区分两个 file 需要用命名空间（`namespace`）
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  xmlns（XML NameSpace）后加命名空间名
+  等号（"="）后的路径无特殊要求，只需保证唯一即可。 —— 也就是说，也不一定需要为网络路径，只是业界习惯，方便规则查看
+ -->
+<root xmlns:upload="http://example.org/xxxupdate"> <!-- [!code highlight] -->
+<!-- 上传 -->
+<upload:file> <!-- [!code highlight] -->
+  <path>http://example.org</path>
+</upload:file>
+<!-- 下载 -->
+<download:file xmlns:download="http://example.org/xxxdownload"> <!-- [!code highlight] -->
+  <path>./example.txt</path>
+</download:file>
+</root>
+```
+
+## XML 语法
+
+忽略 XML 特殊符号
+
+```xml
+<![CDATA[ 原样显示： 5>1 ]]>
+```
+
+实体
+
+```
+&gt; >
+&lt; <
+&amp; &
+&apos; '
+&quot; "
+```
+
+## XML 操作（Java）
 
 Java 操作 XML 的方向有两个：
 

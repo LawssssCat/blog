@@ -7,6 +7,8 @@ tag:
 order: 88
 ---
 
+官方教程： <https://www.w3school.com.cn/xpath/index.asp>
+
 XPath 是 W3C 的标准，被设计为供 XSLT, XPointer 以及其他 XML 解析软件使用，用于遍历、检索 XML 元素。
 XPath 在 xml 解析、爬虫中经常被使用。
 
@@ -15,6 +17,12 @@ XPath 在 xml 解析、爬虫中经常被使用。
 XPath 使用路径表达式来选取 XML 文档中的节点或节点集合。
 
 包含一个标准函数库，内建 100 多个函数，包含：字符串值、数值、日期和时间的比较；节点和 QName 的处理、序列处理、逻辑值等。
+
+<SiteInfo
+  name="XPath 教程"
+  url="https://zvon.org/xxl/XPathTutorial/General_chi/examples.html"
+  preview="/assets/images/cover3.jpg"
+/>
 
 ## XPath 节点
 

@@ -3,6 +3,7 @@ package org.example;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.junit.jupiter.api.Assertions;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class XmlDom4jReadTest {
@@ -23,6 +25,19 @@ public class XmlDom4jReadTest {
             read = saxReader.read(getClass().getResource("/message001.xml"));
         } catch (DocumentException e) {
             throw new RuntimeException(e);
+        }
+    }
+    @Test
+    void test_elements() {
+        AtomicInteger i = new AtomicInteger(0);
+        printElements(1, read.getRootElement(), i);
+        Assertions.assertEquals(11, i.get());
+    }
+    private void printElements(int deep, Element e, AtomicInteger i) {
+        i.incrementAndGet();
+        log.info(String.format("%"+deep+"s%s", "", e.getQualifiedName()));
+        for (Element c : e.elements()) {
+            printElements(deep+1, c, i);
         }
     }
     @Test
@@ -60,5 +75,10 @@ public class XmlDom4jReadTest {
         Assertions.assertEquals(2, countPostElement);
         Assertions.assertArrayEquals(new String[] {"web-site", "owner", "description", "posts"}, contentElementQNameList.toArray());
         Assertions.assertArrayEquals(new String[] {"P001", "P002"}, postElementIdList.toArray());
+    }
+    @Test
+    void test_parseText() throws DocumentException {
+        Document document = DocumentHelper.parseText(read.asXML());
+        Assertions.assertEquals("my-content", document.getRootElement().getName());
     }
 }
