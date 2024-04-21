@@ -176,5 +176,6 @@ https://repo2.maven.org/maven2/
 
 参考：
 
+- maven | Maven Repositories - https://maven.apache.org/repositories/
 - maven | Using Mirrors for Repositories - <https://maven.apache.org/guides/mini/guide-mirror-settings.html>
 - cnblogs | 浅谈 maven setting.xml 设置的 mirrorof 标签作用 - <https://www.cnblogs.com/kelelipeng/p/11733903.html>
