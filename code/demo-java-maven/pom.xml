@@ -13,6 +13,8 @@
         <module>plugin-custom-with-comment-test</module>
         <module>plugin-custom-with-annotation</module>
         <module>plugin-custom-with-annotation-test</module>
+        <module>plugin-usage-jaxb2-maven-plugin</module>
+        <module>plugin-usage-maven-jaxb2-plugin</module>
     </modules>
 
     <properties>
@@ -21,4 +23,31 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.30</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>repo-maven2</id>
+            <url>https://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

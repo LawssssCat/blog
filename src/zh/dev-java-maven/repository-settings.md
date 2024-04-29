@@ -14,6 +14,12 @@ order: 10
 
 Maven 仓库是用来存放项目中依赖的软件包（jar、war、pom）和元素据（坐标信息、源码、作者、SCM、许可证）等信息
 
+<SiteInfo
+  name="Maven 仓库设置"
+  url="https://www.runoob.com/maven/maven-repositories.html"
+  preview="/assets/images/cover3.jpg"
+/>
+
 Maven 仓库有三种类型：
 
 - **本地（Local）** —— 本地缓存
@@ -24,7 +30,8 @@ Maven 仓库有三种类型：
 
 ### 配置远程仓库列表
 
-远程仓库列表： maven 用来填充构建系统本地仓库所使用的一组远程仓库。
+如果 Maven 在中央仓库中也找不到依赖的文件，它会停止构建过程并输出错误信息到控制台。
+为避免这种情况，Maven 提供了远程仓库的概念，它是开发人员自己定制仓库，包含了所需要的代码库或者其他工程中用到的 jar 文件。
 
 ::: info
 在 pom.xml 或 settings.xml 的 profile 中配置

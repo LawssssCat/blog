@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jaxb:bindings xmlns:jaxb="https://jakarta.ee/xml/ns/jaxb" if-exists="true" version="3.0">
+      
+    <!--
+
+此文件是由 Eclipse Implementation of JAXB v4.0.2 生成的
+请访问 https://eclipse-ee4j.github.io/jaxb-ri 
+在重新编译源模式时, 对此文件的所有修改都将丢失。
+生成时间: 2024.04.29 时间 08:02:33 AM CST
+  -->
+      
+    <jaxb:bindings if-exists="true" scd="x-schema::">
+            
+        <jaxb:schemaBindings map="false">
+                  
+            <jaxb:package name="generated"/>
+                
+        </jaxb:schemaBindings>
+            
+        <jaxb:bindings if-exists="true" scd="~person">
+                  
+            <jaxb:class ref="generated.Person"/>
+                
+        </jaxb:bindings>
+          
+    </jaxb:bindings>
+    
+</jaxb:bindings>
