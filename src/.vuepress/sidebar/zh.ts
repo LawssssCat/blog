@@ -10,5 +10,5 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-maven/": "structure",
   "/zh/dev-java-xml/": "structure",
   "/zh/dev-java-spring/": "structure",
-  "/zh/security-vulnerability-management/": "structure",
+  "/zh/z-security-vulnerability/": "structure",
 });
