@@ -46,6 +46,7 @@ public class XmlXStreamTest {
             throw new RuntimeException(e);
         }
         Assertions.assertTrue(FILE.exists());
+        log.info("success output {}", FILE.getAbsolutePath());
     }
 
     @Test
