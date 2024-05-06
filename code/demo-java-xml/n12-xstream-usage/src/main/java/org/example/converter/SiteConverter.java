@@ -8,8 +8,6 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entity.anno.Site;
 
-import java.util.Iterator;
-
 @Slf4j
 public class SiteConverter implements Converter {
     @Override

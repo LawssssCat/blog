@@ -24,10 +24,16 @@ jdk jaxb 的封装
 
 ::: tabs
 
-@tab 读/写
+@tab 测试类
 
 ```java
 <!-- @include: @project/code/demo-java-xml/n12-xstream-usage/src/test/java/example/XmlXStreamTest.java -->
+```
+
+@tab 测试类（抽象）
+
+```java
+<!-- @include: @project/code/demo-java-xml/n12-xstream-usage/src/test/java/example/AbstractXmlXStreamCommonTest.java -->
 ```
 
 @tab 实体类
@@ -42,7 +48,7 @@ jdk jaxb 的封装
 
 ::: tabs
 
-@tab 读/写
+@tab 测试类
 
 ```java
 <!-- @include: @project/code/demo-java-xml/n12-xstream-usage/src/test/java/example/XmlXStreamAnnotationTest.java -->
