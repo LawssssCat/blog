@@ -3,12 +3,9 @@ package example;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.raw.Person;
-import org.example.entity.raw.Site;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.example.entity.anno.Person;
+import org.example.entity.anno.Site;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,20 +16,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 @Slf4j
-public class XmlXStreamTest {
-    final static File FILE = new File(Objects.requireNonNull(XmlXStreamTest.class.getResource("/")).getFile(),
-            XmlXStreamTest.class.getName() + ".xml");
+public class XmlXStreamAnnotationTest {
+    static XStream xStream;
 
-    static XStream xStream; // 线程安全
-    @BeforeAll
-    static void beforeAll() {
-        xStream = new XStream();
-        xStream.alias("person", Person.class); // 否则 <org.example.Person> 而不是 <person>
-        xStream.aliasField("姓名", Person.class, "name"); // <name> to <姓名> in Person.class
-        xStream.useAttributeFor(Person.class, "age"); // 属性 <person age="18">
-        xStream.alias("site", Site.class); // 否则 org.example.Site
-//        xStream.addImplicitCollection(Person.class, "sites"); // 去掉 <sites>
+    static {
+        xStream = new XStream(); // 线程安全
+        xStream.autodetectAnnotations(true);
     }
+
+    File file = new File(Objects.requireNonNull(getClass().getResource("/")).getFile(),
+            getClass().getName() + ".xml");
 
     public static Person newPerson() {
         Person person = new Person();
@@ -64,14 +57,14 @@ public class XmlXStreamTest {
         // toXml
         String xml = xStream.toXML(person);
         log.info(xml);
-        try (OutputStreamWriter fileOutputStream = new OutputStreamWriter(Files.newOutputStream(FILE.toPath()), StandardCharsets.UTF_8)) {
+        try (OutputStreamWriter fileOutputStream = new OutputStreamWriter(Files.newOutputStream(file.toPath()), StandardCharsets.UTF_8)) {
             xStream.marshal(person, new CompactWriter(fileOutputStream));
             // xStream.toXML(person, fileOutputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Assertions.assertTrue(FILE.exists());
-        log.info("success output {}", FILE.getAbsolutePath());
+        Assertions.assertTrue(file.exists());
+        log.info("success output {}", file.getAbsolutePath());
     }
 
     /**
@@ -81,7 +74,7 @@ public class XmlXStreamTest {
     @Order(2)
     void testXml2Obj() {
         xStream.allowTypes(new Class[] {Person.class, Site.class});
-        Object o = xStream.fromXML(FILE);
+        Object o = xStream.fromXML(file);
         System.out.println("o = " + o);
         Assertions.assertInstanceOf(Person.class, o);
         Person p = (Person) o;
