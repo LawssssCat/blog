@@ -16,11 +16,17 @@ public class XmlXStreamTest extends AbstractXmlXStreamCommonTest {
     @BeforeAll
     static void beforeAll() {
         xStream = new XStream();
+        // 自定义标签名 —— "类/属性混叠"
         xStream.alias("person", Person.class); // 否则 <org.example.Person> 而不是 <person>
         xStream.aliasField("姓名", Person.class, "name"); // <name> to <姓名> in Person.class
+        // 自定义包前缀 ——+ "包混叠"
+        xStream.aliasPackage("my", "org.example.entity.raw"); // org.example.entity.raw.Site -> my.Site
+        // 生成属性，而非子标签
         xStream.useAttributeFor(Person.class, "age"); // 属性 <person age="18">
-        xStream.alias("site", Site.class); // 否则 org.example.Site
-//        xStream.addImplicitCollection(Person.class, "sites"); // 去掉 <sites>
+        // 去掉集合标签 —— "隐式集合混叠"
+        xStream.addImplicitCollection(Person.class, "sites"); // 去掉 <sites>
+        // 忽略字段
+        xStream.omitField(Site.class, "description");
     }
 
     public static Person newPerson() {
@@ -32,12 +38,14 @@ public class XmlXStreamTest extends AbstractXmlXStreamCommonTest {
             Site site = new Site();
             site.setId("111");
             site.setUrl("http://n1.example.org");
+            site.setDescription("description1");
             person.getSites().add(site);
         }
         {
             Site site = new Site();
             site.setId("222");
             site.setUrl("https://n2.example.org");
+            site.setDescription("description2");
             person.getSites().add(site);
         }
         return person;

@@ -17,6 +17,7 @@
             <artifactId>xstream</artifactId>
             <version>1.4.20</version>
         </dependency>
+        <!-- xstream 转换 json 依赖 -->
         <dependency>
             <groupId>org.codehaus.jettison</groupId>
             <artifactId>jettison</artifactId>

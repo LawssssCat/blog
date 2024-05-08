@@ -3,6 +3,8 @@ package example;
 import com.thoughtworks.xstream.XStream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 @Slf4j
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public abstract class AbstractXmlXStreamCommonTest {
     File file = new File(Objects.requireNonNull(getClass().getResource("/")).getFile(), getClass().getName() + ".xml");
 
