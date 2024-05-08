@@ -10,7 +10,11 @@ order: 44
 
 spring 为 jaxb, jibx, xstream 这些封装提供了统一的接口。
 
+oxm - object xml mapper
+
 <!-- more -->
+
+<https://docs.spring.io/spring-framework/docs/5.0.6.RELEASE/spring-framework-reference/data-access.html#oxm>
 
 <RepoLink path="code/demo-java-xml/n13-springoxm-usage/test/java/org/example/" />
 
