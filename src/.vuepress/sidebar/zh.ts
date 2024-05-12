@@ -6,6 +6,7 @@ export const zhSidebar = sidebar({
   "/zh/demo-record/demo-microk8s/": "structure",
   "/zh/dev-java-commonsense/": "structure",
   "/zh/dev-java-log/": "structure",
+  "/zh/dev-java-schedule/": "structure",
   "/zh/dev-java-test/": "structure",
   "/zh/dev-java-maven/": "structure",
   "/zh/dev-java-xml/": "structure",
