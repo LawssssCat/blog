@@ -7,11 +7,19 @@ tag:
 order: 32
 ---
 
-Quartz 由 OpenSymphony 开源组织维护，是一个 “任务调度库” （Job Scheduling）。
+Quartz 由 OpenSymphony 开源组织发起的项目，该项目 2009 年被 Terracotta 收购。
+Quartz 完全由 Java 编写， 专注于 “任务调度库”（job scheduling） 功能搭建，可以用来管理上万个 jobs 复杂程序。
 
 <!-- more -->
 
 官网： <http://www.quartz-scheduler.org/>
+
+特点：
+
+- 支持多种任务调度方法
+- 支持多种调度数据存储方式
+- 支持分布式和集群能力
+- 易于与 Spring 集成（Quartz 是 Spring 默认的调度框架）
 
 概念：
 
@@ -22,8 +30,10 @@ Quartz 由 OpenSymphony 开源组织维护，是一个 “任务调度库” （
     - JobDataMap
 - 触发器（Trigger） —— 触发场景
   - Trigger 实现包括：
-    - SimpleTrigger
-    - CronTrigger
+    - SimpleTrigger： 延时任务/定时任务
+    - CronTrigger： 使用 cron 表达式定义触发任务的时间规则
+    - DateIntervalTrigger： 日期周期的规则触发器
+    - NthIncludedDateTrigger： 排除指定时间周期和日期的触发器
     - DailyTimeIntervalTrigger
     - CalendarIntervalTrigger
   - Trigger 相关类：
