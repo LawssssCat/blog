@@ -13,8 +13,6 @@ public class SimpleJobTest extends AbstractSimpleJobTest {
     final static String KEY_LOGO = "logo";
     final static String MSG_LOGO_01 = "hello~";
     final static String MSG_LOGO_02 = "trigger-hello~";
-    final static String MSG_JOB_NAME = "jobNameHello";
-    final static String MSG_JOB_GROUP = "jobGroupDemo";
     final static String MSG_TRIGGER_NAME = "triggerName01";
     final static String MSG_TRIGGER_GROUP = "triggerGroup01";
     // 计数器
@@ -26,7 +24,7 @@ public class SimpleJobTest extends AbstractSimpleJobTest {
     void test() throws SchedulerException {
         startSchedule(SimpleJobTest.HelloJob.class,
                 jobBuilder -> {
-                    jobBuilder.withIdentity(MSG_JOB_NAME, MSG_JOB_GROUP);
+                    jobBuilder.withIdentity(getJobName(), MSG_JOB_GROUP);
                     jobBuilder.usingJobData(KEY_LOGO, MSG_LOGO_01);// 向任务传递参数
                 },
                 triggerBuilder -> {
@@ -40,6 +38,11 @@ public class SimpleJobTest extends AbstractSimpleJobTest {
         // 校验运行结果
         Assertions.assertEquals(STEP * (REPEAT+1), COUNT);
     }
+
+    private static String getJobName() {
+        return MSG_JOB_NAME + "-" + SimpleJobTest.class.getName();
+    }
+
     /**
      * 编写任务执行逻辑
      */
@@ -59,7 +62,7 @@ public class SimpleJobTest extends AbstractSimpleJobTest {
         public void execute(JobExecutionContext jobExecutionContext) {
             // job detail
             JobDetail jobDetail = jobExecutionContext.getJobDetail();
-            Assertions.assertEquals(MSG_JOB_NAME, jobDetail.getKey().getName());
+            Assertions.assertEquals(getJobName(), jobDetail.getKey().getName());
             Assertions.assertEquals(MSG_JOB_GROUP, jobDetail.getKey().getGroup());
 
             // trigger
