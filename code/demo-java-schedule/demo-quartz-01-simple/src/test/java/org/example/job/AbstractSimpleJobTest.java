@@ -32,7 +32,8 @@ public abstract class AbstractSimpleJobTest {
         triggerBuilderConsumer.accept(triggerTriggerBuilder);
         Trigger trigger = triggerTriggerBuilder.build();
         log.info("创建调度器");
-        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler(); // 默认读 quartz.properties 配置
+        // new StdSchedulerFactory(properties or fileName).getScheduler(); // 从自定义配置/配置文件中创建
         scheduler.scheduleJob(jobDetail, trigger);
         SchedulerContext schedulerContext = new SchedulerContext(scheduler, jobDetail.getKey(), trigger.getKey());
         log.info("启动调度器（异步）");
