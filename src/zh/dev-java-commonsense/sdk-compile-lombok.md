@@ -8,7 +8,7 @@ order: 10
 
 简化，但入侵 = 挺好，随大流
 
-<!-- mroe -->
+<!-- more -->
 
 ```java
 <!-- @include: @project/code/demo-java-common/demo-lombok/src/main/java/org/example/LombokDemo.java -->

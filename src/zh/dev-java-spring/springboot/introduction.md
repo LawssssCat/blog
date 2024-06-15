@@ -16,3 +16,10 @@ SpringBoot 核心功能：
 - 内嵌 web 服务器
 - 独立运行 `java -jar xxx.jar`
 - 准生产的应用监控
+
+todo 区别 `ApplicationRunner` 和 `CommandLineRunner`
+
+```java
+(runner).run(args) // ApplicationRunner
+(runner).run(args.getSourceArgs()) // CommandLineRunner
+```
