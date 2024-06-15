@@ -31,6 +31,67 @@ JUC `java.util.concurrent` 缩写
 可以形象的理解： 进程=饭馆；线程=饭桌；协程=座椅；
 :::
 
+#### 内核线程
+
+线程实现方式有三种：
+
+1. 使用内核线程实现
+1. 使用用户线程实现
+1. 使用用户线程 + 内核线程混合实现
+
+内核线程（Kernel-Level Thread，KLT）就是直接由操作系统内核（Kernel）支持的线程。这种线程由操作系统内核来完成线程切换，操作系统内核通过操纵调度器（Scheduler）对线程进行调度，并负责将线程的任务映射刀各个处理器上。
+
+> 可以参考 linux 源码
+>
+> ```bash
+> Thread.c
+> jvm.h
+> jvm.cpp
+> thread.cpp
+> os_linux.cpp
+> ```
+>
+> 参考： <https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=11>
+
+**Java 创建线程的方式就是采用内核线程的方式创建的**
+
+#### 内核线程数量
+
+```bash
+# 查看指定参数
+sysctl -a | grep threads-max # 查看所有参数
+sysctl kernel.threads-max
+cat /proc/sys/kernel/threads-max # 内核参数在 /proc/sys 目录下的格式为： 目录.文件
+
+# 修改指定参数
+sysctl -w kernel.threads-max=102400 # 修改 /etc/sysctl.conf 文件，该文件在系统重启后自动加载
+
+# 手动生效配置
+sysctl -p
+```
+
+当实际线程数量超过上述设置值后，Java 继续创建线程会报错：
+
+```bash
+Exception in thread "main" java.lang.OutOfMemoryError: unable to create new native thread
+  at java.lang.Thread.start0(Native Method)
+  at java.lang.Thread.start(Thread.java:717)
+  at Test02.main(Test02.java:9)
+```
+
+#### 用户线程
+
+一般认为，一个线程只要不是内核线程，都是用户线程（User Thread，UT）
+
+用户线程指完全建立再用户自己的程序线程库上，系统内核不能感知到存在的线程（用户线程的创建、同步、销毁和调度完全由用户程序完成，不需要内核的帮助）。
+
+对比：
+
+- 系统线程上下文切换需要系统调度，代价高；用户线程不需要调用内核，操作快速且代价低，且能够支持规模更大的线程数量
+- 系统线程调用方便，只要是支持多线程的系统都能轻松调起；用户线程调用复杂，需要用户程序自己处理线程的创建、销毁、切换和调度
+
+在 Java 1.2 之前 Thread 是用户线程，从 1.2 版本之后采用了内核线程，但如今考虑更好的程序性能，JDK 17 又推出 “协程/~~纤程~~/虚拟线程” 来辅助用户定义用户线程。
+
 ### 并发、并行、串行
 
 并行 = 多个线程**同时**执行**完整**任务
@@ -68,6 +129,8 @@ start / run
 setName / getName
 
 sleep （💡 不释放锁）（推荐：TimeUnit） / interrupt / isInterrupted / interrupted
+
+> 参考：【Java 并发·08】线程中断 interrupt - https://www.bilibili.com/video/BV1CM4y157vc/
 
 yield （💡 不释放锁） —— 允许相同优先级其他线程抢占时间片。
 
@@ -110,7 +173,10 @@ thread.interrupt(); // 打上线程中断标记
 
 ### 线程状态
 
-参考： https://www.cnblogs.com/i-code/p/13839020.html
+> 参考：
+>
+> - https://www.cnblogs.com/i-code/p/13839020.html
+> - https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=52
 
 ::: tip
 理解线程状态为了啥？ todo
@@ -147,9 +213,21 @@ try {
 异常抛出后，先给由 setUncaughtExceptionHandler 方法绑定的处理器处理
 :::
 
+### LockSupport
+
+LockSupport 是 `java.util.concurrent.locks` 包下的一个类，是用来创建锁和其他同步类的基本线程阻塞工具类。
+
+通过 `park` 和 `unpark` 方法可以实现线程调度中的 wait（等待） 和 notify（唤醒） 功能。
+
+todo 具体使用方法 https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=47
+
 ## ThreadPool API
 
 Java 里的线程池顶级接口是 `java.util.concurrent.Executor` 一个执行线程的工具和 `java.util.concurrent.ExecutorService` 一个线程管理服务。
+
+> 配置参考：
+>
+> - <https://www.bilibili.com/video/BV1xE421M78a/>
 
 ```java
 ExecutorService threadPool = new ThreadPoolExecutor(
@@ -184,6 +262,13 @@ try {
 }
 ```
 
+线程池排队逻辑：
+
+- 核心线程空闲 —— 核心线程处理
+- 核心线程满了 —— 排队
+- 核心线程满了，队列满了 —— 非核心线程处理
+- 核心线程满了，队列满了，非核心线程满了 —— 拒绝策略
+
 ### Executors
 
 线程池有很多配置，为了简化配置，官方推荐使用 `java.util.concurrent.Exectors` 中的静态工厂类来生成一些常用的线程池。
@@ -201,6 +286,52 @@ todo 理解 `ThreadPoolExecutor.getTask` 逻辑
 
 - time、timeout 作用
 - cas 竞争淘汰
+
+### 拒绝策略
+
+当核心线程（corePoolSize）、任务队列（workQueue）、最大线程数（maximumPoolSize）都满了，就要执行 “拒绝策略”。
+
+JDK 内置 4 种拒绝策略：
+
+- AbortPolicy （默认） —— 丢弃任务，并抛出 RejectedExecutionException 异常 for 让程序员知道
+- CallerRunsPolicy —— 丢弃任务，不抛出异常 for 无关紧要的业务
+- DiscardOldestPolicy —— 丢弃任务队列最前的任务，将新任务放入队列末尾 for 重试业务
+- DiscardPolicy —— 任务调度线程来执行当前任务 for 让所有任务都能得到执行，而使用多线程只作为增加吞吐量的手段 so 适合大量计算类型的业务
+
+自定义拒绝策略：通过实现 `RejectExecutionHandler` 接口实现自定义拒绝策略。
+
+```java
+class MyRejectedExecutionHandler implements RejectedExecutionHandler {
+  @Override
+  public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+    try {
+      executor.getQueue().offer(r, 60, TimeUnit.SECONDS); // 超时等待
+    } catch (InterruptedExecution e) {
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+开源项目自定义拒绝策略：
+
+- dubbo（`org.apache.dubbo.common.threadpool.support.AbortPolicyWithReport`） —— 当 dubbo 的工作线程触发了线程拒绝策略后，为了让使用者清楚触发线程拒绝策略的原因，拒绝策略做了三件事：
+  1. 输出告警日志 —— 内容包括：线程池的详细设置参数、线程池当前状态、拒绝的任务的详细信息
+  1. 输出当前线程堆栈详情，将发生拒绝策略时的现场情况 dump 线程上下文信息到一个文件中
+  1. 发送事件 onEvent
+  1. 抛出拒绝执行异常，使本次任务失败（使用 JDK 默认拒绝策略的异常）
+
+### 扩展方法
+
+线程池里面提供了几个空方法（钩子方法）：
+
+- beforeExecute
+- afterExecute
+- terminated
+
+通过这些钩子方法可以实现如线程池状态统计、日志输出、告警通知等功能。
+
+todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
 
 ## 线程安全
 
@@ -513,3 +644,313 @@ Java 19 引入虚拟线程概念，Java 21 落地虚拟线程。
 ::: tip
 JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任务的调度，这避免使用多个真实线程来调度多个协同的任务，从而避免线程间上下文切换的带来的系统开销。
 :::
+
+## 问题
+
+### 问题：ConcurrentHashMap 实现原理
+
+ConcurrentHashMap 数据结构如下：
+
+```
+Segment[] （💡 Segment 继承 ReentrantLock 实现分段线程安全）
+0 - HashEntry[] - HashEntry1,HashEntry2,... （单向链表）
+1 - HashEntry[]
+2 - HashEntry[]
+3 - HashEntry[]
+4 - HashEntry[]
+5 - HashEntry[]
+6 - HashEntry[]
+7 - HashEntry[]
+8 - HashEntry[]
+...
+16 （默认 16 个 segment 锁，相当于最大支持 16 个并发 put 操作）
+```
+
+::: tip
+与 HashMap 一样，在 JDK 1.8 后，对碰撞增加了 “红黑树” 的处理。
+:::
+
+::: tip
+concurrencyLevel 配置与 segment 数量的关系： <https://www.infoq.cn/article/ConcurrentHashMap>
+
+- segments 数组的长度 ssize 通过 concurrencyLevel 计算得出
+- 必须保证 segments 数组的长度是 2 的 N 次方（power-of-two size）
+- e.g. 假如 concurrencyLevel 等于 14，15 或 16，ssize 都会等于 16，即容器里锁的个数也是 16
+
+:::
+
+### 问题：实务多线程失效（❗ 解决方案有问题）
+
+todo 移到 spring 并在这里提示
+
+问题：每个线程中的数据库连接（CurrentConnection）是不同的、独立的
+
+```java
+@Transactional
+public void transactionAsyncFail() {
+  new Thread(() -> {
+    addUser(1);
+  }).start();
+  addUser(3);
+  throw new RuntimeException("手动回滚");
+}
+```
+
+解决：
+
+```java
+public void transactionAsyncSuccess() {
+  int size = 10;
+  CyclicBarrier barrier = new CyclicBarrier(size);
+  AtomicReference<Boolean> roolback = new AtomicReference<>(false);
+
+  for (int i=0; i<size; i++) {
+    int currentNum = i;
+
+    new Thread(() -> {
+      // 手动开启事务
+      TransactionStatus transaction = transactionManager.getTransaction(transactionDefinition);
+      try {
+        // insert 操作，如果插入数据 < 1 则异常
+        if (addUser(currentNum) < 1) {
+          log..info("手动异常");
+          throw new RuntimeException("插入数据失败");
+        }
+      } catch (Exception e) {
+        // 如果当前线程执行异常，则设置回滚标志
+        rollback.set(true);
+      }
+
+      // 等待所有线程的事务结束
+      try {
+        barrier.await();
+      } catch (InterruptedException | BrokenBarrierException e) {
+        throw new RuntimeException(e);
+      }
+      // 如果标志需要回滚，则回滚
+      log.info("我执行了{}", currentNum);
+      if (rollback.get()) {
+        transactionManager.rollback(transaction);
+        log.info("rollback for {}", currentNum);
+        return;
+      }
+
+      transactionManager.commit(transaction);
+    }).start();
+  }
+
+  try {
+    Thread.sleep(1000);
+  } catch(InterruptedException e) {
+    throw new RuntimeException(e);
+  }
+  log.info("hello");
+}
+```
+
+坑：
+
+1. 多线程长时间占用，线程池占满
+1. 死锁
+1. 干扰实际的数据库实务间的隔离性
+1. 可以用 “分布式实务” 或 “最终一致” 解决
+
+### 问题：动态线程池 with Nacos
+
+todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=108
+
+所谓 “动态线程池” 指在不重启服务的情况下，改变线程池核心线程数量、最大线程数量、队列容量等。
+
+#### 动态修改配置
+
+环境：（基于 [Spring Cloud Alibaba 版本说明](https://github.com/alibaba/spring-cloud-alibaba/wiki/)）
+
+- Spring Boot 2.6.3
+- Spring Cloud 2021.0.1
+- Spring Cloud Alibaba 2021.0.1.0
+- [Nacos](https://nacos.io/) 1.4.2
+
+```bash
+./startup.sh -m standalone # 单机启动，否则以集群方式启动需要额外配置，麻烦
+# 日志： ${NACOS_HOME}/logs/start.out
+# 访问： http://ip:8848/nacos 默认用户/密码： nacos/nacos
+```
+
+```properties title="application.properties"
+server.port=7070
+spring.application.name=dynamic-thread-pool
+spring.cloud.nacos.config.server-addr=8.142.44.107:8848
+spring.cloud.nacos.config.name=dynamic-thread-pool
+spring.cloud.nacos.username=nacos
+spring.cloud.nacos.password=nacos
+```
+
+```java title="ThreadPoolConfig.java"
+/**
+ * 添加下面配置，会生成对自定义配置文件的提示
+ * <dependency>
+ *  <groupId>org.springframework.boot</groupId>
+ *  <artifactId>spring-boot-configuration-processor</artifactId>
+ *  <optional>true</optional>
+ * </dependency>
+ *
+ * 默认配置
+ * thread.pool.core-pool-size=16
+ * thread.pool.maximum-pool-size=16
+ * thread.pool.work-queue-size=1024
+ */
+@Data
+@Component
+@ConfigurationProperties(perfix = "thread.pool")
+public class ThreadPoolProperties {
+  private int corePoolSize;
+  private int maximumPoolSize;
+  private long keepAliveTime;
+  private int workQueue;
+}
+```
+
+```java title="ThreadPoolConfig.java"
+@Configuration
+public class ThreadPoolConfig {
+  @Autowired
+  private ThreadPoolProperties threadPoolProperties;
+  @Bean
+  public ThreadPoolExecutor threadPoolExecutor() {
+    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+      threadPoolProperties.getCorePoolSize(),
+      threadPoolProperties.getMaximumPoolSize(),
+      threadPoolProperties.getKeepAliveTime(),
+      TimeUnit.SECONDS,
+      new ArrayBlockingQueue<Runnable>(threadPoolProperties.getWorkQueueSize()),
+      Executors.defaultThreadFactory(),
+      // Executors.privilegedThreadFactory(),
+      new ThreadPoolExecutor.DiscardPolicy()
+    )
+  }
+}
+```
+
+方法一： `@RefreshScope` —— 刷新 bean 配置
+
+```java title="ThreadPoolConfig.java"
+@RefreshScope
+@Bean
+public ThreadPoolExecutor threadPoolExecutor() { // ...
+```
+
+方法二： 自己编写刷新代码
+
+::: tabs
+
+@tab 注册自定义线程池
+
+```java title="ThreadPoolConfig.java"
+@Bean
+public ThreadPoolExecutor threadPoolExecutor() {
+  ThreadPoolExecutor threadPoolExecutor = new DynamicThreadPoolExecutor( // DynamicThreadPoolExecutor 自定义类
+    // ...
+```
+
+@tab 实现自定义线程池
+
+```java title="DynamicThreadPoolExecutor.java"
+public class DynamicThreadPoolExecutor extends ThreadPoolExecutor {
+  // ... super method
+}
+```
+
+@tab 实现自定义动态线程池管理器
+
+```java title="DynamicThreadPoolExecutorManager"
+@Component
+public class DynamicThreadPoolExecutorManager {
+  @Autowired
+  private ApplicationContext applicationContext;
+  public synchronized void refreshThreadPoolExecutor(Properties properties) { // 💡加锁，避免ABA
+    applicationContext.getBeansOfType(DynamicThreadPoolExecutor.class).forEach((beanName, executor) -> {
+      executor.setCorePoolSize(Integer.parseInt(properties.getProperty("thread.pool.core-pool-size")));
+      executor.setMaximumPoolSize(Integer.parseInt(properties.getProperty("thread.pool.maximum-pool-size")));
+      // 自定义队列 because of 队列无法通过线程池设置大小
+      if (executor.getQueue() instanceof ResizeLinkedBlockingQueue) {
+        ((ResizeLinkedBlockingQueue) executor.getQueue()).updateCapacity(properties.getProperty("work-queue-size"));
+      }
+    });
+  }
+}
+```
+
+@tab 实现自定义队列
+
+```java
+public class ResizeLinkedBlockingQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, java.io.Serializable {
+  // ...
+  void updateCapacity(int size) {
+    // ...
+  }
+}
+```
+
+```java title="ThreadPoolConfig.java"
+ @Bean
+  public ThreadPoolExecutor threadPoolExecutor() {
+    ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+      threadPoolProperties.getCorePoolSize(),
+      threadPoolProperties.getMaximumPoolSize(),
+      threadPoolProperties.getKeepAliveTime(),
+      TimeUnit.SECONDS,
+      new ResizeLinkedBlockingQueue<Runnable>(threadPoolProperties.getWorkQueueSize()), // 💡注入自定义队列
+      Executors.defaultThreadFactory(),
+      // Executors.privilegedThreadFactory(),
+      new ThreadPoolExecutor.DiscardPolicy()
+    )
+  }
+```
+
+@tab 配置 nacos 监听器
+
+```java title="NacosConfigListener.java"
+@Component
+public class NacosConfigListener implements ApplicationRunner {
+  @Atuowired
+  private NacosConfigManager nacosConfigManager;
+  @Autowired
+  private DynamicThreadPoolExecutorManager dynamicThreadPoolExecutorManager;
+  @Override
+  public void run(ApplicationArguments args) throws Execption {
+    // 开始监听 nacos 的配置更新
+    String dataId = nacosConfigManager.getNacosConfigProperties().getName();
+    String group = nacosConfigManager.getNacosConfigProperties().getGroup();
+    nacosConfigManager.getConfigService().addListener(dataId, group, new Listener() {
+      @Override
+      public Executor getExecutor() {
+        return null;
+      }
+      // 更新后的配置信息在此方法中接收
+      @Override
+      public void receiveConfigInfo(
+        String configInfo // 更新后的配置信息
+      ) {
+        // 刷新我们的线程池配置类
+        Properties properties = new Properties();
+        try {
+          properties.load(new StringReader(configInfo));
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        dynamicThreadPoolExecutorManager.refreshThreadPoolExecutor(properties);
+      }
+    })
+  }
+}
+```
+
+:::
+
+#### 队列缩容处理
+
+todo 多余线程的处理
+
+#### 开源框架
+
+- `dynamic-tp` —— 美团开源的动态线程池，支持通过 nacos 配置中心配置线程池，对线程池进行扩缩容。
