@@ -12,7 +12,9 @@ Quartz 完全由 Java 编写， 专注于 “任务调度库”（job scheduling
 
 <!-- more -->
 
-官网： <http://www.quartz-scheduler.org/>
+官网： <http://www.quartz-scheduler.org/> \
+文档： <https://www.quartz-scheduler.org/documentation/> \
+API： <https://www.quartz-scheduler.org/api/2.3.0/index.html>
 
 特点：
 
@@ -24,10 +26,17 @@ Quartz 完全由 Java 编写， 专注于 “任务调度库”（job scheduling
 概念：
 
 - 任务详情（JobDetail）
+
   - Job 实现： 开发者根据业务需要，实现 `org.quartz.job` 接口的类
   - Job 相关类：
     - JobBuilder
     - JobDataMap
+
+  ::: info
+  **为什么设计成 JobDetail + Job，不直接使用 Job？**
+  Sheduler 每次执行，都会根据 JobDetail 创建一个新的 Job 实例，这样就可以规避 “并发访问” 的问题。
+  :::
+
 - 触发器（Trigger） —— 触发规则 💡 `任务:触发器=1:n`
   - Trigger 实现包括：
     - SimpleTrigger： 延时任务/定时任务
@@ -161,6 +170,10 @@ scheduler.getListenerManager().addJobListener(new MyJobListener(), KeyMatcher.ke
 
 JobStore 负责存储调度器的 “工作数据”： 任务（Job）、触发器（Trigger）、数据（JobDataMap）
 
+### jdbc
+
+todo
+
 ## 配置 prperties
 
 <https://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration>
@@ -196,9 +209,15 @@ org.quartz.plugins.jobInitializer.scanInterval: 120
 org.quartz.plugins.jobInitializer.wrapInUserTransaction: false
 ```
 
+## 集群
+
+Quartz 可单独使用，可在集成在服务器内参数实务，可集成在集群中负责平衡和故障转移。
+
+todo
+
 ## 集成 spring
 
-spring 提供了 quartz 相关的封装
+从 springboot 2.4.10 开始，添加 quartz 的 maven 依赖：
 
 ```xml
 <!-- @include: @project/code/demo-java-schedule/demo-quartz-02-spring/pom.xml -->
@@ -219,3 +238,96 @@ spring 提供了 quartz 相关的封装
 ```
 
 :::
+
+## 持久化 with spring
+
+~~参考： https://zhuanlan.zhihu.com/p/522284183~~
+
+初始化 sql 脚本： ~~https://gitee.com/qianwei4712/code-of-shiva/blob/master/quartz/quartz.sql~~
+
+```yml title="application.yaml"
+# 开发环境配置
+server:
+  # 服务器的HTTP端口
+  port: 80
+  servlet:
+    # 应用的访问路径
+    context-path: /
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+
+spring:
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/quartz?useUnicode=true&characterEncoding=utf-8&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # HikariPool 较佳配置
+    hikari:
+      # 客户端（即您）等待来自池的连接的最大毫秒数
+      connection-timeout: 60000
+      # 控制将测试连接的活动性的最长时间
+      validation-timeout: 3000
+      # 控制允许连接在池中保持空闲状态的最长时间
+      idle-timeout: 60000
+
+      login-timeout: 5
+      # 控制池中连接的最大生存期
+      max-lifetime: 60000
+      # 控制允许池达到的最大大小，包括空闲和使用中的连接
+      maximum-pool-size: 10
+      # 控制HikariCP尝试在池中维护的最小空闲连接数
+      minimum-idle: 10
+      # 控制默认情况下从池获得的连接是否处于只读模式
+      read-only: false
+```
+
+配置类
+
+```java
+@Configuration
+public class ScheduleConfig {
+
+    @Bean
+    public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
+        SchedulerFactoryBean factory = new SchedulerFactoryBean();
+        factory.setDataSource(dataSource);
+
+        // quartz参数
+        Properties prop = new Properties();
+        prop.put("org.quartz.scheduler.instanceName", "shivaScheduler");
+        prop.put("org.quartz.scheduler.instanceId", "AUTO");
+        // 线程池配置
+        prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
+        prop.put("org.quartz.threadPool.threadCount", "20");
+        prop.put("org.quartz.threadPool.threadPriority", "5");
+        // JobStore配置
+        prop.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
+        // 集群配置
+        prop.put("org.quartz.jobStore.isClustered", "true");
+        prop.put("org.quartz.jobStore.clusterCheckinInterval", "15000");
+        prop.put("org.quartz.jobStore.maxMisfiresToHandleAtATime", "1");
+        prop.put("org.quartz.jobStore.txIsolationLevelSerializable", "true");
+
+        // sqlserver 启用
+        // prop.put("org.quartz.jobStore.selectWithLockSQL", "SELECT * FROM {0}LOCKS UPDLOCK WHERE LOCK_NAME = ?");
+        prop.put("org.quartz.jobStore.misfireThreshold", "12000");
+        prop.put("org.quartz.jobStore.tablePrefix", "QRTZ_");
+        factory.setQuartzProperties(prop);
+
+        factory.setSchedulerName("shivaScheduler");
+        // 延时启动
+        factory.setStartupDelay(1);
+        factory.setApplicationContextSchedulerContextKey("applicationContextKey");
+        // 可选，QuartzScheduler
+        // 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了
+        factory.setOverwriteExistingJobs(true);
+        // 设置自动启动，默认为true
+        factory.setAutoStartup(true);
+
+        return factory;
+    }
+}
+```
