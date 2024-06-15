@@ -10,11 +10,25 @@ order: 1
 
 ## zsh
 
-todo 安装
+```bash
+sudo apt install zsh
+# 将 zsh 设置为默认 shell
+chsh -s /bin/zsh
+echo $SHELL
+```
 
 ## oh-my-zsh
 
-todo 安装 http://ohmyz.sh/
+官网： http://ohmyz.sh/
+
+主题
+
+```bash
+powerlevel10k —— 这个主题对字体有要求，需要看 Readme.md
+
+vim ~/.zshrc
+ZSH_THEME="powerlevel10k"
+```
 
 插件
 
@@ -37,3 +51,7 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:
 ```bash
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting z extract web-search)
 ```
+
+## neovim
+
+todo nvim 终端 ide
