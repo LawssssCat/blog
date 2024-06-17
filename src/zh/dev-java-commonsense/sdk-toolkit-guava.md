@@ -69,6 +69,36 @@ alternate:
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/PreconditionsTest.java -->
 ```
 
+## ~~Funtional Programming~~ （JDK8 已有原生替代）
+
+Functional Programming emphasizes the use of functions to achieve its objectives versus changing state.
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/FunctionalTest.java -->
+```
+
+## ~~Collections~~ （JDK8 已有原生替代）
+
+Guava 开始时就是为了处理集合而产生的项目，但现在这些方法已有 JDK8 原生替代方法。
+
+包含方法有：
+
+- FluentIterable
+- Range/Lists/Sets/Maps
+- Immutable Collections
+- Multimaps
+- BitMap
+
+参考：
+
+- todo <https://blog.csdn.net/wuyuxing24/article/details/100594173>
+- todo <https://blog.csdn.net/pzjtian/article/details/106739606>
+- todo <https://blog.csdn.net/zhiwenganyong/article/details/122770670>
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/CollectionsTest.java -->
+```
+
 ## Cache
 
 In Menory cache 缓存
