@@ -647,6 +647,56 @@ JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任�
 
 ## 问题
 
+### 问题：循环多线程
+
+```java
+Arrays.asList().stream().parallel()....
+IntStream.of().parallel()....
+LongStream.of().parallel()....
+```
+
+### 问题：多线程操作集合（CopyOnWrite）
+
+多线程同时操作同一个集合会抛出异常，因为异常迭代器有 “Fail-Fast（快速失败机制）”：当迭代器发现（其他代码）增删后，便抛出异常 `java.util.ConcurrentModificationException` —— 保证迭代器的独立性和隔离性
+
+```java
+List<String> list = new ArrayList();
+list.add("hello");
+Iterator iterator = list.iterator();
+list.add("world"); // 其他代码增删
+iterator.next(); // 抛出异常
+```
+
+处理这种情况，可以用 “写入时复制机制（CopyOnWrite，COW）” —— 希望迭代期间，能增删和高性能
+
+```java title="java.util.concurrent.CopyOnWriteArrayList"
+public boolean add(E e) {
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        Object[] elements = getArray();
+        int len = elements.length;
+        Object[] newElements = Arrays.copyOf(elements, len + 1);
+        newElements[len] = e;
+        setArray(newElements);
+        return true;
+    } finally {
+        lock.unlock();
+    }
+}
+static final class COWIterator<E> implements ListIterator<E> {
+    public E next() {
+        if (! hasNext())
+            throw new NoSuchElementException();
+        return (E) snapshot[cursor++];
+    }
+}
+```
+
+1. 增删时，复制新数组，将引用挨个复制到新数组后，在新数组上操作 —— ❗ 所以写的性能，非常差！非常差！非常差！
+1. 遍历时，正常遍历
+1. 适用于读多，写少的情况
+
 ### 问题：ConcurrentHashMap 实现原理
 
 ConcurrentHashMap 数据结构如下：
