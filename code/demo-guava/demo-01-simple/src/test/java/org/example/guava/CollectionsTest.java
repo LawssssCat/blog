@@ -4,12 +4,12 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;
 import com.google.common.collect.*;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
@@ -90,9 +90,10 @@ public class CollectionsTest {
     @DisplayName("测试 Lists")
     @Test
     void testLists() {
-        // new ❌JDK 替代
+        // 💡new 可改
         assertEquals("A,B,C", Joiner.on(",").join(Lists.newArrayList("A", "B", "C"))); // 可修改
         assertEquals("A,B,C", Joiner.on(",").join(Lists.newLinkedList(FluentIterable.of("A", "B", "C")))); // 可修改
+        // new 不可改❌JDK 替代
         assertArrayEquals(new String[] {"A", "B"}, Lists.asList("A", new String[] {"B"}).toArray()); // 不可修改
         assertArrayEquals(new Character[] {'A', 'B', 'C'}, Lists.charactersOf("ABC").toArray()); // 拆分，不如 Spliter
 
@@ -121,17 +122,24 @@ public class CollectionsTest {
     @DisplayName("测试 Sets")
     @Test
     void testSets() {
+        // new —— same as Lists
+//        Sets.newHashSet()
 
+        // 笛卡尔
+//        Sets.cartesianProduct()
+        // 子集
+        assertEquals("[[1],[2],[3]]", toString(Sets.combinations(Sets.newHashSet(1,2,3), 1)));
+        assertEquals("[[1,2],[1,3],[2,3]]", toString(Sets.combinations(Sets.newHashSet(1,2,3), 2)));
+        assertEquals("[[1,2,3]]", toString(Sets.combinations(Sets.newHashSet(1,2,3), 3)));
     }
 
-    /**
-     * TreeMultiset —— 有序（自然顺序）可重复
-     * HashMultiset —— 无序可重复
-     */
-    @DisplayName("测试 Multiset")
-    @Test
-    void testMultiset() {
-        TreeMultiset<Integer> treeMultiset = TreeMultiset.create(FluentIterable.of(3,2,1,2));
-        Assertions.assertArrayEquals(new Integer[] {1,2,2,3}, treeMultiset.stream().collect(Collectors.toList()).toArray());
+    private static String toString(Collection<?> col) {
+        List<String> stream = col.stream().map(o -> {
+            if (o instanceof Collection) {
+                return toString((Collection<?>) o);
+            }
+            return o.toString();
+        }).collect(Collectors.toList());
+        return "[" + Joiner.on(",").join(stream) + "]";
     }
 }

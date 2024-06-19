@@ -95,9 +95,32 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 - todo <https://blog.csdn.net/pzjtian/article/details/106739606>
 - todo <https://blog.csdn.net/zhiwenganyong/article/details/122770670>
 
+::: tabs
+
+@tab Collections
+
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/CollectionsTest.java -->
 ```
+
+@tab Maps
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/MapsTest.java -->
+```
+
+@tab Table
+
+- ArrayTable
+- TreeBaseTable
+- HashBaseTable
+- ImmutableTable
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/TableTest.java -->
+```
+
+:::
 
 ## Cache
 
