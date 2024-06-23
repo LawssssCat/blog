@@ -203,15 +203,49 @@ try {
 }
 ```
 
-### 異常抛出时机
+### 异常处理
 
-- 无返回值用 execute 方法调用，异常马上在子线程抛出
+线程出现异常，异常会被抛出，从而可能导致线程终止。
+异常抛出后，先给由 `setUncaughtExceptionHandler` 方法绑定的处理器处理（如果有注册的话）。
 
-- 有返回值用 submit 方法调用得到 future 类，异常在 `future.get` 时在主线程抛出
+e.g.
 
-::: tip
-异常抛出后，先给由 setUncaughtExceptionHandler 方法绑定的处理器处理
-:::
+```java
+Thread thread = new Thread(() -> {
+  int number = Integer.parseInt("TTT"); // 💡异常
+  System.out.printf("Number: %d", number);
+});
+// 设定线程异常处理程序
+thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+  @Override
+  public void uncaughtException(Thread t, Throwable e) {
+    System.out.println("捕获到线程抛出的异常：");
+    System.out.printf("线程ID： %s\n", t.getId());
+    System.out.printf("线程状态： %s\n", t.getState());
+    System.out.printf("异常信息： %s：%s\n", e.getClass().getName(), e.getMessage());
+    System.out.println("异常堆栈：");
+    e.printStackTrace(System.out)
+  }
+});
+// 启动线程
+thread.start();
+try {
+  thread.join();
+} catch (InterruptedException e) {
+  e.printStackTrace();
+}
+System.out.println("示例运行结束");
+```
+
+线程异常的传递：
+
+1. 线程关联的 UncaughtExceptionHandler
+1. 线程组关联的 UncaughtExceptionHandler
+1. JVM 默认的 UncaughtExceptionHandler
+
+### 线程组
+
+todo
 
 ### LockSupport
 
@@ -268,6 +302,8 @@ try {
 - 核心线程满了 —— 排队
 - 核心线程满了，队列满了 —— 非核心线程处理
 - 核心线程满了，队列满了，非核心线程满了 —— 拒绝策略
+
+todo 整理图片，参考： https://www.bilibili.com/video/BV1J6421w7Jb
 
 ### Executors
 
@@ -333,6 +369,90 @@ class MyRejectedExecutionHandler implements RejectedExecutionHandler {
 
 todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
 
+### 区别 excute 和 submit 方法
+
+| 区别     | execute         | submit                      |
+| -------- | --------------- | --------------------------- |
+| 返回结果 | 无返回          | Future                      |
+| 异常处理 | 线程中抛出      | `Future.get` 时抛出         |
+| 方法重载 | 只接收 Runnable | 能接收 Runnable 和 Callable |
+
+### 异常处理
+
+在 Java 中，线程池中的工作线程如果出现异常：
+
+1. 默认会把异常往外抛，但是抛出时机有区别
+
+   - 如果是 execute （无返回值）执行的任务，异常马上会在子线程抛出
+   - 如果是 submit （有返回值）执行的 FutureTask 执行的任务，异常会在 `future.get` 时被捕获到
+
+1. 同时这个工作线程会因为异常销毁
+
+   - 线程池调用线程 run 方法时，会在外面包裹 `try-catch-finally` 关键字，处理线程销毁工作
+
+     ```java
+     try {
+       task.run();
+     } catch (RuntimeException x) {
+       thrown = x; throw x;
+     } catch (Error x) {
+       thrown = x; throw x;
+     } catch (Throwable x) {
+       thrown = x; throw new Error(x);
+     } finally {
+       afterExecute(task, thrown);
+     }
+     ```
+
+   - 线程池销毁线程会通过 processWorkerExit 方法，将该异常线程从线程池的 workers 中移除
+
+所以，为了避免异常导致的异常情况，我们需要手动处理对应的异常。
+下面整理几种异常处理手段：
+
+1. 在传递的任务中处理异常
+
+   ```java
+   Runnable task = () -> {
+     try {
+       // 执行任务...
+     } catch (Exception e) {
+       // 处理异常...
+     }
+   };
+   executor.submit(task);
+   ```
+
+1. 使用 Future 获取异常结果
+
+   ```java
+   Future<Integer> future = executor.submit(() -> {
+     // 执行任务...
+     return result;
+   });
+
+   try {
+     Integer result = future.get();
+   } catch (ExecutionException e) {
+     Throwable cause = e.getCause(); // 获取实际的异常
+     // 处理异常...
+   }
+   ```
+
+1. 自定义 ThreadFactory 指定线程池异常处理方式 （推荐）
+
+   ```java
+   ThreadFactory factory = runnable -> {
+     Thread thread = new Thread(runnable);
+     thread.setUncaughtExceptionHandler((t, e) -> { // 该方法在线程由于未捕获异常而即将终止的时候被调用
+       // 处理异常...
+     });
+     return thread;
+   };
+   ExecutorService executor = Executors.netFixedThreadPool(10, factory);
+   ```
+
+1. 重写 `ThreadPoolExecutor.afterExcute` 方法，处理传递的异常引用
+
 ## 线程安全
 
 线程安全 = 共享数据符合预期
@@ -342,6 +462,8 @@ todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
 - 有序性 —— 指令重排、内存屏障、synchronized
 
 ### JMM 内存模型
+
+JMM（Java Memory Model，Java 内存模型）
 
 todo 可见性 violated、指令重排 内存屏障
 
@@ -633,6 +755,18 @@ e.g.
 - synchronized 非公平
 - ReentrantLock 可公平、可非公平 `new ReentrantLock(true) ; // fair true/false 默认 false`
 
+#### 死锁问题
+
+todo 参考： https://www.bilibili.com/video/BV1Xd4y1m7Bs/
+
+todo demo 哲学家就餐：吃饭围一圈，每人中间间隔一只筷子，优先左手拿筷子，导致右手拿筷子时筷子被占用，导致死锁 —— 处理：顺序释放筷子占用，直到一个人拿到两个筷子
+
+todo jps 看 PID
+
+todo jstack 看死锁分析 / jconsole
+
+todo trylock
+
 ## 生产者/消费者模型
 
 todo
@@ -647,7 +781,7 @@ JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任�
 
 ## 问题
 
-### 问题：循环多线程
+### 问题：循环中使用多线程
 
 ```java
 Arrays.asList().stream().parallel()....
@@ -729,9 +863,13 @@ concurrencyLevel 配置与 segment 数量的关系： <https://www.infoq.cn/arti
 
 :::
 
-### 问题：实务多线程失效（❗ 解决方案有问题）
+### 问题：多线程间，事务失效（❗ 解决方案有问题）
 
 todo 移到 spring 并在这里提示
+
+::: warning
+多线程间共享一个事务，本身违背隔离性，应优先解决设计问题，而非下面所述代码问题。
+:::
 
 问题：每个线程中的数据库连接（CurrentConnection）是不同的、独立的
 
