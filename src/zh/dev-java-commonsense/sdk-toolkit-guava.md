@@ -6,9 +6,7 @@ tag:
 order: 10
 ---
 
-Google Guava 官方教程（中文版）： <https://wizardforcel.gitbooks.io/guava-tutorial/content/1.html>
-
-B 站 | Guava 讲解： https://www.bilibili.com/video/BV1R4411s7GX/
+Guava 是 Google 团队开源的一款 Java 核心增强库，最初名叫 “`google-collections`”，专门做集合工具类功能，如今包含集合、并发原语、缓存、IO、反射等工具功能，性能和稳定性上都有保障，应用十分广泛。
 
 ```xml
 <dependency>
@@ -17,6 +15,14 @@ B 站 | Guava 讲解： https://www.bilibili.com/video/BV1R4411s7GX/
   <version>23.0</version>
 </dependency>
 ```
+
+<!-- more -->
+
+> 参考：
+>
+> - Google Guava 官方教程（中文版）： <https://wizardforcel.gitbooks.io/guava-tutorial/content/1.html>
+> - 《Getting Started with Google Guava》 by Bill Bejeck
+> - B 站 | Guava 讲解： https://www.bilibili.com/video/BV1R4411s7GX/
 
 ## Basic
 
@@ -77,7 +83,7 @@ Functional Programming emphasizes the use of functions to achieve its objectives
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/FunctionalTest.java -->
 ```
 
-## ~~Collections~~ （JDK8 已有原生替代）
+## Collections （【部分】JDK8 已有原生替代）
 
 Guava 开始时就是为了处理集合而产生的项目，但现在这些方法已有 JDK8 原生替代方法。
 
@@ -95,21 +101,19 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 - todo <https://blog.csdn.net/pzjtian/article/details/106739606>
 - todo <https://blog.csdn.net/zhiwenganyong/article/details/122770670>
 
-::: tabs
-
-@tab Collections
+### Collections
 
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/CollectionsTest.java -->
 ```
 
-@tab Maps
+### Maps/MultiMap 💡
 
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/MapsTest.java -->
 ```
 
-@tab Table
+### Table 💡
 
 - ArrayTable
 - TreeBaseTable
@@ -120,11 +124,38 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/TableTest.java -->
 ```
 
+### Range
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/RangeTest.java -->
+```
+
+### ImmutableXxx
+
+- ImmutableCollections
+- ImmutableMaps
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/ImmutableXxxTest.java -->
+```
+
+### Ording
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/OrderingTest.java -->
+```
 :::
 
 ## Cache
 
 In Menory cache 缓存
+
+Guava Cache 支持很多特性：
+
+- 基于 LRU 算法实现
+- 支持最大容量限制
+- 支持两种过期删除策略（插入时间、访问时间）
+- 支持简单的统计功能
 
 > alternate
 >
@@ -132,6 +163,59 @@ In Menory cache 缓存
 > - OsCache
 > - SwarmCache
 > - Ehcache
+
+::: tabs
+
+@tab 依赖
+
+```xml
+<dependency>
+  <groupId>com.google.guava</groupId>
+  <artifactId>guava</artifactId>
+  <version>18.0</version>
+</dependency>
+```
+
+@tab Demo
+
+```java
+public class GuavaCacheTest {
+​
+    public static void main(String[] args) throws Exception {
+        //创建guava cache
+        Cache<String, String> loadingCache = CacheBuilder.newBuilder()
+                //cache的初始容量
+                .initialCapacity(5)
+                //cache最大缓存数
+                .maximumSize(10)
+                //设置写缓存后n秒钟过期
+                .expireAfterWrite(17, TimeUnit.SECONDS)
+                //设置读写缓存后n秒钟过期,实际很少用到,类似于expireAfterWrite
+                //.expireAfterAccess(17, TimeUnit.SECONDS)
+                .build();
+        String key = "key";
+        // 往缓存写数据
+        loadingCache.put(key, "v");
+​
+        // 获取value的值，如果key不存在，调用collable方法获取value值加载到key中再返回
+        String value = loadingCache.get(key, new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return getValueFromDB(key);
+            }
+        });
+​
+        // 删除key
+        loadingCache.invalidate(key);
+    }
+​
+    private static String getValueFromDB(String key) {
+        return "v";
+    }
+}
+```
+
+:::
 
 基本接口
 
@@ -146,25 +230,6 @@ In Menory cache 缓存
 | `RemovalListener<K, V>`  | 用于监听缓存条目被移除的事件，并在条目被移除时执行相应的操作        |
 
 具体接口说明： <https://blog.csdn.net/JokerLJG/article/details/134596900>
-
-### 原理：LRU 算法
-
-LRU（Least Recently Used，最少最近使用）
-
-todo https://www.bilibili.com/video/BV1R4411s7GX?p=29
-
-todo LinkedHashMap 实现
-
-todo LinkedList 实现
-
-### 原理：引用类型
-
-- StronReference 强引用 —— 只要有引用，就不会被 gc 回收
-- SoftReference 软引用 —— 尽管还有引用，但是会被 full gc 回收
-- WeakReference 弱引用 —— 尽管还有引用，但是会被 Major gc （仅清理老年代） 和 full gc （清理整个堆） 回收
-- PhantomReference 幽灵引用 —— 尽管还有引用，但不管有没有被 gc 回收，都是无法通过引用访问内存内容，**但是可以收到该内存被 gc 回收的通知** | 参考： apache common-io FileCleaningTracker
-
-todo 内存敏感实现
 
 ### 例子：get-if-absent-compute
 
@@ -187,10 +252,150 @@ Guava Cache 提供两种实现了 get-if-absent-compute 语义的方式：
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/CacheLoaderTest.java -->
 ```
 
-### 策略：清理、过期
+### 淘汰策略
 
-Guava Cache 采用基于容量、Soft 引用、Weak 引用的清理触发条件，基于过期时间、权重来决定哪些数据优先清理，采用 LRU 算法来清理数据。
+由于数据量有限制，缓存的数据可能会由于新的数据进入，而 “淘汰” 旧的数据。
 
-### 策略：重载 refresh
+Guava cache 基于缓存的 “数量” 或者 “权重” 来触发淘汰事件，基于 LRU 算法来决定哪些数据优先被 “淘汰”。
 
-LoadingCache 中的 refresh 提供了值替换的功能。在调用 refresh 时，会先调加载新值，新值加载到后替换掉老值，并返回老值。如果加载不到新值，老值是被保留的，不会被替换掉的。
+相应配置：
+
+- maximumSize —— 基于数量淘汰
+- maximumWeight + weigher —— 基于权重淘汰
+
+### 过期策略
+
+由于数据时效性，缓存的数据可能存在 “过期”。
+
+相应配置：
+
+- expireAfterWrite —— 写后过期
+- expireAfterAccess —— 读后过期（坑：一直读，则一直不过期）
+
+### 刷新策略/重载策略
+
+相应配置：
+
+- refreshAfterWrite
+
+所谓刷新策略，是指缓存数据多久后要重新到数据库拉取数据，需要与过期策略进行区分。
+
+::: tip
+
+区别 refresh 和 expire 细节：
+
+- expire —— 对应的 key 过期后，第一个读 key 的线程负责读取新值，其他读相同 key 的线程阻塞
+  - 问题：高并发场景下，可能有大量线程阻塞
+- refresh —— 对应的 key 过期后，第一个读取 key 的线程负责读取新值，其他读相同 key 的线程返回旧值
+
+:::
+
+为了提高性能，可以考虑：
+
+1. 配置 refresh < expire，以减少线程阻塞概率
+1. 采用**异步刷新策略**（线程异步加载数据，期间所有请求返回旧的缓存值），防止缓存雪崩
+
+#### 异步刷新配置
+
+参考： <https://www.bilibili.com/video/BV1fG411q7Gv/>
+
+默认情况下，Guava Cache 并没有后台任务线程定时地、主动地调用 load 方法来拉取数据，而是在数据请求时才执行数据拉取操作。
+
+但是，刷新策略提供了异步主动刷新数据的机制。 （需要提供线程池）
+
+异步刷新代码：
+
+::: tabs
+
+@tab 重写 reload 方法
+
+```java
+// 定义刷新的线程池
+ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+CacheLoader<String, String> cacheLoader = new CacheLoader<String, String>() {
+  @Override
+  public String load(String key) {
+    System.out.println(Thread.currentThread().getName() + " 加载 key:" + key);
+    // 从数据库加载数据
+    return "value_" + key.toUpperCase();
+  }
+  @Override
+  // 💡异步刷新缓存： 当 refreshAfterWrite 到期，或者 LoadingCache.refresh 方法被调用时，该方法会被触发
+  public ListenableFuture<String> reload(String key, String oldValue) throws Exception {
+    ListenableFutureTask<String> futureTask = ListenableFutureTask.create(() -> {
+      System.out.println(Thread.currentThread().getName() + " 异步加载 key:" + key + " oldValue:" + oldValue);
+      return load(key);
+    });
+    executorService.submit(futureTask);
+    return futureTask;
+  }
+}
+
+LoadingCache<String, String> cache = CacheBuilder.newBuilder()
+  .maximumSize(20)
+  .expireAfterWrite(10, TimeUnit.SECONDS)
+  .refreshAfterWrite(5, TimeSECONDS)
+  .build(cacheLoader);
+```
+
+@tab 实现 asyncReloading 方法
+
+```java
+// 定义刷新的线程池
+ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+CacheLoader<String, String> cacheLoader = new CacheLoader<String, String>() {
+  @Override
+  public String load(String key) {
+    System.out.println(Thread.currentThread().getName() + " 加载 key:" + key);
+    // 从数据库加载数据
+    return "value_" + key.toUpperCase();
+  }
+}
+
+// 💡添加异步处理
+cacheLoader = CacheLoader.asyncReloading(cacheLoader, executorService);
+
+LoadingCache<String, String> cache = CacheBuilder.newBuilder()
+  .maximumSize(20)
+  .expireAfterWrite(10, TimeUnit.SECONDS)
+  .refreshAfterWrite(5, TimeSECONDS)
+  .build(cacheLoader);
+```
+
+:::
+
+### 清理策略
+
+由于内存资源考虑，缓存的数据可能需要被 “清理”。
+
+Guava cache 可以使用 Soft 引用、Weak 引用来避免 gc 阻塞。
+
+相应配置：
+
+- softValues —— 软引用
+- weakValues —— 弱引用
+
+::: info
+
+不同引用方式，在 JVM 中的 gc 策略：
+
+- StronReference 强引用 —— 只要有引用，就不会被 gc 回收
+- SoftReference 软引用 —— 尽管还有引用，但是会被 full gc 回收
+- WeakReference 弱引用 —— 尽管还有引用，但是会被 Major gc （仅清理老年代） 和 full gc （清理整个堆） 回收
+- PhantomReference 幽灵引用 —— 尽管还有引用，但不管有没有被 gc 回收，都是无法通过引用访问内存内容，**但是可以收到该内存被 gc 回收的通知** | 参考： apache common-io FileCleaningTracker
+
+:::
+
+todo 内存敏感实现
+
+## Other
+
+### StopWatch
+
+统计代码运行时间
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/other/StopWatchTest.java -->
+```
