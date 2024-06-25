@@ -305,15 +305,6 @@ try {
 
 todo 整理图片，参考： https://www.bilibili.com/video/BV1J6421w7Jb
 
-### Executors
-
-线程池有很多配置，为了简化配置，官方推荐使用 `java.util.concurrent.Exectors` 中的静态工厂类来生成一些常用的线程池。
-
-- newFixedThreadPool —— 固定容量线程池
-- newCachedThreadPool —— 可缓存线程池。当需求较小，回收空闲线程；当需求过量，增加线程数（无上限）
-- newSingleThreadPoolExecutor —— 单线程 Executor
-- newScheduledThreadPool —— 固定容量线程池，且可延时启动任务和定时任务启动
-
 ### 非核心线程淘汰机制
 
 参考： https://www.bilibili.com/video/BV177421Z7as?p=29
@@ -409,7 +400,7 @@ todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
 所以，为了避免异常导致的异常情况，我们需要手动处理对应的异常。
 下面整理几种异常处理手段：
 
-1. 在传递的任务中处理异常
+1. 在传递的任务中处理异常（推荐）
 
    ```java
    Runnable task = () -> {
@@ -438,7 +429,7 @@ todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
    }
    ```
 
-1. 自定义 ThreadFactory 指定线程池异常处理方式 （推荐）
+1. 自定义 ThreadFactory 指定线程池异常处理方式
 
    ```java
    ThreadFactory factory = runnable -> {
@@ -451,7 +442,47 @@ todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
    ExecutorService executor = Executors.netFixedThreadPool(10, factory);
    ```
 
+   ::::: warning
+   可能导致 UncaughtExceptionHandler 失效的情况：
+
+   1. 如果异常由其他线程抛出（，一般是该线程下又用了其他线程，在其他线程中抛出异常），则不会被当前配置的 Handler 捕获并处理
+   1. 如果 runnable 由线程池的 submit 方法执行（返回 Future 类），则不会被当前配置的 Handler 捕获并处理，因为该 Handler 只针对线程池的 execute 方法捕获异常
+
+      - ❗ 这种失效情况非常常见，如定时任务（`ScheduledExecutorService`）的 schedule 底层调用 submit 方法，如果没意识且不针对性的调试，大概率踩坑
+
+        ::: details
+
+        ```java
+        <!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/ScheduleExecutorServiceCaughtExceptionFailTest.java -->
+        ```
+
+        :::
+
+   :::::
+
 1. 重写 `ThreadPoolExecutor.afterExcute` 方法，处理传递的异常引用
+
+## Executor API
+
+### Executors
+
+线程池有很多配置，为了简化配置，官方推荐使用 `java.util.concurrent.Exectors` 中的静态工厂类来生成一些常用的线程池。
+
+- newFixedThreadPool —— 固定容量线程池
+- newCachedThreadPool —— 可缓存线程池。当需求较小，回收空闲线程；当需求过量，增加线程数（无上限）
+- newSingleThreadPoolExecutor —— 单线程 Executor
+- newScheduledThreadPool —— 固定容量线程池，且可延时启动任务和定时任务启动
+
+### ExecutorService
+
+Executors 工厂类统一返回该接口，区别是实现类的不同功能。
+
+#### ScheduledExecutorService
+
+参考： https://blog.csdn.net/Mrxiao_bo/article/details/136435896
+
+ScheduledExecutorService 是 Java 并发包提供的接口，用于支持任务的调度和执行。
+相较于传统的 Timer 类，ScheduledExecutorService 具有更强大的性能、更灵活的定时任务调度策略。
 
 ## 线程安全
 
