@@ -26,10 +26,9 @@ java 定时任务创建/管理/调度/分布式/弹性
 
 ## API/框架
 
-[quartz](./quartz.md)
-
-xxl-job
-
-elastic-job
-
-power-job
+- [timer](./timer.md)
+- [SpringBoot `@scheduled`](./springboot_schedule.md)
+- [quartz](./quartz.md)
+- xxl-job
+- elastic-job
+- power-job
