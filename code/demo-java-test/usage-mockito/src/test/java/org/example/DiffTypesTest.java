@@ -9,7 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mockingDetails;
+import static org.mockito.Mockito.verify;
 
 /**
  * 区分 @Mock、@Spy、@Captor、@InjectMock

@@ -154,3 +154,11 @@ todo 原理
     Mockito.mockingDetails(spyUserService).isMock(); // true —— ❗Spy是Mock的子类
   }
 ```
+
+## 问题： mock FunctionInterface 输入
+
+todo 完善
+
+```java
+<!-- @include: @project/code/demo-java-test/usage-mockito/src/test/java/org/example/Mock02FunctionInterfaceTest.java -->
+```
