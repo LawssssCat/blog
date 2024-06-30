@@ -6,6 +6,45 @@ tag:
 order: 33
 ---
 
+## JDK URI 和 URL
+
+从 `new URL()` 和 `new URI` 两个构造函数可传入的参数来看，JDK 认为：
+
+- `new URL(String protocol, String host, String port, String file, URLStreamHandler handler)`
+
+  - URL 主要关注 “命名空间（协议 + 域名 + 端口）” 的定义；
+  - URL 提供建立连接的执行的类 `URLStreamHandler`；
+
+- `new URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment)`
+
+  - URI 主要关注 “相对位置（path、query、fragment）”；
+
+但 URI 比 URL 更加严格：
+
+- URL 只做字符串的拼接
+- URI 会对语法（Syntax）进行校验，也能对字符串进行转换
+
+```java
+URI uri = new URI("http", "a:b", "xx", 22, "/xx", "a=嗨 嗨 ", "嗨 嗨 ");
+// http://a:b@xx:22/xx?a=嗨%20嗨%20#嗨%20嗨%20
+System.out.println(uri);
+// http://a:b@xx:22/xx?a=%E5%97%A8%20%E5%97%A8%20#%E5%97%A8%20%E5%97%A8%20
+System.out.println(uri.toASCIIString());
+// http://a:b@xx:22/xx?a=嗨%20嗨%20#嗨%20嗨%20
+System.out.println(uri.toURL());
+URL url = new URL("http", "a:b@xx.cc", 22, "xx/bb?a=哈 哈 #x哈 x哈 "); // 错误的地址，创建没报错
+// http://[a:b@xx.cc]:22xx/bb?a=哈 哈 #x哈 x哈
+System.out.println(url); // 输出没做处理
+// java.net.URISyntaxException: Illegal character in user info at index 7: http://[a:b@xx.cc]:22xx/bb?a=哈 哈 #x哈 x哈
+Assertions.assertThrowsExactly(URISyntaxException.class, () -> url.toURI()); // 报错
+// url.openConnection(); // 💡建立连接
+```
+
+综上，个人认为两个类的使用方法如下：
+
+- URI 用于路径定义（包括校验和 normalize 转换）
+- 后 URI 转 URL 用于建立连接
+
 ## 坑：URL 中的空格转义问题
 
 > 参考：
