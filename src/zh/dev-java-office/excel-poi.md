@@ -24,6 +24,10 @@ Apache POI 是一个流行的 Java 库，用于处理 Microsoft Office 格式文
 
 <!-- more -->
 
+> 参考
+>
+> - <https://github.com/ZhangZiSheng001/poi-demo>
+
 ## 引入依赖
 
 ::: tabs#excel_version
@@ -181,6 +185,39 @@ workbook.write(fileOutputStream);
 ```
 
 使用 `SXSSFWorkbook` 导出耗时：10.959 秒
+
+::: info
+
+从 3.8-beta3 开始，POI 提供了基于 XSSF 的低内存占用的 SXSSF API。
+
+SXSSF 是 XSSF 的 API 兼容流扩展，可用于必须生成非常大的电子表格且堆空间有限的情况。
+SXSSF 通过限制对滑动窗口内的行的访问来实现其低内存占用，而 XSSF 允许对文档中的所有行进行访问。
+不再在窗口中的较旧的行将被写入磁盘，因此无法访问。
+
+在自动刷新模式下，可以指定访问窗口的大小，以在内存中保留一定数量的行。
+当达到该值时，附加行的创建将使索引最低的行从访问窗口中删除并写入磁盘。
+或者，可以将窗口大小设置为动态增长。可以根据需要通过显式调用 flushRows（int keepRows）定期对其进行修剪。
+
+由于实现的流性质，与 XSSF 相比存在以下限制：
+
+- 在某个时间点只能访问有限数量的行
+- 不支持 `Sheet.clone()`
+- 不支持公式评估
+
+:::
+
+::: tip
+
+SXSSF 刷新临时文件中的工作表数据（每个 sheet 一个临时文件），这些临时文件的大小可能会增长到非常大的值。
+例如，对于 20mb 临时 xml 大小的 csv 数据变得超过十亿字节。
+如果临时文件的大小是一个问题，可以使用 gzip 压缩:
+
+```java
+SXSSFWorkbook wb = new SXSSFWorkbook();
+wb.setCompressTempFiles(true); //临时文件将被gzip压缩
+```
+
+:::
 
 ## 读 excel
 
