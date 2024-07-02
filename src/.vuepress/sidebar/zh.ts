@@ -10,6 +10,7 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-test/": "structure",
   "/zh/dev-java-maven/": "structure",
   "/zh/dev-java-xml/": "structure",
+  "/zh/dev-java-office/": "structure",
   "/zh/dev-java-spring/": "structure",
   "/zh/ops-terminal-shell/": "structure",
   "/zh/z-security-vulnerability/": "structure",
