@@ -144,7 +144,42 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/OrderingTest.java -->
 ```
+
+## IO
+
+::: info
+alternate:
+
+- apache common-io （推荐）
+
 :::
+
+### Files 💡
+
+Files —— The Files class offers serveral helpful methods for working with the File objects.
+
+提供了方便的遍历方法
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/io/FilesTest.java -->
+```
+
+### XxxSource/XxxSink
+
+- 字节
+  - CharSource —— 字节读
+  - CharSink —— 字节写
+- 字符
+  - ByteSource —— A ByteSource class represents a readable source of bytes.
+  - ByteSink —— A ByteSink class represents a writable source of bytes.
+
+### todo
+
+- CharStreams
+- ByteStreams
+- BaseEncoding
+
+- Closer —— The Closer class in Guava is used to ensure that all the registered Closeable objects.
 
 ## Cache
 
