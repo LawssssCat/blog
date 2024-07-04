@@ -173,13 +173,30 @@ Files —— The Files class offers serveral helpful methods for working with th
   - ByteSource —— A ByteSource class represents a readable source of bytes.
   - ByteSink —— A ByteSink class represents a writable source of bytes.
 
-### todo
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/io/XxxSourceAndSinkTest.java -->
+```
+
+### XxxStreams
 
 - CharStreams
 - ByteStreams
-- BaseEncoding
 
-- Closer —— The Closer class in Guava is used to ensure that all the registered Closeable objects.
+todo https://www.bilibili.com/video/BV1R4411s7GX?p=13
+
+### Closer ❌JDK 替代
+
+Closer —— The Closer class in Guava is used to ensure that all the registered Closeable objects.
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/io/CloserTest.java -->
+```
+
+### BaseEncoding
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/io/BaseEncodingTest.java -->
+```
 
 ## Cache
 
