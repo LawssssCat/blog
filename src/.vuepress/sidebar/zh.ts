@@ -12,6 +12,7 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-xml/": "structure",
   "/zh/dev-java-office/": "structure",
   "/zh/dev-java-spring/": "structure",
+  "/zh/dev-java-cache/": "structure",
   "/zh/ops-terminal-shell/": "structure",
   "/zh/z-security-vulnerability/": "structure",
 });
