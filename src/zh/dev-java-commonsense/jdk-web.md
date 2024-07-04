@@ -105,3 +105,27 @@ try {
 ```
 
 ::::::
+
+## 接口并发限制
+
+::: tabs
+
+@tab 注解定义
+
+```java
+<!-- @include: @project/code/demo-java-web/demo-spring-web/src/main/java/org/example/config/web/ConcurrentLimit.java -->
+```
+
+@tab 切面实现
+
+```java
+<!-- @include: @project/code/demo-java-web/demo-spring-web/src/main/java/org/example/config/web/ConcurrentLimiterAspect.java -->
+```
+
+@tab Controller 使用
+
+```java
+<!-- @include: @project/code/demo-java-web/demo-spring-web/src/main/java/org/example/controller/ConcurrentLimitController.java -->
+```
+
+:::
