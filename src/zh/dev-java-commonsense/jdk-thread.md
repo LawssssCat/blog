@@ -188,6 +188,9 @@ thread.interrupt(); // 打上线程中断标记
 
 ### Callable、Future
 
+- Callable 接口 —— Runnable 接口的替代接口，有返回值的一个单独任务
+- Future 接口 —— 包含一些能获取 Callable 接口返回值并控制其状态的方法
+
 获取线程返回值
 
 ```java
@@ -261,7 +264,8 @@ Java 里的线程池顶级接口是 `java.util.concurrent.Executor` 一个执行
 
 > 配置参考：
 >
-> - <https://www.bilibili.com/video/BV1xE421M78a/>
+> - todo <https://www.bilibili.com/video/BV1xE421M78a/>
+> - todo https://www.bilibili.com/video/BV1HC411n7XL/
 
 ```java
 ExecutorService threadPool = new ThreadPoolExecutor(
@@ -458,6 +462,8 @@ todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
 
         :::
 
+        - 尝试使用 Spring 的 ThreadPoolTaskExecutor 和 CallableDecorator 类修饰线程池解决。参考：https://www.coder.work/article/1816127
+
    :::::
 
 1. 重写 `ThreadPoolExecutor.afterExcute` 方法，处理传递的异常引用
@@ -484,13 +490,21 @@ Executors 工厂类统一返回该接口，区别是实现类的不同功能。
 ScheduledExecutorService 是 Java 并发包提供的接口，用于支持任务的调度和执行。
 相较于传统的 Timer 类，ScheduledExecutorService 具有更强大的性能、更灵活的定时任务调度策略。
 
-## 线程安全
+## 线程安全（同步 API）
 
 线程安全 = 共享数据符合预期
 
 - 原子性 —— atomic
 - 可见性 —— violated
 - 有序性 —— 指令重排、内存屏障、synchronized
+
+同步机制包括：
+
+- `synchronized` 关键字
+- Lock 接口
+- CountDownLatch 类/CyclicBarrier 类 —— 多线程 join 同步
+- Semaphore 类 —— 通过实现经典的信号量机制来实现同步。（Java 支持二进制的信号量和一般信号量）
+- Phaser 类 —— 允许控制那些分割成多个阶段的任务的执行。（在所有任务都完成当前阶段之前，任何任务都不能进入下一阶段）
 
 ### JMM 内存模型
 
@@ -802,6 +816,24 @@ todo trylock
 
 todo
 
+## 并发数据结构
+
+Java API 中的常见数据结构（例如 ArrayList、Hashtable 等）并不能在并发应用程序中使用，除非采用外部同步机制。
+另外，如果在多线程中修改数据，可能会出现各种异常（例如 ConcurrentModificationException、ArrayIndexOutOfBoundsException、隐性数据丢失、应用陷入死循环 —— 参考 [collections](./jdk-collection.md) 的 COW）
+
+Java API 针对比并发问题，提供了相关的数据结构。大致两类：
+
+- **阻塞型数据结构** —— 含有能够阻塞调用任务的方法
+  - LinkedBlockingDeque
+  - LinkedBlockingQueue
+  - PriorityBlockingQueue —— 基于优先级对元素进行排序的阻塞型队列
+  - AtomicBoolean/AtomicInteger/AtomicLong/AtomicReference —— 基本数据类型的原子实现
+- **非阻塞型数据结构** —— 操作可立即执行，不会阻塞调用的任务。❗ 否则，会返回 null 值或者抛出异常。
+  - ConcurrentLinkedDeque
+  - ConcurrentLinkedQueue
+  - ConcurrentSkipListMap —— 非阻塞型的 NavigableMap
+  - ConcurrentHashMap
+
 ## 协程/虚拟线程
 
 Java 19 引入虚拟线程概念，Java 21 落地虚拟线程。
@@ -809,6 +841,16 @@ Java 19 引入虚拟线程概念，Java 21 落地虚拟线程。
 ::: tip
 JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任务的调度，这避免使用多个真实线程来调度多个协同的任务，从而避免线程间上下文切换的带来的系统开销。
 :::
+
+## Fork/Join 框架
+
+Fork/Join 框架定义了一种特殊的执行器，采用分治方法进行求解问题：将新任务加入队列中并且按照队列排序执行任务。
+
+接口：
+
+- ForkJoinPool —— 该类实现了要用与运行任务的执行器
+- ForkJoinTask —— 在 ForkJoinPool 中执行的任务
+- ForkJoinWorkerThread —— 在 ForkJoinPool 中执行任务的线程
 
 ## 问题
 

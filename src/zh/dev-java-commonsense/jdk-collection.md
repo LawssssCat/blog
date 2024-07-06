@@ -133,6 +133,8 @@ reduce （Reduction） String joinedName = people.stream().map(Person::getName).
 <!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/CollectionParallelTest.java -->
 ```
 
+更多： Thread 中的 Fork/Join 框架 - [link](./jdk-thread.md)
+
 #### 顺序（结果一致）问题
 
 很多时候我们担心并行流是否导致结果与预期不一致。
