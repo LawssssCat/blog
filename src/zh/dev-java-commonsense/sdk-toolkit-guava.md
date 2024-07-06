@@ -198,6 +198,102 @@ Closer —— The Closer class in Guava is used to ensure that all the registere
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/io/BaseEncodingTest.java -->
 ```
 
+## EventBus
+
+消息总线（Event Bus） 是 Guava 的事件处理机制，是观察者模式（Observer 模式）（生产/消费模型）的一种实现。
+
+::: info
+关于观察者模式： 在 JDK 1.0 版本就就有 Observer 类，但许多程序库提供了更加简单的实现，例如 Guava EventBus、RxJava、EventBus 等
+:::
+
+EventBus 优点
+
+- 相比 Observer 编程简单方便
+- 通过自定义参数可实现同步、异步操作以及异常处理
+- 单进程使用，无网络影响
+
+EventBus 缺点
+
+- 只能单进程使用，如果需要分布式使用还是需要使用 MQ
+- 项目异常重启或者退出不保证消息持久化
+
+### Subscribing/Posting
+
+::: info
+标注 `@Subscribe` 的方法需要满足以下条件：
+
+1. public 和 return void
+1. only one argument
+
+:::
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/event/SimpleEventBusTest.java -->
+```
+
+### Exception Handle
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/event/ExceptionHandleTest.java -->
+```
+
+### 异步（AsyncEventBus）
+
+::: warning
+
+todo 验证 ~~Guava 的 EventBus 默认不是线程安全的。~~
+
+当我们使用默认的构造方法创建 EventBus 的时候，其中 executor 为 `MoreExecutors.directExecutor()`，其具体实现中直接调用的 `Runnable#run` 方法，使其仍然在同一个线程中执行，所以默认操作仍然是同步的。
+
+通过下面案例，可见 EventBus 的订阅方法收到事件后，在发布事件的线程上执行订阅方法。
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/event/SyncEventBusTest.java -->
+```
+
+:::
+
+::: tip
+处理消息不一定强求异步，因为同步也有好处：
+
+1. 已经满足解耦要求
+1. 在同一个线程中，不需要切换额外上下文，比如事务的处理
+
+:::
+
+```java
+EventBus eventBus = new AsyncEventBus(Executors.newCachedThreadPool());
+```
+
+### DeadEvent
+
+一个包装的 event，该 event 没有订阅者无法被分发。
+在开发时注册一个 DeadEvent 可以检测系统事件分布中的错误配置。
+
+todo
+
+### 原理
+
+- SubscriberRegistry（事件注册中心） —— 单个事件总线（EventBus）的订阅者注册表。
+- Dispatcher（事件分发器） —— 负责将事件分发到订阅者，并且可以不同的情况，按不同的顺序分发。
+  - PerThreadQueuedDispatcher —— 每个线程一个事件队列，先进先出，广度优先（确保事件被全部订阅者接收后，再发布下一个事件）
+  - LegacyAsyncDispatcher —— 全局队列存放全部事件
+  - ImmediateDispatcher —— 发布事件时立即将事件分发给订阅者，而不使用中间队列更改分发顺序。这实际上是 **深度优先** 的调度顺序，而不是使用队列时的 **广度优先**。
+- todo
+
+todo <https://juejin.cn/post/7200267919291826232>
+
+todo <https://woodwhales.cn/2020/07/06/072/>
+
+todo <https://github.com/google/guava/wiki/EventBusExplained>
+
+### todo
+
+Comprehensive practice
+
+- listener communication each other
+- monitor the directory
+
 ## Cache
 
 In Menory cache 缓存
