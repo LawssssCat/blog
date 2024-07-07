@@ -135,6 +135,18 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 - ImmutableCollections
 - ImmutableMaps
 
+::: tip
+
+区别 `List`/`Collections.unmodifiableCollection`/`ImmutableList.of`
+
+| 工具                                 | 是否可变 | 速度 | 构造方式   |
+| ------------------------------------ | -------- | ---- | ---------- |
+| `List`                               | 可变     | 慢   | -          |
+| `Collections.unmodifiableCollection` | 不可变   | 快   | 包裹原内存 |
+| `ImmutableList.of`                   | 不可变   | 快   | 新建内存   |
+
+:::
+
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/ImmutableXxxTest.java -->
 ```
