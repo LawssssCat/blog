@@ -316,12 +316,57 @@ todo
 
 ### 原理
 
+- EventBus —— 总线接口，注册/发布事件。
 - SubscriberRegistry（事件注册中心） —— 单个事件总线（EventBus）的订阅者注册表。
 - Dispatcher（事件分发器） —— 负责将事件分发到订阅者，并且可以不同的情况，按不同的顺序分发。
   - PerThreadQueuedDispatcher —— 每个线程一个事件队列，先进先出，广度优先（确保事件被全部订阅者接收后，再发布下一个事件）
   - LegacyAsyncDispatcher —— 全局队列存放全部事件
   - ImmediateDispatcher —— 发布事件时立即将事件分发给订阅者，而不使用中间队列更改分发顺序。这实际上是 **深度优先** 的调度顺序，而不是使用队列时的 **广度优先**。
-- todo
+- Executor/ExceptionHandler
+
+```
+结构：
+
+EventBus
+  - Dispatcher
+    - Executor
+  - Registry
+  - Registry
+  - ...
+```
+
+```java
+class MyRegistry {
+  private final ConcurrentHashMap<String, ConcurrentLinkedDeque<MySubscribe>> subscriberContainer = new ConcurrentHashMap<>();
+  public void bind(Object subscriber) {
+    getSubscribeMethods(subscriber).forEach(method -> tierSubscriber(subscriber, method));
+  }
+  public void unbind(Object subscriber) {
+    // todo ...
+  }
+  private void tierSubscriber(Object subscriber, Method method) {
+    MySubscribe mySubscribe = method.getDeclaredAnnotation(MySubscribe.class);
+    String topic = mySubscribe.topic();
+    ConcurrentLinkedQueue<MySubscriber> mySubscribers = subscriberContainer.computeIfAbsent(topic, key -> new ConcurrentLinkedQueue<>());
+    mySubscribers.add(new MySubscriber(subscriber, method));
+  }
+  private List<Method> getSubscribeMethods(Object subscriber) {
+    List<Method> methods = new ArrayList<>();
+    Class<?> temp = subscriber.getClass();
+    while (temp != null) {
+      Method[] declaredMethods = temp.getDeclaredMethods();
+      Arrays.stream(declaredMethods)
+        .filter(method -> method.isAnnotationPresent(MySubscribe.class))
+        .filter(method -> method.getParameterCount() == 1)
+        .filter(method -> method.getModifiers() == Modifier.PUBLIC)
+        .filter(method -> method.)
+        .forEach(methods::add);
+      temp = temp.getSuperclass();
+    }
+    return methods;
+  }
+}
+```
 
 todo <https://juejin.cn/post/7200267919291826232>
 
@@ -329,12 +374,13 @@ todo <https://woodwhales.cn/2020/07/06/072/>
 
 todo <https://github.com/google/guava/wiki/EventBusExplained>
 
-### todo
+## Odds And Ends
 
-Comprehensive practice
+todo
 
-- listener communication each other
-- monitor the directory
+HashingFunction
+
+BloomFilter
 
 ## Cache
 
