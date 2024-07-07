@@ -272,6 +272,38 @@ todo
 
 :::
 
+### ListenableFuture ❌JDK 替代
+
+提供线程结果（主动）回调
+
+::: tabs
+
+@tab 被动回调
+
+线程的结果需要通过 `Future.get()` 获取，这会阻塞操作线程。
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/FutureTest.java -->
+```
+
+@tab 主动回调 ListenableFuture
+
+Guava 主动回调工具
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/ListeningExecutorTest.java -->
+```
+
+@tab 主动回调 ListenableFuture
+
+JDK 主动回调工具
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/CompletableFutureTest.java -->
+```
+
+:::
+
 ## EventBus
 
 消息总线（Event Bus） 是 Guava 的事件处理机制，是观察者模式（Observer 模式）（生产/消费模型）的一种实现。
