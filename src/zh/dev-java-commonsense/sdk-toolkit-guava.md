@@ -198,6 +198,48 @@ Closer —— The Closer class in Guava is used to ensure that all the registere
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/io/BaseEncodingTest.java -->
 ```
 
+## Concurrency
+
+### Monitor
+
+ReentrantLock 锁的封装
+
+#### 例子：自定义队列
+
+:::::: tabs
+
+@tab 测试用例
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/queue/QueueDemoTest.java -->
+```
+
+@tab 队列接口
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/queue/Queue.java -->
+```
+
+@tab Synchronized 实现
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/queue/SynchronizedQueue.java -->
+```
+
+@tab ReentrantLock 实现
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/queue/ReentrantLockQueue.java -->
+```
+
+@tab Monitor 实现
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/queue/MonitorQueue.java -->
+```
+
+::::::
+
 ## EventBus
 
 消息总线（Event Bus） 是 Guava 的事件处理机制，是观察者模式（Observer 模式）（生产/消费模型）的一种实现。
