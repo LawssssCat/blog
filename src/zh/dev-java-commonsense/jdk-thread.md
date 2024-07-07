@@ -476,6 +476,7 @@ todo https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=113
 
 - newFixedThreadPool —— 固定容量线程池
 - newCachedThreadPool —— 可缓存线程池。当需求较小，回收空闲线程；当需求过量，增加线程数（无上限）
+- newWorkStealingPool —— （JDK8 新引入的）具有抢占式操作（work-stealing 算法，基于 ForkJoinPool 的扩展）的线程池。如果一个线程完成了工作并且无事可做，则可以从另一线程的队列中 “窃取” 工作。这在任务较小时非常有用，该任务可以由任何可用线程主动拾取，从而减少了线程空闲时间。
 - newSingleThreadPoolExecutor —— 单线程 Executor
 - newScheduledThreadPool —— 固定容量线程池，且可延时启动任务和定时任务启动
 

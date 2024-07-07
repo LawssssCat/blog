@@ -204,6 +204,10 @@ Closer —— The Closer class in Guava is used to ensure that all the registere
 
 ReentrantLock 锁的封装
 
+- enterIf —— 尝试一次进入
+- enterWhen —— 循环等待进入
+- leave —— 离开
+
 #### 例子：自定义队列
 
 :::::: tabs
@@ -239,6 +243,34 @@ ReentrantLock 锁的封装
 ```
 
 ::::::
+
+### RateLimiter
+
+限流
+
+::: tabs
+
+@tab Guava 限流
+
+漏桶算法：限流
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/RateLimiterTest.java -->
+```
+
+@tab JDK 限制并发
+
+漏桶算法：限量
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/SemaphoreTest.java -->
+```
+
+@tab 限制并发 + 限制流量
+
+todo
+
+:::
 
 ## EventBus
 
