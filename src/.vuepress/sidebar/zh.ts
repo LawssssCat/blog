@@ -4,6 +4,7 @@ export const zhSidebar = sidebar({
   "/zh/": ["", "router.md", "changelog.md", "intro.md"],
   "/zh/dev-rpc-thrift/": "structure",
   "/zh/demo-record/demo-microk8s/": "structure",
+"/zh/dev-algorithm-datastructure": "structure",
   "/zh/dev-java-commonsense/": "structure",
   "/zh/dev-java-log/": "structure",
   "/zh/dev-java-schedule/": "structure",
