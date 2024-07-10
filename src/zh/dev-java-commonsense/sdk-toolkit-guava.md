@@ -295,7 +295,7 @@ todo
 线程的结果需要通过 `Future.get()` 获取，这会阻塞操作线程。
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/FutureTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/future/FutureTest.java -->
 ```
 
 @tab 主动回调 ListenableFuture
@@ -303,7 +303,7 @@ todo
 Guava 主动回调工具
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/ListeningExecutorTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/future/ListeningExecutorTest.java -->
 ```
 
 @tab 主动回调 ListenableFuture
@@ -311,7 +311,7 @@ Guava 主动回调工具
 JDK 主动回调工具
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/ratelimit/CompletableFutureTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/concurrent/future/CompletableFutureTest.java -->
 ```
 
 :::
