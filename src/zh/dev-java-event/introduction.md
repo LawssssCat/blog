@@ -151,3 +151,13 @@ public class XxxEventService implements ApplicationContextAware {
 ```
 
 ::::::
+
+### 内置事件
+
+| 事件                  | 描述                                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------- |
+| ContextRefreshedEvent | 容器实例被实例化或者 refreshed（触发 `refresh()` 方法）时触发事件。                                     |
+| ContextStartedEvent   | 容器启动时（触发 `start()` 方法）触发事件。                                                             |
+| ContextStoppedEvent   | 容器停止时（触发 `stop()` 方法）触发事件。此时所有 bean 收到 stop 信号。可通过 `start()` 方法重启容器。 |
+| ContextClosedEvent    | 容器关闭时（触发 `close()` 方法）触发事件。此时所有 bean 已经销毁。容器无法重启。                       |
+| RequestHandledEvent   | Spring Web 中 DispatcherServlet 处理完一个请求后触发事件。                                              |
