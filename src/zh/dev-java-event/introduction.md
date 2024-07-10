@@ -38,6 +38,13 @@ order: 1
 
 ## 框架：Spring Event
 
+特性：
+
+- 支持异步 —— `@Async`
+- 支持条件配置 —— `@EventListener(condition = "...")`
+
+### 基本使用
+
 :::::: tabs
 
 @tab Event
@@ -52,6 +59,50 @@ order: 1
 <!-- @include: @project/code/demo-java-event/demo-01-spring/src/main/java/org/example/event/SimpleEventPublisher.java -->
 ```
 
+:::: info
+
+按 Spring 的设计，提供了两个接口注入 或者 ApplicationContext。
+
+::: tabs
+
+@tab Publisher
+
+```java
+@Service
+public class XxxEventService implements ApplicationEventPublisherAware {
+  private ApplicationEventPublisher applicationEventPublisher;
+  @Override
+  public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+    this.applicationEventPublisher = applicationEventPublisher;
+  }
+  public void publishEvent() {
+    applicationEventPublisher.publishEvent(new XxxEvent("xxx"));
+  }
+}
+```
+
+@tab Context
+
+Context 实现了 Publisher 接口，把 Context 当作 Publisher 用即可。
+
+```java
+@Service
+public class XxxEventService implements ApplicationContextAware {
+  private ApplicationContext applicationContext;
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
+  public void publishEvent() {
+    applicationContext.publishEvent(new XxxEvent("xxx"));
+  }
+}
+```
+
+:::
+
+::::
+
 @tab Listener
 
 ```java
@@ -62,6 +113,41 @@ order: 1
 
 ```java
 <!-- @include: @project/code/demo-java-event/demo-01-spring/src/main/java/org/example/event/SimpleEventAnnotationListener.java -->
+```
+
+::::::
+
+### 自定义事件，封装实现按标识处理
+
+特性：
+
+- 监听事件可按 Topic 区分处理
+- 监听器统一配置
+
+:::::: tabs
+
+@tab Event
+
+```java
+<!-- @include: @project/code/demo-java-event/demo-01-spring/src/main/java/org/example/eventTpoic/TopicEvent.java -->
+```
+
+@tab Publisher
+
+```java
+<!-- @include: @project/code/demo-java-event/demo-01-spring/src/main/java/org/example/eventTpoic/TopicEventPublisher.java -->
+```
+
+@tab ListenerEngine
+
+```java
+<!-- @include: @project/code/demo-java-event/demo-01-spring/src/main/java/org/example/eventTpoic/TopicListenerEngine.java -->
+```
+
+@tab ListenerEngineConfig
+
+```java
+<!-- @include: @project/code/demo-java-event/demo-01-spring/src/main/java/org/example/eventTpoic/TopicListenerEngineConfig.java -->
 ```
 
 ::::::
