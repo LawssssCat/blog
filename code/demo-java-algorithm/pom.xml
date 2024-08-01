@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>demo-datastructure-graph</module>
+        <module>demo-datastructure-tree</module>
     </modules>
 
     <properties>

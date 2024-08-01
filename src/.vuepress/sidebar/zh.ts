@@ -16,5 +16,6 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-cache/": "structure",
   "/zh/dev-java-event/": "structure",
   "/zh/ops-terminal-shell/": "structure",
+  "/zh/ops-cicd-jenkins/": "structure",
   "/zh/z-security-vulnerability/": "structure",
 });
