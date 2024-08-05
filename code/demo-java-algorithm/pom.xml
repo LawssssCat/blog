@@ -11,6 +11,7 @@
     <modules>
         <module>demo-datastructure-graph</module>
         <module>demo-datastructure-tree</module>
+        <module>demo-datastructure-array</module>
     </modules>
 
     <properties>
