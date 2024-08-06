@@ -1,4 +1,4 @@
-package org.example.guava;
+package org.example.guava.collection;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Supplier;

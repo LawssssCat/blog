@@ -1,4 +1,4 @@
-package org.example.guava;
+package org.example.guava.collection;
 
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Maps;

@@ -1,4 +1,4 @@
-package org.example.guava;
+package org.example.guava.collection;
 
 import com.google.common.collect.Ordering;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
+/**
+ * 排序
+ */
 public class OrderingTest {
     @Test
     void testSortNullException() {

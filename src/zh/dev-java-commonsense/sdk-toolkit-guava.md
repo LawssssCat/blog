@@ -20,6 +20,7 @@ Guava 是 Google 团队开源的一款 Java 核心增强库，最初名叫 “`g
 
 > 参考：
 >
+> - Google Guava 官方教程： <https://github.com/google/guava/wiki>
 > - Google Guava 官方教程（中文版）： <https://wizardforcel.gitbooks.io/guava-tutorial/content/1.html>
 > - 《Getting Started with Google Guava》 by Bill Bejeck
 > - B 站 | Guava 讲解： https://www.bilibili.com/video/BV1R4411s7GX/
@@ -104,13 +105,13 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 ### Collections
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/CollectionsTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/CollectionsTest.java -->
 ```
 
 ### Maps/MultiMap 💡
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/MapsTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/MapsTest.java -->
 ```
 
 ### Table 💡
@@ -121,19 +122,22 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 - ImmutableTable
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/TableTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/TableTest.java -->
 ```
 
 ### Range
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/RangeTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/RangeTest.java -->
 ```
 
 ### ImmutableXxx
 
-- ImmutableCollections
-- ImmutableMaps
+不可变的 Xxx
+
+- ImmutableCollections —— 集合
+- ImmutableMaps —— 键值对
+- ImmutableGraph —— 图
 
 ::: tip
 
@@ -148,13 +152,77 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 :::
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/ImmutableXxxTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/ImmutableXxxTest.java -->
 ```
 
 ### Ording
 
 ```java
-<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/OrderingTest.java -->
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/OrderingTest.java -->
+```
+
+### Graph
+
+参考：
+
+- todo <https://github.com/google/guava/wiki/GraphsExplained>
+- todo api doc <https://guava.dev/releases/23.0/api/docs/com/google/common/graph/Graph.html>
+- 中文 <https://blog.csdn.net/sl1992/article/details/105295216>
+
+::: tip
+概念：
+
+- Graph/g/节点/顶点/端点
+- Edge/e/边/连接/弧/相邻/关联
+
+  - 有向边/派生自/链接至/由…撰写 —— 适用于非对称关系
+    - source/前驱/输出边/外边/来源
+    - target/后继/输入边/内边/目标
+  - 无向边/之间的距离/同级 —— 适用于对称关系
+
+  - 自环 —— 将一个节点连接到自身的一条边/一条端点为相同节点的边
+  - 平行 —— 两条边以相同顺序（如果有）连接相同的节点
+  - 反平行 —— 以相反的顺序连接相同的节点？
+
+    ```java
+    // 在directedGraph中，edgeUV_a和edgeUV_b相互平行，并且每个都与edgeVU反平行。
+    directedGraph.addEdge(nodeU, nodeV, edgeUV_a);
+    directedGraph.addEdge(nodeU, nodeV, edgeUV_b);
+    directedGraph.addEdge(nodeV, nodeU, edgeVU);
+    // 在undirectedGraph中，edgeUV_a，edgeUV_b和edgeVU中的每一个与其它两个都相互平行。
+    undirectedGraph.addEdge(nodeU, nodeV, edgeUV_a);
+    undirectedGraph.addEdge(nodeU, nodeV, edgeUV_b);
+    undirectedGraph.addEdge(nodeV, nodeU, edgeVU);
+    ```
+
+:::
+
+Graphs：用于对图结构数据（即实体及其之间的关系）进行建模的库。主要功能包括：
+
+1. 图类型
+
+   - Graph —— 图的边是匿名实体，没有身份或信息。
+   - ValueGraph —— 其边具有关联的非唯一值的图。
+   - Network —— 边是唯一对象的图形。
+
+1. 支持可变和不可变
+
+   - ImmutableGraph —— 不可变的，只能在创建时初始化
+   - MutableGraph —— 允许在创建后添加和删除顶点和边
+
+1. 有向和无向的图
+1. 以及其它一些属性
+
+::: info
+
+Guava Graph 不包含图形算法，如 “最短路径” 或 “拓扑排序”。这些算法需要另外实现或使用其他库。
+
+todo 其他库
+
+:::
+
+```java
+<!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/GraphTest.java -->
 ```
 
 ## IO
