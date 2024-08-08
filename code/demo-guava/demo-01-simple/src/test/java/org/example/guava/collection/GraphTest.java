@@ -45,10 +45,18 @@ public class GraphTest {
         assertArrayEquals(new Integer[] {}, graph.adjacentNodes(4).toArray());
         assertArrayEquals(new Integer[] {1, 3}, graph.adjacentNodes(2).toArray());
 
+        // 判断包含
+        assertFalse(graph.nodes().contains(0));
+        assertTrue(graph.nodes().contains(1));
+
         // 判断链接
         assertTrue(graph.hasEdgeConnecting(1, 2)); // true, 1 -> 2
+        assertTrue(graph.successors(1).contains(2)); // true, 1 -> 2
+        assertTrue(graph.adjacentNodes(1).contains(2)); // true
         assertFalse(graph.hasEdgeConnecting(1, 3)); // false, 1 -> 2 -> 3
         assertFalse(graph.hasEdgeConnecting(3, 2)); // false, 1 x-> 2 （有向）
+        assertFalse(graph.successors(3).contains(2)); // false, 1 x-> 2 （有向）
+        assertTrue(graph.adjacentNodes(3).contains(2)); // true cause 无向
         assertFalse(graph.hasEdgeConnecting(1, 4)); // false, 1 ?-? 4
     }
 

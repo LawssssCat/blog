@@ -165,11 +165,13 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 
 参考：
 
-- todo <https://github.com/google/guava/wiki/GraphsExplained>
-- todo api doc <https://guava.dev/releases/23.0/api/docs/com/google/common/graph/Graph.html>
-- 中文 <https://blog.csdn.net/sl1992/article/details/105295216>
+- introduction <https://github.com/google/guava/wiki/GraphsExplained>
+  - ~~中文 <https://blog.csdn.net/sl1992/article/details/105295216>~~
+  - 中文 <https://www.lenshood.dev/2020/06/20/guava-graphs/> （⭐⭐⭐）
+- api doc <https://guava.dev/releases/23.0/api/docs/com/google/common/graph/Graph.html>
 
 ::: tip
+
 概念：
 
 - Graph/g/节点/顶点/端点
@@ -197,21 +199,43 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 
 :::
 
-Graphs：用于对图结构数据（即实体及其之间的关系）进行建模的库。主要功能包括：
+Graphs：用于对图结构数据（即实体及其之间的关系）进行建模的库。
+
+主要功能包括：
 
 1. 图类型
 
-   - Graph —— 图的边是匿名实体，没有身份或信息。
-   - ValueGraph —— 其边具有关联的非唯一值的图。
-   - Network —— 边是唯一对象的图形。
+   - Graph —— 点、边。用例示例：`Graph<Airport>`，其边连接着可以乘坐直达航班的机场。
+   - ValueGraph —— 点、边（with 值）。用例示例：`ValueGraph<Airport, Integer>`，其边值表示该边连接的两个机场之间旅行所需的时间。
+   - Network —— 点、边（with 值 and 可平行）。用例示例：`Network<Airport, Flight>`，其中的边表示从一个机场到另一个机场可以乘坐的特定航班。
+
+   ::: tip
+   这些接口均扩展了 SuccessorsFunction 和 PredecessorsFunction。
+   这些接口被用作图形算法的参数类型（例如广度优先遍历），该算法仅需要访问图中节点的后继/前驱的一种方式。
+   :::
 
 1. 支持可变和不可变
 
-   - ImmutableGraph —— 不可变的，只能在创建时初始化
    - MutableGraph —— 允许在创建后添加和删除顶点和边
+   - ImmutableGraph —— 不可变的，只能在创建时初始化
+     特性：
+
+     1. **浅层不变性**：永远不能添加，删除或替换元素（这些类未实现 `Mutable*` 接口）
+     1. **确定性迭代**：迭代顺序总是与输入图的顺序相同
+     1. **线程安全**：从多个线程并发访问此图是安全的
+     1. **完整性**：此类型不能在此包之外进行子类化（这会违反这些保证）
 
 1. 有向和无向的图
 1. 以及其它一些属性
+
+   - 等价
+     - `Graph.equals()` 具有相同的节点和边集。
+     - `ValueGraph.equals()` 具有相同的节点和边集，并且相等的边具有相等的值。
+     - `Network.equals()` 具有相同节点和边集，并且每个边对象都沿相同方向（如果有）连接相同节点。
+
+特性：
+
+1. 顺序： 默认情况下，节点和边对象是按插入顺序排列的
 
 ::: info
 
@@ -219,7 +243,35 @@ Guava Graph 不包含图形算法，如 “最短路径” 或 “拓扑排序�
 
 todo 其他库
 
+- https://github.com/google/guava/wiki/GraphsExplained#why-should-i-use-it-instead-of-something-else
+
 :::
+
+```java
+// Creating mutable graphs
+MutableGraph<Integer> graph = GraphBuilder.undirected().build();
+
+MutableValueGraph<City, Distance> roads = ValueGraphBuilder.directed()
+    .incidentEdgeOrder(ElementOrder.stable())
+    .build();
+
+MutableNetwork<Webpage, Link> webSnapshot = NetworkBuilder.directed()
+    .allowsParallelEdges(true)
+    .nodeOrder(ElementOrder.natural()) // 顺序设置
+    .expectedNodeCount(100000)
+    .expectedEdgeCount(1000000)
+    .build();
+
+// Creating an immutable graph
+ImmutableGraph<Country> countryAdjacencyGraph =
+    GraphBuilder.undirected()
+        .<Country>immutable() // 不可变类型，默认 stable 顺序（尽可能按插入顺序）
+        .putEdge(FRANCE, GERMANY)
+        .putEdge(FRANCE, BELGIUM)
+        .putEdge(GERMANY, BELGIUM)
+        .addNode(ICELAND)
+        .build();
+```
 
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/GraphTest.java -->
