@@ -71,3 +71,7 @@ SpringCloud 是以微服务为核心的分布式系统构建标准。也就是�
 ::::::
 
 ![对比](https://s2.loli.net/2024/08/11/ICRY2FakLbhVy7u.png)
+
+## SpringCloud Alibaba
+
+脚手架： <https://start.aliyun.com/>
