@@ -845,15 +845,84 @@ JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任�
 
 ## Fork/Join 框架
 
-Fork/Join 框架定义了一种特殊的执行器，采用分治方法进行求解问题：将新任务加入队列中并且按照队列排序执行任务。
+> 参考：
+>
+> 1. 使用 https://www.bilibili.com/video/BV1zb4y1J77G/
+> 1. todo 源码 https://www.bilibili.com/video/BV1C44y1W7n6/
+> 1. todo JDK19 虚拟线程基于 ForkJoin 的实现 https://www.bilibili.com/video/BV1Fd4y1w7MV?p=6
 
-接口：
+JDK 1.7 引入
 
-- ForkJoinPool —— 该类实现了要用与运行任务的执行器
-- ForkJoinTask —— 在 ForkJoinPool 中执行的任务
-- ForkJoinWorkerThread —— 在 ForkJoinPool 中执行任务的线程
+Fork/Join 框架定义了一种特殊的执行器，采用分治方法进行求解问题：将一个大任务分解成一系列子任务（fork）；当子任务执行完成后，将各自执行结果进行合并（join）成为一个大结果。
+
+::: info
+
+Fork/Join 框架利用线程池（ForkJoinPool）调度任务。
+
+关于该线程池，有如下概念：
+
+1. 多队列 —— 为了提高效率、减少线程竞争，Fork/Join 框架把这多个平行的任务放到不同的队列中去，这样 ForkJoinPool 线程池里面有多个任务队列（一般线程池只有一个任务队列）。
+1. 任务窃取（`WorkStealing`） —— 线程池线程执行完自己任务队列中的任务后，会 “帮” 其他线程执行它们任务队列中的任务。
+   ref: `newWorkStealingPool`
+1. 内部任务/外部任务 —— 在 `ForkJoinWorkerThread` 线程中 Fork 出的任务属于 “内部任务”，这些任务被 ForkJoinPool 线程池内部优化调度；在线程外部通过 submit/execute/invoke 等方法提交给线程池的任务属于 “外部任务”，这些任务遵循一般线程池调度规则。
+   - （内部）Fork —— 分治特性
+   - （外部）invoke【同步】 —— 方法调用后一直阻塞，直到任务执行完成才返回执行结果
+   - （外部）submit【异步】 —— 方法调用后马上返回 Future 类，通过该类的 `get()` 方法来获取结果
+   - （外部）execute【异步】 —— 方法调用后马上返回，没有返回结果
+
+:::
+
+接口/核心组件：
+
+- ForkJoinPool（线程池） —— 该类实现了要用与运行任务的执行器
+  1. 负责接收外部任务的提交
+  1. 负责工作线程的创建和管理
+  1. （特性）负责接收 Fork 出来的子任务的提交
+  1. （特性）负责任务队列数组 `workQueue[]` 的初始化和管理
+- ForkJoinTask（要执行的任务） —— 在 ForkJoinPool 中执行的任务
+  JUC 设计如下子类：
+  - `RecursiveAction` —— 没有返回结果的 ForkJoin 任务
+  - `RecursiveTask` —— 有返回结果的 ForkJoin 任务
+  - `CountedCompleter` —— 用于操作完成后需要触发其他操作的 ForkJoin 任务
+- ForkJoinWorkerThread（执行线程） —— 在 ForkJoinPool 中执行任务的线程。每个 ForkJoinWorkerThread 都有一个自己的任务队列
+- WorkQueue（任务队列）
+
+使用了 ForkJoinPool 的 JDK 类：
+
+- `Stream.parallelStream()`
+- `CompletableFuture`
+
+demo:
+
+```java
+<!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/ForkJoinPoolTest.java -->
+```
+
+## AQS 框架
+
+AQS（AbstractQueuedSynchronizer，抽象队列同步器） 主要用来构建锁和同步器
+
+todo Java 面试题：AQS 条件等待和唤醒的实现原理 —— https://www.bilibili.com/video/BV1gN411J7Na/
+todo Java 面试题：AQS 实现原理之互斥模式 —— https://www.bilibili.com/video/BV1mF41117VQ/
+todo Java 面试题：AQS 共享模式在读写锁中的应用 —— https://www.bilibili.com/video/BV1Rh4y1z7Zn/
+
+todo JavaGuide | AQS 详解 —— https://javaguide.cn/java/concurrent/aqs.html
+
+todo 美团 | 从 ReentrantLock 的实现看 AQS 的原理及应用 —— https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html
+
+todo ~~AQS 是什么？AbstractQueuedSynchronizer 之 AQS 原理及源码深度分析 —— https://blog.csdn.net/A_art_xiang/article/details/133985680~~
 
 ## 问题
+
+### 问题：应用的线程数应该设置成多少？
+
+- 计算密集型： `线程数 = CPU个数 + 1`
+- IO 密集型： `线程数 = CPU个数 * 2 + 1`
+
+其他因素：
+
+- 超线程技术
+- 吞吐量（tps）
 
 ### 问题：循环中使用多线程
 
