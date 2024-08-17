@@ -7,6 +7,8 @@ tag:
 order: 10
 ---
 
+todo https://www.52pojie.cn/thread-1921814-1-1.html
+
 ## 生成
 
 `Alt + Enter` | 补全提示
@@ -66,44 +68,66 @@ todo
 
 ## 插件
 
-### Alibaba Java Coding Guidelines
+### 预处理/批处理（必要）
 
-编码规范
-
-### CodeGlance
-
-代码右侧预览
-
-### Grep Console
-
-日志高亮
-
-### Rainbow Brackets
-
-彩虹括号
-
-### SequenceDiagram
-
-解析代码成时序图
-
-### Presentation Assistant
-
-提示快捷键
-
-### save auto action + eclipse ...
+#### save auto action + eclipse ...
 
 格式化
 
-### String Manipulation
+#### String Manipulation
 
 字符串加工： 驼峰/大小写/编码、解码/...
 
-### maven 插件
+### 规范
+
+#### Alibaba Java Coding Guidelines
+
+编码规范
+
+### 美化/可视化（必要）
+
+#### CodeGlance
+
+代码右侧预览
+
+#### Grep Console
+
+日志高亮
+
+#### Rainbow Brackets
+
+彩虹括号
+
+> 有 pro 版本。。。
+
+#### maven 插件
 
 maven helper
 
-### JPA/Mybatis 插件
+#### JPA/Mybatis 插件
 
 ~~Jpa Support~~
 
 MybatisCodeHelperPro
+
+#### VisualVM Launcher
+
+调优
+
+#### Java Visualizer
+
+看实例引用
+
+### 美化/可视化（非必要）
+
+#### Presentation Assistant
+
+提示快捷键
+
+### 生成图
+
+#### ~~SequenceDiagram~~
+
+解析代码成时序图
+
+> 有 pro 版本。。。
