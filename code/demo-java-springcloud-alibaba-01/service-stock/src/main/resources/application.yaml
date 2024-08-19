@@ -1,2 +1,13 @@
 server:
-  port: 28081
+  port: 28090/28091/...
+spring:
+  application:
+    name: service-stock # nacos 获取该配置作为服务名称
+  cloud:
+    nacos: # 默认值如下
+      server-addr: localhost:8848
+      discovery:
+        username: nacos
+        password: nacos
+        # 隔离配置环境，如 dev/pro，默认 public
+        namespace: public

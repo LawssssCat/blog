@@ -16,7 +16,8 @@ public class OrderController {
     @RequestMapping("/add")
     public String add() {
         log.info("下单成功！");
-        String msg = restTemplate.getForObject("http://localhost:28081/stock/reduce", String.class);
+        // service-stock -> application server name registed in nacos
+        String msg = restTemplate.getForObject("http://service-stock/stock/reduce", String.class);
         return "下单：" + msg;
     }
 }

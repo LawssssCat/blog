@@ -106,6 +106,54 @@ todo 优先级、版本范围指定、版本固定之类的东西
 </dependencies>  
 ```
 
+### 排包（技巧）
+
+用 `execution` 标签排包会不彻底： 在 `dependency` 中用 `execution` 标签排包可能会在其他 `dependency` 中再次引入该包。
+
+#### ~~方案一：阿里的方式：维护并引入空依赖~~
+
+问题：1、工作量；2、私服搭建
+
+```xml
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>log4j</groupId>
+  <artifactId>log4j</artifactId>
+  <version>1.0-Empty</version>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+  </dependencies>
+</project>
+```
+
+#### 方案二：用 provided 引入
+
+问题：运行期比编译期少一个依赖，运行时可能出现 `ClassNotFoundException` 问题
+
+```xml
+<dependency>
+  <groupId>log4j</groupId>
+  <artifactId>log4j</artifactId>
+  <version>1.2.17</version>
+  <scope>provided</scope> <!-- 设置为运行时应该提供，所以编译时不主动下载 -->
+</dependency>
+```
+
+#### 方案三：用 test 引入
+
+问题： 可能静态检查工具出现误报
+
+```xml
+<dependency>
+  <groupId>log4j</groupId>
+  <artifactId>log4j</artifactId>
+  <version>1.2.17</version>
+  <scope>test</scope>
+</dependency>
+```
+
 ## Maven 仓库
 
 Maven 仓库是用来存放项目中依赖的软件包（jar、war、pom）和元素据（坐标信息、源码、作者、SCM、许可证）等信息
