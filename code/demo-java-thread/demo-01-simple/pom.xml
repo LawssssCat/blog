@@ -11,5 +11,12 @@
 
     <artifactId>demo-01-simple</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.2-android</version>
+        </dependency>
+    </dependencies>
 
 </project>

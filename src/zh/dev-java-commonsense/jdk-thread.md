@@ -607,6 +607,14 @@ CompletableFuture 以对任务完成的监听机制，实现非阻塞的特性�
 
   :::
 
+::: details
+
+```java
+<!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/CompletableFutureTest.java -->
+```
+
+:::
+
 ### 问题：区别 Future、CompletionService、CompletableFuture
 
 https://blog.csdn.net/weixin_44153131/article/details/135389315
@@ -968,6 +976,8 @@ JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任�
 :::
 
 ## Fork/Join 框架
+
+todo pool 管理细节、pool 源码
 
 > 参考：
 >
