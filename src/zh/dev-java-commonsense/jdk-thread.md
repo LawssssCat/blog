@@ -188,22 +188,15 @@ thread.interrupt(); // 打上线程中断标记
 
 ### Callable、Future
 
+Future 是 JDK1.5 提供的接口，是用来以阻塞的方式获取线程异步执行完的结果。
+
 - Callable 接口 —— Runnable 接口的替代接口，有返回值的一个单独任务
 - Future 接口 —— 包含一些能获取 Callable 接口返回值并控制其状态的方法
 
 获取线程返回值
 
 ```java
-FutureTask<Integer> future = new FutureTask<>(
-  (Callable<Integer>) () -> {
-    return 5;
-  }
-);
-new Thread(future).start();
-try {
-  Integer value = future.get();
-  // ...
-}
+<!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/FutureTest.java -->
 ```
 
 ### 异常处理
@@ -490,6 +483,137 @@ Executors 工厂类统一返回该接口，区别是实现类的不同功能。
 
 ScheduledExecutorService 是 Java 并发包提供的接口，用于支持任务的调度和执行。
 相较于传统的 Timer 类，ScheduledExecutorService 具有更强大的性能、更灵活的定时任务调度策略。
+
+## 任务编排 API
+
+### Future
+
+同上，解决线程执行结果收集问题
+
+### CompletionService
+
+批量异步工具。
+功能： 异步提交任务，**按完成顺序获取结果**。
+
+CompletionService 的底层原理： 阻塞队列、线程池
+
+- 阻塞队列： CompletionService 使用阻塞队列保存已完成的任务。当一个任务完成时，它会被放入队列中。阻塞队列的选择通常是 LinkedBlockingQueue，它是一个先进先出的队列，确保按照任务完成的顺序排列。
+- 线程池： CompletionService 需要与 Executor 框架一起使用。创建一个 ExecutorService，并将其传递给 CompletionService 的构造函数。这个线程池负责执行提交的任务。
+
+```java
+<!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/CompletionServiceTest.java -->
+```
+
+### CompletableFuture
+
+JDK8 引入，解决 Future 和 CompletionService 都不擅长的 “异步任务编排组合” 问题。
+
+```java
+// Future 异步计算的结果
+// CompletionStage 以声明式的方式组合和链接异步操作，而不需要显式地处理回调函数
+class CompletableFuture implements CompletionStage, Future
+```
+
+CompletableFuture 内部使用 ForkJoinPool 线程池高效地调度和执行任务。
+CompletableFuture 以对任务完成的监听机制，实现非阻塞的特性。当任务完成时，它会遍历所有注册的回调函数，并在合适的线程中执行这些回调。通过这种机制，CompletableFuture 能够在任务完成后及时返回结果或触发后序处理逻辑，而不会阻塞主线程的执行。
+
+特性：
+
+1. 解决 Future 的这些缺陷
+1. 函数式编程
+1. 异步任务编排组合（可以将多个异步任务串联起来，组成一个完整的链式调用）能力
+
+函数接口：
+
+- 通过 `thenApply`/`thenAccept`/`thenRun` 方法，注册回调函数，这些函数会在 CompletableFuture 完成时被异步调用。这样，处理任务的结果不必阻塞当前线程。
+
+  ```java
+  CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello");
+
+  future.thenApply(result -> {
+      // Non-blocking callback to process the result
+      System.out.println("Received result: " + result);
+      return result.toUpperCase();
+  });
+
+  // Continue with other non-blocking operations
+  ```
+
+- 通过 `thenCombine`/`thenAcceptBoth`/`runAfterBoth`/`applyToEither`/`acceptEither` 等方法，将多个 CompletableFuture 的结果组合在一起，而不必阻塞等待每个任务的完成。
+
+  ```java
+  CompletableFuture<String> firstTask = CompletableFuture.supplyAsync(() -> {
+      // Simulate some computation
+      return "First Task";
+  });
+
+  CompletableFuture<String> secondTask = CompletableFuture.supplyAsync(() -> {
+      // Simulate some computation
+      return "Second Task";
+  });
+
+  CompletableFuture<String> thirdTask = CompletableFuture.supplyAsync(() -> {
+      // Simulate some computation
+      return "Third Task";
+  });
+
+  // 使用thenCompose确保任务按照顺序完成
+  CompletableFuture<String> result = firstTask.thenCompose(result1 ->
+          secondTask.thenCompose(result2 ->
+                  thirdTask.thenApply(result3 -> result1 + " -> " + result2 + " -> " + result3)
+          )
+  );
+
+  // 异步获取结果
+  result.thenAcceptAsync(System.out::println);
+
+  // 阻塞等待所有任务完成
+  result.join();
+  ```
+
+- CompletableFuture 异常处理
+
+  ::: tabs
+
+  @tab exceptionally
+
+  ```java
+  CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+      throw new RuntimeException();
+  })
+  .exceptionally(ex -> "errorFirstTask") // 处理异常并返回新结果
+  .thenApply(firstTask -> firstTask + "secondTask")
+  .thenApply(secondTask -> secondTask + "thirdTask")
+  .thenApply(thirdTask -> thirdTask + "lastTask")
+  ```
+
+  @tab `handle(BiFunction fn)`
+
+  ```java
+  CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "resultA")
+  .thenApply(firstTask -> firstTask + "secondTask")
+  .thenApply(secondTask -> {throw new RuntimeException();})
+  .handle(new BiFunction<Object, Throwable, Object>() { // 定义异常处理
+      @Override
+      public Object apply(Object re, Throwable throwable) {
+          if (throwable != null) {
+              return "errorThirdTask ";
+          }
+          return re;
+      }
+  })
+  .thenApply(thirdTask -> thirdTask + "lastTask");
+  ```
+
+  :::
+
+### 问题：区别 Future、CompletionService、CompletableFuture
+
+https://blog.csdn.net/weixin_44153131/article/details/135389315
+
+- Future —— JDK1.5 提供，解决线程执行结果收集问题。
+- CompletionService —— 批量异步工具。异步提交任务，希望按完成顺序获取结果。
+- CompletableFuture —— JDK8 引入，解决 Future 和 CompletionService 都不擅长的 “异步任务编排组合” 问题。
 
 ## 线程安全（同步 API）
 
@@ -898,7 +1022,7 @@ demo:
 <!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/ForkJoinPoolTest.java -->
 ```
 
-## AQS 框架
+## 原理：AQS 框架
 
 AQS（AbstractQueuedSynchronizer，抽象队列同步器） 主要用来构建锁和同步器
 
