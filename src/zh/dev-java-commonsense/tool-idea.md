@@ -78,11 +78,15 @@ todo
 
 字符串加工： 驼峰/大小写/编码、解码/...
 
-### 规范
+### 规范/检查
 
 #### Alibaba Java Coding Guidelines
 
 编码规范
+
+#### spotbugs
+
+漏洞排查
 
 ### 美化/可视化（必要）
 
