@@ -21,8 +21,8 @@ public class MapsTest {
     @DisplayName("测试 Multiset")
     @Test
     void testMultiset() {
-        TreeMultiset<Integer> treeMultiset = TreeMultiset.create(FluentIterable.of(3,2,1,2));
-        Assertions.assertArrayEquals(new Integer[] {1,2,2,3}, treeMultiset.stream().collect(Collectors.toList()).toArray());
+        TreeMultiset<Integer> treeMultiset = TreeMultiset.create(FluentIterable.of(3, 2, 1, 2));
+        Assertions.assertArrayEquals(new Integer[]{1, 2, 2, 3}, treeMultiset.stream().collect(Collectors.toList()).toArray());
     }
 
     /**
@@ -69,8 +69,7 @@ public class MapsTest {
     }
 
     /**
-     * 可以将 Key 和 Value 对换
-     *
+     * 可反转 key/value 的 map。一般允许 key 重复，不允许 value 重复。
      */
     @DisplayName("测试 BiMap")
     @Test
@@ -78,8 +77,8 @@ public class MapsTest {
         HashBiMap<String, String> biMap = HashBiMap.create();
         biMap.put("1", "1");
         biMap.put("1", "66"); // 💡允许 put 重复 key
-        assertThrowsExactly(IllegalArgumentException.class, () -> biMap.put("2", "66")); // 💡默认不允许 put 重复值
-        biMap.forcePut("2", "66"); // 💡强制 put 重复值
+        assertThrowsExactly(IllegalArgumentException.class, () -> biMap.put("2", "66")); // 💡默认不允许 put 重复 value
+        biMap.forcePut("2", "66"); // 💡强制 put 重复 value （❗会删除重复 value 对应的 key）
         biMap.put("3", "11"); // 💡key 和 value 均不一样，则无影响
         Assertions.assertEquals("{2=66, 3=11}", biMap.toString());
         Assertions.assertEquals("{66=2, 11=3}", biMap.inverse().toString()); // 💡键值反转

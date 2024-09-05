@@ -84,6 +84,49 @@ Functional Programming emphasizes the use of functions to achieve its objectives
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/FunctionalTest.java -->
 ```
 
+### Supplier
+
+lazy initialization
+
+```java
+Supplier<Date> func = Suppliers.memoize(Date::new);
+```
+
+::: tip
+
+如果您使用的是 Apache Commons Lang ，那么您可以使用 ConcurrentInitializer 的变体之一，例如 LazyInitializer 。
+
+```java
+ConcurrentInitializer<Foo> lazyInitializer = new LazyInitializer<Foo>() {
+    @Override
+    protected Foo initialize() throws ConcurrentException {
+        return new Foo();
+    }
+};
+Foo instance = lazyInitializer.get(); // 安全地获取 Foo（仅初始化一次）
+```
+
+使用 Java 的原生实现 lazy 初始化
+https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom
+
+```java
+public class Something {
+    private Something() {}
+
+    private static class LazyHolder {
+        static final Something INSTANCE = new Something();
+    }
+
+    public static Something getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+}
+```
+
+other http://blog.crazybob.org/2007/01/lazy-loading-singletons.html
+
+:::
+
 ## Collections （【部分】JDK8 已有原生替代）
 
 Guava 开始时就是为了处理集合而产生的项目，但现在这些方法已有 JDK8 原生替代方法。
@@ -108,7 +151,25 @@ Guava 开始时就是为了处理集合而产生的项目，但现在这些方�
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/CollectionsTest.java -->
 ```
 
-### Maps/MultiMap 💡
+### Maps/MultiMap/BidiMap/... 💡
+
+说明：
+
+- Maps
+- MultiMap —— 相当于 `Map<K, List<V>>` 和 `Map<K, Set<V>>`
+
+  | Implementation        | Keys          | Values        |
+  | --------------------- | ------------- | ------------- |
+  | ArrayListMultimap     | HashMap       | ArrayList     |
+  | HashMultimap          | HashMap       | HashSet       |
+  | LinkedListMultimap    | LinkedHashMap | LinkedList    |
+  | LinkedHashMultimap    | LinkedHashMap | LinkedHashSet |
+  | TreeMultimap          | TreeMap       | TreeSet       |
+  | ImmutableListMultimap | ImmutableMap  | ImmutableList |
+  | ImmutableSetMultimap  | ImmutableMap  | ImmutableSet  |
+
+- BidiMap —— 可反转 key/value 的 map。一般允许 key 重复，不允许 value 重复。
+- ...
 
 ```java
 <!-- @include: @project/code/demo-guava/demo-01-simple/src/test/java/org/example/guava/collection/MapsTest.java -->
