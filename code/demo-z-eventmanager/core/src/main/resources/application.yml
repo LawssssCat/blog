@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:mydb;
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          diagnostics: debug
+        jdbc: debug
+    org.mybatis: debug
+    java.sql: debug
+    org.example.mapper: debug
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

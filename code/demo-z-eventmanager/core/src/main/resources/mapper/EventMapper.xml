@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.EventMapper">
+    <resultMap id="eventMap" type="org.example.model.po.EventPo">
+        <id property="id" column="id" />
+        <result property="status" column="status" />
+        <result property="name" column="name" />
+        <result property="param" column="param" />
+        <result property="context" column="context" />
+    </resultMap>
+
+    <sql id="commonCol">
+        ${alias}id as ${prefix}id,
+        ${alias}status as ${prefix}status,
+        ${alias}name as ${prefix}name,
+        ${alias}param as ${prefix}param,
+        ${alias}context as ${prefix}context
+    </sql>
+
+    <sql id="commonSelect">
+        select
+        <include refid="commonCol">
+            <property name="alias" value="e."/>
+            <property name="prefix" value=""/>
+        </include>
+        from event e
+        <where>
+            <if test="event.id != null">
+                and e.id = #{event.id}
+            </if>
+            <if test="event.status != null">
+                and e.status = #{event.status}
+            </if>
+            <if test="event.name != null">
+                and e.name = #{event.name}
+            </if>
+            <if test="event.param != null">
+                and e.param = #{event.param}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectByParam" resultMap="eventMap">
+        <include refid="commonSelect"><property name="event" value="event"/></include>
+    </select>
+
+    <select id="selectByParamForUpdate" resultType="org.example.model.po.EventPo">
+        <include refid="commonSelect"><property name="event" value="event"/></include>
+        for update
+    </select>
+
+    <update id="updateById">
+        update event
+        <set>
+            <if test="event.status != null">
+                status = #{event.status},
+            </if>
+            <if test="event.context != null">
+                context = #{event.context} format json,
+            </if>
+        </set>
+        where id = #{event.id}
+    </update>
+</mapper>
