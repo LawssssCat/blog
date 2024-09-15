@@ -1,0 +1,16 @@
+{
+  "request": {
+    "urlPath": "/mock",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "status": "Error",
+      "message": "Endpoint not found"
+    }
+  }
+}
