@@ -1,0 +1,30 @@
+{
+  "request": {
+    "urlPath": "/hello",
+    "method": "ANY"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template"],
+    "jsonBody": {
+      "status": "200",
+      "message": "hello world!",
+      "time": "{{now}}",
+      "random": "{{randomInt}}",
+      "hostname": "{{hostname}}",
+      "data": {
+        "docs": "https://wiremock.org/docs/response-templating/#the-request-model",
+        "request_id": "{{request.id}}",
+        "request_baseUrl": "{{request.baseUrl}}",
+        "request_url": "{{request.url}}",
+        "request_method": "{{request.method}}",
+        "request_body_base64": "{{request.bodyAsBase64}}",
+        "request_body_xx": "{{jsonPath request.body '$.xx'}}",
+        "request_body_xx_form": "{{formData request.body 'form' urlDecode=true}}{{form.xx}}"
+      }
+    }
+  }
+}

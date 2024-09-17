@@ -9,5 +9,19 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>demo-lombok</artifactId>
+    <artifactId>demo-httpclient</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.3.1</version>
+        </dependency>
+    </dependencies>
 </project>
