@@ -9,3 +9,8 @@ CREATE TABLE employees
     email_address varchar(255) NULL DEFAULT NULL COMMENT '邮箱',
     primary key(id)
 );
+
+CREATE TABLE events (
+    id int primary key COMMENT '主键',
+    param json COMMENT '数据'
+)
