@@ -12,6 +12,7 @@
         <module>demo-lombok</module>
         <module>demo-httpclient</module>
         <module>demo-io</module>
+        <module>demo-collection</module>
     </modules>
 
     <properties>

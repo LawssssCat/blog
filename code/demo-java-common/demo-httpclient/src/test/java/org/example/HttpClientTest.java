@@ -10,12 +10,16 @@ import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.classic.MinimalHttpClient;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,14 +29,38 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class HttpClientTest extends BaseTest {
     /**
+     * 最小实现，一般不使用
+     */
+    @Deprecated
+    @Test
+    void test_hello_min() throws IOException, ParseException {
+        // 客户端
+        MinimalHttpClient minimal = HttpClients.createMinimal();
+        // 请求/响应
+        CloseableHttpResponse response = minimal.execute(new HttpGet(HOST + "/hello"));
+        // 解析响应
+        showResponse(response);
+    }
+
+    /**
      * 基本使用 GET
      */
     @Test
     void test_hello() throws IOException, ParseException {
         log.info("test HttpClient");
 
+        // finial 关闭
         try (CloseableHttpClient aDefault = HttpClients.createDefault()) {
             HttpGet httpGet = new HttpGet(HOST + "/hello");
+
+            // 模拟真实浏览器： 解决服务器对客户端的限制
+            httpGet.addHeader("User-Agent", "e.g. chrome ...");
+            // 防盗链
+            httpGet.addHeader("Referer", "相关网站网址 ...");
+            // MIME type, Multipurpose Internet Mail Extensions, 多用途互联网邮件扩展类型
+            // Content-Type | 内容类型 | application/x-www-form-urlencoded （普通表单）, multipart/form-data （文件上传表单）, text/plain, application/json
+            // Content-Transfer-Encoding | 编码格式 | 8bit, binary
+            // Content-Disposition | 内容编排方式 | 上传文件时： Content-Disposition: form-data; name="filename"; filename="C:\Users\lenovo\Desktop\a.html" ； 下载文件时： Content-Disposition: attachment; filename=URLEncoder.encode("xx.zip", "UTF-8")
 
             showResponse(aDefault.execute(httpGet));
         }
@@ -106,7 +134,7 @@ public class HttpClientTest extends BaseTest {
                  * 适用于网络不稳定或者服务器响应较慢的场景。
                  * 适当增加ConnectTimeout的值，可以给予HttpClient更多的时间来建立连接，减少因网络波动导致的连接失败情况。
                  */
-                .setConnectTimeout(5000, TimeUnit.MILLISECONDS) // 向服务器请求建立连接的等待超时时间 e.g. IP不存，就抛出 java.net.SocketTimeoutException: connect timed out
+                .setConnectTimeout(5000, TimeUnit.MILLISECONDS) // 向服务器请求建立连接的等待超时时间 | 三次握手成功的等待时间 e.g. IP不存，就抛出 java.net.SocketTimeoutException: connect timed out
                 .build();
 
         RequestConfig requestConfig = RequestConfig.custom()
@@ -131,13 +159,45 @@ public class HttpClientTest extends BaseTest {
         }
     }
 
+    boolean isProxyHttpHostNotLive() {
+        // todo
+        return true;
+    }
+
+    /**
+     * 配置代理
+     */
+    @DisabledIf(value = "isProxyHttpHostNotLive", disabledReason = "代理主机不存活")
+    @Test
+    void test_proxy() throws IOException, ParseException {
+        CloseableHttpClient aDefault = HttpClients.createDefault();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setProxy(new HttpHost(URIScheme.HTTP.getId(), "127.0.0.1", 10809)) // 设置 http 代理
+                .build();
+        HttpGet httpGet = new HttpGet(HOST + "/hello");
+        httpGet.setConfig(requestConfig);
+        showResponse(aDefault.execute(httpGet));
+    }
+
     private void showResponse(CloseableHttpResponse response) throws IOException, ParseException {
+        Assertions.assertEquals(HttpStatus.SC_OK, response.getCode());
+
         Header[] headers = response.getHeaders();
         log.info("headers: {}", Arrays.asList(headers));
 
+        // 内容解析工具
         HttpEntity entity = response.getEntity();
-        String content = EntityUtils.toString(entity);
+        // 解析响应头
+        log.info("Content-Type: {}", entity.getContentType());
+        log.info("Content-Encoding: {}", entity.getContentEncoding());
+        log.info("Content-Length: {}", entity.getContentLength());
+        // 解析响应体
+        String content = EntityUtils.toString(entity); // for 文字
+//        byte[] byteArray = EntityUtils.toByteArray(entity); // for 二进制文件，如：图片
         log.info("content with apache util: {}", content);
+
+        // 确保流关闭
+        EntityUtils.consume(entity);
     }
 
     /**

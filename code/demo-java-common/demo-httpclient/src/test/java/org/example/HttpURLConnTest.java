@@ -18,13 +18,17 @@ public class HttpURLConnTest extends BaseTest {
         log.info("test HttpURLConnection");
         URL url = new URL(HOST + "/hello");
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        /*
+         * 设置请求类型
+         */
         urlConnection.setRequestMethod("GET");
         urlConnection.setConnectTimeout(5000);
         urlConnection.setReadTimeout(5000);
         urlConnection.setUseCaches(false);
         urlConnection.connect();
 
-        String content = IOUtils.readLines(urlConnection.getInputStream(), Charsets.UTF_8).stream().collect(Collectors.joining("\n"));
+        String content = IOUtils.readLines(urlConnection.getInputStream(), Charsets.UTF_8)
+                .stream().collect(Collectors.joining("\n"));
         log.info("resp: {}", content);
     }
 }
