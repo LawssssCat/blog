@@ -1,1 +1,2 @@
 code/demo-scap-tools/try-openscap-01/* filter=lfs diff=lfs merge=lfs -text
+archive/*.pptx filter=lfs diff=lfs merge=lfs -text
