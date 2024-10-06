@@ -37,7 +37,7 @@ Json 格式
 @tab Json 格式响应配置
 
 ```java
-<!-- @include: @project/code/demo-java-test/usage-wiremock/src/test/resources/myWiremockFiles/mappings/t1.jsons -->
+<!-- @include: @project/code/demo-java-test/usage-wiremock/src/test/resources/myWiremockFiles/mappings/t1.json -->
 ```
 
 :::
