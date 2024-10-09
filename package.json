@@ -10,7 +10,7 @@
   "scripts": {
     "docs:build": "vuepress-vite build src",
     "docs:clean-dev": "vuepress-vite dev src --clean-cache",
-    "docs:dev": "vuepress-vite dev src",
+    "docs:dev": "vuepress-vite dev --port 28999 src",
     "docs:update-package": "pnpm dlx vp-update"
   },
   "devDependencies": {
@@ -18,6 +18,9 @@
     "@vuepress/bundler-vite": "2.0.0-rc.9",
     "@vuepress/plugin-shiki": "2.0.0-rc.22",
     "flowchart.ts": "^3.0.0",
+    "markmap-lib": "^0.17.0",
+    "markmap-toolbar": "^0.17.0",
+    "markmap-view": "^0.17.0",
     "mermaid": "^10.9.0",
     "vue": "^3.4.21",
     "vuepress": "2.0.0-rc.9",

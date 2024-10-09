@@ -181,6 +181,11 @@ export default hopeTheme({
 
       // install sandpack-vue3 before enabling it
       // sandpack: true,
+
+      // 思维导图
+      // 参考： https://theme-hope.vuejs.press/zh/guide/markdown/chart/markmap.html
+      // pnpm add -D markmap-lib markmap-toolbar markmap-view
+      markmap: true,
     },
 
     // install @vuepress/plugin-pwa and uncomment these if you want a PWA
