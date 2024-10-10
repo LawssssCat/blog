@@ -4,6 +4,7 @@
 import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
 import mdCode from "./config/md-code.js";
+import mdGoogleAnalytics from "./config/md-googleanalytics.js";
 
 export default defineUserConfig({
   base: "/blog/",
@@ -19,8 +20,8 @@ export default defineUserConfig({
   theme,
 
   plugins: [
-    // 代码高亮
-    mdCode.shiki.shikiPlugin,
+    mdCode.shiki.shikiPlugin, // 代码高亮
+    mdGoogleAnalytics.googleAnalyticsPlugin, // 访问统计
   ],
 
   // Enable it with pwa
