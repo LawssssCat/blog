@@ -47,7 +47,16 @@ OpenJDK Runtime Environment (build 17.0.12+7-Ubuntu-1ubuntu222.04)
 OpenJDK 64-Bit Server VM (build 17.0.12+7-Ubuntu-1ubuntu222.04, mixed mode, sharing)
 
 # Zulu OpenJDK
+$ java -version
+openjdk version "21.0.5" 2024-10-15 LTS
+OpenJDK Runtime Environment Zulu21.38+21-CA (build 21.0.5+11-LTS)
+OpenJDK 64-Bit Server VM Zulu21.38+21-CA (build 21.0.5+11-LTS, mixed mode, sharing)
+
 # Alibaba OpenJDK
+$ java -version
+openjdk version "21.0.4.0.4" 2024-07-16
+OpenJDK Runtime Environment (Alibaba Dragonwell Extended Edition)-21.0.4.0.4+7-GA (build 21.0.4.0.4)
+OpenJDK 64-Bit Server VM (Alibaba Dragonwell Extended Edition)-21.0.4.0.4+7-GA (build 21.0.4.0.4, mixed mode, sharing)
 ```
 
 为了保证多种 OpenJDK 发行版是 “靠谱” 的，[JCP（Java Community Process）](https://jcp.org) 规定发行版发布前需要通过 TCK 兼容性测试来认证该发行版是 “靠谱” 的。
