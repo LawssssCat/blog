@@ -27,7 +27,7 @@ todo
 基本信息：
 
 - 基本属性 —— 名称、语言、官网、作者、社区地址
-- 版本属性 —— 版本编号、证书（license）、发布时间（Release Date）、源码、编译二进制、版权（copyright）
+- 版本属性 —— 版本编号、证书（license）、发布时间（Release Date）、源码、编译二进制、数字签名、版权（copyright）
 
 开源社区 EOL 时间： （大部分社区无 EOL 时间，采用滚动演进式发布）
 
@@ -247,21 +247,27 @@ LGPL 定义： 如果修改 LGPL 发布的库，新的库必须以 LGPL 发布�
 OIN 成员间可进行 Linux 相关专利的交叉许可。
 任何从事 Linux、GNU、Android 等软件开发的团队都可以加入 OIN。
 
+### 安全风险
+
+- 下载的二进制对比数字签名
+- 跟踪漏洞披露和修复情况
+  - Github 上的 Security
+  - Xen 的漏洞披露 <https://xenbits.xen.org/xsa/>
+  - Openssl 的漏洞披露 <https://www.openssl.org/news/vulnerabilities.html>
+  - Spring 的漏洞披露 <https://spring.io/security>
+
 ## 依赖选型
 
 选型原则：
 
 - 生命周期 —— 留意依赖生命周期，不选衰退期依赖
+  - 不选 EOL（End of Life，生命终止） 的依赖，因为有漏洞修复也只会合入到新版本中，不会合入到 EOL 的版本中。
+  - 可选 LTS（Long time Support，长期支持） 的依赖，因为社区承诺长期支持。
 - 版本更新 —— 优选较新的稳定版本
+  - RC（Released Candidate，发布候选）
 - 版本归一 —— 一个依赖在整个产品中（尽量）只有一个版本
 - 全量引入 —— 不片段引入依赖
 - 全量监控 —— 除了关注产品直接依赖的软件/组件，还需要关注这些依赖所依赖的软件/组件
-
-## 术语
-
-- Long time Support 长期支持
-- EOL End of Life 生命末期
-- RC Released Candidate 发布候选
 
 ## 参考
 
