@@ -1,0 +1,7 @@
+logging:
+  level:
+    org.example: debug
+
+test:
+  spel:
+    var1: hello world
