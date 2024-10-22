@@ -8,6 +8,38 @@ order: 1
 
 ---
 
+## 依赖识别
+
+无明确构建配置文件的项目，如 C/C++ 使用 Makefile 类的项目，则根据编译过程中具体执行的依赖行为进行判别。
+
+存在构建配置文件的项目，如 Java 的 `pom.xml` 文件，通过对应的依赖管理器作为识别依据。
+
+> **为什么只能作为依据？**
+>
+> 存在跳脱依赖管理器识别规则的依赖，如 Spring 的 `spring-boot-loader` 依赖是通过 `spring-boot-maven-plugin` 在打包时注入的，没法通过 maven 识别出来。
+
+e.g.
+
+```bash
+# java
+mvn dependencies
+
+# python
+pipenv graph
+
+# go
+go mod graph
+```
+
+| 语言       | 包管理工具 | 依赖配置文件     | groupId | packageName | version |
+| ---------- | ---------- | ---------------- | ------- | ----------- | ------- |
+| Java       | Maven      | pom.xml          | ✅      | ✅          | ✅      |
+| Java       | Gradle     | build.gradle     |         | ✅          | ✅      |
+| JavaScript | NPM        | package.json     |         | ✅          | ✅      |
+| Python     | PyPi       | requirements.txt |         | ✅          | ✅      |
+| Go         | gomod      | go.mod           |         | ✅          | ✅      |
+| Rust       | cargo      | Cargo.toml       |         | ✅          | ✅      |
+
 ## 依赖软件选型能力重要性
 
 从能力划分上看，无论设计/开发/测试，高级工程师必备依赖选型能力。
@@ -51,7 +83,59 @@ todo
 - 调试能力（是否可开启/关闭）
 - 自动化构建能力
 
-### 开源协议
+### 名称
+
+项目名称： `[组织] + 软件名称`
+
+### 开发商
+
+项目的主要版权所有者/管理者/发布者，可以为组织/个人。
+
+### 官网地址
+
+官网/托管地址
+
+### 源码仓地址
+
+代码托管仓库地址
+
+- git 地址
+- 源码下载地址
+- 二进制下载地址
+
+### 主要语言
+
+- C/C++
+- Java
+- JavaScript
+- Python
+- Go
+
+- Rust
+- TypeScript
+- Scala
+- Lua
+- Dart
+- Swift
+- Erlang
+
+扫描工具： cloc
+
+### Copyright
+
+e.g.
+
+```txt
+Copyright (c) XXXX人名/公司名
+Copyright © XXXX人名/公司名
+Copyright XXXX人名/公司名
+(c) XXXX人名/公司名
+© XXXX人名/公司名
+```
+
+### License
+
+开源协议
 
 #### GPLv2，General Public License 【传染性】
 
@@ -233,7 +317,23 @@ LGPL 定义： 如果修改 LGPL 发布的库，新的库必须以 LGPL 发布�
 
 ##### Apache 2.0
 
-- Apache 2.0 发布的软件代码，而不需要开放源代码，只需要提及代码的原出处就可以。例如： Android / Tomcat / ...
+- Apache 2.0 发布的软件代码，而不需要开放源代码，只需要提及代码的原出处就可以。例如： Android / Tomcat / Spring / ...
+
+## 版本信息
+
+### 版本号
+
+非正式版：
+
+- alpha
+- beta
+- RC + num
+- master
+- trunk
+- r + num
+- ...
+
+## 选型风险
 
 ### 专利风险
 
@@ -251,10 +351,24 @@ OIN 成员间可进行 Linux 相关专利的交叉许可。
 
 - 下载的二进制对比数字签名
 - 跟踪漏洞披露和修复情况
-  - Github 上的 Security
-  - Xen 的漏洞披露 <https://xenbits.xen.org/xsa/>
-  - Openssl 的漏洞披露 <https://www.openssl.org/news/vulnerabilities.html>
-  - Spring 的漏洞披露 <https://spring.io/security>
+  - 项目披露
+    - Github 上的 Security
+    - Xen 的漏洞披露 <https://xenbits.xen.org/xsa/>
+    - Openssl 的漏洞披露 <https://www.openssl.org/news/vulnerabilities.html>
+    - Spring 的漏洞披露 <https://spring.io/security>
+    - Samba 的漏洞披露 <https://www.samba.org/samba/history/security.html>
+    - Linux Kernel 的漏洞披露 （非官方，官方没有开放相关地址）
+      - <https://linuxkernelcves.com/>
+      - <https://github.com/nluedtke/linux_kernel_cves/tree/master/data>
+  - 漏洞库披露
+    - https://nvd.nist.gov/
+    - https://www.cvedetails.com/
+    - https://cve.mitre.org/
+    - https://vuldb.com/
+    - https://www.rapid7.com/
+    - https://snyk.io/vuln
+    - https://www.cnvd.org.cn/
+    - https://www.cnnvd.org.cn/
 
 ## 依赖选型
 
