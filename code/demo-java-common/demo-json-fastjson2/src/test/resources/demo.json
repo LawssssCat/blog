@@ -1,0 +1,17 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "status": "valid",
+      "msg": "hello world!"
+    },
+    {
+      "status": "invalid",
+      "msg": "sorry"
+    },
+    {
+      "status": "valid",
+      "msg": "hello world! x2"
+    }
+  ]
+}
