@@ -18,8 +18,21 @@ order: 1
 <!-- @include: @project/code/demo-js-vue/demo-01-simple/index.html -->
 ```
 
+### 生命周期/变更监听
+
+https://www.vueframework.com/docs/v3/cn/guide/composition-api-lifecycle-hooks.html
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-02-vite/src/App.vue -->
+```
+
 ### 状态管理
 
 - bus
 - vuex —— 【过时】 2022 年
 - pinia —— 2019 年 ~ 2024 年 [`issue271`](https://github.com/vuejs/rfcs/pull/271)
+
+## VSCode 插件
+
+- Vue - Official —— 开发环境监测、高亮
+- Vue VSCode Snippets —— 提示
