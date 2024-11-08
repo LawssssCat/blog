@@ -8,13 +8,27 @@
     </a>
   </div>
   <div>hello world!</div>
+  <!-- 计算属性 -->
   <div>{{ dayInfo }}</div>
   <div>{{ dayInfo }}</div>
   <div>{{ count }}</div>
   <div>{{ obj }}</div>
   <button @click="clickMe">clickMe</button>
   <hr>
-  <MyDialog></MyDialog>
+  <button @click="showDialog=!showDialog">弹出对话框组件</button>
+  <MyDialog title="自定义提示" content="<span style='color:red'>测试</span>内容" v-model="weather"
+    v-if="showDialog" @close="showDialog=false">
+    <!-- 默认插槽 -->
+    <span style='color:red'>测试</span>内容 {{ count }} （“默认”插槽）
+    <!-- 具名插槽 -->
+    <template #namedSlot>
+      <span style='color:red'>测试</span>内容 {{ count }} （“具名”插槽）
+    </template>
+    <!-- 具名插槽，使用下层值 -->
+    <template #namedSlot2="slotName">
+      <span style='color:red'>测试</span>内容 {{ count }} （“具名”插槽，传值 "{{ slotName.val1 }}/{{ slotName.val2 }}"）
+    </template>
+  </MyDialog>
 </template>
 
 <script lang="ts">
@@ -32,7 +46,8 @@ export default {
         count: 0
       },
       weather: "晴天",
-      x: 0
+      x: 0,
+      showDialog: false,
     }
   },
   methods: { // 方法
