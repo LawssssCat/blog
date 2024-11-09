@@ -77,6 +77,41 @@ component:
 
 :::
 
+### 路由: Vue Router
+
+[Vue Router](https://router.vuejs.org/)
+
+- 不同的历史模式 （[link](https://router.vuejs.org/zh/guide/essentials/history-mode.html)）
+  - createWebHashHistory —— `#` 请求未发送服务器 无法 SEO 捕获
+  - createWebHistory —— （常见）适合浏览器场景，路径看起来 “正常” （e.g. `https://example.com/user/id`），但是路径无法被直接访问
+  - createMemoryHistory —— 不记录历史记录，适合 node 环境和 SSR，不适合浏览器场景
+
+```bash
+npm install vue-router@4
+```
+
+::: tabs
+
+@tab 路由配置
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-03-vite-and-vue-router/src/main.ts -->
+```
+
+@tab 路由显示
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-03-vite-and-vue-router/src/App.vue -->
+```
+
+@tab 二级路由
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-03-vite-and-vue-router/src/views/Home.vue -->
+```
+
+:::
+
 ### 状态管理
 
 - bus

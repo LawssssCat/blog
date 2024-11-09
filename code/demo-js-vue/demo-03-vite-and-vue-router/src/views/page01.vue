@@ -1,8 +1,11 @@
 <template>
-  <RouterView></RouterView>
+  <div>
+    page01
+  </div>
 </template>
 
 <script setup lang="ts">
+
 </script>
 
 <style scoped>
