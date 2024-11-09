@@ -15,6 +15,7 @@
   <div>{{ obj }}</div>
   <button @click="clickMe">clickMe</button>
   <hr>
+  <!-- 自定义组件 in vue2 -->
   <button @click="showDialog=!showDialog">弹出对话框组件</button>
   <MyDialog title="自定义提示" content="<span style='color:red'>测试</span>内容" v-model="weather"
     v-if="showDialog" @close="showDialog=false">
@@ -29,15 +30,21 @@
       <span style='color:red'>测试</span>内容 {{ count }} （“具名”插槽，传值 "{{ slotName.val1 }}/{{ slotName.val2 }}"）
     </template>
   </MyDialog>
+  <hr>
+  <!-- 自定义组件 in vue3 （组合式API） -->
+  <button @click="showDialog2=!showDialog2">刷出内容</button>
+  <MyDialog2 title="自定义标题"
+  v-if="showDialog2"></MyDialog2>
 </template>
 
 <script lang="ts">
-import MyDialog from "./components/MyDialog.vue";
+import MyDialog from "./components/MyDialog.vue"; // vue2 组件写法
+import MyDialog2 from "./components/MyDialog2.vue"; // vue3 组件写法
 function toString(obj: any) {
   return JSON.stringify(obj);
 }
 export default {
-  components: {MyDialog},
+  components: {MyDialog, MyDialog2},
   data() { // 数据
     return {
       count: 0,
@@ -48,6 +55,7 @@ export default {
       weather: "晴天",
       x: 0,
       showDialog: false,
+      showDialog2: false
     }
   },
   methods: { // 方法

@@ -7,24 +7,75 @@ order: 1
 参考：
 
 - 官网 —— https://cn.vuejs.org/guide/introduction.html
-
-- 4 小时快速入门前端 Vue3+Vite+Pinia —— https://www.bilibili.com/video/BV1aa1NYxECK/
+- ~~4 小时快速入门前端 Vue3+Vite+Pinia —— https://www.bilibili.com/video/BV1aa1NYxECK/~~ （vue2 语法）
 
 ## 基本使用
 
-### 模板语法/条件渲染/循环渲染
+### 模板语法
+
+- 渲染变量（`{{ val }}`,`v-html="val"`）,变量计算（`{{ val1 + val2 }}`）
+- 属性变量（`v-bind:attr="val`/`:attr="val`）
+- 动态属性变量（`v-bind:[val1,val2,...]="valn`/`:[val1,val2,...]="valn"`）
+- 事件绑定（`v-on:click="count++"`/`@click="func1"`）,按键修饰符（`keyup`/`keydown`/...）,系统修饰符（`.ctrl`/`.alt`/...）,精确修饰符（`.exact`）,鼠标按键修饰符（`.left`/`.right`/`.middle`）
+- 条件渲染（`v-if`/`v-else-if`/`v-else`,`v-show`）
+- 循环渲染（`v-for="(item,index) in items" :key="item.id"`/`v-for="(value,key,index) in obj" :key="key"`,`v-for="(value,key) of obj" :key="key"`）
+- 模板标签（`<template>`）
 
 ```html
 <!-- @include: @project/code/demo-js-vue/demo-01-simple/index.html -->
 ```
 
-### 生命周期/变更监听
+### 自定义组件
 
-https://www.vueframework.com/docs/v3/cn/guide/composition-api-lifecycle-hooks.html
+**语法**
+
+::: tabs
+
+@tab vue2
+
+script:
+
+- 数据（`data(){return{val1:data1,...}}`）
+- 计算数据（`computed:{data1(){return val1},...}`）
+- 方法（`methods:{func1(){...},...}`）
+- 生命周期（`beforeCreate`/`created`/`beforeMount`/`mounted`/`beforeUpdate`/`updated`/`beforeUnmount`/`unmounted`） [link](https://www.vueframework.com/docs/v3/cn/guide/composition-api-lifecycle-hooks.html)
+- 变更监听（`watch: {val:{handler:(newVal,oldVal)=>{...},deep:true}}`）
+- 组件（`components:{Component1,...}`）
+- 上层变量（`props:{prop1:{type:String,default:""},...}`）
+
+component:
+
+- 变量传递（`<Component1 val1="data1">`,`props:{val1}`,`{{val1}}`）
+- 变量绑定（`<Component1 v-model="val1">`,`props:{modelValue}`,`this.$emit('update:modelValue',value)`）
+- 事件传递（`<Component1 @event1="func1">`,`this.$emit("event1")`）
+- 匿名插槽（`<Component1><slot>`）
+- 具名插槽（`<Component1><slot name="namedSlot" :val1="val1">`）
+
+:::
+
+**例子**
 
 ```html
 <!-- @include: @project/code/demo-js-vue/demo-02-vite/src/App.vue -->
 ```
+
+::: tabs
+
+@tab vue2
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-02-vite/src/components/MyDialog.vue -->
+```
+
+@tab vue3
+
+组合式 API
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-02-vite/src/components/MyDialog2.vue -->
+```
+
+:::
 
 ### 状态管理
 
