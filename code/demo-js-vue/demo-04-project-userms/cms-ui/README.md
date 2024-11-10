@@ -134,3 +134,6 @@ tsconfig.vitest.json  —— TypeScript配置 （只放test相关）
   - normalize.css
   - reset.css
 - 路由配置
+  - vue router
+- 状态配置
+  - pinia
