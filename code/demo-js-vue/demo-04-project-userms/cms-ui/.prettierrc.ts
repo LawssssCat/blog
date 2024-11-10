@@ -7,7 +7,7 @@ export default {
   semi: false, // 是否末尾加 ; 符号
   // trailingComma: "none" // 并行行末尾加 , 符号
   singleQuote: true, // 单引号
-  printWidth: 150, // 行长度
+  printWidth: 200, // 行长度
   // useTab: false // 使用 tab 缩进
   // tabWidth: 2 // 缩进个数
 };

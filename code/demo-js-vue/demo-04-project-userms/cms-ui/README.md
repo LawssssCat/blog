@@ -137,3 +137,6 @@ tsconfig.vitest.json  —— TypeScript配置 （只放test相关）
   - vue router
 - 状态配置
   - pinia
+- 网络请求
+  - axios
+    - 参考： https://juejin.cn/post/7071518211392405541
