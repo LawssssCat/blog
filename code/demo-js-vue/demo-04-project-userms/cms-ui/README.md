@@ -133,3 +133,4 @@ tsconfig.vitest.json  —— TypeScript配置 （只放test相关）
 - CSS 样式重置
   - normalize.css
   - reset.css
+- 路由配置
