@@ -3,6 +3,7 @@ import "./style.css";
 import App from "./App.vue";
 
 import { createWebHistory, createRouter, RouteRecordRaw } from "vue-router";
+import { createPinia } from 'pinia'
 
 const routes: Readonly<RouteRecordRaw[]> = [
   {
@@ -23,4 +24,5 @@ const router = createRouter({
 
 createApp(App)
 .use(router)
+.use(createPinia())
 .mount("#app");

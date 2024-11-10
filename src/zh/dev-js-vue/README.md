@@ -118,6 +118,34 @@ npm install vue-router@4
 - vuex —— 【过时】 2022 年
 - pinia —— 2019 年 ~ 2024 年 [`issue271`](https://github.com/vuejs/rfcs/pull/271)
 
+https://pinia.vuejs.org/
+
+```bash
+npm install pinia
+```
+
+::: tabs
+
+@tab 引入
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-03-vite-and-vue-router/src/main.ts -->
+```
+
+@tab 定义
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-03-vite-and-vue-router/src/components/TestA.vue -->
+```
+
+@tab 使用
+
+```html
+<!-- @include: @project/code/demo-js-vue/demo-03-vite-and-vue-router/src/views/page01.vue -->
+```
+
+:::
+
 ## VSCode 插件
 
 - Vue - Official —— 开发环境监测、高亮
