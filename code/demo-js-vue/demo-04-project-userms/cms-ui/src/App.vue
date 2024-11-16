@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>
+  <div class="app">
     <h2>App</h2>
     <RouterLink to="/main">首页</RouterLink>
     /
@@ -10,4 +10,10 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.app {
+  width: 100vh;
+  height: 100vh;
+  background-color: aquamarine;
+}
+</style>
