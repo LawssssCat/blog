@@ -23,3 +23,7 @@ todo 区别 `ApplicationRunner` 和 `CommandLineRunner`
 (runner).run(args) // ApplicationRunner
 (runner).run(args.getSourceArgs()) // CommandLineRunner
 ```
+
+参考：
+
+- Spring Boot 最佳实践 —— <https://github.com/javastacks/spring-boot-best-practice>
