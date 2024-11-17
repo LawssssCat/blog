@@ -9,10 +9,10 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>cms-web</artifactId>
+    <artifactId>cms-admin</artifactId>
 
     <description>
-        web服务入口
+        web后台服务入口
     </description>
 
     <dependencies>
