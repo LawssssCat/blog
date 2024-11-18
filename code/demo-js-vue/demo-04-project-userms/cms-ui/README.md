@@ -140,3 +140,5 @@ tsconfig.vitest.json  —— TypeScript配置 （只放test相关）
 - 网络请求
   - axios
     - 参考： https://juejin.cn/post/7071518211392405541
+- 组件
+  - 登录

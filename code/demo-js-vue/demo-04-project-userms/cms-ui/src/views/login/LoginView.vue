@@ -1,38 +1,22 @@
 <template>
-  <div>login</div>
+  <div class="login">
+    <LoginPanelView></LoginPanelView>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { xRequest2 } from "@/service";
-
-xRequest2
-  .get({
-    url: "/login",
-    interceptors: {
-      requestSuccessFn: (config) => {
-        console.log("login 请求成功拦截");
-        return config;
-      },
-      // requestFailureFn: (error) => {
-      //   console.log("login 请求失败拦截");
-      //   Promise.reject(error);
-      // },
-      responseSuccessFn: (resp) => {
-        console.log("login 响应成功拦截");
-        return resp;
-      },
-      responseFailureFn: (err) => {
-        console.error("login 响应失败拦截");
-        return Promise.reject(err);
-      },
-    },
-  })
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+import LoginPanelView from "./cpns/LoginPanelView.vue";
 </script>
 
-<style scoped></style>
+<style scoped>
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+
+  /* background: url(""); */
+}
+</style>

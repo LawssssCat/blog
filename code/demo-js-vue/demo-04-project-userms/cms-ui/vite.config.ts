@@ -13,7 +13,7 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers"; // 配�
 export default defineConfig({
   plugins: [
     vue(),
-    vueDevTools(),
+    // vueDevTools(), // 使用浏览器插件调试
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),

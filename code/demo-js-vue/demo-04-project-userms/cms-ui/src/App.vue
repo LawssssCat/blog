@@ -2,17 +2,13 @@
 
 <template>
   <div class="app">
-    <h2>App</h2>
-    <RouterLink to="/main">首页</RouterLink>
-    /
-    <RouterLink to="/login">登录</RouterLink>
-    <RouterView />
+    <RouterView/>
   </div>
 </template>
 
 <style scoped>
 .app {
-  width: 100vh;
+  width: 100vw;
   height: 100vh;
   background-color: aquamarine;
 }
