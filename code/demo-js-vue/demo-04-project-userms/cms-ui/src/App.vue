@@ -2,7 +2,7 @@
 
 <template>
   <div class="app">
-    <RouterView/>
+    <RouterView />
   </div>
 </template>
 
