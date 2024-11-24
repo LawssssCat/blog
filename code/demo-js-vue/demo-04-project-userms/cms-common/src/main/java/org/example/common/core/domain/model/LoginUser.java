@@ -5,12 +5,22 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 登录用户身份权限
  */
+@Getter
+@Setter
 public class LoginUser implements UserDetails {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 过期时间
+     */
+    private Long expireTime;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

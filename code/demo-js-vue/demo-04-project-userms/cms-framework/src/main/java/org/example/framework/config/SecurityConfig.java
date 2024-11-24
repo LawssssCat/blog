@@ -2,8 +2,10 @@ package org.example.framework.config;
 
 import javax.annotation.Resource;
 
+import org.example.framework.config.security.filter.JwtAuthenticationTokenFilter;
 import org.example.framework.config.security.handle.AuthenticationEntryPointImpl;
 import org.example.framework.config.security.handle.LogoutSuccessHandlerImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * spring security配置
@@ -24,6 +29,18 @@ import org.springframework.security.web.SecurityFilterChain;
 )
 @Configuration
 public class SecurityConfig {
+    /**
+     * 跨域过滤器
+     */
+    @Autowired
+    private CorsFilter corsFilter;
+
+    /**
+     * token认证过滤器
+     */
+    @Autowired
+    private JwtAuthenticationTokenFilter authenticationTokenFilter;
+
     /**
      * 认证失败处理类
      */
@@ -86,11 +103,9 @@ public class SecurityConfig {
             })
             // 添加Logout filter
             .logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler))
-            // TODO 添加JWT filter
-            // .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
-            // TODO 添加CORS filter
-            // .addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class)
-            // .addFilterBefore(corsFilter, LogoutFilter.class)
+            .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class)
+            .addFilterBefore(corsFilter, LogoutFilter.class)
             .build();
     }
 

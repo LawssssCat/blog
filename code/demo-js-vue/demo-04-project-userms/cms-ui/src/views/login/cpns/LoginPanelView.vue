@@ -13,7 +13,7 @@
               <span class="text">账号登录</span>
             </div>
           </template>
-          User
+          <PaneAccount ref="accountRef"></PaneAccount>
         </el-tab-pane>
         <el-tab-pane name="phone">
           <template #label>
@@ -22,7 +22,7 @@
               <span class="text">手机登录</span>
             </div>
           </template>
-          Phone
+          <PanePhone></PanePhone>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -40,13 +40,18 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import PaneAccount from "./PaneAccount.vue";
+import PanePhone from "./PanePhone.vue";
 
 const isRemPwd = ref(false);
-const activeTab = ref<string>();
+const activeTab = ref("account");
+const accountRef = ref<InstanceType<typeof PaneAccount>>(); // 固定写法: PaneAccount = 构造器 | typeof PaneAccount = 构造器类型 | InstanceType<typeof PaneAccount> = 构造器构造的实例类型
 
 function handleLoginBtnClick() {
   if (activeTab.value === "account") {
-    console.log("账号登录");
+    // 1. 获取子组件的实例
+    // 2. 调用方法
+    accountRef.value?.loginAction();
   } else {
     console.log("手机登录");
   }
