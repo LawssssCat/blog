@@ -4,7 +4,11 @@ tag:
   - life
 ---
 
-## Switch
+## 系统
+
+系统资讯、使用技巧
+
+### Switch
 
 系统 （[入门](https://switch.hacks.guide/)、[源起](https://switch.hacks.guide/)）
 
@@ -69,7 +73,34 @@ Tesla
 - nsz
 - xcz
 
-游戏
+### Stream
 
-- 塞尔达系列
-  - 塞尔达传说：智慧的再现 （The Legend of Zelda Echoes of Wisdom）
+todo 省钱（打折、跨国购买）
+
+## 游戏
+
+### N000233/马里奥系列
+
+todo
+
+### N000234/塞尔达系列
+
+平台： switch
+
+风格： 冒险
+
+- todo 织梦岛
+- todo 旷野
+- 塞尔达传说：智慧的再现 （The Legend of Zelda Echoes of Wisdom）
+
+### N000234/任天堂明星大乱斗
+
+todo
+
+### S000222/编程游戏
+
+- todo 轨道连结 —— 状态机 | 大佬：`b站-NnWinter冬` 《基于游戏《轨道连结》的状态机研究》
+- todo Screeps Arena —— 通过编写脚本操作游戏
+- todo shenzhen i/0 —— 电路 | Z 社
+- todo opus magnum （巨作） ——
+- todo Turing Complete （图灵完备） —— 电路 | 攻略：《数字电路》、《计算机组成原理》、《汇编语言》、《算法导论》 | 实际上就是游戏：计组真正抽象的比如流水线、乱序执行、cache 之类的不设计；数字电路没有处理高速信号；汇编也不需要做出操作系统；...
