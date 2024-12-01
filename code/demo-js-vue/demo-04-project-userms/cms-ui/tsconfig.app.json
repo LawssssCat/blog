@@ -1,0 +1,15 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json", // 配置继承
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"], // 指定编译文件
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true, // 声明该文件是被引用的文件
+    "noImplicitAny": false,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"] // 提示
+    }
+  }
+}

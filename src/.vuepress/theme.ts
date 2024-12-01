@@ -1,5 +1,6 @@
 /**
  * vuepress-hope 主题配置
+ * https://theme-hope.vuejs.press/zh/config/frontmatter/
  */
 import { hopeTheme } from "vuepress-theme-hope";
 import { zhNavbar } from "./navbar/index.js";
@@ -65,6 +66,7 @@ export default hopeTheme({
   },
 
   displayFooter: footer.displayFooter,
+  headerDepth: 3, // 侧边栏深度
 
   locales: {
     /**
@@ -94,7 +96,7 @@ export default hopeTheme({
   },
 
   // enable it to preview all changes in time
-  // hotReload: true,
+  hotReload: true,
 
   plugins: {
     prismjs: mdCode.prismjs.prismjs,

@@ -13,6 +13,8 @@
         <module>demo-httpclient</module>
         <module>demo-io</module>
         <module>demo-collection</module>
+        <module>demo-io-jar</module>
+        <module>demo-json-fastjson2</module>
     </modules>
 
     <properties>

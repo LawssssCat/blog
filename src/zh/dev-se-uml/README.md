@@ -16,6 +16,7 @@ UML（Unified Modeling Language，统一建模语言）
     - UML 2.x standard compliant
   - 证书
     - ~~[OCSMP(OMG Certified Systems Modeling Professional)](https://www.omg.org/certification/sysml/)~~ 评估认证人员使用 SysML 进行系统建模能力的认证 （价格高到飞起 350 刀/次 至少考 4 次。且国内基本没用？猜的）
+    - 软考，不是主要考 uml，国内相对 ocsmp 有用？
 - sysml http://production.omgsysml.org/spec/
 
 UML 图分类
@@ -48,11 +49,17 @@ UML 图分类
 - 参与者
   - 在系统外部和系统交互的人/设备/系统
 
+关系
+
+- 包含 include
+- 扩展 extend
+
 ### 活动图（Activity Diagram）/流程图（Flowchart Diagram）/BPMN
 
 参考：
 
 - https://www.bilibili.com/video/BV1MY411c7BN/
+- https://www.bilibili.com/video/BV1zi4y187Q2?p=2
 - https://sparxsystems.com/enterprise_architect_user_guide/17.0/modeling_languages/interruptibleactivityregion.html
 
 区别
@@ -67,12 +74,19 @@ UML 图分类
 概念
 
 - 泳道 —— 表示不同的活动主体（人），包含各种活动
-- 动作
-- 分叉/汇合 —— 并行/动作间没有必然先后顺序要求
-- 事件
-  - 发送事件 —— 左尖
-  - 接收事件 —— 右尖
-  - 时间事件 —— 沙漏
+- 节点
+  - 动作（Action）
+  - 传递性节点（Call Activity Node） —— 代表子系统
+  - 事物（Object Node） —— 活动中的信息主体
+  - 事件
+    - 发送事件 —— 左尖
+    - 接收事件 —— 右尖
+    - 时间事件（Time Event，作为初始节点时为 Repeating Time Event） —— 沙漏
+- 线条
+  - 事件
+  - 分叉/汇合 —— 并行/动作间没有必然先后顺序要求
+  - 警卫条件（Guard Condition）
+  - 中断事件（Interrupting Event）
 - 扩充区（Expansion Region）
 - 结构化活动 —— 定义循环
 
@@ -81,6 +95,7 @@ UML 图分类
 参考：
 
 - https://www.bilibili.com/video/BV1KL4y1F7go/
+- https://www.bilibili.com/video/BV1zi4y187Q2?p=3
 - https://docs.staruml.io/working-with-uml-diagrams/class-diagram
 - https://www.cnblogs.com/coolstream/p/9572846.html
 
@@ -91,6 +106,7 @@ UML 图分类
 - 名称
 - 属性/字段/成员变量 `[可见性][/]名称[:类型名][多重性][=默认值][{特性字符串}]`
 - 操作/行为/成员方法 `[可见性]名称([参数列表]):[返回值][{特性字符串}]`
+- 约束（OCL，Object Constraint Language） —— e.g. `self.name -> notEmpty()`
 
 常用的关系 see [link](https://docs.staruml.io/working-with-uml-diagrams/class-diagram#relationship)
 
@@ -179,6 +195,7 @@ UML 组件图的主要元素
 
 参考：
 
+- https://www.bilibili.com/video/BV1zi4y187Q2?p=9
 - https://docs.staruml.io/v/v3/working-with-diagrams/deployment-diagram
 - https://www.cnblogs.com/coolstream/p/9572870.html
 - https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-deployment-diagram/
@@ -200,6 +217,10 @@ UML 组件图的主要元素
 - 关联：节点间的通信方式。跟具体的协议有关，比如 TCP/IP, ftp, http, soap, web service 等
 
 ### 4+1 View Model
+
+todo https://www.bilibili.com/video/BV1Ya41157SU
+
+todo https://www.bilibili.com/video/BV1ogxTezERp/
 
 - Scenarios —— 用例图（Use Case Diagram）
 - Logical View —— 类图（Class Diagram）
@@ -267,17 +288,38 @@ UML 组件图的主要元素
 
 ### 通信图（Communication Diagram）
 
+参考：
+
+- https://www.bilibili.com/video/BV1zi4y187Q2?p=5
+
 顺序图 vs 通信图
 
 - 通信图和顺序图可以等价互换
 - 通信图牺牲了顺序图上的直观性
 - 通信图增强了布局和关联上的直观性
 
+要点：
+
+- 通信图每个消息必须要有序号，表示消息的出现顺序！
+
+### 时序图（Timing Diagram）
+
+参考：
+
+- https://www.bilibili.com/video/BV1zi4y187Q2?p=6
+
 ## 工具
+
+画图
 
 - [Enterprise Architect](https://sparxsystems.com/) —— 强大，收费 | todo https://space.bilibili.com/74123713/channel/series
 - Rational Rose 2007 / Rational Rose 7.0 —— 完善，IBM 收费
+- draw.io —— 开源答案、二次开发答案
 - ~~[StarUML](./staruml.md) —— 小，免费~~ （不好用）
+
+码图（适合简单场景、可管理变更）
+
+- plantUML
 
 other
 
@@ -299,11 +341,14 @@ todo 软件工程
 
 - todo https://www.bilibili.com/video/BV1o8411i7Pe/
 - todo https://www.bilibili.com/video/BV18y4y1h7e7/
-- todo https://www.bilibili.com/video/BV1r5411w7Ub/
+
+todo https://www.bilibili.com/video/BV17C4y1e7E4/
 
 参考：
 
-- [UML 系列视频教程](https://www.bilibili.com/video/BV1MY411c7BN/) （⭐⭐⭐⭐⭐）
+- [UML 系列视频教程](https://www.bilibili.com/video/BV1MY411c7BN/) （⭐⭐⭐⭐⭐） —— 入门概念
+- [软件建模-统一建模语言 UML Tutorial (2.0)](https://www.bilibili.com/video/BV1zi4y187Q2/) —— 另一种描述，比较睡意/自然？
+- [sparxsystems | Unified Modeling Language (UML)](https://sparxsystems.com/enterprise_architect_user_guide/17.0/modeling_languages/whatisuml.html) —— 字典
 - todo https://www.uml-diagrams.org/class-diagrams-overview.html
 - todo https://docs.staruml.io/user-guide/basic-concepts
 - todo https://www.visual-paradigm.com/cn/guide/uml-unified-modeling-language/what-is-uml/

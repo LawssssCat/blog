@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "type": "node-terminal",
+      "name": "Run Script: dev | vue project userms-ui",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}\\code\\demo-js-vue\\demo-04-project-userms\\cms-ui"
+    }
+  ]
+}

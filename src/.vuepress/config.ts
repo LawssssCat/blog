@@ -17,6 +17,18 @@ export default defineUserConfig({
     },
   },
 
+  markdown: {
+    anchor: {
+      level: [2, 3, 4],
+    },
+    headers: {
+      level: [2, 3, 4, 5],
+    },
+    toc: {
+      level: [2, 3, 4],
+    },
+  },
+
   theme,
 
   plugins: [
