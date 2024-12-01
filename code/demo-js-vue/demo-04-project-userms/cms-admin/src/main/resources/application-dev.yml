@@ -1,0 +1,11 @@
+server:
+  port: 18080
+  ssl:
+    enabled: true # 是否启用SSL证书
+    key-store: classpath:conf/cert/test.jks
+    key-store-password: 123123
+    key-store-type: JKS
+
+token:
+  # 令牌秘钥
+  secret: abcdefghijklmnopqrstuvwxyz
