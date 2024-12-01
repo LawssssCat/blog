@@ -6,6 +6,10 @@ pnpm run docs:dev
 
 ```
 .
+├── .github (可选的) → GitHub 配置文件存放路径
+│    └── workflow → GitHub 工作流配置
+│         └── docs-deploy.yml → 自动部署文档的工作流
+|
 ├── docs → 由你指定的文档文件夹
 │    │
 │    ├── .vuepress (可选的) → 用于存放全局的配置、组件、静态资源等
@@ -40,6 +44,11 @@ pnpm run docs:dev
 | `tagItem`      | 特定标签列表 | `/tag/:name/`      |
 | `star`         | 星标文章列表 | `/star/`           |
 | `timeline`     | 时间线列表   | `/timeline/`       |
+
+配置参考
+
+- https://vuejs.press/zh/reference/config.html
+- https://vuepress-theme-hope.github.io/v2/zh/guide/layout/sidebar.html
 
 永久链接（permalink）
 
