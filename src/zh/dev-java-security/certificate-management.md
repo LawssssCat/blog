@@ -51,7 +51,7 @@ todo 本文基于的规范版本
 >
 > - X509 证书详解 （[link-en-OpenSSL Certificate Authority](https://jamielinux.com/docs/openssl-certificate-authority/index.html),[link-en-X509 证书详解](https://blog.csdn.net/blue0bird/article/details/78656536),[link-cn-X509 证书详解（中文翻译）](https://www.cnblogs.com/nirvanan/articles/13815185.html)）
 
-`X.509` 标准是密码学里公钥证书的格式标准。
+`X.509` 标准是密码学里公钥**证书的格式标准**。
 `X.509` 证书己应用在包括 TLS/SSL（WWW 万维网安全浏览的基石）在内的众多 Internet 协议里，同时它也有很多非在线的应用场景，比如电子签名服务。
 `X.509` 证书含有公钥和标识（主机名、组织或个人），并由证书颁发机构（CA）签名（或自签名）。
 
@@ -389,6 +389,8 @@ openssl ocsp -issuer "Microsoft Azure RSA TLS Issuing CA 04.crt" -CAfile chain.p
 
 @tab openssl 介绍
 
+OpenSSL 是 SSL（Secure Sockets Layer） 的一个实现。
+
 todo openssl 中文文档 —— https://www.openssl.net.cn/
 
 todo openssl 英文文档 —— https://docs.openssl.org/master/
@@ -520,15 +522,30 @@ keytool -changealias -keystore yourjks.jks -alias oldalias -destalias newalias
 
 ### 转换
 
+#### 去除密码
+
+去除 pem 格式的 key 的密码：
+（输出的密码不输入即可）
+
+```bash
+openssl rsa -in test.key -out test1.key
+```
+
 #### `.der` 转 `.pem` （以及反向）
 
 二进制转 base64
 
+DER \-\-\> PEM
+
 ```bash
 # 将der格式证书转pem格式
 openssl x509 -in cert.crt -inform der -outform pem -out cert.pem
-# PEM到DER
-openssl x509 -in cert.crt -outform der-out cert.der
+```
+
+PEM \-\-\> DER
+
+```bash
+openssl x509 -in cert.crt -outform der -out cert.der
 ```
 
 #### `.p12` 转 `.crt` + `.key`
@@ -540,26 +557,57 @@ openssl pkcs12 -in keystore.p12 -nocerts -nodes -out my_store.key
 
 #### `.crt` + `.key` 转 `.p12`
 
+合并 PEM 格式输出 PFX(p12)
+
 ```bash
+openssl pkcs12 -export -in server.crt -inkey server.key -out mycert.p12
+# 指定intermedian和CA
 openssl pkcs12 -export -in server.crt -inkey server.key -out mycert.p12 -name alias_name -CAfile myCA.crt
+openssl pkcs12 -export -in server.crt -inkey server.key -out mycert.p12 -name alias_name -CAfile myCA.crt -certfile server.crt
 ```
 
-#### `.der`/`.pem` 转 `.jks`
+#### `.der`/`.pem` 转 `.p12` （以及反向）
+
+```bash
+openssl pkcs12 -in cert2.pfx -out cert22.pem -nodes
+```
+
+#### `.der`/`.pem` 转 `.jks` （以及反向）
+
+CER \-\-\> JKS：
+导入证书/秘钥
 
 ```bash
 keytool -import -keystore cert.jks -file cert.der
 # 别名
-keytool -import -alias youralias -keystore cert.jks -file cert.der
-keytool -import -alias youralias -keystore output.jks -file cert.der -keypass youraliaspass
+keytool -import -keystore cert.jks -file cert.der -alias youralias
+keytool -import -keystore cert.jks -file cert.der -alias youralias -keypass youraliaspass
+keytool -import -keystore cert.jks -file cert.der -alias youralias -keypass youraliaspass -v -noprompt
 ```
 
-#### `.p12` 转 `.jks`
+JKS \-\-\> CER：
+导出证书/秘钥
 
 ```bash
-# 方式1
-keytool -importkeystore -srckeystore keystore.p12 -srcstoretype PKCS12 -destkeystore keystore.jks -deststoretype JKS -srcalias alias_name -destalias alias_name
-# 方式2
-keytool -importkeystore -v -srckeystore mycert.p12 -srcstoretype pkcs12 -srcstorepass a123456 -destkeystore Aserver.keystore -deststoretype jks -deststorepass b123456
+keytool -export -alias test -keystore test.jks -storepass 123456 -file test.cer
+```
+
+#### `.p12` 转 `.jks` （以及反向）
+
+P12 \-\-\> JKS
+
+```bash
+keytool -importkeystore -srckeystore keystore.p12 -srcstoretype PKCS12 -deststoretype JKS -destkeystore keystore.jks
+# 指定别名
+keytool -importkeystore -srckeystore keystore.p12 -srcstoretype PKCS12 -deststoretype JKS -destkeystore keystore.jks -srcalias alias_name -destalias alias_name
+# 指定密码
+keytool -importkeystore -srckeystore keystore.p12 -srcstoretype pkcs12 -deststoretype jks -destkeystore keystore.jks -srcstorepass a123456 -deststorepass b123456 -v
+```
+
+JSK \-\-\> P12
+
+```bash
+keytool -importkeystore -srckeystore keystore.jks -srcstoretype JKS -deststoretype PKCS12 -destkeystore keystore.p12
 ```
 
 #### `.jks` 转 `.crt` + `.key`
