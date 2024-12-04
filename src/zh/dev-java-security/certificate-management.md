@@ -251,6 +251,9 @@ Certificate 的简称
 **示例命令**：
 
 ```bash
+# 查看证书详情
+keytool -printcert -file test.cer
+
 # 将.pem结尾的PEM格式证书转换成.crt结尾的PEM格式证书 （内容完全一样，就是改了个后缀）
 openssl x509 -in cert.pem -outform PEM -out cert.crt
 # 从密钥库导出证书
@@ -275,7 +278,7 @@ openssl pkcs7 -print_certs -in certificate.p7b -out certificate.cer
 openssl pkcs12 -export -in certificate.cer -inkey privateKey.key -out certificate.pfx -certfile CACert.cer
 ```
 
-#### `.pkcs12`/`.pfx`/`.p12` - PKCS（Public-Key Cryptography Standards，公玥密码学）
+#### `.pkcs12`/`.pfx`/`.p12` - PKCS（Public-Key Cryptography Standards，公玥加密标准）
 
 **格式**： `PKCS#12` 是一种二进制的跨平台的标准格式。
 （RSA 定义的 “描述个人信息交换语法标准” 有多个标准，pkcs（Public-Key Cryptography Standards，公玥密码学）标准是其中一个）
@@ -320,6 +323,9 @@ openssl pkcs12 -in for-iis.pfx -out for-iis.pem -nodes
 例如：
 如果你是在 Java 环境中工作，可能会使用 `.keystore` 或 `.jks` 文件；
 如果你需要跨平台兼容性，则可能更倾向于使用 `.p12` 或 `.pfx` 文件。
+
+当应用需要使用 SSL/TLS 进行通信时，我们将会使用到密钥库（keystore）和信任库（truststore）。
+在 JDK8 之前，这些文件的默认格式为 JKS；从 JDK9 开始，默认格式为 PKCS12。
 :::
 
 **示例命令**：
@@ -389,6 +395,8 @@ openssl ocsp -issuer "Microsoft Azure RSA TLS Issuing CA 04.crt" -CAfile chain.p
 
 @tab openssl 介绍
 
+<!-- ============================= -->
+
 OpenSSL 是 SSL（Secure Sockets Layer） 的一个实现。
 
 todo openssl 中文文档 —— https://www.openssl.net.cn/
@@ -396,6 +404,8 @@ todo openssl 中文文档 —— https://www.openssl.net.cn/
 todo openssl 英文文档 —— https://docs.openssl.org/master/
 
 @tab keytool 介绍
+
+<!-- ============================= -->
 
 keytool 是 Java 开发工具包 JDK1.4 之后引入的一个命令行工具，用于管理和生成 密钥对、数字证书 以及管理 密钥库。它主要用于安全通信和身份验证，通过使用公钥/私钥对和相关证书实现自我认证。
 
@@ -617,6 +627,9 @@ keytool -importkeystore -srckeystore keystore.jks -srcstoretype JKS -deststorety
 keytool -exportcert -file server.cer -alias server -keystore server.jks -storepass 123456
 
 # todo to .key
+私钥是无法通过keytool从证书库中导出的（脱裤子放屁的规定）。
+如果你特别需要私钥，可以考虑用编程的方式从密钥库文件中去获取。
+参考： https://blog.csdn.net/zyx1260168395/article/details/112802464
 ```
 
 ### 组合
@@ -825,6 +838,14 @@ keytool -list -v -keystore server.jks
 
 1. 配置 http 允许连接 （否则，http 访问会提示 `Bad Request. This combination of host and port requires TLS.`）
 
+## 案例：Spring SSL 双向认证
+
+todo
+
+> - Https 生成证书（keytool），并在 Springboot 中进行配置
+>   - https://blog.csdn.net/zyx1260168395/article/details/112802464
+>   - https://blog.csdn.net/qq_31856061/article/details/125542695
+
 ## 案例：Nginx 单向认证（JKS）
 
 场景： 前后端分离且前后端交互需要用 HTTPS 协议，则需要在前端服务（一般 nginx）上配置 SSL 证书。如果后端由 Java 开发，一般拿到的 SSL 证书是 Java 版的 jks 证书；且前端客户提供的配置好基本环境的 nginx，所需要的证书是 crt 和 key 组合形式，因此需要进行证书转换。
@@ -905,6 +926,7 @@ keytool -list -v -keystore server.jks
 
 > 参考：
 >
+> - 一文看懂 HTTPS、证书机构（CA）、证书、数字签名、私钥、公钥（转） —— https://www.cnblogs.com/kerwincui/p/14179509.html
 > - SSL 证书格式普及，PEM、CER、JKS、PKCS12 —— https://blog.freessl.cn/ssl-cert-format-introduce/
 > - https://blog.csdn.net/qq_33204709/category_12778972.html
 >   - todo 证书学习（一）keytool 工具使用介绍
@@ -913,5 +935,8 @@ keytool -list -v -keystore server.jks
 >   - todo 证书学习（四）X.509 数字证书整理
 >   - todo 证书学习（五）Java 实现 RSA、SM2 证书颁发
 >   - todo 证书学习（六）TSA 时间戳服务器原理 + 7 个免费时间戳服务器地址
+> - Https 生成证书（keytool），并在 Springboot 中进行配置
+>   - https://blog.csdn.net/zyx1260168395/article/details/112802464
+>   - https://blog.csdn.net/qq_31856061/article/details/125542695
 > - todo HTTPS 证书吊销机制 —— https://www.secpulse.com/archives/113075.html
 > - todo OSCP 流程和实践 —— https://blog.csdn.net/anjiyufei/article/details/141951363

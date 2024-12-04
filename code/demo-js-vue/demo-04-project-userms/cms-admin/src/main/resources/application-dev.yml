@@ -2,9 +2,23 @@ server:
   port: 18080
   ssl:
     enabled: true # 是否启用SSL证书
+    #    ciphers: # 支持的SSL密码
+    protocol: tls # 要使用的SSL协议
+    enabled-protocols: TLSv1.2,TLSv1.3 # 已启用SSL协议
+    # 【KeyStore】 密钥库用于保存标识自身身份的证书，它存储一个私钥和一个相关的证书/相关的证书链（由客户证书和一个或多个证书颁发机构（CA）证书组成）。存储时，使用别名（alias）存储。
+    key-store-type: JKS # 密钥存储的类型
+    #    key-store-provider: # 密钥存储的提供程序
     key-store: classpath:conf/cert/test.jks
-    key-store-password: 123123
-    key-store-type: JKS
+    key-store-password: 123123 # 用于访问密钥存储的密码
+    #    key-alias: # 标识密钥存储中密钥的别名
+    #    key-password: # 用于访问密钥存储中的密钥的密码
+    # 【TrustStore】 信任库用于保存识别他人(第三方)身份的证书，用于校验与我们通信的第三方是否可信。
+    # JDK 中有个默认的信任库 cacerts，它位于 $JAVA_HOME/jre/lib/security 目录中。我们通过java后台程序使用https去访问其他第三方终端时，就是用这个cacerts信任库来校验第三方终端发送过来的证书。
+    # client-auth: need # need/want/none
+    # trust-store-type: JKS #
+    #    trust-store-provider: #
+    # trust-store: classpath:conf/cert/test.jks # 保存SSL证书的信任存储
+    # trust-store-password: 123123
 
 token:
   # 令牌秘钥
