@@ -14,3 +14,9 @@ export function accountLoginRequest(username: string, password: string) {
     },
   });
 }
+
+export function helloRequest() {
+  return xRequest.get<V1Response & { data: string }>({
+    url: '/hello',
+  });
+}

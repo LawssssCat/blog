@@ -7,6 +7,10 @@ import org.example.common.core.domain.model.LoginUser;
 import org.example.common.exception.user.UserNotExistsException;
 import org.example.common.exception.user.UserPasswordNotMatchException;
 import org.example.common.utils.StringUtils;
+import org.example.framework.security.context.AuthenticationContextHolder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,6 +20,9 @@ import org.springframework.stereotype.Service;
 public class SysLoginService {
     @Resource
     private TokenService tokenService;
+
+    @Resource
+    private AuthenticationManager authenticationManager;
 
     /**
      * 登录验证
@@ -30,7 +37,18 @@ public class SysLoginService {
         // TODO 验证码校验
         // 登录前置校验
         loginPreCheck(username, password);
-        // TODO 用户验证
+        // 用户验证
+        Authentication authentication = null;
+        try {
+            // 构建认证凭据
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            AuthenticationContextHolder.setContext(authenticationToken);
+            // 调用UserDetailsServiceImpl.loadUserByUsername方法，完成认证流程
+            authentication = authenticationManager.authenticate(authenticationToken);
+        } finally {
+            AuthenticationContextHolder.clearContext();
+        }
+        // 登录信息
         LoginUser loginUser = null;
         // TODO 记录登录信息
         // 生成token

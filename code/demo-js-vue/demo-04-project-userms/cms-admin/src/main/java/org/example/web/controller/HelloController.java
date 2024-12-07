@@ -1,5 +1,6 @@
-package org.example.web;
+package org.example.web.controller;
 
+import org.example.common.core.domain.AjaxResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,8 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class HelloController {
     @GetMapping("/hello")
-    public String request() {
-        log.debug("controller: /hello!");
-        return "hello";
+    public AjaxResult request() {
+        return AjaxResult.successData("hello");
     }
 }

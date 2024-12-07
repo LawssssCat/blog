@@ -1,29 +1,5 @@
-# 开发环境配置
-server:
-  # 服务器的HTTP端口，默认为8080
-  port: 8080
-  servlet:
-    # 应用的访问路径
-    context-path: /api
-    
-# Spring配置
 spring:
   profiles:
     active:
+      - prod
       - dev
-  # 资源信息
-  messages:
-    # 国际化资源文件路径
-    basename: i18n/messages
-
-token:
-  # 令牌自定义标识
-  header: Authorization
-  # 令牌有效期（默认30分钟）
-  expireTime: 30
-
-# 日志配置
-logging:
-  level:
-    org.example: debug
-    org.springframework: warn

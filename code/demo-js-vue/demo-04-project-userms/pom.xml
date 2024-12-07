@@ -29,7 +29,7 @@
         <spring-framework.version>5.3.33</spring-framework.version>
         <spring-security.version>5.7.12</spring-security.version>
         <druid.version>1.2.23</druid.version>
-        <!--        <bitwalker.version>1.21</bitwalker.version>-->
+        <bitwalker.version>1.21</bitwalker.version>
         <swagger.version>3.0.0</swagger.version>
         <!--        <kaptcha.version>2.3.3</kaptcha.version>-->
         <pagehelper.boot.version>1.4.7</pagehelper.boot.version>
@@ -120,11 +120,11 @@
             </dependency>
 
             <!-- 解析客户端操作系统、浏览器等 -->
-            <!--            <dependency>-->
-            <!--                <groupId>eu.bitwalker</groupId>-->
-            <!--                <artifactId>UserAgentUtils</artifactId>-->
-            <!--                <version>${bitwalker.version}</version>-->
-            <!--            </dependency>-->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${bitwalker.version}</version>
+            </dependency>
 
             <!-- pagehelper 分页插件 -->
             <dependency>

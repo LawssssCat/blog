@@ -1,4 +1,4 @@
-package org.example.framework.config.security.filter;
+package org.example.framework.security.filter;
 
 import java.io.IOException;
 

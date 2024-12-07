@@ -1,4 +1,4 @@
-package org.example.web.system.core;
+package org.example.framework.config;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;

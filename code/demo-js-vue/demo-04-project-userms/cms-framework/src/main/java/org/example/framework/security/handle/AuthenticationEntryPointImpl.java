@@ -1,4 +1,4 @@
-package org.example.framework.config.security.handle;
+package org.example.framework.security.handle;
 
 import java.io.IOException;
 

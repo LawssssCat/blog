@@ -20,6 +20,29 @@ server:
     # trust-store: classpath:conf/cert/test.jks # 保存SSL证书的信任存储
     # trust-store-password: 123123
 
+spring:
+  datasource:
+    url: jdbc:h2:mem:devdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      validation-query: select 1
+  sql:
+    init:
+      encoding: utf-8
+      mode: always
+      continue-on-error: false
+      schema-locations: classpath:db/h2/schema.sql
+      data-locations: classpath:db/h2/data.sql
+
 token:
   # 令牌秘钥
   secret: abcdefghijklmnopqrstuvwxyz
+
+# 日志配置
+logging:
+  level:
+    org.example: debug
+    org.springframework.jdbc: debug
