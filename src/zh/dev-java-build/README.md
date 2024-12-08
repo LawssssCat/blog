@@ -1,5 +1,5 @@
 ---
-title: Maven 系列
+title: Java 项目构建工具
 index: false
 timeline: false
 isOriginal: true
