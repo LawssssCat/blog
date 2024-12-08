@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.example.common.core.domain.AjaxResult;
 import org.example.common.utils.MessageUtils;
-import org.example.common.utils.ServletUtils;
+import org.example.common.utils.web.ServletUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;

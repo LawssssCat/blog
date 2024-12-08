@@ -1,4 +1,4 @@
-package org.example.framework.config;
+package org.example.system.config;
 
 import java.io.IOException;
 import java.util.*;

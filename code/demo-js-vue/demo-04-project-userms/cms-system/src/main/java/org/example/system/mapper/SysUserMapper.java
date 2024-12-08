@@ -13,4 +13,12 @@ public interface SysUserMapper {
      * @return 用户对象信息
      */
     SysUser selectUserByUserName(String userName);
+
+    /**
+     * 修改用户信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    int updateUserSelective(SysUser user);
 }

@@ -5,13 +5,11 @@ import java.util.Date;
 import org.example.common.core.domain.BaseEntity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 用户对象 sys_user
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class SysUser extends BaseEntity {
     /**
      * 用户编号

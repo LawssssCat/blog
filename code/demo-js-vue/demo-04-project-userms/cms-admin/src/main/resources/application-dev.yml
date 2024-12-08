@@ -22,9 +22,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:devdb
+    url: jdbc:h2:file:./db/devdb;AUTO_RECONNECT=TRUE;AUTO_SERVER=TRUE
     username: sa
-    password:
+    password: 123321
     driver-class-name: org.h2.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -36,6 +36,9 @@ spring:
       continue-on-error: false
       schema-locations: classpath:db/h2/schema.sql
       data-locations: classpath:db/h2/data.sql
+  h2:
+    console:
+      enabled: false
 
 token:
   # 令牌秘钥

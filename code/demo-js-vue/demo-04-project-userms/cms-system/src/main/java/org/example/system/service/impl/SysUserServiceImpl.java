@@ -22,4 +22,15 @@ public class SysUserServiceImpl implements ISysUserService {
     public SysUser selectUserByUserName(String userName) {
         return userMapper.selectUserByUserName(userName);
     }
+
+    /**
+     * 修改用户基本信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    public int updateUserProfile(SysUser user) {
+        return userMapper.updateUserSelective(user);
+    }
 }

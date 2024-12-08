@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.example.common.constant.HttpStatus;
 import org.example.common.core.domain.AjaxResult;
 import org.example.common.utils.MessageUtils;
-import org.example.common.utils.ServletUtils;
+import org.example.common.utils.web.ServletUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
