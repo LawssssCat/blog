@@ -152,6 +152,12 @@ caffine <https://github.com/ben-manes/caffeine>
 Caffeine 是基于 JAVA 8 的高性能缓存库。
 在 Spring5 (Springboot 2.x) 后，Spring 官方放弃了 Guava，而使用了性能更优秀的 Caffeine 作为默认缓存组件。
 
+Caffeine 和很多的本地缓存一样，有如下特性：
+
+- 支持并发
+- 支持 `O(1)` 时间复杂度的数据存取
+- 支持自动移除 “不常用” 的数据，以保持内存的合理占用
+
 ::: tabs
 
 @tab 依赖

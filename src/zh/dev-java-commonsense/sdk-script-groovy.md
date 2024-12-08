@@ -3,30 +3,58 @@ title: Groovy 使用笔记
 date: 2024-07-18
 tag:
   - java
+  - gradle
 order: 10
 ---
+
+todo 项目 https://github.com/nextflow-io/nextflow
+todo 项目 https://github.com/jenkinsci/job-dsl-plugin
 
 Groovy 是可在 JVM 中运行的脚本语言。
 同时， Groovy 有面向对象的特性。
 
 ::: info
-其他可在 JVM 中运行的脚本语言有： Groovy, JRuby, JPython, BeanShell, JavaScript, ...
+其他可在 JVM 中运行的脚本语言有： JRuby, JPython, BeanShell, JavaScript, ...
+
+相比起其他脚本语言，Groovy 的优势是能使用 Java 的库。
 :::
 
 Groovy 在 JSR241 中被 Java 引入，在 2007 年 1 月发布第一个版本。
 
 <!-- more -->
 
-## 安装
+官网: <https://www.groovy-lang.org/documentation.html> \
+Github: https://github.com/apache/groovy \
+特性： https://www.youtube.com/watch?v=BXRDTiJfrSE
 
-1. 下载 bin
-1. 配置环境变量
+## 运行
 
-```ps1
-> scoop install groovy
-> groovy -v
-Groovy Version: 4.0.22 JVM: 11.0.20 Vendor: Oracle Corporation OS: Windows 11
-```
+### console (web)
+
+运行在网页控制台
+
+场景：
+
+- demo
+
+<>
+
+### console (local)
+
+运行在本地 GDK 环境
+
+场景：
+
+- 开发/测试
+
+#### 安装：方式一、gdk with manual
+
+<https://groovy.codehaus.org/Download>
+
+- Download Groovy development kit (GDK)
+- install
+- groovy/groovyConsole/groovesh
+- 配置环境变量
 
 :::::: info
 
@@ -49,6 +77,24 @@ groovyConsole.bat
 :::
 
 ::::::
+
+#### 安装：方式一、gvm
+
+<https://gvmtool.net/>
+
+```bash
+install msysgit
+install GVM
+gvm install groovy 2.2.2
+```
+
+#### 安装：方式一、scoop
+
+```ps1
+> scoop install groovy
+> groovy -v
+Groovy Version: 4.0.22 JVM: 11.0.20 Vendor: Oracle Corporation OS: Windows 11
+```
 
 ### 目录
 
@@ -343,6 +389,77 @@ mb.students() { // 💡看上去像方法，但并非方法，只是语法相似
 println s
 ```
 
+### 处理：文件
+
+读写
+
+```groovy
+def file = new File("d://students.xml")
+println file.getText()
+println '---------------'
+file.eachLine { println it}
+println '---------------'
+file.withReader {
+    char[] buffer = new char[100]
+    it.read(buffer)
+    return buffer
+}
+println '---------------'
+// 复制文件 （❗生产直接用 cp 命令）
+def copy(String srcPath, String descPath) {
+    def descFile = new File(descPath)
+    if (!descFile.exists()) {
+        descFile.createNewFile()
+    }
+    new File(srcPath).withReader {
+        def lines = it.readLines()
+        descFile.withWriter {
+            lines.each { line ->
+                it.append(line + "\r\n")
+            }
+        }
+    }
+    return true
+}
+println copy("d://students.xml", "d://students-copy.xml")
+```
+
+对象序列化
+
+```groovy
+def saveObject(Object obj, String path) {
+    def file = new File(path)
+    if(!file.exists()) {
+        file.createNewFile()
+    }
+    file.withObjectOutputStream {
+        it.writeObject(obj)
+    }
+    return true
+}
+def readObject(String path) {
+    def obj = null
+    def file = new File(path)
+    if (file == null || !file.exists()) {
+        return null
+    }
+    file.withObjectInputStream {
+        obj = it.readObject()
+    }
+    return obj
+}
+class Student implements Serializable { // 💡实现序列化接口
+    String name
+    Integer age
+}
+def s = new Student(name:'luck', age:18)
+// 写
+saveObject(s, "d://demo.txt")
+// 读
+def s2 = (Student) readObject("d://demo.txt")
+println s2.name
+```
+
 ## ~~Maven 项目~~
 
 都用 Groovy 了，就直接 Gradle 走起！
@@ -387,3 +504,15 @@ println s
     </plugins>
 </build>
 ```
+
+## Gradle 项目
+
+相比 Maven Xml 配置，Gradle 配置（Groovy/Kotlin 语法）更易于扩展。
+
+常见场景： Android, Java 开发
+
+[link](../dev-java-maven/gradle.md)
+
+## Java 调用
+
+todo https://www.bilibili.com/video/BV1cj41117c2/

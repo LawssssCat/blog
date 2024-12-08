@@ -1,4 +1,5 @@
 ---
+# 配置参考： https://ecosystem.vuejs.press/zh/themes/default/frontmatter.html#%E9%A6%96%E9%A1%B5
 home: true
 layout: BlogHome
 icon: home
