@@ -4,10 +4,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.example.common.utils.StringUtils;
 
+import sun.net.util.IPAddressUtil;
+
 /**
  * 获取IP方法
+ * <p>
+ * 注意：仅支持IPv4
  */
 public class IpUtils {
+    /**
+     * 未知地址
+     */
+    public static final String UNKNOWN = "XX XX";
+
     /**
      * 获取客户端IP
      *
@@ -18,6 +27,7 @@ public class IpUtils {
     }
 
     private static String getIpAddr(HttpServletRequest request) {
+
         if (request == null) {
             return "unknown";
         }
@@ -60,5 +70,64 @@ public class IpUtils {
             }
         }
         return StringUtils.substring(ip, 0, 255);
+    }
+
+    /**
+     * 检查是否为内部IP地址
+     *
+     * @param ip IP地址
+     * @return 结果
+     */
+    public static boolean isInternalIp(String ip) {
+        if ("127.0.0.1".equals(ip)) {
+            return true;
+        }
+        byte[] addr = IPAddressUtil.textToNumericFormatV4(ip);
+        return isInternalIp(addr);
+    }
+
+    /**
+     * 检查是否为内部IP地址
+     *
+     * @param addr byte地址
+     * @return 结果
+     */
+    private static boolean isInternalIp(byte[] addr) {
+        if (StringUtils.isNull(addr) || addr.length < 2) {
+            return true;
+        }
+        final byte b0 = addr[0];
+        final byte b1 = addr[1];
+        // 10.x.x.x/8
+        final byte SECTION_1 = 0x0A;
+        // 172.16.x.x/12
+        final byte SECTION_2 = (byte)0xAC;
+        final byte SECTION_3 = (byte)0x10;
+        final byte SECTION_4 = (byte)0x1F;
+        // 192.168.x.x/16
+        final byte SECTION_5 = (byte)0xC0;
+        final byte SECTION_6 = (byte)0xA8;
+        switch (b0) {
+            case SECTION_1:
+                return true;
+            case SECTION_2:
+                if (b1 >= SECTION_3 && b1 <= SECTION_4) {
+                    return true;
+                }
+            case SECTION_5:
+                switch (b1) {
+                    case SECTION_6:
+                        return true;
+                }
+            default:
+                return false;
+        }
+    }
+
+    public static String getRealAddressByIP(String ip) {
+        if (isInternalIp(ip)) {
+            return "内网IP";
+        }
+        return UNKNOWN; // TODO 请求 http://whois.pconline.com.cn/ipJson.jsp
     }
 }

@@ -2,6 +2,7 @@ package org.example.common.utils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 时间工具类
@@ -36,5 +37,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      */
     public static Date getNowDate() {
         return new Date();
+    }
+
+    public static Date calcDate(Date base, int val, TimeUnit timeUnit) {
+        long millSec = TimeUnit.MILLISECONDS.convert(val, timeUnit);
+        return new Date(base.getTime() + millSec);
     }
 }

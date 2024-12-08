@@ -69,7 +69,7 @@ public class SysLoginService {
         // TODO 记录日志
         LoginUser loginUser = (LoginUser)authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
-        // 生成token
+        // 生成token，并缓存
         return tokenService.createToken(loginUser);
     }
 

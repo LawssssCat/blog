@@ -78,17 +78,3 @@ comment on table SYS_USER is '用户和角色关联表';
 -- ----------------------------
 insert into sys_user_role values ('1', '1');
 insert into sys_user_role values ('2', '2');
-
--- ----------------------------
--- 初始化-mock 缓存 for redis
--- ----------------------------
-drop table if exists mock_cache;
-create table mock_cache (
-    key             varchar  not null comment 'key',
-    value           json     not null comment 'value',
-    expire_time     datetime comment '更新时间',
-    primary key(key)
-);
-comment on table mock_cache is 'mock 缓存';
-insert into mock_cache values ('1', '{}' format json , CURRENT_TIMESTAMP());
-insert into mock_cache values ('2', '{}' format json , CURRENT_TIMESTAMP());

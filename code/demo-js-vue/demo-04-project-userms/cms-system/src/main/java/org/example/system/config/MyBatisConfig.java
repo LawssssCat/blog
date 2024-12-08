@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 // 指定要扫描的Mapper类的包的路径
-@MapperScan("org.example.**.mapper")
+@MapperScan("org.example.system.**.mapper")
 public class MyBatisConfig {
     private static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
