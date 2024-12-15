@@ -1,6 +1,8 @@
 package org.example.system.config.mybatis.interceptor;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -22,25 +24,74 @@ import lombok.extern.slf4j.Slf4j;
     @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})
 })
 public class UpdateTimeAndUpdateUserInterceptor implements Interceptor {
+
+    private ThreadLocal<Date> threadLocalDate = new ThreadLocal<>();
+
+    private ThreadLocal<String> threadLocalAccount = new ThreadLocal<>();
+
+    private Date getThreadLocalDate() {
+        Date date = threadLocalDate.get();
+        if (date == null) {
+            threadLocalDate.set(new Date());
+        }
+        return threadLocalDate.get();
+    }
+
+    private String getThreadLocalAccount() {
+        String account = threadLocalAccount.get();
+        if (account == null) {
+            threadLocalAccount.set("xxx");
+        }
+        return threadLocalAccount.get();
+    }
+
+    private void cleanThreadLocal() {
+        threadLocalAccount.remove();
+        threadLocalDate.remove();
+    }
+
+    private void fillItem(BaseEntity baseEntity, SqlCommandType sqlCommandType) {
+        String account = getThreadLocalAccount();
+        Date time = getThreadLocalDate();
+
+        baseEntity.setUpdateTime(time);
+        baseEntity.setUpdateBy(account);
+
+        if (SqlCommandType.INSERT.equals(sqlCommandType)) {
+            baseEntity.setCreateTime(time);
+            baseEntity.setCreateBy(account);
+        }
+    }
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         MappedStatement mappedStatement = (MappedStatement)invocation.getArgs()[0];
         Object parameter = invocation.getArgs()[1];
 
         if (parameter instanceof BaseEntity) {
-            String account = "x"; // TODO 获取登录用户
-            Date time = new Date();
+            fillItem((BaseEntity)parameter, mappedStatement.getSqlCommandType());
+        } else if (parameter instanceof Collection) {
+            fillCollection((Collection)parameter, mappedStatement);
+        } else if (parameter instanceof Map) {
+            fillMap((Map)parameter, mappedStatement);
+        }
 
-            BaseEntity p = (BaseEntity)parameter;
-            p.setUpdateTime(time);
-            p.setUpdateBy(account);
+        cleanThreadLocal();
+        return invocation.proceed();
+    }
 
-            SqlCommandType sqlCommandType = mappedStatement.getSqlCommandType();
-            if (SqlCommandType.INSERT.equals(sqlCommandType)) {
-                p.setCreateTime(time);
-                p.setCreateBy(account);
+    private void fillMap(Map map, MappedStatement mappedStatement) {
+        if (map.get("list") instanceof Collection) {
+            fillCollection((Collection)map.get("list"), mappedStatement);
+        }
+        // TODO 扩充
+    }
+
+    private void fillCollection(Collection parameter, MappedStatement mappedStatement) {
+        for (Object item : parameter) {
+            if (item instanceof BaseEntity) {
+                fillItem((BaseEntity)item, mappedStatement.getSqlCommandType());
             }
         }
-        return invocation.proceed();
     }
 }

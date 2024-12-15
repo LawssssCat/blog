@@ -1,5 +1,7 @@
 package org.example.web.controller.test;
 
+import java.util.Collections;
+
 import javax.annotation.Resource;
 
 import org.example.common.core.domain.AjaxResult;
@@ -23,6 +25,14 @@ public class TestController {
         TestMapper.TestEntity record = new TestMapper.TestEntity();
         record.setId(SnowflakeIdUtils.nextTestId());
         testMapper.insert(record);
+        return AjaxResult.success("ok");
+    }
+
+    @RequestMapping(value = "/insert/batch", method = RequestMethod.POST)
+    public AjaxResult insertBatch() {
+        TestMapper.TestEntity record = new TestMapper.TestEntity();
+        record.setId(SnowflakeIdUtils.nextTestId());
+        testMapper.insertList(Collections.singletonList(record));
         return AjaxResult.success("ok");
     }
 }
