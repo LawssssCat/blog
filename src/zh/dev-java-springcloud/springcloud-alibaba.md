@@ -75,3 +75,60 @@ SpringCloud 是以微服务为核心的分布式系统构建标准。也就是�
 ## SpringCloud Alibaba
 
 脚手架： <https://start.aliyun.com/>
+
+### Nacos
+
+构建云原生应用的动态服务发现（Nacos Discovery）、服务配置（Nacos Config）和服务管理平台。
+
+- 官网： <https://nacos.io/zh-cn/docs/quick-start.html>
+- book:[Nacos 架构&原理](https://developer.aliyun.com/ebook/36/read?spm=a2c6h.26392459.ebook-detail.4.31b95ac4f03ZcC)
+
+Nacos 的关键特性包括：
+
+- 服务发现和服务健康检测
+- 动态配置服务
+- 动态 DNS 服务
+- 服务及其元数据管理
+
+alternate:
+
+- Nacos - CP/AP
+- ~~Eureka（闭源） - AP~~
+- Consul - CP
+- ~~CoreDNS（功能少） - xx~~
+- Zookeeper - CP
+
+> CAP C 一致性 A 可用性 P 分区容错性
+
+::: tabs
+
+@tab ~~传统~~
+
+```java
+String url = "http://localhost:8010/order/findOrderByUserId/" + id;
+ReponseEntity<List> responseEntity = restTemplate.getForEntity(url, List.class);
+List<Order> orderList = reponseEntity.getBody();
+```
+
+@tab ~~nginx~~
+
+```bash
+官网 -> nginx -> order-service-01/order-service-02/...
+```
+
+问题：
+
+- 不自带健康检查
+- 手动配置关系，配置效率低、配置易出错
+
+@tab nacos
+
+```bash
+server-register
++ 服务注册接口 <--- 会员服务/订单服务
++ 服务取消接口
++ 服务获取接口 ---> 订单服务
++ 心跳机制
+```
+
+:::

@@ -41,11 +41,11 @@ public class MBInterceptorConfig {
 
     @PostConstruct
     public void postConstruct() {
-        log.info("begin to register customer mybatis interceptor");
+        log.debug("begin to register customer mybatis interceptor");
         for (SqlSessionFactory sqlSessionFactory : sqlSessionFactories) {
             sqlSessionFactory.getConfiguration().addInterceptor(customerInterceptor());
             sqlSessionFactory.getConfiguration().addInterceptor(updateTimeAndUpdateUserInterceptor());
         }
-        log.info("finish register customer mybatis interceptor");
+        log.debug("finish register customer mybatis interceptor");
     }
 }

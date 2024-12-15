@@ -37,7 +37,7 @@
                 and e.name = #{event.name}
             </if>
             <if test="event.param != null">
-                and e.param = #{event.param}
+                and e.param = #{event.param} format json
             </if>
         </where>
     </sql>

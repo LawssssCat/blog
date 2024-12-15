@@ -76,7 +76,7 @@ public ScheduledFuture<?> scheduleAtFixeRate(Runnable command, long initialDelay
 <!-- @include: @project/code/demo-java-schedule/demo-timer-01-simple/src/test/java/org/example/task/SchedulePoolTaskTest.java -->
 ```
 
-::: tips
+::: tip
 使用 SchedulePool 就不需要自己创建 Timer 了。
 :::
 

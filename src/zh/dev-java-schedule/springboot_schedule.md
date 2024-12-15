@@ -144,7 +144,10 @@ fixedRate 任务：
 
 ## 配置原理
 
-参考： https://blog.csdn.net/z69183787/article/details/115543858
+> 参考：
+>
+> - https://blog.csdn.net/z69183787/article/details/115543858
+> - https://sherry-02.github.io/2021/06/16/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%BC%82%E5%B8%B8%E6%8E%92%E6%9F%A5/
 
 - 基于  `@Scheduled` 的定时任务，会在 bean 实例化阶段 的   `BeanPostProcessor`（具体： `ScheduledAnnotationBeanPostProcessor`  的 `postProcessAfterInitialization` 方法）将所有 `@Scheduled` 注解的方法检测出来，加入各个任务队列之中。
 

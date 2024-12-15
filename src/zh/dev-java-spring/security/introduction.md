@@ -245,6 +245,49 @@ UserDetailsService 接口实现
 - JdbcDaoImpl —— 通过 jdbc 操作数据库中的用户与权限信息，相关数据表由 Spring Security 提供
 - 自定义 UserDetailsService —— 如果想要自己实现从数据库获取用户的功能，可自行实现该 Service 的 loadUserByUsername 方法
 
+::: tabs
+
+@tab InMemoryUserDetailsManager
+
+通过 createUser , manager 把用户配置的账号密码添加到 spring 的内存中。
+InMemoryUserDetailsManager 类中有一个 loadUserByUsername 的方法通过账号（username）从内存中获取我们配置的账号密码，之后调用其他方法来判断前端用户输入的密码和内存中的密码是否匹配。
+
+```java
+@Bean
+public UserDetailsService userDetailsService() {
+	// 创建基于内存的用户信息管理器
+  InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+  manager.createUser(
+    // 创建UserDetails对象，用于管理用户名、用户密码、用户角色、用户权限等内容
+    User.withDefaultPasswordEncoder().username("user").password("user123").roles("USER").build()
+  );
+  // 如果自己配置的有账号密码, 那么上面讲的 user 和 随机字符串 的默认密码就不能用了
+  return manager;
+}
+```
+
+@tab JdbcDaoImpl
+
+```java
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+    @Autowired
+    UserMapper userMapper;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<User>();
+        queryWrapper.eq("username", username);	// 这里不止可以用username，你可以自定义，主要根据你自己写的查询逻辑
+        User user = userMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new UserDetailsImpl(user);	// UserDetailsImpl 是我们实现的类
+    }
+}
+```
+
+@tab 自定义 UserDetailsService
+
 虽然，Spring Security 有提供默认的实现，但是这会限制我们的用户表结构，因此一般需要自己实现这个接口。
 
 ```java
@@ -271,6 +314,8 @@ public class UserServiceImpl implements UserDetailsService {
   }
 }
 ```
+
+:::
 
 #### SecurityContextHolder 和 Authentication
 
@@ -316,9 +361,26 @@ public interface Authentication extends Principal, Serializable {
 }
 ```
 
+例子： 用户密码默认获取认证信息
+
+```java
+@Autowired
+private AuthenticationManager authenticationManager;
+
+UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+
+// 从数据库中对比查找，如果找到了会返回一个带有认证的封装后的用户，否则会报错，自动处理。（这里我们假设我们配置的security是基于数据库查找的）
+Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
+// 获取认证后的用户
+User user = (User) authenticate.getPrincipal();	// 如果强制类型转换报错的话，可以用我们实现的 `UserDetailsImpl` 类中的 getUser 方法了
+```
+
 ::: tip
 
-一般会把 SecurityContextHolder 的调用过程封装为工具方法
+认证通过后，一般会把认证信息放入 SecurityContextHolder 中，方便业务代码取用。
+
+SecurityContextHolder 的调用过程一般会封装为工具方法
 
 ```java
 abstract public class SecurityUtils {
@@ -360,6 +422,10 @@ abstract public class SecurityUtils {
 
 创建一个配置类，继承 ~~WebSecurityConfigurerAdapter~~ 类。（已启用，新版用 `SecurityFilterChain`，参考 [link](https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter)）
 
+::::: tabs
+
+@tab 旧版写法
+
 ```java
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -368,13 +434,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+        /**
+    * 基于内存的方式，创建两个用户admin/123456，user/123456
+    * */
+    // auth.inMemoryAuthentication()
+    //         .withUser("admin")//用户名
+    //         .password(passwordEncoder().encode("123456"))//密码
+    //         .roles("ADMIN");//角色
+    // auth.inMemoryAuthentication()
+    //         .withUser("user")//用户名
+    //         .password(passwordEncoder().encode("123456"))//密码
+    //         .roles("USER");//角色
     // ...
     // e.g.
     http.authorizeRequests()
         // 登录页允许匿名访问
         .antMatchers("/login.jsp").anonymous();
         // 资源允许所有权限访问 <==> 不需要权限
-        .antMatchers("/static/**").permitAll();
+        .antMatchers("/static/**").permitAll(); //配置静态文件不需要认证
         // 其他路径必须认证
         .antRequest().authenticated();
     http.formLogin()
@@ -383,9 +460,92 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .usernameParameter("username")
         .passwordParameter("password")
         .defaultSuccessUrl("/");
+    http
+        // 使用默认的登陆登出页面进行授权登陆
+        .formLogin(Customizer.withDefaults())
+        // 启用“记住我”功能的。允许用户在关闭浏览器后，仍然保持登录状态，直到他们主动注销或超出设定的过期时间。
+        .rememberMe(Customizer.withDefaults());
+    // 关闭 csrf CSRF（跨站请求伪造）是一种网络攻击，攻击者通过欺骗已登录用户，诱使他们在不知情的情况下向受信任的网站发送请求。
+    http.csrf(csrf -> csrf.disable());
   }
 }
 ```
+
+::: warning
+
+关于上面放行路径写法的一些细节问题：
+
+1. 如果在 application.properities 中配置的有 `server.servlet.context-path=/api` 前缀的话，在放行路径中不需要写 /api。
+1. 如果 `@RequestMapping(value = "/test/")` 中写的是 `/test/`，那么放行路径必须也写成 `/test/`，否则 `/test` 是不行的，反之亦然。
+1. 如果 `@RequestMapping(value = "/test")` 链接 `/test` 后面要加查询字符的话（e.g. `/test?type=0`），不要写成 `@RequestMapping(value = "/test/")`
+
+:::
+
+@tab 新版写法
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+            // 开启授权保护
+            .authorizeHttpRequests(authorize -> authorize
+                    // 不需要认证的地址有哪些
+                    .requestMatchers("/blog/**", "/public/**", "/about").permitAll()	// ** 通配符
+                    // 对所有请求开启授权保护
+                    .anyRequest().
+                    // 已认证的请求会被自动授权
+                    authenticated()
+            )
+            // 使用默认的登陆登出页面进行授权登陆
+            .formLogin(Customizer.withDefaults())
+            // 启用“记住我”功能的。允许用户在关闭浏览器后，仍然保持登录状态，直到他们主动注销或超出设定的过期时间。
+            .rememberMe(Customizer.withDefaults());
+    // 关闭 csrf CSRF（跨站请求伪造）是一种网络攻击，攻击者通过欺骗已登录用户，诱使他们在不知情的情况下向受信任的网站发送请求。
+    http.csrf(csrf -> csrf.disable());
+
+    return http.build();
+}
+```
+
+@tab 新版生产例子
+
+一般完整的 SecurityConfig 如下：
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(CsrfConfigurer::disable) // 基于token，不需要csrf
+                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 基于token，不需要session
+                .authorizeHttpRequests((authz) -> authz
+                        .requestMatchers("/login/",  "/getPicCheckCode").permitAll() // 放行api
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+```
+
+:::::
 
 ::: info
 
@@ -509,16 +669,54 @@ Spring Security 利用 CsrfFilter 过滤器来返回和验证 token。只有在 
 
 ### 配置加密算法
 
+密码管理方面 Spring Security 提供了 PasswordEncoder 接口，用于定义密码的加密和验证方法。
+主要有以下几种实现：
+
+- BCryptPasswordEncoder：基于 BCrypt 算法，具有适应性和强大的加密强度。它可以根据需求自动调整加密的复杂性。
+- NoOpPasswordEncoder：不执行加密，适用于开发和测试环境，不建议在生产环境中使用。
+- Pbkdf2PasswordEncoder、Argon2PasswordEncoder 等：这些都是基于不同算法的实现，具有不同的安全特性。
+
+::: tabs
+
+@tab 配置 PasswordEncoder
+
 ```java
 @Configuration
 public class WebSecurigyConfig extends WebSecurityConfigurerAdapter {
   // 配置 Spring Security 默认的密码加密器
   @Bean
   public PasswordEncoder passwordEncoder() {
+    // 也可用有参构造，取值范围是 4 到 31，默认值为 10。数值越大，加密计算越复杂
     return new BCryptPasswordEncoder(); // bcrypt 加密算法
   }
 }
 ```
+
+@tab 加密密码
+
+```java
+@Autowired
+private PasswordEncoder passwordEncoder;
+
+public void registerUser(String username, String rawPassword) {
+    String encryptedPassword = passwordEncoder.encode(rawPassword);
+    // 保存用户信息到数据库，包括加密后的密码
+}
+```
+
+> 加密后，原明文密码一般要求从内存中擦除
+
+@tab 解密密码
+
+```java
+public boolean login(String username, String rawPassword) {
+    // 从数据库中获取用户信息，包括加密后的密码
+    String storedEncryptedPassword = // 从数据库获取;
+    return passwordEncoder.matches(rawPassword, storedEncryptedPassword);
+}
+```
+
+:::
 
 ::: info
 
@@ -559,16 +757,24 @@ VaGgw3duNuPMQqx1LUV4CoXxTHUJihO —— 第四部分： 是加密的运算结果�
 
 Spring Security 默认的前后端交互模式是不分离的。改成前后端分离模式需要费点功夫。
 
-### 配置 Json 格式返回
+前端：
 
-:::::: tabs
+1. 用户在登录界面输入用户名和密码。
+1. 前端将这些凭证以 JSON 格式发送到后端的登录 API（例如 POST /api/login）。
 
-@tab 流程分析
+后端：
+
+1. Spring Security 接收请求，使用 AuthenticationManager 进行身份验证。
+1. 如果认证成功，后端生成一个 JWT（JSON Web Token）或其他认证令牌，并将其返回给前端。
 
 | 交互模式     | 示意图                                                                                                                                                                                                                                                                                       |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 非前后端分离 | <ul><li>返回页面形式，登录操作流程 <br> ![HbLqoOfSmsrD3GSF-image-1700724446615.png](https://s2.loli.net/2023/11/23/jGwSkeP4DnHO6dE.png)</li> <li> 返回页面形式，鉴权操作流程 <br> ![XqlbZ6j0M67489q0-image-1700724504282.png](https://s2.loli.net/2023/11/23/Rn3eIkSyBl5ouEW.png) </li></ul> |
 | 前后端分离   | ![image.png](https://s2.loli.net/2023/11/23/BMd4bAieL152TXC.png)                                                                                                                                                                                                                             |
+
+### 配置 Json 格式返回
+
+:::::: tabs
 
 @tab 开放 `/login` 接口权限
 
@@ -577,7 +783,22 @@ Spring Security 默认的前后端交互模式是不分离的。改成前后端�
   .antMatchers("/login.jsp", "/login").anonymous();
 ```
 
-@tab 前端接口
+::: tip
+需要在配置类中注册 `AuthenticationManager` 类：
+
+```java
+@Configuration
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+  @Bean
+  protected AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
+}
+```
+
+:::
+
+@tab 完成登录接口
 
 ```java
 @RestController
@@ -614,21 +835,6 @@ public class LoginController {
   }
 }
 ```
-
-::: tip
-上面提到 `AuthenticationManager` 类需要在配置类中注册：
-
-```java
-@Configuration
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-  @Bean
-  protected AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
-}
-```
-
-:::
 
 ::: tip
 
@@ -716,9 +922,36 @@ public class EmployeeUserDetails implements UserDetails {
 }
 ```
 
+@tab 配置 token 校验拦截器
+
+校验 token 的方式会不同：
+
+- ~~csrf 校验 —— token 不存储信息，只做唯一标识。校验时只缓存中有或没有这 token 信息，有就放行~~ （缺点：1. 不加时间信息的话，容易被冒用 2. 没有权限管理）
+- jwt 校验 —— 一种特殊结构的 token。可以在 token 中存储认证时间、过期时间、用户权限等信息，在外面再对这些信息做签名。校验时校验 token 有没有？有没有被篡改？内部的信息是否符合要求等...
+
+这里先不展开，下面详细介绍
+
+@tab 前端处理
+
+1. 获取 JWT —— 前端发送 /login 接口请求，获取 JWT 信息
+1. 存储 JWT —— 前端收到 JWT 后，可以将其存储在 localStorage 或 sessionStorage 中，以便后续请求使用。
+1. 发送受保护请求 —— 在发送需要认证的请求时，前端将 JWT 添加到请求头中：
+
+   ```js
+   fetch("/api/protected-endpoint", {
+     method: "GET",
+     headers: {
+       Authorization: `Bearer ${token}`,
+     },
+   });
+   ```
+
 ::::::
 
-### 配置 Json 格式 crfs token 校验
+### 配置 crfs token 校验 （不推荐）
+
+不推荐的原因不是这种 crfs 模式安全有问题，而是通过 JWT 也能实现这效果，还附带其他有用的功能。
+因此，建议直接用 JWT token 校验即可。
 
 ::: tabs
 
@@ -797,6 +1030,82 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 ```
 
 :::
+
+### 配置 JWT token 校验
+
+::: tip
+JWT 工具可以自己写，但推荐用 jjwt
+:::
+
+::::: tabs
+
+@tab 编写 Filter
+
+```java
+import io.jsonwebtoken.Claims;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Component
+public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+    @Autowired
+    private UserMapper userMapper;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+        String token = request.getHeader("Authorization");
+
+        if (!StringUtils.hasText(token) || !token.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        token = token.substring(7);
+
+        String userid;
+        try {
+            Claims claims = JwtUtil.parseJWT(token); // 💡JWT 工具可以自己写，但推荐用 jjwt
+            userid = claims.getSubject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        User user = userMapper.selectById(Integer.parseInt(userid));
+
+        if (user == null) {
+            throw new RuntimeException("用户名未登录");
+        }
+
+        UserDetailsImpl loginUser = new UserDetailsImpl(user);
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginUser, null, null);
+
+        // 如果是有效的jwt，那么设置该用户为认证后的用户
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
+@tab 注册 Filter
+
+```java
+http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+```
+
+:::::
 
 ### 配置 Json 格式认证异常处理
 

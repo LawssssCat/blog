@@ -14,6 +14,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -38,8 +42,19 @@ public class ContextConfig implements ApplicationRunner {
     @Scheduled(fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     public void consumeSchedule() {
         log.info("hello, runtime");
+        cancel();
         boolean flag = eventService.handleEvent(EventNameEnum.DELETE) &&
                 eventService.handleEvent(EventNameEnum.FETCH);
+    }
+
+    private void cancel() {
+        CompletableFuture.runAsync(() -> {
+            int x = new Random(new Date().getTime()).nextInt(10);
+            if (x > 3) {
+                EventFetchParam param = new EventFetchParam("RT_1");
+                eventService.cancelEvent(EventNameEnum.FETCH, param);
+            }
+        });
     }
 
     /**
@@ -51,13 +66,13 @@ public class ContextConfig implements ApplicationRunner {
 
         EventFetchParam param = new EventFetchParam("RT_1");
         EventFetchContext context = new EventFetchContext();
-        eventService.createEvent(EventNameEnum.FETCH, param, context);
+        int eventId = eventService.createEvent(EventNameEnum.FETCH, param, context);
     }
 
     /**
      * 模拟数据创建
      */
-    // @Scheduled(initialDelay = 2, fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelay = 2, fixedDelay = 3, timeUnit = TimeUnit.SECONDS)
     public void productBSchedule() {
         log.info("hello, productB");
 
