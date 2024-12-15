@@ -12,7 +12,7 @@ import org.example.common.constant.CacheConstants;
 import org.example.common.constant.Constants;
 import org.example.common.core.domain.model.LoginUser;
 import org.example.common.utils.StringUtils;
-import org.example.common.utils.uuid.IdUtils;
+import org.example.common.utils.key.UUIDUtils;
 import org.example.common.utils.web.IpUtils;
 import org.example.common.utils.web.UserAgentUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,7 +55,7 @@ public class TokenService {
      * @return 令牌
      */
     public String createToken(LoginUser loginUser) {
-        String loginUserKey = IdUtils.fastUUID();
+        String loginUserKey = UUIDUtils.fastUUID();
 
         // 刷新登录令牌
         loginUser.setToken(loginUserKey);

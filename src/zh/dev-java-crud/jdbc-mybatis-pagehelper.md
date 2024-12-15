@@ -3,10 +3,14 @@ title: Mybatis PageHelper 使用
 date: 2024-09-14
 tag:
   - java
-order: 1
+  - jdbc
+  - mybatis
+order: 66
 ---
 
-官网：
+官网：https://pagehelper.github.io/
+
+Mybatis 插件，辅助分页功能编写。
 
 参考：
 

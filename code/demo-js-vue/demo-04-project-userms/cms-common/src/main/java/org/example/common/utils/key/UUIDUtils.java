@@ -1,9 +1,9 @@
-package org.example.common.utils.uuid;
+package org.example.common.utils.key;
 
 /**
  * ID生成器工具类
  */
-public class IdUtils {
+public class UUIDUtils {
     /**
      * 获取随机UUID
      *

@@ -1,4 +1,4 @@
-package org.example.common.utils.uuid;
+package org.example.common.utils.key;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
