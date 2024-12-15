@@ -1,14 +1,13 @@
 package org.example.common.core.domain;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
 
 import org.example.common.constant.Constants;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
 
@@ -17,11 +16,8 @@ import lombok.Data;
  */
 @Data
 public class BaseEntity {
-    /**
-     * 搜索值
-     */
-    @JsonIgnore
-    private String searchValue;
+    @Id
+    private Long id;
 
     /**
      * 创建者
@@ -32,6 +28,7 @@ public class BaseEntity {
      * 创建时间
      */
     @JsonFormat(pattern = Constants.DATE_FORMAT)
+    @Column(name = "CREATE_TIME")
     private Date createTime;
 
     /**
@@ -43,23 +40,6 @@ public class BaseEntity {
      * 更新时间
      */
     @JsonFormat(pattern = Constants.DATE_FORMAT)
+    @Column(name = "UPDATE_TIME")
     private Date updateTime;
-
-    /**
-     * 备注
-     */
-    private String remark;
-
-    /**
-     * 请求参数
-     */
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String, Object> params;
-
-    public synchronized Map<String, Object> getParams() {
-        if (params == null) {
-            params = new HashMap<>();
-        }
-        return params;
-    }
 }

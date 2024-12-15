@@ -2,7 +2,7 @@ package org.example.common.core.domain.entity;
 
 import java.util.Date;
 
-import org.example.common.core.domain.BaseEntity;
+import org.example.common.core.domain.ExEntity;
 
 import lombok.Data;
 
@@ -10,12 +10,7 @@ import lombok.Data;
  * 用户对象 sys_user
  */
 @Data
-public class SysUser extends BaseEntity {
-    /**
-     * 用户编号
-     */
-    private Long userId;
-
+public class SysUser extends ExEntity {
     /**
      * 用户账号
      */

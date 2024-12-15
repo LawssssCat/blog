@@ -1,4 +1,4 @@
-package org.example.system.config;
+package org.example.system.config.mybatis;
 
 import java.io.IOException;
 import java.util.*;
@@ -30,7 +30,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @Configuration
 // 指定要扫描的Mapper类的包的路径
 @MapperScan("org.example.system.**.mapper")
-public class MyBatisConfig {
+public class MBMappingConfig {
     private static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
     @javax.annotation.Resource

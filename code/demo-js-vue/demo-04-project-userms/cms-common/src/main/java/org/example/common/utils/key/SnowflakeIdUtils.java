@@ -6,6 +6,7 @@ package org.example.common.utils.key;
 public class SnowflakeIdUtils {
     private static SnowflakeIdWorker WORKER_ORDER = new SnowflakeIdWorker(1, 1);
     private static SnowflakeIdWorker WORKER_USER = new SnowflakeIdWorker(1, 2);
+    private static SnowflakeIdWorker WORKER_TEST = new SnowflakeIdWorker(1, 2);
 
     /**
      * @return 用户编号
@@ -19,5 +20,12 @@ public class SnowflakeIdUtils {
      */
     public static long nextOrderId() {
         return WORKER_ORDER.nextId();
+    }
+
+    /**
+     * @return 测试编号
+     */
+    public static long nextTestId() {
+        return WORKER_TEST.nextId();
     }
 }

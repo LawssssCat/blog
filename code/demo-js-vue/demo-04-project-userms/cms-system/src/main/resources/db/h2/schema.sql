@@ -1,9 +1,20 @@
+-- 测试
+drop table if exists t_test;
+create table t_test (
+    id bigint not null,
+    create_by varchar,
+    create_time datetime,
+    update_by varchar,
+    update_time datetime,
+    primary key (id)
+);
+
 -- ----------------------------
 -- 2、用户信息表
 -- ----------------------------
 drop table if exists sys_user;
 create table sys_user (
-      user_id           bigint          not null auto_increment    comment '用户ID',
+      id                bigint          not null auto_increment    comment '用户ID',
       dept_id           bigint          default null               comment '部门ID',
       user_name         varchar(30)     not null                   comment '用户账号',
       nick_name         varchar(30)     not null                   comment '用户昵称',
@@ -22,7 +33,7 @@ create table sys_user (
       update_by         varchar(64)     default ''                 comment '更新者',
       update_time       datetime                                   comment '更新时间',
       remark            varchar(500)    default null               comment '备注',
-      primary key (user_id)
+      primary key (id)
 );
 comment on table SYS_USER is '用户信息表';
 
@@ -37,7 +48,7 @@ insert into sys_user values(2,  105, 'test',  '用户2', '00', 'user@example.org
 -- ----------------------------
 drop table if exists sys_role;
 create table sys_role (
-    role_id              bigint          not null auto_increment    comment '角色ID',
+    id                   bigint          not null auto_increment    comment '角色ID',
     role_name            varchar(30)     not null                   comment '角色名称',
     role_key             varchar(100)    not null                   comment '角色权限字符串',
     role_sort            int             not null                   comment '显示顺序',
@@ -51,7 +62,7 @@ create table sys_role (
     update_by            varchar(64)     default ''                 comment '更新者',
     update_time          datetime                                   comment '更新时间',
     remark               varchar(500)    default null               comment '备注',
-    primary key (role_id)
+    primary key (id)
 );
 comment on table SYS_USER is '角色信息表';
 

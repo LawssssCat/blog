@@ -80,7 +80,7 @@ public class SysLoginService {
      */
     private void recordLoginInfo(Long userId) {
         SysUser sysUser = new SysUser();
-        sysUser.setUserId(userId);
+        sysUser.setId(userId);
         sysUser.setLoginIp(IpUtils.getClientIpAddr());
         sysUser.setLoginDate(DateUtils.getNowDate());
         iSysUserService.updateUserProfile(sysUser);

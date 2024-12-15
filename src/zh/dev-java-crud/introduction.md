@@ -15,7 +15,7 @@ order: 1
 
 框架（Mybatis）
 
-- mybatis
+- [mybatis](./jdbc-mybatis.md)
 - [page-helper](./jdbc-mybatis-pagehelper.md)
 - [tk.mapper](./jdbc-mybatis-tk_mapper.md)
 - mybatis-plus

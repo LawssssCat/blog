@@ -52,6 +52,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         sysPasswordService.validate(sysUser, usernamePasswordAuthenticationToken);
 
         // 结果返回
-        return new LoginUser(sysUser.getUserId(), null, sysUser, null);
+        return new LoginUser(sysUser.getId(), null, sysUser, null);
     }
 }
