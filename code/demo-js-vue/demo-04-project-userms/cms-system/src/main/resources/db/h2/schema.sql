@@ -1,7 +1,8 @@
 -- 测试
-drop table if exists t_test;
-create table t_test (
+-- drop table if exists t_test;
+create table if not exists t_test (
     id bigint not null,
+    name varchar,
     create_by varchar,
     create_time datetime,
     update_by varchar,
