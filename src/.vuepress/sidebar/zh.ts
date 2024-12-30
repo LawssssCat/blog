@@ -18,6 +18,8 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-springcloud/": "structure",
   "/zh/dev-java-cache/": "structure",
   "/zh/dev-java-event/": "structure",
+  "/zh/dev-js-vue/": "structure",
+  "/zh/dev-js-antv/": "structure",
   "/zh/dev-se-project_management/": "structure",
   "/zh/ops-terminal-shell/": "structure",
   "/zh/ops-hw-red/": "structure",

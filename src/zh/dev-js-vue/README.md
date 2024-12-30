@@ -9,6 +9,29 @@ order: 1
 - 官网 —— https://cn.vuejs.org/guide/introduction.html
 - ~~4 小时快速入门前端 Vue3+Vite+Pinia —— https://www.bilibili.com/video/BV1aa1NYxECK/~~ （vue2 语法）
 
+## 项目初始化
+
+```bash
+$ npm init vite@latest project-name
+Need to install the following packages:
+create-vite@6.1.1
+Ok to proceed? (y) y
+
+
+> npx
+> create-vite .
+
+√ Select a framework: » Vue
+√ Select a variant: » TypeScript
+
+Scaffolding project in xxx\blog\code\demo-js-antv\demo-01-g6...
+
+Done. Now run:
+
+  npm install
+  npm run dev
+```
+
 ## 基本使用
 
 ### 模板语法
@@ -150,3 +173,9 @@ npm install pinia
 
 - Vue - Official —— 开发环境监测、高亮
 - Vue VSCode Snippets —— 提示
+
+## VSCode 缩写
+
+- vbase —— 模板
+- imd —— import xxx 缩写
+
