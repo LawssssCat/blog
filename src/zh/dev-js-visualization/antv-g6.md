@@ -5,6 +5,8 @@ order: 1
 ---
 
 参考：
-https://www.bookstack.cn/read/antv-g6-api/42231065d3c7b97a.md
+
+- 官方教程： https://g6.antv.vision/zh/docs/manual/tutorial/preface
+- 接口笔记： https://www.bookstack.cn/read/antv-g6-api/42231065d3c7b97a.md
 
 todo
