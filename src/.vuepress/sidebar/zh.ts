@@ -23,6 +23,7 @@ export const zhSidebar = sidebar({
   "/zh/dev-js-antv/": "structure",
   "/zh/dev-se-project_management/": "structure",
   "/zh/ops-terminal-shell/": "structure",
+  "/zh/ops-db-client/": "structure",
   "/zh/ops-hw-red/": "structure",
   "/zh/ops-cicd-jenkins/": "structure",
   "/zh/z-security-vulnerability/": "structure",
