@@ -8,6 +8,12 @@ order: 1
 
 整理 Java 产品级别的集成解决方案/项目。
 
+## 社区
+
+中文
+
+- [dromara](https://github.com/dromara) —— 项目有 hutool, sa-token 等
+
 ## 后台管理
 
 - [ruoyi](./ruoyi/README.md)

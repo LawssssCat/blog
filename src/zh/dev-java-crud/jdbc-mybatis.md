@@ -250,6 +250,7 @@ public class MybatisConfig {
 参考：
 
 - https://blog.csdn.net/m0_47743175/article/details/128053257
+- https://blog.csdn.net/qq_37844454/article/details/130513925
 
 ## Other
 

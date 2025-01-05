@@ -9,5 +9,5 @@ order: 1
 客户端：
 
 - [DBeaver](./DBeaver.md) —— 【推荐】强大、开源、java
-- [HeidiSQL](./HeidiSQL.md)
+- [HeidiSQL](./HeidiSQL.md) —— 贵，一年 800 刀，买断 1800 刀（2024 年 5 月 26 日）
 - [Navicat](./Navicat.md)
