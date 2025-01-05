@@ -92,6 +92,8 @@ public class JedisConfig {
 
 @tab 使用
 
+线程池获取
+
 ```java
 @Autowired
 private JedisPool jedisPool;
@@ -102,9 +104,20 @@ jedis.get(key);
 jedis.flushDB();
 ```
 
+手动建立连接
+
+```java
+Jedis jedis = new Jedis("192.168.40.4", 6379);
+jedis.select(0);
+// ...
+jedis.close();
+```
+
 :::
 
 ## SpringBoot + Spring Data Redis （Lettuce）
+
+文档： <https://docs.spring.io/spring-data/redis/reference/#redis:template>
 
 [Spring Data Redis](https://spring.io/projects/spring-data-redis) 中对 JedisApi 的高度封装 （SpringBoot 推荐使用这种）
 
@@ -263,3 +276,158 @@ redisTemplate.opsForHash().put("user", id , new User())
 redisTemplate.opsForHash().hasKey("user", id)
 redisTemplate.opsForHash().get("user", id)
 ```
+
+### RedisTemplate 基本使用
+
+todo forList, boundXxxOps
+参考： https://www.bilibili.com/video/BV1jD4y1Q7tU
+
+### 问题：事务处理
+
+同数据库一样，有两种事务处理方式：
+
+- 编程式事务
+- 声明式事务
+
+**编程式事务**
+
+```java
+@Autowired
+private RedisTemplate<String, Object> redisTemplate;
+@Test
+public void testTransactionalCode() {
+  List<Object> execute = redisTemplate.execute(new SessionCallback<List<Object>>() {
+    @Override
+    public List<Object> execute(RedisOperations operations) throws DataAccessException {
+      operations.multi(); // 开启事务
+      // 💡无须写回滚try，出现异常自动回滚
+      BoundValueOperations ops = operations.boundValueOps("hxm");
+      ops.set(999);
+      assertNull(ops.get()); // ⚠️这里为null，因为事务还未执行
+      return operations.exec(); // 提交事务
+    }
+  });
+  System.out.println(execute);
+}
+```
+
+**声明式事务** （参考： https://blog.csdn.net/hxm_Code/article/details/105119273）
+
+::: tabs
+
+@tab 开启声明式配置
+
+```java
+@Configuration
+@EnableTransactionManagement // 开启注解式事务
+public class RedisConfig {
+  @Bean
+  public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    RedisTemplate redisTemplate = new RedisTemplate();
+    // ⚠️需要显示声明开启transaction支持
+    template.setEnableTransactionSupport(true);
+    return template;
+  }
+```
+
+@tab 声明事务
+
+方法上添加 `@Transactional` 注解
+
+:::
+
+## 应用场景
+
+### 分布式锁
+
+todo
+
+### 分布式缓存（Cache）实现
+
+todo
+
+::: warning
+使用 Mybatis 二级缓存需要注意以下问题：
+
+- 联表查询的结果如果被缓存，可能不会因为单表的更新而被更新。
+  - ~~（有问题的）解决方法： 统一使用相同的缓存命名空间 `<cache-ref namespace="org.example.dao.UserDAO" />`~~
+
+:::
+
+缓存架构：
+
+- redis 分布式缓存 （distribute cache）
+- mybatis 二级缓存 （local cache） （通过 `org.apache.ibatis.cache.impl.PerpetualCache` 实现）
+- sql 查询
+
+```xml
+<mapper namespace="org.example.dao.UserDAO">
+  <!-- 开启mybatis二级缓存 -->
+  <cache type="org.example.cache.RedisCache" />
+  <select id="findAll" redisType="User" >
+    select * from t_user
+  </select>
+</mapper>
+```
+
+```java
+public class RedisCache implements Cache {
+  private static final String PREFIX = "MYBATIS:CACHE:"
+  private String id;
+  private RedisTemplate redisTemplate;
+  public RedisCache(String id) {
+    this.id = id;
+    this.redisTemplate = (RedisTemplate) ApplicationContextUtils.getBean("redisTemplate");
+  }
+  @Override
+  public String getId() {
+    return this.id;
+  }
+  // 查到值，值放入缓存
+  @Override
+  public void putObject(Object key, Object value) {
+    redisTemplate.opsForHash().put(PREFIX+id, toMD5(key.toString()), value);
+  }
+  // 查询缓存
+  @Override
+  public Object getObject(Object key) {
+    return redisTemplate.opsForHash().get(PREFIX+id, toMD5(key.toString()));
+  }
+  @Override
+  public Object removeObject(Object key) {
+    return null; // UnsupportedException
+  }
+  @Override
+  public void clear() {
+    redisTemplate.delete(PREFIX+id); // 清空缓存
+  }
+  // 计算缓存数量
+  @Override
+  public int getSize() {
+    return redisTemplate.opsForHash().size(PREFIX+id).intValue();
+  }
+  private String toMD5(String key) {
+    return DigestUtils.md5DigestAsHex(key.getBytes());
+  }
+}
+```
+
+### 分布式会话（Session）实现
+
+todo
+
+### 排行榜实现
+
+todo
+
+### 缓存穿透、击穿、雪崩问题
+
+- **缓存穿透**：查询的 key 不在数据库中，查询结果无法被缓存，每次都要查库。
+- **缓存击穿**：某个 key 被非常频繁访问，当 key 失效时，有大量线程来构建缓存，导致负载增加，系统奔溃。
+- **缓存雪崩**：大量的 key 同时过期或者 redis 服务器宕机
+
+解决方法：
+
+- **缓存穿透**：缓存空结果；通过布隆过滤器判断数据是否存在
+- **缓存击穿**：（主动刷新缓存的方式）避免缓存失效，如在 value 中记录下次主动刷新的时间，击鼓传花，最后查询到的线程负责主动刷新
+- **缓存雪崩**：不同业务设置不同缓存时间，使缓存过期时间尽量均匀分布；（通过锁/线程池队列）减少同时查询 sql 的连接数量
