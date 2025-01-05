@@ -6,33 +6,36 @@ tag:
 order: 1
 ---
 
-Redis（Remote Dictionary Server，远程字典服务） 是一个开源（BSD 许可）的使用 ANSI C 语言编写数据库。
-Redis 是一种以 `key-value` 的模式存储数据的 nosql 数据库，支持数据在**内存中读写**（读写快）、**定时持久化**和**高可用部署**。
+[Redis](https://redis.io/)（Remote Dictionary Server，远程字典服务） 是一个开源（BSD 许可）的使用 ANSI C 语言编写数据库。
+Redis 是一种以 `key-value` 的模式存储数据的 nosql 数据库，支持数据**原子操作**（分布式前提）、**在内存中读写**（读写快）、**定时持久化**和**高可用部署**。
 
 应用场景：
 
-- 缓存、分布式锁、自增序列
+- 缓存（文字/二进制，如图片）
+- 分布式锁
+- 自增序列/计数器
 - ~~消息中间件~~ （给专业的干：RabbitMQ）
 
 参考：
 
 - <https://www.runoob.com/redis/redis-intro.html>
-- <https://mijingdui.github.io/redis/introduce/>
+- <https://mijingdui.github.io/redis/introduce/> 阿星 精神时の屋
+- <https://www.bilibili.com/video/BV1vWsDedEU8/> 内存数据库 Redis7 教程
 
 <!-- more -->
 
-## 数据类型
+- [编译/安装/部署](./setup.md)
+- 客户端
 
-Redis 支持丰富数据类型：
-字符串（String） 、哈希表（Hash）、列表（List）、集合（Set）、有序集合（sorted set）、位图、hyperloglogs 等。
+  - [Another Redis Desktop Manager](https://github.com/qishibo/AnotherRedisDesktopManager) —— electron/js 编写
+  - RedisInsight —— electron/ts/js 编写，官方推荐，但 star 相对前者少。
 
-如何操作各种数据类型，参考： [link](./usage.md)
+- [基本使用](./usage.md) —— 常用 cli 命令、数据类型
+- [配置、部署策略](./deployment.md)
 
-## 其他功能
+被集成：
 
-Redis 有内置复制、Lua 脚本、LRU 收回、事务以及不同级别磁盘持久化功能，同时通过 Redis Sentinel 提高可用性、通过 Redis Cluster 提供自动分区功能。
-
-todo
+- [Java](/src/zh/dev-java-spring/springboot/springboot-redis.md)
 
 # 附录：
 
@@ -48,10 +51,13 @@ NoSQL 不依赖业务逻辑方式存储，而以简单的 `key-value` 模式存�
 
 通过 NoSQL 可以解决的问题：
 
-- 商品数量的频繁查询
-- 热搜商品的排行统计
-- 订单超时问题
-- 音频、视频存储问题
+- High performance - 对数据库高并发读写的需求
+  - 商品数量的频繁查询
+- Huge Storage - 对海量数据的高效率存储和访问的需求
+  - 热搜商品的排行统计
+- High Scalability && High Availability - 对数据库的高可扩展性和高可用性的需求
+  - 订单超时问题
+  - 音频、视频存储问题
 
 ### NoSQL 实现分类
 
@@ -73,7 +79,7 @@ NoSQL 不依赖业务逻辑方式存储，而以简单的 `key-value` 模式存�
 #### 列存储数据库
 
 这部分数据库通常是用来因对分布式存储的海量数据。
-其 key 指向多个 “列”。这些列由列家族来安排。
+列簇式存储（将同一列数据存在一起）：其 key 指向多个 “列”。这些列由列家族来安排。
 
 相关产品：
 
