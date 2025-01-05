@@ -64,4 +64,96 @@ kill -9 PID
 
 ## Docker
 
-<https://lawsssscat.blog.csdn.net/article/details/104166908>
+```bash
+docker pull redis:latest
+docker run -itd --name redis-test -p 6379:6379 redis
+docker exec -it redis-test /bin/bash
+```
+
+## K8S
+
+`podman kube play xxx.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: ruoyi-pod
+spec:
+  containers:
+    - name: mysql
+      image: docker.io/library/mysql:5.7.35
+      # imagePullPolicy: IfNotPresent
+      # command:
+      # args:
+      ports:
+        - containerPort: 3306
+          hostPort: 23306
+          # port: 30080             # 服务访问端口，集群内部访问的端口
+          # targetPort: 3306          # pod控制器中定义的端口（应用访问的端口）
+          # nodePort: 23306           # NodePort，外部客户端访问的端口
+      volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        - name: mysql-logs
+          mountPath: /var/lib/logs
+        # - name: mysql-conf
+        #   mountPath: /etc/mysql/mysql.conf.d/mysql.cnf
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: 123456
+        - name: MYSQL_USER
+          value: azi
+        - name: MYSQL_PASSWORD
+          value: 123mysql
+    - name: redis
+      image: docker.io/library/redis:7.2.6
+      command:
+        - "redis-server"
+        - "/usr/local/etc/redis/redis.conf"
+      ports:
+        - containerPort: 6379
+          hostPort: 26379
+      volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        - name: redis-logs
+          mountPath: /logs
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/
+          readonly: true
+
+  volumes:
+    - name: mysql-data
+      persistentVolumeClaim:
+        claimName: ry-mysql-data
+    - name: mysql-logs
+      persistentVolumeClaim:
+        claimName: ry-mysql-logs
+    - name: redis-data
+      persistentVolumeClaim:
+        claimName: ry-redis-data
+    - name: redis-logs
+      persistentVolumeClaim:
+        claimName: ry-redis-logs
+    - name: redis-config
+      configMap:
+        name: ry-config-map
+        items:
+          - key: redis-config
+            path: redis.conf
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ry-config-map
+data:
+  redis-config: |-
+    port 6379
+    bind 0.0.0.0
+    appendonly yes
+    save 60 1000
+    maxmemory 512mb
+    maxmemory-policy allkeys-lru
+```

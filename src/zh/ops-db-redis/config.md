@@ -249,48 +249,133 @@ activerehashing yes
 - **dir ./** ── 输入本地 redis 数据库存放文件夹（可选）
 - **appendonly yes** ── redis 持久化（可选）
 
+## 安全配置
+
+todo
+
+- redis 安全 - <https://redis.io/docs/management/security/>
+- antirez 关于 Redis 安全性的几件事 <http://antirez.com/news/96>
+
 ## 内存维护策略
 
-todo 由头
+**最大缓存配置**：
+在 redis 中，允许用户设置最大使用的内存大小：
 
-动态数据删除（LRU 算法、LFU 算法）
+```bash title="redis.conf"
+maxmemory 512G
 
-> - 对于在内存中但又不用的数据块（内存块）叫做 LRU（`Least Recently Used`，最近最久未使用算法）
-> - 通过内存管理的一种页面置换算法，操作系统会判断哪些数据属于 LRU 而将其移出内存而腾出统建来加载另外的数据
+maxmemory-policy allkeys-lru
+```
 
-1. **volatile-lru**：设定的超时时间的数据中，删除最不常用的数据
-2. **allkeys-lru**：查询所有的 key 中最近最不常用的数据进行删除，==这是应用最为广泛的策略==
-3. volatile-random：在已经设定了超时的数据中随机删除
-4. allkeys-random：查询所有的 key，之后随机删除
-5. volatile-ttl：查询全部设置定超时时间的数据之后，排序，将马上要过期的数据进行删除。
-6. ==noeviction：如果设置为该属性，则不会进行删除操作，如果内存溢出，则报错返回==。（默认）
-7. volatile-lfu：从所有配置了过期时间的键中驱逐使用的平率最少的键
-   > LFU(`Least Frequently Used` ,最近最少使用算法)也是一种常见的缓存算法
-8. allkeys-lfu：从所有键中驱逐使用频率最少的键
+::: warning
+Redis 官方给的警告，当内存不足时，Redis 会根据配置的缓存策略淘汰部分 keys ，以保证写入成功。
+当无淘汰策略时或没有找到适合淘汰的 key 时， Redis 直接返回 out of memory 错误。
+:::
 
-> lfu 是 4.0 后新增策略
+为了增加内存使用率，对于存在内存中但 “用不着的” 数据块 Redis 倾向于而将其移出内存而腾出内存来加载另外的数据。
+
+如何判断数据是否 “用不着”，Redis 给出 6 种数据淘汰策略：
+
+- `volatile-lru`：LRU（Least Recently Used，最近最久未使用算法）指设定的超时时间的数据中，删除最不常用的数据
+- `allkeys-lru`：查询所有的 key 中最近最不常用的数据进行删除 （**这是应用最为广泛的策略**）
+- `volatile-random`：在已经设定了超时的数据中随机删除
+- `allkeys-random`：查询所有的 key，之后随机删除
+- `volatile-ttl`：查询全部设置定超时时间的数据之后，排序，将马上要过期的数据进行删除。
+- **`noeviction`**（**默认**）：如果设置为该属性，则不会进行删除操作，如果内存溢出，则报错返回。
+- `volatile-lfu`：LFU（Least Frequently Used ,最近最少使用算法）指从所有配置了过期时间的键中驱逐使用的平率最少的键 （**也是一种常见的缓存算法**）
+- `allkeys-lfu`：从所有键中驱逐使用频率最少的键 （4.0 后新增策略）
+
+配置：
+
+```bash title="redis.conf"
+todo
+```
 
 ## 持久化策略
 
-持久化 - redis 数据存储在内存中，持久化方案有两种：
+持久化方案有两种： （参考： [link](https://www.cnblogs.com/zxs117/p/11242026.html)）
 
-- 定时快照（snapshot）：
-  定时将数据写入磁盘，每次均是全部读写，代价非常高
-- 基于语句追加（aof）：
-  只往数据库变化的数据，可能导致 追加的 log 过大。
-  而且追加方式是所有操作重新执行一遍，回复速度慢
+| &nbsp; | **定时快照（snapshot）** （Redis 默认的持久化方式） | **基于语句追加（aof，append only file，只追加日志文件）**                                                              |
+| ------ | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 策略   | 定时将数据**全量**写入 `*.rdb` 磁盘文件             | 只将变化的数据写入 `*.aof` 磁盘文件                                                                                    |
+| 优点   | 保存数据快、还原数据快                              | <ul><li>保存数据快，且不额外占用内存、CPU</li><li>所有修改会及时写入磁盘，能减少数据丢失</li></ul>                     |
+| 缺点   | 备份过程需要双倍内存                                | <ul><li>备份 `*.aof` 文件可能过大（记录了所有的变化命令）</li><li>恢复速度慢（恢复时需重新执行一遍所有操作）</li></ul> |
 
-**dump.rdb**
+### RDB：定时快照（snapshot）
 
-redis 数据存在内存中，也会定时将数据进行持久化
+定时将所有数据写入磁盘中的 `*.rdb` （如 dump.rdb）结尾的文件中。
+这种方式也被称为 RDB（Redis DataBase） 方式。
 
-dump.rdb 里面存储的就是持久化的信息（里面有我们上面 set 的信息）
+配置文件：
+
+```bash title="redis.conf"
+# 指定存储至本地数据库时是否压缩数据，默认为yes
+# redis采用LZF（压缩算法）
+# 如果为了节省CPU时间，可以关闭该选项，但会导致数据库文件变的巨大
+rdbcompression yes
+
+# 指定本地数据库文件名，默认为dump.rdb
+dbfilename dump.rdb
+
+# 指定本地数据库存放目录，默认 /data
+dir ./
+```
+
+触发方式：
+
+- 服务端根据配置定时/定量触发
+
+  ```bash title="redis.conf"
+  save 900 1      # 每 900 秒（15 分钟）至少 1 个 key 发生变化，产生快照
+  save 300 10     # 每 300 秒（5 分钟）至少 10 个 key 发生变化，产生快照
+  save 60 10000   # 每 60 秒（1 分钟）至少 10000 个 key 发生变化，产生快照
+  ```
+
+- 客户端触发：通过 `BGSAVE`（调用 fork 进程归档） 和 `SAVE`（调用当前进程归档） 命令
+- 服务器正常关闭 `redis-cli shutdown`
+
+### AOF：只追加日志文件（append only file）
+
+- 在使用 aof 持久化方式时，redis 会将每一个收到的写命令都通过 write 函数追加到文件中（默认是 `appendonly.aof`）。
+- 当 redis 重启时，会通过重新执行文件中保存的写命令来在内存中重新构建整个数据库的内容。
+
+配置文件：
+
+```bash title="redis.conf"
+appendonly yes       # 启动 aof 持久化
+appendfsync always/everysec/no
+# always    收到命令就立即写入磁盘；最慢，但是保证完全的持久化
+# everysec （默认，推荐）每秒中写入磁盘一次；在性能和持久化方面做了很好的折中
+# no        有操作系统决定合适写入AOF（如正常关闭时才开始持久化）；性能最好，持久化没有保证
+```
+
+**AOF 重写机制**：
+AOF 的方式带来另外一个问题，随着持久化次数增加，持久化文件会变得越来越大。
+但注意到其中有可压缩空间，如 `set a {newValue}` 命令执行 100 次，只需要记录最后一次命令。
+由此 Redis 提供了 AOF ReWriter 机制（AOF 重写机制），来在一定程度上减少 AOF 文件的体积。
+
+触发重写方式：
+
+1. 客户端触发：执行 `BGREWRITEAOF` 命令
+1. 服务器配置自动触发：
+
+   ```bash
+   auto-aof-rewrite-percentage 100 # AOF 文件体积比上次重写大 100% （一倍）
+   auto-aof-rewrite-min-size 64mb  # AOF 文件体积大于 64mb
+   ```
+
+## 一致性
+
+todo
 
 ## 高可用策略
 
 todo
 
 - lua 脚本
+
+Redis 2.6 版本通过内嵌支持 Lua 环境。
+执行脚本通常命令为： `EVAL`
 
 ## 待整理
 

@@ -24,14 +24,14 @@ Redis 是一种以 `key-value` 的模式存储数据的 nosql 数据库，支持
 
 <!-- more -->
 
-- [编译/安装/部署](./setup.md)
+- [编译/安装/部署](./deployment.md)
 - 客户端
 
   - [Another Redis Desktop Manager](https://github.com/qishibo/AnotherRedisDesktopManager) —— electron/js 编写
   - RedisInsight —— electron/ts/js 编写，官方推荐，但 star 相对前者少。
 
 - [基本使用](./usage.md) —— 常用 cli 命令、数据类型
-- [配置、部署策略](./deployment.md)
+- [配置、部署策略](./config.md)
 
 被集成：
 

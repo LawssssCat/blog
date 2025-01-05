@@ -48,6 +48,8 @@ hget key1 field1
 # 如：有序集合（Z开头）
 # ...
 
+# type key # 获取数据类型
+
 127.0.0.1:6379> del b # 删除b的值
 (integer) 0
 127.0.0.1:6379> exists a # 判断a是否存在值。1=存在，0=不存在
@@ -56,6 +58,9 @@ hget key1 field1
 # 取键名
 127.0.0.1:6379> keys * # 查询所有键名
 1) "a"
+# keys h?llo => hello, hallo, hxllo, ...
+# keys h*llo => hello, hllo, hxxxxxxxxllo, ....
+# keys h[ae]llo => hello, hallo
 127.0.0.1:6379> keys a # 查询a键名
 1) "a"
 127.0.0.1:6379> randomkey # 随机返回一个键名
@@ -68,8 +73,9 @@ OK
 # 设置值+有效时间
 127.0.0.1:6379> expire a 1 # 设置有效时间
 (integer) 1
-127.0.0.1:6379> expire a 1000 milliseconds # 以毫秒为单位
+127.0.0.1:6379> pexpire a 1000 # 以毫秒（milliseconds）为单位
 (integer) 1
+# pexireat key milliseconds-timestamp # 设定过期时间戳
 127.0.0.1:6379> persist a # 设置有效时间-1（设置为一直时间不过期）
 (integer) 0
 
@@ -85,6 +91,7 @@ OK
 (integer) -2 # -2 表示没有找到/已过期
 127.0.0.1:6379> ttl b
 (integer) -2
+# pttl key # 返回毫秒
 ```
 
 ## 规范
@@ -181,7 +188,7 @@ H 开头
 
 # HSETNX KEY FIELD value          # 只有在字段FIELD不存在时，设置值
 # HINCRBY KEY FIELD increment     # 为KEY对象（整数类型的）FIELD属性设置自增量
-# HINCRBYLOAT KEY FIELD increment # 为KEY对象（浮点类型的）FIELD属性设置自增量
+# HINCRBYFLOAT KEY FIELD increment # 为KEY对象（浮点类型的）FIELD属性设置自增量
 
 # 批量存取
 127.0.0.1:6379> hmset h1 a 1 b 2
@@ -435,3 +442,61 @@ georadiusbymember key member radius m|km|ft|mi [withcoord] [withdist] [withhash]
 geohash key member [member...]
 	获取指定点对应的坐标hash值
 ```
+
+## 事务
+
+redis 事务四大命令：
+
+1.  MULTI ── 开启事务
+1.  EXEC ── 提交
+1.  DISCARD ── 回滚
+1.  WATCH ── “乐观锁”，监视一个（或者多个）KEY：
+    `watch` 需要在 `multi` 前设置。
+    如果在 `watch` 到 `exec` 命令的过程中，被监控的 key 值发生改变，那么事务中执行的全部命令都将不生效，`exec` 命令返回 `nil` 结果。
+
+    e.g.
+
+    ```bash
+    session_01> watch account:a
+    OK
+    session_02> set account:a 10
+    OK
+    session_01> multi
+    OK
+    session_01> incr account:a
+    QUEUED
+    session_01> exec
+    (nil)
+    ```
+
+1.  UNWATCH ── 对所有 KEY 的监视
+
+Redis 事务两点需要注意：
+
+- **事务队列** —— 从 `multi` 命令开始，到 `exec` 命令开始后，Redis 才会将一个事务中的所有命令序列化，然后按顺序执行，执行中不会被其他命令插入。
+- **异常处理** —— 收到 `EXEC 命令` 后进入事务执行，事务中任意命令执行失败，其余的命令依然被执行。 （语法错误除外）
+
+应用场景：
+
+- 秒杀 —— 保证一组命令在执行的过程中不被其他命令插入
+
+## 消息发布、订阅
+
+```bash
+# 订阅“log”管道
+subscribe log
+# 发布消息给“log”管道
+publish log hello
+```
+
+::: tip
+
+发布订阅功能对比：
+
+| &nbsp;           | redis                              | rabbitmq                                 |
+| ---------------- | ---------------------------------- | ---------------------------------------- |
+| 可靠性：确认机制 | 无，只是将消息依次发送给每个订阅者 | 有                                       |
+| 可靠性：持久化   | 无，没有正对消息的持久化           | 有                                       |
+| 监控             | 无                                 | 有，可以在内置后台看到所有队列的详细情况 |
+
+:::
