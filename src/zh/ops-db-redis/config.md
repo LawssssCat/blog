@@ -364,11 +364,139 @@ AOF 的方式带来另外一个问题，随着持久化次数增加，持久化�
    auto-aof-rewrite-min-size 64mb  # AOF 文件体积大于 64mb
    ```
 
-## 一致性
+## 高可用（High Availability）策略
+
+避免单节点故障导致服务不可用，为此 Redis 提供如下高可用策略架构：
+
+- 主从复制：用来解决数据的冗余备份，从节点用来同步数据
+- 心跳机制、哨兵：故障转移策略
+
+### 主从复制
+
+```
+Redis 主从复制:
++ Master
+├─ Slave-1
+└─ Slave-2
+```
+
+::: tip
+从节点在升级到主节点前，都是只读的（2.6 版本后）。
+在从节点修改，会收到报错 “READONLY You can't write against a read only replica.”。
+:::
+
+::: tabs
+
+@tab 配置方式配置
+
+```bash title="redis.conf"
+# master
+port 6379
+bind 0.0.0.0
+
+# slave1
+port 6380
+bind 0.0.0.0
+slaveof 127.0.0.1 6379
+
+# slave2
+port 6381
+bind 0.0.0.0
+slaveof 127.0.0.1 6379
+```
+
+@tab 命令行方式配置
+
+```bash
+# --slaveof 或者 --replicaof
+/usr/local/redis/bin/redis-server /usr/local/redis/redis.conf --port 6380 --slaveof 127.0.0.1 6379
+```
+
+@tab 主从变换命令
+
+```bash title="redis.conf"
+# 不是任何的从
+slaveof no one
+# 指定从属的主服务器
+slaveof ip地址 端口号
+```
+
+@tab 实现细节/相关配置
+
+如果从节点无法访问主节点（提示：`master_link_status:down`），且地址、端口、认证信息均无误，考虑是否开启防火墙：
+
+```bash
+# 端口看你自己情况
+firewall-cmd --zone=public --add-port=3679/tcp --permanent
+firewall-cmd --reload
+```
+
+---
+
+主从复制的数据同步阶段（psync）分两步：
+
+1. 全量复制：主节点生成 RDB 文件，发送给从节点进行数据恢复
+1. 部分复制：主节点将新数据保存“复制缓冲区”，待从节点完成 RDB 文件恢复后，将缓冲区信息发送给从节点，进行差异同步
+
+```bash title="redis.conf"
+repl-backlog-size 1mb # 调整复制缓存区大小
+slave-server-stale-data yes|no # 主从复制过程中，从服务器是否响应客户端请求，建议设置为 no
+```
+
+::: tip
+
+估算 `repl-backlog-size` 最优值：
+
+1. 测算 master 到 slave 的重连平均时长 `second`
+1. 获取 master 平均每秒产生写命令数据总量 `write_size_per_second`
+1. 最优复制缓冲区空间 = 2 \* `second` \* `write_sieze_per_second`
+
+:::
+
+---
+
+心跳机制：主从双方使用心跳机制确保双方连接在线
+
+1. master 定期使用 `ping` 命令判断 slave 是否在线 （通过 INFO replication 获取 slave 最后一次连接时间间隔，lag 项维持在 0 或 1 视为正常）
+1. slave 使用 `REPLCONF ACK [offset]` 命令向 master 汇报自己的复制偏移量
+
+```bash title="redis.conf"
+########################
+# master 配置
+########################
+repl-ping-slave-period # ping slave 的周期，默认10s
+repl-timeout           # ping slave 的等待时间，默认60s
+# 当 slave 多数掉线或延迟过高时，master 为保障数据稳定性，将拒绝所有信息同步操作
+min-slaves-to-write 2 # 最小slave数量
+min-slaves-max-lag 8 # 最大延迟8s
+```
+
+:::
+
+实验：
+
+1. 在主节点更新键值，从节点马上也能查到更新的键值。 —— 符合备份要求
+1. 关闭主节点，连接主节点的应用无法访问 redis 服务，导致单点异常。 —— 不符合高可用要求
+
+**两个好处：**
+
+- 读写分离：提高服务器的负载能力，可根据读请求的规模自由增加或减少从库的数量
+- 可用性：数据被复制成好几份，一台机器故障，可以快速从其他机器获取数据并回复。
+
+### 哨兵机制
+
+哨兵（Sentinel）机制是 Redis 的高可用解决方案：
+由一个或多个 Sentinel 实例组成的 Sentinel 系统可以监视任意多个主服务器，以及这些服务器下属的所有从服务器。
+当被监视的主服务器下线后，自动将其下属的从服务器升级为新的主服务器。
+简单的说哨兵机制就是带自动故障转移的主从架构。
 
 todo
 
-## 高可用策略
+## 缓存一致性问题
+
+todo
+
+## 待整理
 
 todo
 
@@ -376,8 +504,6 @@ todo
 
 Redis 2.6 版本通过内嵌支持 Lua 环境。
 执行脚本通常命令为： `EVAL`
-
-## 待整理
 
 Redis 有内置复制、Lua 脚本、LRU 收回、事务以及不同级别磁盘持久化功能，同时通过 Redis Sentinel 提高可用性、通过 Redis Cluster 提供自动分区功能。
 

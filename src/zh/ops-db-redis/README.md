@@ -31,11 +31,11 @@ Redis 是一种以 `key-value` 的模式存储数据的 nosql 数据库，支持
   - RedisInsight —— electron/ts/js 编写，官方推荐，但 star 相对前者少。
 
 - [基本使用](./usage.md) —— 常用 cli 命令、数据类型
-- [配置、部署策略](./config.md)
+- [配置、部署策略、分布式问题方案](./config.md)
 
 被集成：
 
-- [Java](/src/zh/dev-java-spring/springboot/springboot-redis.md)
+- [Java](/zh/dev-java-spring/springboot/springboot-redis.md)
 
 # 附录：
 
