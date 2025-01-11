@@ -26,6 +26,7 @@ export const zhSidebar = sidebar({
   "/zh/ops-db-client/": "structure",
   "/zh/ops-db-redis/": "structure",
   "/zh/ops-hw-red/": "structure",
+  "/zh/ops-common-ide/": "structure",
   "/zh/ops-cicd-jenkins/": "structure",
   "/zh/z-security-vulnerability/": "structure",
 });
