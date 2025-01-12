@@ -1,3 +1,6 @@
+/**
+ * 埋点
+ */
 import { googleAnalyticsPlugin } from "@vuepress/plugin-google-analytics";
 
 export default {

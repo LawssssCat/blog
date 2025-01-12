@@ -8,7 +8,7 @@ import { zhSidebar } from "./sidebar/index.js";
 import { MR_HOPE_AVATAR } from "./logo.js";
 import common from "./config/common.js";
 import footer from "./config/footer.js";
-import mdCode from "./config/md-code.js";
+import markdown from "./config/md.js";
 
 export default hopeTheme({
   hostname: common.github.blog,
@@ -98,7 +98,7 @@ export default hopeTheme({
   hotReload: true,
 
   // all features are enabled for demo, only preserve features you need here
-  markdown: mdCode,
+  markdown,
 
   plugins: {
     blog: true,
