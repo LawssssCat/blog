@@ -20,7 +20,7 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-event/": "structure",
   "/zh/dev-java-dev-java-integration_solution/": "structure", // 集成解决方案
   "/zh/dev-js-vue/": "structure",
-  "/zh/dev-js-antv/": "structure",
+  "/zh/dev-js-visualization/": "structure",
   "/zh/dev-se-project_management/": "structure",
   "/zh/ops-terminal-shell/": "structure",
   "/zh/ops-db-client/": "structure",
