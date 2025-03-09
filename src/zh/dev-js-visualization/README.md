@@ -6,6 +6,7 @@ order: 1
 
 原生：
 
+- [echarts](./dev-js-echarts/README.md)
 - [antv-g6](./antv-g6.md)
 - three.js
 
