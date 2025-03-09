@@ -9,10 +9,12 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as echarts from 'echarts'
 import axios from 'axios'
+import { textProps } from 'element-plus'
 
 const sellerRef = new ref()
 const chartInstance = new ref(null)
 const allData = new ref({
+  title: '商家销售统计',
   data: null, // 服务器返回的数据
   currentPage: 1, // 当前显示的页数
   totalPage: 0, // 总页数
@@ -22,7 +24,12 @@ const allData = new ref({
 
 // 初始化echartInstance对象
 function initChart() {
-  chartInstance.value = echarts.init(sellerRef.value)
+  chartInstance.value = echarts.init(
+    sellerRef.value,
+    //
+    // 'mint',
+    'dark',
+  )
   // 对图表对象进行鼠标事件的监听
   chartInstance.value.on('mouseover', () => {
     endInterval()
@@ -55,6 +62,33 @@ function updateChart() {
   const sellerNames = showData.map((item) => item.name)
   const sellerValues = showData.map((item) => item.value)
   const option = {
+    title: {
+      text: '▮ ' + allData.value.title,
+      textStyle: {
+        fontSize: 66,
+      },
+      left: 20,
+      top: 20,
+    },
+    grid: {
+      top: '13%',
+      left: '3%',
+      right: '3%',
+      bottom: '3%',
+      containLabel: true, // 距离包含坐标轴文字
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'line',
+        z: 0,
+        lineStyle: {
+          type: 'solid',
+          width: 66,
+          color: '#201c3a',
+        },
+      },
+    },
     xAxis: {
       type: 'value',
     },
@@ -66,6 +100,25 @@ function updateChart() {
       {
         type: 'bar',
         data: sellerValues,
+        barWidth: 66,
+        label: {
+          show: true,
+          position: 'right',
+        },
+        itemStyle: {
+          barBorderRadius: [0, 33, 33, 0],
+          // 颜色渐变
+          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            {
+              offset: 0,
+              color: '#5052EE',
+            },
+            {
+              offset: 1,
+              color: '#AB6EE5',
+            },
+          ]),
+        },
       },
     ],
   }
@@ -98,4 +151,8 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(canvas) {
+  border-radius: 30px;
+}
+</style>
