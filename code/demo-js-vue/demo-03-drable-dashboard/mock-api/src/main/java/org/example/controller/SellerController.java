@@ -24,7 +24,7 @@ public class SellerController {
         xx.add(new Seller("商家8", 198));
         xx.add(new Seller("商家9", 198));
         xx.add(new Seller("商家10", 1928));
-        xx.add(new Seller("商家11", 1928));
+        xx.add(new Seller("商家11", 3928));
         xx.add(new Seller("商家12", 98));
         xx.add(new Seller("商家13", 18));
         xx.add(new Seller("商家14", 18));
