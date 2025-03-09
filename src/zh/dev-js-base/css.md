@@ -11,6 +11,7 @@ order: 1
 参考：
 
 + https://www.bilibili.com/video/BV1nM411T77W
++ https://www.bilibili.com/video/BV1w84y1r7X8
 
 
 ## 基础样式
@@ -61,6 +62,25 @@ div —— 容器
 ```
 
 ### grid
+
+grid = 网格
+
+概念：
+
++ 行/列 
+  + `grid-template-columns: 200px/1fr/repeat(12, 50px)/repeat(auto-fill, 150px)/repeat(auto-fill, minmax(150px, 1fr))` 列宽
+    + fr = fraction
+  + `grid-template-rows` 行高
+  + `grid-auto-rows` 默认行高 
++ 空隙
+  + `grid-row-gap`
+  + `grid-column-gap`
+  + `gap` 简写
++ 布局
+  + `grid-column-start/grid-column-end` 简写 `grid-column: start/end` （tip:跨度1则可忽略end）
+  + `grid-row-start/grid-row-end` 简写 `grid-row: start/end`
+  + 可视化简写 `grid-template-areas` 加 `grid-area: xxx`
+
 
 ```html
 <!-- @include: @project/code/demo-js-css/demo-01-layout/index-01-grid.html -->
