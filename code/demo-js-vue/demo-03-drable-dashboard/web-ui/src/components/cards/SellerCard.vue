@@ -9,7 +9,6 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as echarts from 'echarts'
 import axios from 'axios'
-import { textProps } from 'element-plus'
 
 const sellerRef = new ref()
 const chartInstance = new ref(null)
@@ -30,6 +29,65 @@ function initChart() {
     // 'mint',
     'dark',
   )
+  const initOption = {
+    title: {
+      textStyle: {
+        fontSize: 66,
+      },
+      left: 20,
+      top: 20,
+    },
+    grid: {
+      top: '13%',
+      left: '3%',
+      right: '3%',
+      bottom: '3%',
+      containLabel: true, // 距离包含坐标轴文字
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'line',
+        z: 0,
+        lineStyle: {
+          type: 'solid',
+          width: 66,
+          color: '#201c3a',
+        },
+      },
+    },
+    xAxis: {
+      type: 'value',
+    },
+    yAxis: {
+      type: 'category',
+    },
+    series: [
+      {
+        type: 'bar',
+        barWidth: 66,
+        label: {
+          show: true,
+          position: 'right',
+        },
+        itemStyle: {
+          barBorderRadius: [0, 33, 33, 0],
+          // 颜色渐变
+          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            {
+              offset: 0,
+              color: '#5052EE',
+            },
+            {
+              offset: 1,
+              color: '#AB6EE5',
+            },
+          ]),
+        },
+      },
+    ],
+  }
+  chartInstance.value.setOption(initOption)
   // 对图表对象进行鼠标事件的监听
   chartInstance.value.on('mouseover', () => {
     endInterval()
@@ -61,68 +119,20 @@ function updateChart() {
   // console.log(showData)
   const sellerNames = showData.map((item) => item.name)
   const sellerValues = showData.map((item) => item.value)
-  const option = {
+  const dataOption = {
     title: {
       text: '▮ ' + allData.value.title,
-      textStyle: {
-        fontSize: 66,
-      },
-      left: 20,
-      top: 20,
-    },
-    grid: {
-      top: '13%',
-      left: '3%',
-      right: '3%',
-      bottom: '3%',
-      containLabel: true, // 距离包含坐标轴文字
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'line',
-        z: 0,
-        lineStyle: {
-          type: 'solid',
-          width: 66,
-          color: '#201c3a',
-        },
-      },
-    },
-    xAxis: {
-      type: 'value',
     },
     yAxis: {
-      type: 'category',
       data: sellerNames,
     },
     series: [
       {
-        type: 'bar',
         data: sellerValues,
-        barWidth: 66,
-        label: {
-          show: true,
-          position: 'right',
-        },
-        itemStyle: {
-          barBorderRadius: [0, 33, 33, 0],
-          // 颜色渐变
-          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-            {
-              offset: 0,
-              color: '#5052EE',
-            },
-            {
-              offset: 1,
-              color: '#AB6EE5',
-            },
-          ]),
-        },
       },
     ],
   }
-  chartInstance.value.setOption(option)
+  chartInstance.value.setOption(dataOption)
 }
 
 function startInterval() {
@@ -139,15 +149,47 @@ function endInterval() {
   clearInterval(allData.value.timerId)
 }
 
+// 当浏览器的大小发生变化，会调用方法完成屏幕分辨率的适配
+function screenAdapter() {
+  const titleFontSize = (sellerRef.value.offsetWidth / 100) * 3.6
+  const adapterOption = {
+    title: {
+      textStyle: {
+        fontSize: titleFontSize,
+      },
+    },
+    tooltip: {
+      axisPointer: {
+        lineStyle: {
+          width: titleFontSize,
+        },
+      },
+    },
+    series: [
+      {
+        barWidth: titleFontSize,
+        itemStyle: {
+          barBorderRadius: [0, titleFontSize / 2, titleFontSize / 2, 0],
+        },
+      },
+    ],
+  }
+  chartInstance.value.setOption(adapterOption)
+  chartInstance.value.resize()
+}
+
 onMounted(async () => {
   initChart()
   await getData()
   updateChart()
   startInterval()
+  window.addEventListener('resize', screenAdapter)
+  screenAdapter()
 })
 
 onBeforeUnmount(() => {
   endInterval()
+  window.removeEventListener('resize', screenAdapter)
 })
 </script>
 
