@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="item">xxxxxxxx</div>
+      <div class="item">xxx xxxxx</div>
+      <div class="item">xxx xxxxx</div>
+      <div class="item">
+        xxx xx PS（消费订阅）模型 ——
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+      </div>
+      <div class="item">
+        xxx xx PS（消费订阅）模型 ——
+        消费者通过订阅主题（Topic）消费信息，即一个消息可被多个消费者消费，然后供应商给生产者反馈xxx
+      </div>
+    </div>
+  </body>
+  <!-- 样式 -->
+  <style>
+    .container {
+      border: 4px dotted #9f9f9f;
+      border-radius: 5px;
+    }
+    .item {
+      background-color: #45b1df;
+      border: 1px solid #000;
+      border-radius: 5px;
+      margin: 0.25px;
+    }
+  </style>
+  <!-- 布局 -->
+  <style>
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-items: center;
+      height: 100px;
+    }
+    .item {
+      height: 10px;
+      /* 宽度 */
+      /* 默认： flex-basis: auto; = width: max-content; */
+      /* 最大单词长度 */
+      /* width: min-content; */
+      /* width: max-content; */
+      /* flex-basis: 30px; */
+      /* 在 flex-basis 基础上，均分剩余宽度 */
+      /* flex-grow: 1; */
+      /* width 不能覆盖基础宽度 */
+      /* width: 1px; */
+      /* width: 0px; */
+      /* flex: 1 2 300px; */
+    }
+    .item:nth-child(2) {
+      /* 指定特殊的宽度比例 */
+      /* flex-grow: 6; */
+    }
+  </style>
+</html>

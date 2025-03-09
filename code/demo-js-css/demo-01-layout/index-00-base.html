@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="box">
+      <h1>CSS:层叠样式表</h1>
+      <p>层叠样式表（Cascading Style Sheets，CSS）是 Web 的核心语言之一。</p>
+      <span>xxxxxxxxxxxxxx</span>
+    </div>
+    <div>
+      <h1>CSS:层叠样式表</h1>
+      <p>层叠样式表（Cascading Style Sheets，CSS）是 Web 的核心语言之一。</p>
+      <span>xxxxxxxxxxxxxx</span>
+    </div>
+    <div>
+      <h1>CSS:层叠样式表</h1>
+      <p>层叠样式表（Cascading Style Sheets，CSS）是 Web 的核心语言之一。</p>
+      <span>xxxxxxxxxxxxxx</span>
+    </div>
+    <div>
+      <h1>CSS:层叠样式表</h1>
+      <p>层叠样式表（Cascading Style Sheets，CSS）是 Web 的核心语言之一。</p>
+      <span>xxxxxxxxxxxxxx</span>
+    </div>
+    <div>
+      <h1>CSS:层叠样式表</h1>
+      <p>层叠样式表（Cascading Style Sheets，CSS）是 Web 的核心语言之一。</p>
+      <span>xxxxxxxxxxxxxx</span>
+    </div>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .box {
+        /* width: 500px; */
+        height: 200px;
+        border: 3px dotted grey;
+        border-radius: 8px;
+        padding: 15px 20px;
+        width: 100%;
+        box-sizing: border-box;
+
+        /* 居中 */
+        margin: 0 auto;
+      }
+
+      /* 背景 */
+      .box {
+        background-color: #f9f9f9;
+        box-shadow: 5px 5px 5px grey;
+      }
+
+      /* 文字 */
+      .box p {
+        color: #666;
+        text-indent: 2em;
+        /* 1px = 1像素 */
+        /* 1em = 当前标签的字号 */
+        /* 1rem = */
+      }
+      .box h1 {
+        font-size: 50px;
+        font-family: "黑体";
+        font-weight: normal;
+        text-align: center;
+
+        background-color: orange;
+        height: 180;
+        /* 与高度一致，则垂直居中 */
+        line-height: 180px;
+
+        text-shadow: 2px 2px 2px black;
+        text-decoration: dashed underline skyblue;
+      }
+      .box span {
+        color: orange;
+        writing-mode: vertical-lr;
+        /* fix：英文垂直显示问题 */
+        text-orientation: upright;
+        /* 位置 */
+        /* 相对最近的relative定位 */
+        position: absolute;
+        top: 200px;
+        left: 5px;
+      }
+    </style>
+  </body>
+</html>
