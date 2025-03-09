@@ -27,4 +27,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      '/api/v1/': {
+        target: 'http://127.0.0.1:23458/mock-api/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/v1/, ''),
+      },
+    },
+  },
 })

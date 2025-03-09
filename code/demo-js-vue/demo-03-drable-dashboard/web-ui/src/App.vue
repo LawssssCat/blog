@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <ElButton>hello</ElButton>
+  <RouterView></RouterView>
 </template>
 
 <style scoped></style>
