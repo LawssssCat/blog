@@ -1,5 +1,5 @@
 <script setup>
-import SellerCard from '@/components/cards/SellerCard.vue'
+import SellerCard from '@/components/screen/cards/SellerCard.vue'
 </script>
 
 <template>
