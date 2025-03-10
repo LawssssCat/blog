@@ -10,9 +10,9 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as echarts from 'echarts'
 import axios from 'axios'
 
-const sellerRef = new ref()
-const chartInstance = new ref(null)
-const allData = new ref({
+const sellerRef = ref()
+const chartInstance = ref(null)
+const allData = ref({
   title: '商家销售统计',
   data: null, // 服务器返回的数据
   currentPage: 1, // 当前显示的页数
