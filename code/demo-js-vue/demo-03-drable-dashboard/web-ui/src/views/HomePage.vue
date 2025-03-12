@@ -4,7 +4,7 @@
     <li
       class="info-item"
       :key="routeInfo.path"
-      v-for="routeInfo in router.getRoutes()"
+      v-for="routeInfo in routeInfos"
       @click="toRoute(routeInfo)"
     >
       <div class="info-link">
@@ -17,8 +17,18 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
+
+const routeInfos = computed(() => {
+  return router
+    .getRoutes()
+    .filter((routeInfo) => {
+      return routeInfo.path != '/' && routeInfo.path != '/home'
+    })
+    .sort((a, b) => a.path.localeCompare(b.path))
+})
 
 function toRoute(routeInfo) {
   console.log(routeInfo)

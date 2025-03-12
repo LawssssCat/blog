@@ -5,7 +5,7 @@ import SubRoute from '@/views/subRoute/index.vue'
 import SellerPage from '@/views/screen/SellerPage.vue'
 import ScreenPage from '@/views/screen/ScreenPage.vue'
 
-import DemoPage from '@/views/DemoPage.vue'
+import DemoPage from '@/views/demo/DemoPage.vue'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -30,6 +30,14 @@ const router = createRouter({
             c: () => import('@/views/subRoute/CxCx.vue'),
           },
         },
+        {
+          path: 'miss',
+          components: {
+            a: () => import('@/views/subRoute/AxAx.vue'),
+            // b: () => import('@/views/subRoute/BxBx.vue'),
+            // c: () => import('@/views/subRoute/CxCx.vue'),
+          },
+        },
       ],
     },
     {
@@ -41,8 +49,37 @@ const router = createRouter({
       component: SellerPage,
     },
     {
-      path: '/demo',
+      path: '/demo0',
       component: DemoPage,
+      props: {
+        title: '总Demo：测试参数、测试动态加载',
+        columnNum: '4',
+        demoList: [
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+          'HelloDemo',
+          'HiDemo',
+        ],
+      },
+    },
+    {
+      path: '/demo1',
+      component: DemoPage,
+      props: {
+        demoList: ['HiDemo', 'HelloDemo', 'HiDemo'],
+      },
     },
   ],
 })
