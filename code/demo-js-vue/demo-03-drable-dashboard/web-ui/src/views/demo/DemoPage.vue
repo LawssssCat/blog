@@ -5,6 +5,13 @@
     </div>
     <div class="demo-body">
       <div v-for="(item, index) in props.demoList" :key="index" class="demo-item">
+        <div
+          class="demo-item-title"
+          @click="({ target: { parentNode: ele } }) => toggleFullScreen(ele)"
+        >
+          {{ item }}
+        </div>
+        <hr />
         <component :is="calcComponent(item)"></component>
       </div>
     </div>
@@ -13,6 +20,8 @@
 
 <script setup>
 import { defineAsyncComponent } from 'vue'
+import { toggleFullScreen } from '@/utils/fullScreen'
+
 const props = defineProps({
   title: {
     default: 'Demo',
@@ -29,6 +38,9 @@ const modules = import.meta.glob('./modules/**/*.vue')
 console.log(modules)
 function calcComponent(componentId) {
   return defineAsyncComponent(modules[`./modules/${componentId}.vue`])
+}
+function handleDemoItemTitleClick(e) {
+  e.target.parentNode.requestFullscreen()
 }
 </script>
 
@@ -55,10 +67,15 @@ function calcComponent(componentId) {
       border: 2px dotted yellowgreen;
       padding: 1px 2px;
       height: 300px;
+      overflow: hidden;
     }
     .demo-item:hover {
       border-style: solid;
       // box-shadow: 8px 4px 4px black;
+    }
+    .demo-item-title:hover {
+      font-weight: bold;
+      cursor: pointer;
     }
   }
 }

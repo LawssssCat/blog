@@ -57,7 +57,7 @@ const router = createRouter({
         demoList: [
           'HelloDemo',
           'HiDemo',
-          'HelloDemo',
+          'demo-elementp/01-button-01',
           'HiDemo',
           'HelloDemo',
           'HiDemo',
