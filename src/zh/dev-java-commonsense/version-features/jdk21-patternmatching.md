@@ -199,6 +199,13 @@ record Point(int x, int y) {
 :::
 ::::::
 
+::: warning
+
+1. record 类型没有 build/set 方法，其值在 new 时就需要确定，后续无法修改
+1. record 类型统一被 final 修复，无法被继承
+
+:::
+
 ### JDK17
 
 <https://openjdk.org/projects/jdk/17/>
@@ -269,6 +276,7 @@ static void printSum(Object obj) {
 ```java
 static void printXCoordOfUpperLeftPointWithPatterns(Rectangle r) {
     if (r instanceof Rectangle(ColoredPoint(Point(var x, var y), var c), var lr)) {
+        // 注意：进来的条件需要Rectangle、ColoredPoint、Point对象均非空
         System.out.println("Upper-left corner: " + x);
     }
 }
@@ -280,6 +288,7 @@ static void printXCoordOfUpperLeftPointWithPatterns(Rectangle r) {
 
 + 解构中的类型也是判断条件，~~如果确定无需作为条件，则建议写成 `var` 类型~~
 + 父类/子类的判断同 `instanceof` 惯例
++ 如果嵌套的解构中出现中间对象为空的情况，则不符合判断条件，也就不会继续解构了
 
 问题：
 1. 取的字段不能太深：如果需要的字段在比较深的地方，取出来需要把record整个结构翻出来，可能导致维护问题。

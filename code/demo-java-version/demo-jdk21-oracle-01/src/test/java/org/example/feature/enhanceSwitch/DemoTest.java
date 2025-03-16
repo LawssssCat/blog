@@ -15,7 +15,8 @@ public class DemoTest {
         hr();
         // 类型判断
         doSome2(null); // hit ~ null
-        doSome2(new Data(new GeoLocation(1.1, 2.2))); // hit ~ double
+        doSome2(new Data(new GeoLocation(1.1, null))); // hit ~ double
+        doSome2(new Data(null)); // hit ~ double
         doSome2(new MyClass("hello")); // hit ~ myclass
         doSome2(1.1); // default
         hr();
@@ -31,7 +32,10 @@ public class DemoTest {
 
     }
 
-    record GeoLocation(double lng, double lat) {
+    record MyGeoLocation() { // 无法继承 GeoLocation record 类
+    }
+
+    record GeoLocation(Double lng, Double lat) {
     }
 
     private void doSome2(Object value) {
@@ -43,7 +47,7 @@ public class DemoTest {
 //                    log.info("d.lat() = " + d.geo.lat());
 //                }
 //            }
-            case Data(GeoLocation(var x, double y)) -> { // 1.记录类型允许嵌套取值；2.不需要显式指定类型；3.变量名无需一致，因为值根据位置匹配的
+            case Data(GeoLocation(var x, Double y)) -> { // 1.记录类型允许嵌套取值；2.不需要显式指定类型；3.变量名无需一致，因为值根据位置匹配的
                 log.info("d:lng = " + x);
                 log.info("d:lat = " + y);
             }
