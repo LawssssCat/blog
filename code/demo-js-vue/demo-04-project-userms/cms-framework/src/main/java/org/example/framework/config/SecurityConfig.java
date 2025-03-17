@@ -113,7 +113,10 @@ public class SecurityConfig {
                 requests.antMatchers("/login", "/register", "/captchaImage").permitAll()
                     // 静态资源，可匿名访问
                     .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
+                    // .antMatchers("/swagger-ui.html", "/swagger-resources/**").permitAll()
+                    .antMatchers("/v3/api-docs", "/swagger-ui/**").permitAll()
                     .antMatchers("/test/**").permitAll()
+                    // TODO ~~swagger~~ and other
                     // .antMatchers("/swagger-ui.html", "/swagger-resources/**",
                     // "/webjars/**","/*/api-docs","/druid/**")
                     // .permitAll()

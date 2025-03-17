@@ -79,6 +79,12 @@
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
 
+        <!-- swagger3-->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>

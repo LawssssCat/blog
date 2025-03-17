@@ -3,3 +3,8 @@ spring:
     active:
       - prod
       - dev
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

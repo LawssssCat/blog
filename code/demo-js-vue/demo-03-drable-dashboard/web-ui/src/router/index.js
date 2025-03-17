@@ -55,7 +55,9 @@ const router = createRouter({
         title: '总Demo：测试参数、测试动态加载',
         columnNum: '4',
         demoList: [
-          'HelloDemo',
+          'demo-echarts/04-map-01',
+          'demo-echarts/04-map-02',
+          'demo-echarts/04-map-03',
           'HiDemo',
           'demo-elementp/01-button-01',
           'HiDemo',

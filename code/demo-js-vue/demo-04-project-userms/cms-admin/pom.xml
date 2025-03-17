@@ -16,6 +16,13 @@
     </description>
 
     <dependencies>
+        <!-- swagger3-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+
         <!-- 核心模块-->
         <dependency>
             <groupId>org.example</groupId>
