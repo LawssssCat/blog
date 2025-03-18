@@ -6,7 +6,7 @@ tag:
 order: 99
 ---
 
-## 配置
+## 配置模板
 
 完整配置在源码目录 redis.conf 文件中：
 
@@ -242,12 +242,12 @@ activerehashing yes
 
 重点看几个配置：（5.0.8）
 
-- **bind 127.0.0.1** ── 注释掉这部分，这是限制 redis 只能本地访问
-- **protected-mode no** ── 默认 yes，开启保护模式，限制为本地访问
-- **daemonize no** ── 默认 no，改为 yes 意为以守护进程方式启动，可后台运行，除非 kill 进程（改为 yes 会使配置文件方式启动 redis 失败）
-- **databases 16** ── 数据库个数（可选）
-- **dir ./** ── 输入本地 redis 数据库存放文件夹（可选）
-- **appendonly yes** ── redis 持久化（可选）
+- **`bind 127.0.0.1`** ── 注释掉这部分，这是限制 redis 只能本地访问
+- **`protected-mode no`** ── 默认 yes，开启保护模式，限制为本地访问
+- **`daemonize no`** ── 默认 no，改为 yes 意为以守护进程方式启动，可后台运行，除非 kill 进程（改为 yes 会使配置文件方式启动 redis 失败）
+- **`databases 16`** ── 数据库个数（可选）
+- **`dir ./`** ── 输入本地 redis 数据库存放文件夹（可选）
+- **`appendonly yes`** ── redis 持久化（可选）
 
 ## 安全配置
 
@@ -371,7 +371,7 @@ AOF 的方式带来另外一个问题，随着持久化次数增加，持久化�
 - 主从复制：用来解决数据的冗余备份，从节点用来同步数据
 - 心跳机制、哨兵：故障转移策略
 
-### 主从复制
+### 主从复制机制
 
 ```
 Redis 主从复制:
@@ -483,16 +483,134 @@ min-slaves-max-lag 8 # 最大延迟8s
 - 读写分离：提高服务器的负载能力，可根据读请求的规模自由增加或减少从库的数量
 - 可用性：数据被复制成好几份，一台机器故障，可以快速从其他机器获取数据并回复。
 
-### 哨兵机制
+### 故障转移机制（哨兵机制）
 
 哨兵（Sentinel）机制是 Redis 的高可用解决方案：
-由一个或多个 Sentinel 实例组成的 Sentinel 系统可以监视任意多个主服务器，以及这些服务器下属的所有从服务器。
+由一个**或多个** Sentinel 实例组成的 Sentinel 系统可以监视任意多个主服务器，以及这些服务器下属的所有从服务器。
 当被监视的主服务器下线后，自动将其下属的从服务器升级为新的主服务器。
-简单的说哨兵机制就是带自动故障转移的主从架构。
+简单的说哨兵机制就是**带自动故障转移的主从架构**。
+
+![image.png](https://s2.loli.net/2025/01/07/OqNouHK6tQZe9My.png)
+
+::: tip
+哨兵机制依然无法解决单节点并发压力问题、单节点内存/cpu/磁盘物理上限问题。
+解决该问题，需要使用**集群机制**。
+:::
+
+#### 一个哨兵的配置
+
+哨兵配置文件
+
+```bash title="sentinel.conf"
+# sentinel monitor 主从架构标识 master-ip master-port 哨兵数量
+sentinel monitor architect-01 192.168.202.206 6379 1
+```
+
+启动哨兵
+
+```bash
+redis-sentinel sentinel.conf
+```
+
+::: tip
+程序客户端（Java/Python/...）连接哨兵模式的Redis时，需要配置哨兵的地址和架构。
+
+如 spring boot
+
+```yaml
+spring:
+  redis:
+    sentinel:
+      master: architect-01
+      nodes: localhost:26379,localhost:26380
+```
+:::
+
+#### 多个哨兵的配置
+
+::: warning
+多个哨兵的情况下，哨兵数量需要为 “奇数”。
+~~因为，master 节点是通过哨兵间的选举产生的，如果为偶数可能导致多次选举。~~
+:::
+
+#### 哨兵相关配置
 
 todo
 
-## 缓存一致性问题
+### 集群机制
+
+Redis 在 3.0 后开始支持 Cluster（集群） 模式。
+
+特性：
+
++ 节点自动发现
++ `slave-master` 选举和容错
++ 在线分片（sharding shard）
++ 等
+
+#### 集群架构说明
+
+概念：
+
++ 槽位（slot） —— 集群模式下，“根据key取value的动作”会先根据key进行CRC16算法计算得到槽位值（slot index）然后到槽位值对应的节点（node）上存取value。
++ 节点（node） —— 节点可以是单个redis服务，也可以是“主从复制/哨兵机制”的redis服务。节点数量需要固定，集群会把`[0-16383]slot`个槽位（slot）“均匀”分配到每个节点上。
++ 集群（cluster） —— 负责检测节点（node）的存活（`ping-pong`机制，内部使用二进制协议优化传输速度和带宽），和负责维护槽位（slot）到节点的映射关系。
+
+::: info
+
+说明：
+
+1. 所有redis节点彼此互联（`ping-pong`机制）
+1. 节点的fail是通过集群中超过半数的节点检测失败时才生效
+1. 客户端与redis节点直连，不需要中间proxy层、不需要连接集群所有节点（连接集群中任何一个节点即可）
+1. `redis-cluster`把所有的节点映射到`[0-16383]slot`上，cluster负责维护`node<->slot<->value`
+
+:::
+
+#### 集群搭建
+
+```bash
+# 说明：搭建redis集群的节点数量最好是“奇数”，所以最少情况：“主节点”3个、“从节点”3个，至少需要启动6个redis服务。
+# 简化：在一个vm上启6个redis服务
+
+# 说明：redis集群依赖ruby语言脚本
+
+# 1. 安装redis集群依赖：ruby、....
+yum install -y ruby rubygems
+gem install redis
+
+# libyaml-0.1.4-11.el7_0.x86_64.rpm
+# ruby-2.0.0.648-34.el7_6.x86_64.rpm
+# ruby-irb-2.0.0.648-34.el7_6.x86_64.rpm
+# ruby-libs-2.0.0.648-34.el7_6.x86_64.rpm
+# rubygem-bigdecimal-1.2.0-34.el7_6.x86_64.rpm
+# rubygem-io-console-0.4.2-34.el7_6.x86_64.rpm
+# rubygem-json-1.7.7-34.el7_6.x86_64.rpm
+# rubygem-psych-2.0.0-34.el7_6.x86_64.rpm
+# rubygem-rdoc-4.0.0-34.el7_6.x86_64.rpm
+# rubygems2.0.14.1-34.el7_6.x86_64.rpm
+# redis-3.2.1.gem
+```
+
+#### 场景：节点自动发现
+
+todo 
+
+#### 场景：故障转移
+
+todo 参考哨兵机制
+
+#### 场景：节点重新分配（sharding shard）
+
+所谓“重新分配”就是重新分配hash槽（slot）。
+
+触发条件：
+
+1. 节点数量变更（增加/减少）
+
+todo 
+
+#### 问题：缓存一致性问题
 
 todo
 
