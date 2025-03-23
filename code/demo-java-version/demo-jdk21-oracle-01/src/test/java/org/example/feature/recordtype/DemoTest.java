@@ -25,9 +25,9 @@ public class DemoTest {
         Obj1 o2 = new Obj1(new Obj1.Obj2(1));
         System.out.println("(o1.equals(o2)) = " + (o1.equals(o2))); // true 嵌套值相等
         // 数组
-        Object[] numbers = new Integer[] {1, 2, 3};
+        var numbers = new Integer[] {1, 2, 3};
         switch (numbers) {
-            case Integer[] arr when arr.length > 3 -> {
+            case Integer[] arr when arr.length >= 3 -> {
                 System.out.println("The array contains three elements.");
             }
             default -> throw new IllegalStateException("Unexpected value: " + numbers);
@@ -38,7 +38,7 @@ public class DemoTest {
             case String s when s.length() > 3 -> {
                 System.out.println("s = " + s);
             }
-            default -> throw new IllegalStateException("Unexpected value: " + x);
+            default -> {}// throw new IllegalStateException("Unexpected value: " + x);
         }
     }
 }

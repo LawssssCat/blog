@@ -1,17 +1,19 @@
 package org.example;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Locale;
 
-import static java.lang.StringTemplate.STR;
-
+@Slf4j
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        log.info("Hello world!");
         System.getProperties().forEach((key, value) -> {
             String x = (String) key;
             if (x.toLowerCase(Locale.ROOT).contains("version")) {
-                System.out.println(STR."\{key}: \{value}");
+                log.info("{}: {}", key, value);
             }
         });
+        log.info("property = " + System.getProperty("user.dir"));
     }
 }
