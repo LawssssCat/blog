@@ -12,8 +12,7 @@ public class DynamicClassLoader extends URLClassLoader {
         return this.findClass(fullName);
     }
 
-    public Class loadClass(String fullName, InMemoryJavaFileManager.InMemoryOutputJavaFileObject jco) {
-        byte[] classData = jco.getBytes();
+    public Class loadClass(String fullName, byte[] classData) {
         return this.defineClass(fullName, classData, 0, classData.length);
     }
 }

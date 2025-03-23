@@ -2,12 +2,11 @@ package org.example.dynacomp;
 
 import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.List;
 
 import javax.tools.*;
 
-import org.example.Main;
+import lombok.Getter;
 
 /**
  * JDK6 动态编译：
@@ -25,27 +24,31 @@ public class DynamicEngine {
         return ourInstance;
     }
 
-    private ClassLoader parentClassLoader;
+    @Getter
+    private DynamicClassLoader classLoader;
 
     private String classpath;
 
     private DynamicEngine() {
-        this.parentClassLoader = Main.class.getClassLoader();
+        ClassLoader parentClassLoader = DynamicEngine.class.getClassLoader();
+        if (parentClassLoader instanceof DynamicClassLoader cl) {
+            this.classLoader = cl;
+        } else {
+            this.classLoader = new DynamicClassLoader(parentClassLoader);
+        }
         this.buildClassPath(); // 加载依赖
     }
 
     private void buildClassPath() {
         StringBuilder sb = new StringBuilder(System.getProperty("java.class.path"));
-        if (this.parentClassLoader instanceof URLClassLoader urlCl) {
-            for (URL url : urlCl.getURLs()) {
-                String p = url.getFile();
-                sb.append(p).append(File.pathSeparator);
-            }
+        for (URL url : this.classLoader.getURLs()) {
+            String p = url.getFile();
+            sb.append(p).append(File.pathSeparator);
         }
         this.classpath = sb.toString();
     }
 
-    public Object javaCodeToObject(String fullClassName, String javaCode) throws IllegalAccessException, InstantiationException {
+    public byte[] javaCodeToClassBytes(String fullClassName, String javaCode) throws IllegalAccessException, InstantiationException {
         // 获取系统Java编译器
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>(); // 错误记录
@@ -63,12 +66,9 @@ public class DynamicEngine {
         // 执行编译任务
         boolean success = task.call();
 
-        Object instance;
         if (success) {
             InMemoryJavaFileManager.InMemoryOutputJavaFileObject jco = fileManager.getJavaClassObject();
-            DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(this.parentClassLoader);
-            Class clazz = dynamicClassLoader.loadClass(fullClassName, jco);
-            instance = clazz.newInstance();
+            return jco.getBytes();
         } else {
             String error = "";
             for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
@@ -77,7 +77,6 @@ public class DynamicEngine {
             }
             throw new RuntimeException(error);
         }
-        return instance;
     }
 
     private String compilePrint(Diagnostic diagnostic) {

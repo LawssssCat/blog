@@ -1,10 +1,10 @@
 package org.example.dynacomp;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.example.utils.AssertUtils;
 import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
@@ -32,23 +32,29 @@ public class CompileTest {
             import lombok.extern.slf4j.Slf4j;
             @Slf4j
             public class DynaClass {
+              static {
+                log.info("static block invoke by {}", DynaClass.class.getClassLoader());
+              }
               public String toString() {
                 return "Hello, I am" + this.getClass().getSimpleName();
               }
               public void test() {
-                log.info("invoke method");
-              }
+              log.info("invoke method"); }
             }
             """;
         doTestStr(src, fullName);
     }
 
-    private static void doTestStr(String src, String fullName) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+    private static void doTestStr(String src, String fullClassName) throws Exception {
         log.info("compile content: {}", src);
-        DynamicEngine de = DynamicEngine.getInstance();
-        Object instance = de.javaCodeToObject(fullName, src);
+        DynamicEngine engine = DynamicEngine.getInstance();
+        byte[] bytes = engine.javaCodeToClassBytes(fullClassName, src);
+        Class clazz = engine.getClassLoader().loadClass(fullClassName, bytes);
+        Object instance = clazz.newInstance();
         log.info("compile result: {}", instance);
         Method method = instance.getClass().getMethod("test");
         method.invoke(instance);
+        log.info("method test Number");
+        AssertUtils.assertMethodLineLess(bytes, method, 10);
     }
 }
