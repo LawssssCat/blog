@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.tools.*;
 
+import org.example.Main;
+
 /**
  * JDK6 动态编译：
  *
@@ -28,12 +30,12 @@ public class DynamicEngine {
     private String classpath;
 
     private DynamicEngine() {
-        this.parentClassLoader = getClass().getClassLoader();
-        this.buildClassPath();
+        this.parentClassLoader = Main.class.getClassLoader();
+        this.buildClassPath(); // 加载依赖
     }
 
     private void buildClassPath() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(System.getProperty("java.class.path"));
         if (this.parentClassLoader instanceof URLClassLoader urlCl) {
             for (URL url : urlCl.getURLs()) {
                 String p = url.getFile();
@@ -44,7 +46,6 @@ public class DynamicEngine {
     }
 
     public Object javaCodeToObject(String fullClassName, String javaCode) throws IllegalAccessException, InstantiationException {
-        Object instance = null;
         // 获取系统Java编译器
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>(); // 错误记录
@@ -52,7 +53,7 @@ public class DynamicEngine {
         InMemoryJavaFileManager fileManager = new InMemoryJavaFileManager(compiler.getStandardFileManager(diagnostics, null, null));
 
         // 包装输入内容
-        List<JavaFileObject> jFiles = List.of(new CharSequenceJavaFileObject(fullClassName, javaCode));
+        List<JavaFileObject> jFiles = List.of(new InMemoryJavaFileManager.InMemorySourceJavaFileObject(fullClassName, javaCode));
         List<String> options = List.of(
             "-encoding", "UTF-8",
             "-classpath", this.classpath);
@@ -62,15 +63,17 @@ public class DynamicEngine {
         // 执行编译任务
         boolean success = task.call();
 
+        Object instance;
         if (success) {
-            InMemoryJavaFileObject jco = fileManager.getJavaClassObject();
+            InMemoryJavaFileManager.InMemoryOutputJavaFileObject jco = fileManager.getJavaClassObject();
             DynamicClassLoader dynamicClassLoader = new DynamicClassLoader(this.parentClassLoader);
             Class clazz = dynamicClassLoader.loadClass(fullClassName, jco);
             instance = clazz.newInstance();
         } else {
             String error = "";
             for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
-                error = error + compilePrint(diagnostic);
+                // error += compilePrint(diagnostic);
+                error += diagnostic;
             }
             throw new RuntimeException(error);
         }
