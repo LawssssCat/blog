@@ -1,7 +1,10 @@
 package org.example.dynacomp;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.tools.*;
@@ -46,6 +49,10 @@ public class DynamicEngine {
             sb.append(p).append(File.pathSeparator);
         }
         this.classpath = sb.toString();
+    }
+
+    public byte[] javaCodeToClassBytes(String fullClassName, Path path) throws IllegalAccessException, InstantiationException, IOException {
+        return javaCodeToClassBytes(fullClassName, Files.readString(path));
     }
 
     public byte[] javaCodeToClassBytes(String fullClassName, String javaCode) throws IllegalAccessException, InstantiationException {

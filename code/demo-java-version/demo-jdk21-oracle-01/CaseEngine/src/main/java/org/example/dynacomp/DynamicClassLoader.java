@@ -13,6 +13,10 @@ public class DynamicClassLoader extends URLClassLoader {
     }
 
     public Class loadClass(String fullName, byte[] classData) {
-        return this.defineClass(fullName, classData, 0, classData.length);
+        return loadClass(fullName, classData, 0, classData.length);
+    }
+
+    public Class loadClass(String fullName, byte[] classData, int off, int len) {
+        return this.defineClass(fullName, classData, off, len);
     }
 }

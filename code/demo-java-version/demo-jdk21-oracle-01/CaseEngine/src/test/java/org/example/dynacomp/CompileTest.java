@@ -1,10 +1,10 @@
 package org.example.dynacomp;
 
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.example.utils.AssertUtils;
+import org.example.utils.CaseExecutor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import lombok.SneakyThrows;
@@ -39,22 +39,20 @@ public class CompileTest {
                 return "Hello, I am" + this.getClass().getSimpleName();
               }
               public void test() {
-              log.info("invoke method"); }
+              log.info("invoke method");
+              }
             }
             """;
         doTestStr(src, fullName);
     }
 
     private static void doTestStr(String src, String fullClassName) throws Exception {
-        log.info("compile content: {}", src);
-        DynamicEngine engine = DynamicEngine.getInstance();
-        byte[] bytes = engine.javaCodeToClassBytes(fullClassName, src);
-        Class clazz = engine.getClassLoader().loadClass(fullClassName, bytes);
-        Object instance = clazz.newInstance();
-        log.info("compile result: {}", instance);
-        Method method = instance.getClass().getMethod("test");
-        method.invoke(instance);
-        log.info("method test Number");
-        AssertUtils.assertMethodLineLess(bytes, method, 10);
+        CaseExecutor caseExecutor = new CaseExecutor(fullClassName, src,
+            classMeta -> {
+                int maxCount = 2;
+                int num = classMeta.parsedMethod().getLineNumberTable().getTableLength();
+                Assertions.assertTrue(num <= maxCount, "行数" + num + "应该小于" + maxCount + "，以减少圈复杂度");
+            });
+        caseExecutor.check();
     }
 }
