@@ -6,7 +6,11 @@ order: 1
 
 - [需求分析](./demand-analysis.md)
 
-- todo 特性设计
+- 生命周期规划
+  - [RC（Release Candidate）](https://openjdk.org/jeps/3#rc)
+  - [GA（General Availability）](https://openjdk.org/projects/jdk8/milestones#General_Availability)
+
+- [特性设计](./feature-design/README.md)
 
 - [接口开发](./tools-api/README.md)
 
