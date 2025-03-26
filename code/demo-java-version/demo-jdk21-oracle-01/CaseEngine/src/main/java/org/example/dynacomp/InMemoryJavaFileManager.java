@@ -20,6 +20,7 @@ public class InMemoryJavaFileManager extends ForwardingJavaFileManager {
     @Override
     public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind, FileObject sibling) throws IOException {
         jclassObject = new InMemoryOutputJavaFileObject(className, kind);
+        // todo 通过接收多次回调，获取并加载子类
         return jclassObject;
     }
 
