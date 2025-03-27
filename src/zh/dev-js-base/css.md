@@ -26,8 +26,8 @@ div —— 容器
 
 容器类型：（通过 `display: xxx` 让 div 变成 xxx 容器）
 
-+ flex： 先出现，好。侧重：todo
-+ grid： 后出现，更好。侧重：todo
++ flex （CSS3）： 先出现，好。侧重：todo
++ grid （CSS3）： 后出现，更好。侧重：todo
 
 ### flex
 
