@@ -27,9 +27,10 @@ css
 + echarts.js
 + antv
 
-大屏库
+大屏库（[link_大屏适配方案](./feature-screen.md)）
 
 + datav —— 使用前，注意生命周期；建议参考源码手搓
+<https://www.bilibili.com/video/BV1z1421t7gQ>
 
 大屏问题
 

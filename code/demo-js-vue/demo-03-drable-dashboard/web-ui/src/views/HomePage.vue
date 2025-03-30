@@ -31,7 +31,7 @@ const routeInfos = computed(() => {
 })
 
 function toRoute(routeInfo) {
-  console.log(routeInfo)
+  console.log('toRoute', routeInfo)
   router.push(routeInfo)
 }
 </script>

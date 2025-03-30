@@ -1,7 +1,7 @@
 <template>
   <div class="demo-wrapper">
     <div class="demo-header">
-      <h1>{{ props.title }}</h1>
+      <h1 style="font-size: 2rem">{{ props.title }}</h1>
     </div>
     <div class="demo-body">
       <div v-for="(item, index) in props.demoList" :key="index" class="demo-item">
@@ -9,7 +9,7 @@
           class="demo-item-title"
           @click="({ target: { parentNode: ele } }) => toggleFullScreen(ele)"
         >
-          {{ item }}
+          <span style="font-size: 1rem">{{ item }}</span>
         </div>
         <hr />
         <component :is="calcComponent(item)"></component>
@@ -19,8 +19,9 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 import { toggleFullScreen } from '@/utils/fullScreen'
+import { autoCalcRem } from '@/utils/rem.js'
 
 const props = defineProps({
   title: {
@@ -35,19 +36,27 @@ const props = defineProps({
 })
 
 const modules = import.meta.glob('./modules/**/*.vue')
-console.log(modules)
+console.log('modules', modules)
 function calcComponent(componentId) {
   return defineAsyncComponent(modules[`./modules/${componentId}.vue`])
 }
-function handleDemoItemTitleClick(e) {
-  e.target.parentNode.requestFullscreen()
-}
+
+onMounted(() => {
+  autoCalcRem().start()
+})
+onUnmounted(() => {
+  autoCalcRem().close()
+})
 </script>
 
 <style scoped lang="scss">
 .demo-wrapper {
   display: flex;
   flex-direction: column;
+  .demo-header {
+    flex-shrink: 0;
+    height: 3rem;
+  }
   .demo-body {
     flex-grow: 1;
 
@@ -57,16 +66,16 @@ function handleDemoItemTitleClick(e) {
 }
 
 .demo-wrapper {
-  padding: 5px 10px;
+  padding: 0.25rem 0.625rem;
   .demo-body {
-    border: 2px dotted yellow;
-    padding: 5px;
-    gap: 5px;
+    border: 0.125rem dotted yellow;
+    padding: 0.25rem;
+    gap: 0.25rem;
 
     .demo-item {
-      border: 2px dotted yellowgreen;
-      padding: 1px 2px;
-      height: 300px;
+      border: 0.125rem dotted yellowgreen;
+      padding: 0.125rem;
+      height: 21rem;
       overflow: hidden;
     }
     .demo-item:hover {

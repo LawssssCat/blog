@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../asset/reset.css" />
+    <script src="../asset/vue.global.min.js"></script>
+  </head>
+  <style>
+    .box {
+      background-color: aquamarine;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+  <body style="height: 100vh">
+    <div
+      id="app"
+      style="
+        background-color: antiquewhite;
+        box-sizing: border-box;
+        height: 100%;
+        padding: 10px;
+      "
+    >
+      <div v-for="(index) in boxSize" :id="getBoxId(index)" class="box">
+        <span>{{ getBoxId(index) }}</span>
+      </div>
+    </div>
+  </body>
+  <script>
+    const { createApp, ref, computed } = Vue;
+    createApp({
+      setup() {
+        const boxSize = ref(10);
+        return {
+          boxSize,
+        };
+      },
+      methods: {
+        getBoxId(index) {
+          return `d${index}`;
+        },
+      },
+    }).mount("#app");
+  </script>
+  <style>
+    /* 简单边框 */
+    #d1 {
+      border-bottom: 3px dotted red;
+    }
+    /* 图片边框 */
+    #d2 {
+      position: relative;
+    }
+    #d2::after {
+      display: block;
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      background-color: brown;
+      height: 10px;
+      width: 10px;
+      transition: width 2s;
+    }
+    #d2:hover #d2::after {
+      width: 100px;
+    }
+  </style>
+</html>

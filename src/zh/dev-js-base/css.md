@@ -13,6 +13,27 @@ order: 1
 + https://www.bilibili.com/video/BV1nM411T77W
 + https://www.bilibili.com/video/BV1w84y1r7X8
 
+todo 布局
+https://www.bilibili.com/video/BV1am4y1E7DM/
+https://www.bilibili.com/video/BV1EM411m71m/
+
+todo 动画
+https://www.bilibili.com/video/BV11X4y1V7ZZ
+https://www.bilibili.com/video/BV1Ki421S7WB 黑白切换⚪扩散
+
+todo 侧边栏
+https://www.bilibili.com/video/BV1uL41157hj
+https://www.bilibili.com/video/BV1kb4y1J7L9/
+https://www.bilibili.com/video/BV1kN4y1M7Gq/
+https://www.bilibili.com/video/BV1yh411a78Z/ ⭐
+
+todo 顶部菜单
+https://www.bilibili.com/video/BV15Y411P7Rd/
+
+todo 项目
+https://www.bilibili.com/video/BV1pq4y1c7oy
+https://www.bilibili.com/video/BV1nw411Q7sS/
+ https://www.bilibili.com/video/BV1nj411K7ME/ ⭐
 
 ## 基础样式
 
@@ -62,6 +83,11 @@ div —— 容器
 ```
 
 ### grid
+
+参考
+
++ todo https://www.webhek.com/post/interactive-guide-to-grid/
++ todo https://ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html
 
 grid = 网格
 
