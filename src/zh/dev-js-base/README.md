@@ -6,13 +6,21 @@ order: 0
 体系 todo
 https://www.bilibili.com/video/BV1JQQ7YXE53/?
 
-css
+样式/绘图
 
-+ css Generators —— “形状” 生成器
+::: info
 
-图标库
+参考：
++ https://www.bilibili.com/video/BV1yN4y1G7vm
 
-+ todo element plus 入口
+:::
+
++ [css](./css.md)
+  + css Generators —— “形状” 生成器
++ [svg](./svg.md)
++ canvas
++ 图标库
+  + todo element plus 入口
 
 拖拽库
 
