@@ -49,6 +49,15 @@ const router = createRouter({
       component: SellerPage,
     },
     {
+      path: '/demo/66-guage-00',
+      children: [
+        {
+          path: '',
+          component: () => import('@/views/demo/modules/demo-echarts/66-guage-00.vue'),
+        },
+      ],
+    },
+    {
       path: '/demo0',
       component: DemoPage,
       props: {
