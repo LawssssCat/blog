@@ -8,6 +8,159 @@ article: false
 
 <!-- more -->
 
+## 2025 年 4 月 5 日 添加 “轻量” 代码演示功能 
+
+参考：
+
++ hope 原生： https://theme-hope.vuejs.press/zh/guide/markdown/code/demo.html
++ 实现步骤
+  1. https://juejin.cn/post/7287914129565483065
+  1. https://juejin.cn/post/6991646499775971359
++ Element 实现示例： https://element.eleme.cn/2.0/#/zh-CN/component/color-picker
+
+::: tip
+只有演示，没有交互
+（交互通过右上角转跳）
+:::
+
+::: demo 简介
+```vue
+<div>demo</div>
+```
+:::
+
+:::::: tabs 
+
+@tab 说明
+
+``````md
+::: [类型]-demo 可选的标题文字
+
+```html
+<!-- ↑ 使用可用的语言 -->
+<!-- 在代码块中放置你对应语言的代码，一个语言不能出现多个块 -->
+<!-- 你可以有多个代码块，并且 html, js, css 都是视情况可选的 -->
+```
+
+```json
+// json block 作为插件配置存放处
+{
+  // 放置你的配置 (可选的)
+}
+```
+
+:::
+``````
+
+@tab 类型=normal
+
+``````md
+::: normal-demo 可选的标题文字
+
+```html
+<!-- html code -->
+```
+
+```js
+// js code
+```
+
+```css
+/* css code */
+```
+
+```json
+// 配置 (可选)
+{
+  "jsLib": [
+    ...
+  ],
+  "cssLib":[
+    ...
+  ]
+}
+```
+
+:::
+``````
+
+@tab 类型=vue
+
+``````md
+::: vue-demo 可选的标题文字
+
+```vue
+<!-- ↑ 你也可以使用 html -->
+<template>
+  <!-- vue 模板 -->
+</template>
+<script>
+export default {
+  // vue 组件
+};
+</script>
+<style>
+/* css 代码 */
+</style>
+```
+
+```json
+// 配置 (可选)
+```
+
+:::
+``````
+
+@tab 类型=react 
+
+``````md
+::: react-demo 可选的标题文字
+
+```js
+// 放置脚本，并通过 `export default` 导出你的 react 组件
+```
+
+```css
+/* 你的 css 内容 */
+```
+
+```json
+// 配置 (可选)
+```
+
+:::
+``````
+
+@tab 可用语言
+
+当你设置一些不能在浏览器上直接运行的语言时，由于插件无法解析它们，因此网页演示将被禁用。插件只显示代码。
+
+可用的 HTML 语言:
+
++ "html" (默认)
++ "slim"
++ "haml"
++ "markdown" / "md"
+
+可用的 JS 语言:
+
++ "javascript" / "js" (default)
++ "coffeescript" / "coffee"
++ "babel"
++ "livescript" / "ls"
++ "typescript" / "ts"
+
+可用的 CSS 语言:
+
++ "css" (default)
++ "less"
++ "scss"
++ "sass"
++ "stylus" / "styl"
+
+::::::
+
+
 ## 2025 年 1 月 12 日 增强 Markdown 功能
 
 高亮：!!高亮！!!
@@ -16,10 +169,15 @@ article: false
 
 属性（f12看id为hello）：属性 {#hello}
 
-## 2025 年 1 月 8 日 demo
+## 2025 年 1 月 8 日 添加代码演示功能
 
 参考：
 https://theme-hope.vuejs.press/zh/guide/markdown/code/demo.html
+
+::: warning
+演示 + 交互。
+太重了，计划去掉。
+:::
 
 ::: playground#vue 使用自定义导入的 Vue 案例
 
