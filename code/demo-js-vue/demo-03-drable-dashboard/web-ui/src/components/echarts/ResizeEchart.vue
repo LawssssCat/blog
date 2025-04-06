@@ -60,12 +60,15 @@ watch(
   },
 )
 
+const observer = new ResizeObserver(resizeChart)
+
 onMounted(() => {
   if (!chartInstance.value) {
     chartInstance.value = echarts.init(chartElementRef.value)
   }
   // 监听窗口大小变化
-  window.addEventListener('resize', resizeChart)
+  // window.addEventListener('resize', resizeChart)
+  observer.observe(chartElementRef.value)
   // 绘制图形
   drawChart(props.options)
   // todo 必要性
@@ -76,7 +79,10 @@ onMounted(() => {
   // })
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', resizeChart)
+  // window.removeEventListener('resize', resizeChart)
+  if (observer) {
+    observer.disconnect()
+  }
   if (chartInstance.value) {
     chartInstance.value.dispose()
     chartInstance.value = null
