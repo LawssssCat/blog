@@ -24,6 +24,15 @@ SVG（Scalable Vector Graphics，可伸缩矢量图）
 + figma —— 新生态
 + illustrator —— 专业
 
+三方库
+
++ 实现元素间的动画交互
+    + Anime
+    + GSAP 高级功能付费
++ 实现元素本身的动画效果
+    + Lottie —— 通过Lottie Creator生成动画效果，直接嵌入页面
+    + Rive —— 通过Rive工具生成动画效果，直接嵌入页面（Rive效果基于canvas实现，可以实现更好的动画效果）
+
 ## 语法
 
 ### svg标签
@@ -31,7 +40,7 @@ SVG（Scalable Vector Graphics，可伸缩矢量图）
  标签 | 分类 | 作用
 --- | --- | ---
 xmlns |  | xml namespace 防止标签命名冲突
-viewBox | 视图 | 视图区域
+viewBox | 视图 | 视图区域 ❗如果不设置viewBox，则viewBox值为width/height值
 preserveAspectRatio | 视图 | “对齐模式”和“填充模式” <br> 对齐模式：xMinYMin/.../xMidyMid（默认）/.../xMaxYMax <br> 填充模式：slice/meet（默认） 
 x | 位置 | （少用）嵌套svg中，子svg标识原点位置 
 y | 位置 | 
@@ -170,7 +179,6 @@ todo
 
 #### 描边
 
-todo
 https://www.bilibili.com/video/BV1rZ421T7sz
 
 
@@ -200,6 +208,15 @@ https://www.bilibili.com/video/BV1rZ421T7sz
 
 ::::::
 
+#### 文字
+
+todo
+
++ text
+    + 基本设置： fill/stroke/x/y/dx/dy/rotate/text-anchor/textLength/lengthAdjust/ 
+    + 样式设置： font-family/font-size/font-weight/letter-spacing/...
++ tspan
++ textPath
 
 ### svg动画
 
@@ -418,7 +435,7 @@ export default {
 
 ::::::
 
-#### animateMotion 沿线动画
+#### animateMotion沿线动画
 
 + 基础设置：
 path/mpath/rotate
@@ -620,9 +637,228 @@ repeatCount='indefinite'/>
 
 和动画类似，但是没有动画的变化过程，直接改变！
 
+### svg高级样式
+
+::: tip
+
+可以通过 g 和 defs 标签进行样式复用
+
++ g 组管理
++ defs 定义复用
+
+:::
+
+#### 渐变
+
++ linearGradient —— 线性渐变
++ radialGradient —— 径向渐变
++ meshGradient —— 网格渐变 ❗新标准，浏览器不一定支持（2025年4月6日）
+
+:::::: vue-demo
+
+```vue
+<template>
+<div id='safsfsfasfjdgfd'>
+<h4>gradientUnits=objectBoundingBox 渐变：元素范围作为渐变范围</h4>
+<svg width="220" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="svg_jb2" spreadMethod="pad">
+   <stop id="jq_stop_8881" offset="0" stop-color="#FF0000"/>
+   <stop id="jq_stop_8654" offset="1" stop-color="#00ffff"/>
+  </linearGradient>
+ </defs>
+ <g class="layer">
+  <rect fill="url(#svg_jb2)" height="50" id="svg_1" stroke-width="0" width="200" x="10" y="10"/>
+  <rect stroke="url(#svg_jb2)" fill='none' height="50" id="svg_1" stroke-width="5"  width="200" x="10" y="70"/>
+  <rect stroke="url(#svg_jb2)" fill='none' height="50" id="svg_1" stroke-width="5"  width="100" x="10" y="130"/>
+ </g>
+</svg>
+
+<h4>gradientUnits=userSpaceOnUse 渐变：整个视图作为渐变范围</h4>
+<svg width="220" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="svg_jb2xxx" spreadMethod="pad" gradientUnits='userSpaceOnUse'>
+   <stop id="jq_stop_8881" offset="0" stop-color="#FF0000"/>
+   <stop id="jq_stop_8654" offset="1" stop-color="#00ffff"/>
+  </linearGradient>
+ </defs>
+ <g class="layer">
+  <rect fill="url(#svg_jb2xxx)" height="50" id="svg_1" stroke-width="0" width="200" x="10" y="10"/>
+  <rect stroke="url(#svg_jb2xxx)" fill='none' height="50" id="svg_1" stroke-width="5"  width="200" x="10" y="70"/>
+  <rect stroke="url(#svg_jb2xxx)" fill='none' height="50" id="svg_1" stroke-width="5"  width="100" x="10" y="130"/>
+ </g>
+</svg>
+
+<h4>动画</h4>
+<svg width="220" height="250" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="svg_jb2xx22x" spreadMethod="pad" >
+   <stop id="jq_stop_8881" offset="0" stop-color="#FF0000"/>
+   <stop id="jq_stop_8654" offset="1" stop-color="#00ffff"/>
+   <animateTransform attributeName='gradientTransform'
+    type='rotate'
+    from='0 0.5 0.5'
+    to='360 0.5 0.5'
+    dur='2s'
+    repeatCount='indefinite'/>
+  </linearGradient>
+ </defs>
+ <g class="layer">
+  <rect fill="url(#svg_jb2xx22x)" height="50" id="svg_1" stroke-width="0" width="200" x="10" y="10"/>
+  <rect stroke="url(#svg_jb2xx22x)" fill='none' height="50" id="svg_1" stroke-width="5"  width="200" x="10" y="70"/>
+  <rect stroke="url(#svg_jb2xx22x)" fill='none' height="50" id="svg_1" stroke-width="5"  width="100" x="10" y="130"/>
+  <rect stroke="url(#svg_jb2xx22x)" fill='none' height="50" id="svg_1" stroke-width="1"  width="100" x="10" y="190"/>
+ </g>
+</svg>
+
+</div>
+</template>
+
+<style>
+#safsfsfasfjdgfd svg {
+  border: 1px solid #393;
+}
+</style>
+```
+::::::
+
+#### 滤镜
+
+::: tip
+SVG 滤镜比 CSS 滤镜更强大，但使用也更麻烦。
+:::
+
+todo
+https://www.bilibili.com/video/BV1w34JeHECV
+
+效果 | CSS滤镜 <br> `filter: ...` | SVG滤镜
+--- | --- | ---
+模糊 | `blur()`
+亮度 | `brightness()`
+对比度 | `contrast()`
+灰度 | `grayscale()`
+颜色反转 | `invert()`
+复古效果 | `sepia()`
+饱和度 | `saturate()`
+旋转色调 | `hue-rotate()`
+添加阴影 | `drop-shadow()`
+
+#### 遮罩（mask）
+
++ 基础属性 —— height/width/x/y
++ 特殊属性
+    + maskUnites： objectBoundingBox/userSpaceOnUse
+    + maskContentUnits： objectBoundingBox/userSpaceOnUse
+
+
+:::::: vue-demo
+
+```vue
+<template>
+  <div id='sfasfsafsfsa'>
+    <h4>luminance：遮罩亮度/灰度</h4>
+    <div class='example'>
+      <svg width="100" height="100"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" fill="#a33333" height="100%" width="100%"></rect>
+      </svg>
+      <span>+</span>
+      <svg width="100" height="100"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" fill="#000" height="100%" width="100%"></rect>
+        <circle cx="50" cy="50" r='20' fill="#fff"></rect>
+      </svg>
+      <span>=</span>
+       <svg width="100" height="100"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id='maskasfsagwewokgf'>
+            <rect x="0" y="0" fill="#000" height="100%" width="100%"></rect>
+            <circle cx="50" cy="50" r='20' fill="#fff"></rect>
+          </mask>
+        </defs>
+        <rect x="0" y="0" fill="#a33333" height="100%" width="100%" mask='url(#maskasfsagwewokgf)'></rect>
+      </svg>
+    </div>
+
+    <h4>alpha：遮罩透明度</h4>
+    <div class='example'>
+      <svg width="100" height="100"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" fill="#a33333" height="100%" width="100%"></rect>
+      </svg>
+      <span>+</span>
+      <svg width="100" height="100"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" fill="rgba(51, 170, 51, 0.5)" height="100%" width="100%"></rect>
+        <circle cx="50" cy="50" r='20' fill="rgba(170, 51, 170, 0.9)"></rect>
+      </svg>
+      <span>=</span>
+       <svg width="100" height="100"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id='maskasfsagwewokgfasdfsdf' mask-type='alpha'>
+            <rect x="0" y="0" fill="rgba(51, 170, 51, 0.5)" height="100%" width="100%"></rect>
+            <circle cx="50" cy="50" r='20' fill="rgba(170, 51, 170, 0.9)"></rect>
+          </mask>
+        </defs>
+        <rect x="0" y="0" fill="#a33333" height="100%" width="100%" mask='url(#maskasfsagwewokgfasdfsdf)'></rect>
+      </svg>
+    </div>
+  </div>
+</template>
+
+<style>
+#sfasfsafsfsa svg {
+  border: 1px solid #393;
+  border-radius: 5px;
+}
+#sfasfsafsfsa .example {
+  display: flex;
+  align-items: center;
+}
+#sfasfsafsfsa .example > * {
+  margin: 5px;
+}
+</style>
+```
+::::::
+
+#### 剪切（clipPath）
+
+定义/使用：`clipPath`/`clip-path`
+
+### svg工程
+
+#### defs标签
+
+```
+defs 子标签：
+
+symbol/use —— 图形复用：在 defs 中使用 symbol id 定义图形，然后在 defs 外使用 use href 复用
+
+pattern —— 填充复用：
+
+marker —— 头尾复用：
+
+animate
+
+image 
+
+rect/circle/text/.... —— 与symbol类似，但是这种直接定义的没法通过width/height调整大小，需要使用transform="scale(0.5)"等其他方式调整图形大小❗
+```
+
 ## 示例
 
 ### 路径生长效果
+
+关键：`stroke-dasharray` 的设置和 `stroke-dashoffset` 的动画设置
 
 :::::: vue-demo
 
@@ -683,17 +919,178 @@ repeatCount='indefinite'/>
 
 ::::::
 
-颜色
+### 渐变边框按钮
+
+https://www.bilibili.com/video/BV1kdpKeuECU
+https://www.bilibili.com/video/BV1664CeUEqH
+
+:::::: vue-demo
+
+```vue
+<template>
+  <div id='safsfsfasfjdgfdsfaf'  @mouseover="state1" @mouseleave="state2">
+    <span>鼠标移入~</span>
+    <svg width="100%" height="100%"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:svg="http://www.w3.org/2000/svg"
+      ref='ssvg'
+    >
+      <defs>
+        <linearGradient id="svg_jb2xx2asfasf2x" spreadMethod="pad" >
+        <stop id="jq_stop_8881" offset="0" stop-color="#FF0000"/>
+        <stop id="jq_stop_8654" offset="1" stop-color="#00ffff"/>
+        <animateTransform attributeName='gradientTransform'
+          type='rotate'
+          from='0 0.5 0.5'
+          to='360 0.5 0.5'
+          dur='2s'
+          repeatCount='indefinite'
+          fill='freeze'
+        />
+        </linearGradient>
+      </defs>
+      <rect stroke="url(#svg_jb2xx2asfasf2x)" fill='transparent' 
+        stroke-width="var(--border-width)"
+        style="
+          rx: 10px;
+          x:calc(var(--border-width)/2);y:calc(var(--border-width)/2);
+          height:calc(100% - var(--border-width));width: calc(100% - var(--border-width));
+        ">
+      </rect>
+    </svg>
+  </div>
+</template>
+
+<script>
+export default {
+  setup() {},
+  methods: {
+    state1() {
+      this.$refs.ssvg.pauseAnimations();
+    },
+    state2() {
+      this.$refs.ssvg.unpauseAnimations();
+    }
+  }
+}
+</script>
+
+<style>
+#safsfsfasfjdgfdsfaf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  width: 100px;
+  height: 50px;
+  border-radius: 4px;
+}
+#safsfsfasfjdgfdsfaf span {
+  z-index: 1;
+}
+#safsfsfasfjdgfdsfaf svg {
+  /* border: 1px solid #393; */
+  --border-width: 5px;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+}
+</style>
+```
+::::::
+
+::: tip
+
+动画停止（pause）和继续（unpause）的效果实现有以下几种：
++ js https://dev.to/link2twenty/comment/1cmdg
++ css http://xn--dahlstrm-t4a.net/svg/css/animations/hover-root-transform.svg
+
+:::
+
+### 进度条封装
+
+
+:::::: vue-demo
+
+```vue
+<template>
+  <div id='kkgfyjasfas'>
+    <div>
+      <span>{{ title }}</span>
+    </div>
+    <div>
+      <svg
+        height='25' width='400'
+        viewBox='0 0 400 50'
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:svg="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="svg_asfs5">
+            <stop offset="0" stop-color="#0000ff" stop-opacity="1"/>
+            <stop offset="1" stop-color="#aa56ff" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+        <path d='M 0 25 H 400' stroke-width='50' stroke='#5a5aaa'/>
+        <path :d='"M 0 25 H " + getWidth + " V25.00001"'
+          stroke-width='50'
+          stroke='url(#svg_asfs5)'
+          stroke-dasharray='10 3'
+        />
+      </svg>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    value: {
+      default: 90,
+    },
+    title: {
+      default: '分数'
+    }
+  },
+  data() {
+    return {
+      w: 400,
+    } 
+  },
+  setup() {},
+  methods: {},
+  computed: {
+    getWidth() {
+      return this.w * this.value / 100;
+    }
+  }
+}
+</script>
+
+<style>
+#kkgfyjasfas {
+  width: 400px;
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
+}
+#kkgfyjasfas > * {
+  margin: 3px;
+}
+</style>
+```
+::::::
+
+### 文字出现效果
 
 todo
+https://www.bilibili.com/video/BV1Py4BerEEC
 
-缩放
-
-todo
-
-动画
-
-todo
+## 待整理
 
 ```html
 <style>
