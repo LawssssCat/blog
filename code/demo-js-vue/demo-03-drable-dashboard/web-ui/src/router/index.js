@@ -58,6 +58,10 @@ const router = createRouter({
       ],
     },
     {
+      path: '/demo/66-guage-01',
+      component: () => import('@/views/demo/modules/demo-echarts/66-guage-01.vue'),
+    },
+    {
       path: '/demo0',
       component: DemoPage,
       props: {

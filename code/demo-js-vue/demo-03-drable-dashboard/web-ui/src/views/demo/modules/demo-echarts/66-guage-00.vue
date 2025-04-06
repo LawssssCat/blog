@@ -1,30 +1,31 @@
 <template>
   <div class="wrapper">
-    <div ref="polarGaugeRef" class="PolarGauge"></div>
+    <div class="w-item">
+      <ResizeEchart class="PolarGauge" :options="buildOptions()"></ResizeEchart>
+    </div>
+    <div class="w-item">
+      <ResizeEchart class="PolarGauge" :options="buildOptions()"></ResizeEchart>
+    </div>
+    <div class="w-item">
+      <ResizeEchart class="PolarGauge" :options="buildOptions()"></ResizeEchart>
+    </div>
+    <div class="w-item">
+      <ResizeEchart class="PolarGauge" :options="buildOptions()"></ResizeEchart>
+    </div>
+    <div class="w-item">
+      <ResizeEchart class="PolarGauge" :options="buildOptions()"></ResizeEchart>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import * as echarts from 'echarts'
-
-// https://www.cnblogs.com/HelloWorld-Yu/p/12560805.html
-// https://www.jianshu.com/p/9af1fbc63447
-// https://echarts.apache.org/zh/option.html#color
-
-// https://www.jianshu.com/p/9af1fbc63447
-
-const polarGaugeRef = ref()
-const echartInstance = ref()
+import ResizeEchart from '@/components/echarts/ResizeEchart.vue'
 
 const gaugeData = [
   {
     name: 'xx',
     value: 90,
   },
-  //   {
-  //   value: 10,
-  // }
 ]
 
 function buildOptions() {
@@ -102,31 +103,16 @@ function buildOptions() {
   }
   return options
 }
-
-function init() {
-  echartInstance.value = echarts.init(polarGaugeRef.value)
-  echartInstance.value.setOption(buildOptions())
-}
-
-let observer
-
-onMounted(() => {
-  init()
-  observer = new ResizeObserver(() => echartInstance.value.resize())
-  observer.observe(polarGaugeRef.value)
-})
-
-onUnmounted(() => {
-  if (observer) {
-    observer.disconnect()
-  }
-})
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .wrapper {
   background-color: #aaa;
   height: 100vh;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: repeat(4, 500px);
+  overflow-y: auto;
 }
 
 .PolarGauge {
