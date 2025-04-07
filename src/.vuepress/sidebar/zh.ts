@@ -18,7 +18,7 @@ export const zhSidebar = sidebar({
   "/zh/dev-java-springcloud/": "structure",
   "/zh/dev-java-cache/": "structure",
   "/zh/dev-java-event/": "structure",
-  "/zh/dev-java-dev-java-integration_solution/": "structure", // 集成解决方案
+  "/zh/dev-java-integration_solution/": "structure", // 集成解决方案
   "/zh/dev-js-vue/": "structure",
   "/zh/dev-js-visualization/": "structure",
   "/zh/dev-se-project_management/": "structure",

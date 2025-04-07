@@ -117,6 +117,12 @@ https://openjdk.org/projects/jdk/21/
 
 Java 21 号称具有数千项性能、稳定性和安全性改进。新的 JDK 21 包括对 15 项改进的抢先体验，这些增强功能是在 Oracle CloudWorld 2023 会议上宣布的，包括支持虚拟线程以提高整体吞吐量，以及增加对向量应用编程接口（API）的支持，从而更轻松地构建涉及人工智能 AI 模型的 Java 应用。
 
+### 新增API
+
++ HTTP Client API
++ 向量 API
++ 注解 API
++ Thread API
 
 ### 模式匹配
 

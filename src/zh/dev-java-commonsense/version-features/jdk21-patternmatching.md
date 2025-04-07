@@ -146,7 +146,7 @@ if (obj instanceof String) {
 ```java
 if (obj instanceof String value && "str".equals(value)) {
     // 1.末尾加上变量名；
-    // 2.变量可以在“&&”判断中使用（❗即不可在“||”中使用）（💡这在JDK19中又发生变化，用when关键字取代了&&表示）
+    // 2.变量可以在“&&”判断中使用（❗即不可在“||”中使用）
     System.out.println("value = " + value);
 }
 ```

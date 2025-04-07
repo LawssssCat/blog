@@ -6,6 +6,17 @@ tag:
 order: 1
 ---
 
+官网：
+
++ https://echarts.apache.org/zh/index.html for 使用者
++ https://echarts.apache.org/examples/zh/index.html 示例
++ ~~https://echartsjs.com/ for 开发者~~ 老
++ https://echartsjs.com/en/coding-standard.html echarts 开发者规范
+
+仓库：
+
++ <RepoLink path="/code/demo-js-vue/demo-03-drable-dashboard/" />
++ <RepoLink path="/code/demo-js-echarts/" />
 
 ## 直角坐标系
 

@@ -1,6 +1,5 @@
 ---
-title: RuoYi
-date: 2024-09-19
+title: RuoYi 后台管理系统
 order: 1
 ---
 

@@ -1,7 +1,6 @@
 ---
-title: RuoYi
-date: 2024-09-19
-order: 2
+title: RuoYi 单应用版本
+order: 10
 ---
 
 代码仓：
