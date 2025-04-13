@@ -44,6 +44,14 @@ added 23 packages in 21s
 
 11 packages are looking for funding
   run `npm fund` for details
+
+$  npm i @element-plus/icons
+npm warn deprecated @element-plus/icons@0.0.11: Please use @element-plus/icons-vue instead.
+
+added 1 package in 3s
+
+11 packages are looking for funding
+  run `npm fund` for details
 ```
 
 ```bash
