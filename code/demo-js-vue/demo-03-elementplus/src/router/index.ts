@@ -16,6 +16,10 @@ const routes: RouteRecordRaw[] = [
         path: "/",
         component: Home,
       },
+      {
+        path: "/chooseArea",
+        component: () => import('../views/chooseArea/index.vue'),
+      },
     ],
   },
 ];
