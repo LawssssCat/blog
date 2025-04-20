@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import mChooseArea, { type Data } from "@/components/chooseArea/src/index.vue";
+import { type Data } from "@/components/chooseArea/src/index.vue";
 
 function handleAreaChange({
   province,
