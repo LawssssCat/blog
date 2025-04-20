@@ -15,12 +15,25 @@
       <ElButton :icon="Search"></ElButton>
     </template>
   </MyInput>
+
+  <br><hr><br>
+
+  <AddProduct></AddProduct>
+  <br><hr><br>
+  <EditProduct></EditProduct>
+
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+
+// test-1
 import MyInput from '@/components/MyInput.vue';
 import { Search } from '@element-plus/icons';
+
+// test-2
+import AddProduct from "@/components/form/ProductForm/AddProduct.vue";
+import EditProduct from "@/components/form/ProductForm/EditProduct.vue";
 
 const data = ref('');
 const myInputRef = ref();
