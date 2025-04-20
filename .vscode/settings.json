@@ -9,5 +9,14 @@
   "files.trimTrailingWhitespace": true,
   "[markdown]": {
     "files.trimTrailingWhitespace": false
-  }
+  },
+  "cSpell.words": [
+    "antv",
+    "burpsuite",
+    "dalao",
+    "keyup",
+    "playload",
+    "valn",
+    "vbase"
+  ]
 }
