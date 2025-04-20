@@ -9,6 +9,8 @@ order: 20
 + 《完全学会Git, GitHub, Git Server的24堂课》
 
 
+## 常用命令
+
 ```bash
 git init # 创建 .git 目录
 gitk # 可视化
@@ -149,15 +151,13 @@ todo GitStatus —— Python 开发
 
 ## GUI
 
-todo ~~Git GUI~~
-
-todo ~~SmartGit~~
-
-todo ~~SourceTree~~
-
-todo TortoiseGit
-
-todo GitHub for Windows
++ ~~Git GUI~~
++ ~~SmartGit~~
++ ~~SourceTree~~
++ TortoiseGit —— 老玩家，小巧，“过时”
++ ~~GitHub for Windows~~
++ vscode gitlens
++ gitkraken —— 与 gitlens 同公司，electron
 
 ## Git Server
 
