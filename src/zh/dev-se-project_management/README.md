@@ -6,11 +6,16 @@ order: 1
 
 - [流程控制工具](./tools-process/README.md)
 
+- 可行性分析/市场调研
+
 - [需求分析](./demand-analysis.md)
 
 - 生命周期规划
   - [RC（Release Candidate）](https://openjdk.org/jeps/3#rc)
   - [GA（General Availability）](https://openjdk.org/projects/jdk8/milestones#General_Availability)
+
+- 架构设计/方案调研
+  - 后台管理系统方案 [link](../dev-java-integration_solution/README.md)
 
 - [特性设计](./feature-design/README.md)
 

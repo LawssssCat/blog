@@ -31,6 +31,9 @@ order: 1
     - 支持模块：包括用户管理、角色管理、权限管理、数据字典、系统日志、定时任务等实用模块；
     - 部署模式：支持单体与微服务两种模式，具有高度可配置、插件化设计等特点；
 
+- art-design-pro
+- SmartAdmin 3.x
+
 - jeesite
 
   - 后端： 基于 Spring Framework、Spring MVC 框架，整合了 Mybatis 和 Apache Shiro。
@@ -71,3 +74,8 @@ order: 1
 
 todo 基于 SpringBoot&Vue 实现的期刊在线投稿系统实战教程
 https://www.bilibili.com/video/BV1BdqPYrEAc/
+
+## 即时通讯
+
++ enjoykanyu/chat_serve
+  enjoykanyu/kChat_web
