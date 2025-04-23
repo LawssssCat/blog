@@ -1,8 +1,11 @@
 <template>
-  <ElForm :label-width="labelWidth">
+  <div>
+    <slot name="header"></slot>
+  </div>
+  <ElForm ref="formRef" :label-width="labelWidth" :model="modelValue">
     <!-- 通过数据配置生成表单 -->
     <template v-for="(item, index) in formItem" :key="index">
-      <ElFormItem :label="item.label">
+      <ElFormItem :label="item.label" :prop="item.field">
         <!-- 开关按钮 -->
         <!--
         <ElFormItem label="新增为会员">
@@ -10,7 +13,7 @@
         </ElFormItem>
         -->
         <template v-if="item.type === 'switch'">
-          <ElSwitch></ElSwitch>
+          <ElSwitch v-model="modelValue[item.field]"></ElSwitch>
         </template>
 
         <!-- 输入框 -->
@@ -22,8 +25,12 @@
           <ElInput placeholder="请输入备注名"></ElInput>
         </ElFormItem>
         -->
-        <template v-else-if="item.type === 'input'">
-          <ElInput :placeholder="item.placeholder"></ElInput>
+        <template v-else-if="item.type === 'input' || item.type === 'password'">
+          <ElInput
+            :placeholder="item.placeholder"
+            :show-password="item.type === 'password'"
+            v-model="modelValue[item.field]"
+          ></ElInput>
         </template>
 
         <!-- 下拉框 -->
@@ -36,7 +43,10 @@
         </ElFormItem>
         -->
         <template v-else-if="item.type === 'select'">
-          <ElSelect :placeholder="item.placeholder">
+          <ElSelect
+            :placeholder="item.placeholder"
+            v-model="modelValue[item.field]"
+          >
             <ElOption
               v-for="option in item.options"
               :key="option.value"
@@ -55,22 +65,52 @@
         -->
         <template v-else>
           <ElDatePicker
-            :type="item.data"
+            v-model="modelValue[item.field]"
+            type="date"
             :placeholder="item.placeholder"
           ></ElDatePicker>
         </template>
       </ElFormItem>
     </template>
   </ElForm>
+
+  <div>
+    <slot name="footer"></slot>
+  </div>
 </template>
 
-<script setup>
-defineProps({
-  labelWidth: {
-    type: String,
-  },
-  formItem: {
-    type: Array,
-  },
+<script setup lang="ts">
+import { ref, withDefaults } from "vue";
+
+const formRef = ref();
+
+interface FormItem {
+  type: string;
+  field: string;
+  label: string;
+  placeholder?: string;
+  options?: Array<{
+    label: string;
+    value: string;
+  }>;
+}
+
+withDefaults(
+  defineProps<{
+    labelWidth: string;
+    formItem: FormItem[];
+    modelValue: { [key: string]: any };
+  }>(),
+  {
+    labelWidth: "160px",
+  }
+);
+
+const resetForm = () => {
+  formRef.value.resetFields();
+};
+
+defineExpose({
+  resetForm,
 });
 </script>

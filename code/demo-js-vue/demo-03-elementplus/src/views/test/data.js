@@ -7,7 +7,7 @@ export default {
       placeholder: '请输入姓名'
     },
     {
-      type: 'input',
+      type: 'password',
       label: '密码',
       field: 'password',
       placeholder: '请输入密码'
@@ -38,6 +38,11 @@ export default {
           value: 1
         },
       ]
+    },
+    {
+      type: 'date',
+      label: '生日',
+      field: 'birthday'
     }
   ]
 }
