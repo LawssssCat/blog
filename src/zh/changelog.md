@@ -8,7 +8,17 @@ article: false
 
 <!-- more -->
 
-## 2025 年 4 月 5 日 添加 “轻量” 代码演示功能 
+## 2025 年 4 月 5 日 添加 “轻量” 代码演示功能
+
+::: info
+
+优秀的在线“游乐场”：
+
++ <https://play.vueuse.org/>
+
+:::
+
+todo 源码分析
 
 参考：
 
@@ -24,12 +34,14 @@ article: false
 :::
 
 ::: demo 简介
+
 ```vue
 <div>demo</div>
 ```
+
 :::
 
-:::::: tabs 
+:::::: tabs
 
 @tab 说明
 
