@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>hello, see console</div>
+    <script>
+      // function memorize(func) {}
+
+      // 参考： https://www.bilibili.com/video/BV1zr4y1X71a/
+      // 实现
+      function memorize(func, resolver) {
+        const memoized = function (...args) {
+          // 缓存中是否存在
+          const key = resolver ? resolver(...args) : args[0];
+          if (memoized.cache.has(key)) {
+            return memoized.cache.get(key);
+          }
+          const result = func.apply(this, args); // 使this等于memoized函数调用者
+          memoized.cache.set(key, result);
+          return result;
+        };
+        memoized.cache = new WeakMap();
+        return memoized;
+      }
+    </script>
+    <script>
+      var object = { a: 1, b: 2 };
+      var other = { c: 3, d: 4 };
+
+      var values = memorize((obj) => Object.values(obj));
+      console.log(values(object));
+      // => [1, 2]
+
+      console.log(values(object));
+      // => [3, 4]
+
+      object.a = 2;
+      console.log(values(object));
+      // => [1, 2]
+
+      // Modify the result cache.
+      values.cache.set(object, ["a", "b"]);
+      console.log(values(object));
+      // => ['a', 'b']
+    </script>
+  </body>
+</html>
