@@ -93,7 +93,7 @@ const router = createRouter({
       path: '/demo1',
       component: DemoPage,
       props: {
-        demoList: ['HiDemo', 'HelloDemo', 'HiDemo'],
+        demoList: ['HiDemo', 'HelloDemo', 'demo-css/AnimatedCursorTrailEffects'],
       },
     },
   ],

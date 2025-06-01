@@ -8,6 +8,7 @@ const enterFullScreenName = getPropertyName(
 )
 // 进入全屏
 export function enterFullScreen(ele) {
+  console.log('enterFullScreen', ele)
   return enterFullScreenName && ele[enterFullScreenName]()
 }
 
