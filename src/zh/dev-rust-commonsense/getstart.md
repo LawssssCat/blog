@@ -3,6 +3,18 @@ title: Rust 入门
 order: 2
 ---
 
+## 开发环境
+
+编译器/IDE
+
+- vscode + rust-analyzer插件
+- clion
+- helix（开源类vim，rust实现） + ra插件
+
+镜像源
+
+- 字节跳动 <https://rsproxy.cn/>
+
 ## 环境配置
 
 ### 一键配置：rustup
