@@ -26,7 +26,9 @@ Playground：
 - Rust The Book 【官方】 —— <https://doc.rust-lang.org/book/>
 - Rust 官方文档中文翻译 —— <https://rustwiki.org/zh-CN/>
 
-  - [Rust 程序设计语言（中文）](https://rustwiki.org/zh-CN/book/ch01-03-hello-cargo.html)
+  - [通过例子学 Rust（中文）](https://rustwiki.org/zh-CN/rust-by-example) ⭐⭐⭐⭐⭐
+  - [Rust 程序设计语言（中文）](https://rustwiki.org/zh-CN/book/ch01-03-hello-cargo.html) ⭐⭐⭐⭐⭐
+  - [Rust 程序设计语言 std库文档（中文）](https://rustwiki.org/zh-CN/std/)
   - [Cargo 手册（中文）](https://rustwiki.org/zh-CN/cargo/)
 
 - FLS（Rust 语言规范） —— <https://spec.ferrocene.dev/>
@@ -149,4 +151,5 @@ https://www.theseus-os.com/
 
 ### 练手
 
+- 猜数字 https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html
 - lemmeknow —— 正则识别web项目，适合初学者的小项目 （todo 复刻）
