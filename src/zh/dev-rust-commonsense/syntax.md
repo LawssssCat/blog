@@ -363,7 +363,7 @@ static LANGUAGE: &'static str = "Rust";
 const  THRESHOLD: i32 = 10;
 ```
 
-## 类型转换
+### 类型转换
 
 ```rust
 #![allow(overflowing_literals)]
@@ -388,3 +388,12 @@ fn main() {
   assert_eq!(232, 1000 as u8);
 }
 ```
+
+## 语言特点
+
+Rust 借鉴函数式语言的一些特点：
+
++ 面向表达式编程
++ 函数/闭包
++ 迭代器
++ 类型系统

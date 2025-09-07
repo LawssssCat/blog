@@ -85,6 +85,8 @@ https://github.com/kern-crates
 
 ### 开发工具
 
+- [`cargo`](./cargo/README.md) —— 包管理工具
+
 - `mdbook` —— 文档生成（一般Rust项目在`./book`目录中存放该文档）
 - `wasmtime` —— 目标是提供一个轻量级、高效且安全的运行时环境，使得Wasm应用程序能够在各种设备和平台上顺利运行
 
