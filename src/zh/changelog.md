@@ -39,11 +39,11 @@ todo 源码分析
 
 参考：
 
-+ hope 原生： https://theme-hope.vuejs.press/zh/guide/markdown/code/demo.html
++ hope 原生： <https://theme-hope.vuejs.press/zh/guide/markdown/code/demo.html>
 + 实现步骤
-  1. https://juejin.cn/post/7287914129565483065
-  1. https://juejin.cn/post/6991646499775971359
-+ Element 实现示例： https://element.eleme.cn/2.0/#/zh-CN/component/color-picker
+  1. <https://juejin.cn/post/7287914129565483065>
+  1. <https://juejin.cn/post/6991646499775971359>
++ Element 实现示例： <https://element.eleme.cn/2.0/#/zh-CN/component/color-picker>
 
 ::: tip
 只有演示，没有交互
@@ -140,7 +140,7 @@ export default {
 :::
 ``````
 
-@tab 类型=react 
+@tab 类型=react
 
 ``````md
 ::: react-demo 可选的标题文字
@@ -189,7 +189,6 @@ export default {
 
 ::::::
 
-
 ## 2025 年 1 月 12 日 增强 Markdown 功能
 
 高亮：!!高亮！!!
@@ -201,7 +200,7 @@ export default {
 ## 2025 年 1 月 8 日 添加代码演示功能
 
 参考：
-https://theme-hope.vuejs.press/zh/guide/markdown/code/demo.html
+<https://theme-hope.vuejs.press/zh/guide/markdown/code/demo.html>
 
 ::: warning
 演示 + 交互。

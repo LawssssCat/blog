@@ -11,13 +11,24 @@
     "files.trimTrailingWhitespace": false
   },
   "cSpell.words": [
+    "Ambari",
     "antv",
     "burpsuite",
+    "cranelift",
     "dalao",
+    "Godbolt",
     "gridstack",
+    "hostmanager",
+    "hostsupdater",
     "keyup",
     "playload",
+    "Replit",
+    "rustc",
     "valn",
-    "vbase"
+    "vbase",
+    "wasmtime",
+    "XCCDF",
+    "zkservice",
+    "Znode"
   ]
 }
