@@ -8,6 +8,23 @@ article: false
 
 <!-- more -->
 
+## 2025 年 9 月 14 日 开启 plantUML 功能
+
+语法参考：
+<https://plantuml.com/zh/component-diagram>
+
+@startuml
+node "Zookeeper Server"
+node "Micro Service" {
+  [Zookeeper Client]
+  [Zookeeper WatcherManager]
+}
+[Zookeeper Client] -up-> [Zookeeper Server] : 1. register
+[Zookeeper Client] -right-> [Zookeeper WatcherManager] : 1. Watcher Object
+[Zookeeper Client] <-down- [Zookeeper Server] : 2. notify
+[Zookeeper Client] <-left- [Zookeeper WatcherManager] : 3. Watcher Object
+@enduml
+
 ## 2025 年 4 月 5 日 添加 “轻量” 代码演示功能
 
 ::: info

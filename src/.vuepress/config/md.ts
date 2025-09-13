@@ -73,6 +73,8 @@ const markdownOptions: MarkdownOptions = {
   // pnpm add -D markmap-lib markmap-toolbar markmap-view
   markmap: true,
 
+  plantuml: true,
+
   highlighter: mdCode.highlighter,
 };
 export default markdownOptions;
