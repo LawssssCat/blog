@@ -1,6 +1,5 @@
 ---
 title: Java 安全介绍
-date: 2024-11-16
 order: 1
 ---
 
@@ -14,17 +13,14 @@ order: 1
 
 认证授权框架
 
+- 认证授权模式方式
+  - [sasl](./sasl.md)
+  - OAuth
+    - todo <https://www.bilibili.com/video/BV14b4y1A7Wz/>
+  - [jjwt](./jwt-jjwt.md)
 - [Spring Security](./spring-security.md)
 - [shiro](./shiro.md)
-- todo https://github.com/scribejava/scribejava/tree/master
-
-JWT
-
-- [jjwt](./jwt-jjwt.md)
-
-OAuth
-
-- todo https://www.bilibili.com/video/BV14b4y1A7Wz/
+- todo <https://github.com/scribejava/scribejava/tree/master>
 
 RASP
 
