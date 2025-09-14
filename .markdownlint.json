@@ -1,4 +1,18 @@
 {
   "MD013": { "line_length": 250 },
-  "MD033": { "allowed_elements": ["br", "Catalog", "RepoLink", "SiteLink"] }
+  "MD033": {
+    "allowed_elements": [
+      "br",
+      "table",
+      "thead",
+      "th",
+      "tbody",
+      "tr",
+      "td",
+      "Catalog",
+      "RepoLink",
+      "SiteLink"
+    ]
+  },
+  "MD059": false
 }
