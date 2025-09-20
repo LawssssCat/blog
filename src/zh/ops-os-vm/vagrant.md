@@ -3,16 +3,6 @@ title: vagrant 介绍
 order: 66
 ---
 
-资料：
-
-+ 文档|https://www.yuque.com/wukong-zorrm/xmk0v0 \
-  视频|https://www.bilibili.com/video/BV1me411f7sU ⭐⭐⭐
-+ 视频|https://www.bilibili.com/video/BV15t4y167zX ⭐⭐⭐
-+ 视频|https://www.bilibili.com/video/BV1ZG411h7tq/ todo
-+ 视频|https://www.bilibili.com/video/BV1F5411e7EL todo
-
----
-
 Vagrant提供虚拟化技术编排能力，配合Virtual Box，可以通过简单的配置脚本能快速搭建起虚拟机
 
 e.g.
@@ -27,6 +17,16 @@ Vagrant.configure("2") do |config|
   config.vm.disk :disk, size: "40GB" # 存储
 end
 ```
+
+<!-- more -->
+
+资料：
+
++ 文档|<https://www.yuque.com/wukong-zorrm/xmk0v0> \
+  视频|<https://www.bilibili.com/video/BV1me411f7sU> ⭐⭐⭐
++ 视频|<https://www.bilibili.com/video/BV15t4y167zX> ⭐⭐⭐
++ 视频|<https://www.bilibili.com/video/BV1ZG411h7tq> todo
++ 视频|<https://www.bilibili.com/video/BV1F5411e7EL>
 
 ::: tip
 
@@ -66,10 +66,10 @@ Docker晚于Vagrant，Docker设计上借鉴Vagrant。
 ## 安装
 
 Vagrant 2.4.0
-https://developer.hashicorp.com/vagrant/downloads
+<https://developer.hashicorp.com/vagrant/downloads>
 
 VirtualBox 7.0.12
-https://www.virtualbox.org/wiki/Downloads
+<https://www.virtualbox.org/wiki/Downloads>
 
 Vagrant提供虚拟化技术编排能力，但不提供虚拟化的功能。虚拟化需要借助其他虚拟化引擎，例如Virtual Box、VMware、Hyper-V等，Vagrant也可以使用Docker。
 
@@ -412,15 +412,15 @@ Vagrant总是把第一个网卡设置成“网络地址转换(NAT)”模式（Ne
 
 &nbsp; | 适用场景 | 说明
 --- | --- | ---
-网络地址转换(NAT) <br>（Network Address Translation） | 虚拟机访问外部资源（如更新、下载软件），但无需对外提供服务。
-桥接网卡 <br>（Bridged Adapter） | 虚拟机需要与局域网中的其他设备（如服务器、打印机）通信，或者虚拟机需要被局域网中其他设备访问。
-todo | ...
+网络地址转换(NAT) <br>（Network Address Translation） | 虚拟机访问外部资源（如更新、下载软件），但无需对外提供服务。 | &nbsp;
+桥接网卡 <br>（Bridged Adapter） | 虚拟机需要与局域网中的其他设备（如服务器、打印机）通信，或者虚拟机需要被局域网中其他设备访问。 | &nbsp;
+todo | ... | &nbsp;
 
 :::
 
 Vagrant 网络：
 
-+ **NAT（默认）** —— 虚拟机可以上网，外部网络不可见虚拟机。这种模式下外部访问虚拟机服务需要通过端口转发。
+1. **NAT（alias：端口转发）（默认）** —— 虚拟机可以上网，外部网络不可见虚拟机。这种模式下外部访问虚拟机服务需要通过端口转发。
 
   ```ruby
   config.vm.network "forwarded_port", guest: 80, host: 8080
@@ -430,7 +430,7 @@ Vagrant 网络：
   vagrant 总是把第一个网卡设置成 “NAT” 模式，不可修改。
   :::
 
-+ **私有网络** —— 宿主机、虚拟机之间可以相互访问
+1. **私有网络** —— 宿主机、虚拟机之间可以相互访问
 
   ```ruby
   # 这个IP需要在VirtualBox的网段范围内
@@ -459,7 +459,7 @@ Vagrant 网络：
 
   :::
 
-+ **公有网络** —— 虚拟机可以上网，外部网络可见虚拟机
+1. **公有网络** —— 虚拟机可以上网，外部网络可见虚拟机
 
   公有网络在VirtualBox中，使用bridge网络实现。
 
@@ -481,7 +481,7 @@ Vagrant 网络：
   https://www.laoma.cc/archives/1537.html
   ```
 
-#### 文件同步
+### 文件同步
 
 ```ruby
 # todo
@@ -493,7 +493,32 @@ end
 
 ::: info
 
-坑：hyperv无法直接同步文件，需要借助第三方软件，如smb
+坑：**虚拟机系统没有安装`VBoxGuestAdditions.iso`里的`vagrant-vbguest`，导致无法使用`vboxsf`文件系统**
+
+具体报错如下：
+
+```bash
+Vagrant was unable to mount VirtualBox shared folders. This is usually
+because the filesystem "vboxsf" is not available. This filesystem is
+made available via the VirtualBox Guest Additions and kernel module.
+Please verify that these guest additions are properly installed in the
+guest. This is not a bug in Vagrant and is usually caused by a faulty
+Vagrant box. For context, the command attempted was:
+
+mount -t vboxsf -o uid=1000,gid=1000,_netdev vagrant1 /vagrant1
+
+The error output from the command was:
+
+mount: unknown filesystem type 'vboxsf'
+```
+
+解决防范如下：
+
+1. 安装缺失软件
+1. 使用vagrant文件同步插件，如
+1. 更改虚拟机系统，其他系统可能默认安装文件同步所需的软件
+
+坑：**hyper-v无法直接同步文件，需要借助第三方软件，如smb**
 
 适配脚本如下：
 
@@ -541,24 +566,34 @@ todo
 todo
 ```
 
-## 插件
-
-```bash
-vagrant plugin list
-```
-
-## 插件：Parallels
-
-todo
-
-## 插件：Vagrant Manager
-
-todo
-
 ## Box打包、上传
 
+配置好的box可以重新打包，后面就能直接用了。
+更可以将box上传VagrantCloud网站，后面就能直接下载了。
+
+```bash
+# 打包命令
+vagrant package # 在当前目录生成package.box文件
+# 重新导入
+vagrant box add newBoxName=01 package.box
+vagrant box list
+# vagrant init newBoxName-01 # 使用
+# 上传命令
 todo
-https://www.bilibili.com/video/BV1SK4y1S7SR
+```
+
+::: warning
+
+打包前需要先删除网络配置，否则重新使用box会有问题：
+
+```bash
+sudo rm -rf /etc/udev/rules.d/70-persistent-net.rules
+```
+
+:::
+
+todo 待整理
+<https://www.bilibili.com/video/BV1SK4y1S7SR>
 
 ```bash
 vagrant plugin install vagrant-vbguest --plugin-version 0.21
@@ -571,7 +606,11 @@ todo 发布
 
 ## 案例：批量创建虚拟机
 
-默认配置
+### 一、创建虚拟机，并指定IP地址
+
+::: tabs
+
+@tab 默认配置
 
 ```ruby title="Vagrant"
 Vagrant.configure("2") do |config|
@@ -585,7 +624,7 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-指定配置
+@tab 指定配置
 
 ```ruby title="Vagrant"
 vm_list = [
@@ -620,15 +659,17 @@ Vagrant.configure("2") do |config|
         vbox.memory = item["mem"] # 内存
         vbox.cpus = item["cpu"] # CPU
       end
-      # 设置hostname
+      # 设置hostname —— /etc/sysconfig/network
       node.vm.hostname = item["name"]
-      # 设置IP
+      # 设置IP —— 设置网络后，主机-虚拟机、虚拟机-虚拟机之间才可以通信
       node.vm.network "private_network", ip: item["ip_addr"]
 
     end
   end
 end
 ```
+
+:::
 
 创建后通过ssh命令连接
 
@@ -638,7 +679,85 @@ ssh vagrant@192.168.56.11 -i .vagrant/machines/node-2/virtualbox/private_key
 ssh vagrant@192.168.56.12 -i .vagrant/machines/node-3/virtualbox/private_key
 ```
 
-## 案例：创建k3s集群
+### 二、虚拟机互通
+
+这时候在虚拟机内部可以通过ip互通
+
+但我们一般需要设置host互通：
+
+```bash
+$ vim /etc/hosts
+192.168.60.11 node-1
+192.168.60.12 node-2
+192.168.60.13 node-3
+```
+
+### 三、免密登录（跳板机）
+
+集群间的文件传输或者跨节点登录等，都需要进行密码的验证，每次输入密码很麻烦，可以设置为免密码登录。
+
+生成公钥
+
+```bash
+$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/vagrant/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/vagrant/.ssh/id_rsa
+Your public key has been saved in /home/vagrant/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:Sx3LHxNOvKHf9A3pR40dlKTU5wtRT6CK89gBltVhuss vagrant@node-1
+The key's randomart image is:
++---[RSA 3072]----+
+|          ..oo==o|
+|         o +ooo+o|
+|        + o *..oo|
+|       . = O = ++|
+|        S O = * =|
+|       . B = * =.|
+|        o E o o +|
+|               . |
+|                 |
++----[SHA256]-----+
+```
+
+将公钥拷贝到其他机器（包含自身）
+
+```bash
+$ ssh-copy-id node-1
+$ ssh-copy-id node-2
+$ ssh-copy-id node-3
+# e.g.
+$ ssh-copy-id node-1 # 遇到的问题：Permission denied (publickey,gssapi-keyex,gssapi-with-mic). 因为没有指定秘钥，右没有开启密码登录，所以没有登录方式，所以报错
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
+The authenticity of host 'node-1 (127.0.2.1)' can't be established.
+ED25519 key fingerprint is SHA256:hrgKADcxz0ExinW1LFgSDWz8u9ar5V1R84elql5hvic.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+vagrant@node-1: Permission denied (publickey).
+$ sudo vim /etc/ssh/sshd_config # 开启密码登录，默认密码vagrant
+PasswordAuthentication yes
+$ sudo systemctl restart sshd
+$ ssh-copy-id vagrant@node-1
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/vagrant/.ssh/id_rsa.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+vagrant@node-1's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'vagrant@node-1'"
+and check to make sure that only the key(s) you wanted were added.
+```
+
+### todo 一键完成脚本
+
+todo
+
+## todo 案例：创建k3s集群
 
 集群规划
 
@@ -727,7 +846,7 @@ fi
 
 ::: info
 
-**Flannel网络**
+**Flannel网络**：
 
 K3s内置了flannel作为默认的网络插件（CNI）。
 flannel默认是选择第一个网卡进行网络通信的，但是由于vagrant虚拟机的第一个网卡总是nat模式，虚拟机之间无法相互访问。
@@ -758,9 +877,39 @@ $ sudo kubectl get pod -A
 处理：“failed to get CA certs:” 问题
 
 todo
-https://www.cnblogs.com/jmbkeyes/p/13140559.html
-https://dev59.com/5FEG5IYBdhLWcg3wct5F
-https://github.com/k3s-io/k3s/issues/2852
-https://github.com/rancher/rke2/issues/5651
+<https://www.cnblogs.com/jmbkeyes/p/13140559.html>
+<https://dev59.com/5FEG5IYBdhLWcg3wct5F>
+<https://github.com/k3s-io/k3s/issues/2852>
+<https://github.com/rancher/rke2/issues/5651>
 
 :::
+
+## 插件
+
+```bash
+vagrant plugin list
+```
+
+### 插件：vagrant-hostmanager
+
+管理虚拟机中的 `/etc/hosts` 文件，便于维护集群间通信信息
+
+Github： <https://github.com/devopsgroup-io/vagrant-hostmanager>
+
+```bash
+# 1 安装
+vagrant plugin install vagrant-hostmanager
+# 2 配置
+略
+# 3 生效
+vagrant up # 在up或者destroy时生效
+vagrant hostmanager # 手动生效
+```
+
+### 插件：Parallels
+
+todo
+
+### 插件：Vagrant Manager
+
+todo
