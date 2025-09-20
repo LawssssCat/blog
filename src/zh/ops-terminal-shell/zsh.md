@@ -19,7 +19,7 @@ echo $SHELL
 
 ## oh-my-zsh
 
-官网： http://ohmyz.sh/
+官网： <http://ohmyz.sh/>
 
 主题
 
