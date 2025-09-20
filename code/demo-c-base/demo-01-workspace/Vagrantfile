@@ -1,0 +1,53 @@
+vm_list = [
+  { # hash map
+    "name" => "wk-c01",
+    "cpu" => "4",
+    "mem" => "2048",
+    "ip_addr" => "192.168.56.20",
+  },
+]
+
+Vagrant.configure("2") do |config|
+  # config.vm.box = "centos/7" # 不支持文件同步vboxsf
+  config.vm.box = "bento/fedora-latest"
+  config.vm.box_version = "202508.03.0"
+  config.vagrant.plugins = [
+    "vagrant-hostmanager"
+  ]
+
+  # plugin:hostmanager
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = false # 不修改宿主机
+  config.hostmanager.manage_guest = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+
+  # 文件同步
+  # config.vm.provider "virtualbox" do |v|
+  #   config.vm.synced_folder ".", "/vagrant1", type: "virtualbox"
+  # end
+
+  vm_list.each do |item|
+    config.vm.define item["name"] do |node|
+
+      node.vm.provider "virtualbox" do |vbox|
+        vbox.name = item["name"] # 虚拟机名词
+        vbox.memory = item["mem"] # 内存
+        vbox.cpus = item["cpu"] # CPU
+      end
+      # 设置hostname
+      node.vm.hostname = item["name"]
+      # 设置IP
+      node.vm.network "private_network", ip: item["ip_addr"]
+      node.vm.network "public_network"
+
+      # 执行shell脚本
+      node.vm.provision "shell" do |script|
+        script.path = "vagrant.sh" # 脚本路径
+        script.args = [] # 传递参数
+      end
+
+    end
+  end
+
+end
