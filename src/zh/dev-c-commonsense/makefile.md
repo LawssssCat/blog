@@ -1,6 +1,6 @@
 ---
 title: Makefile 使用笔记
-order: 66
+order: 11
 ---
 
 Makefile是`make`工具使用，用于描述工程如何构建的文件，从而进行源码的批量编译。

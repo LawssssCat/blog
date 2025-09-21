@@ -1,5 +1,5 @@
 ---
-title: GDB使用
+title: GDB 使用笔记
 order: 66
 ---
 

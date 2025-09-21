@@ -1,6 +1,6 @@
 ---
 title: cmake 使用笔记
-order: 66
+order: 20
 ---
 
 CMake可以读入工程源码文件、解析配置、输出编译所需的makefile文件。

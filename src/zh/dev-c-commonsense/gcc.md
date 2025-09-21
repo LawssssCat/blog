@@ -1,5 +1,6 @@
 ---
-title: GCC使用笔记
+title: GCC 使用笔记
+order: 10
 ---
 
 GCC（GNU Compiler Collection，GNU编译程序集合）是GNU项目的一个开放源码产品，用于完成C语言代码的编译。如Python就是由C语言开发，由GNU编译程序编译的！
