@@ -1,0 +1,55 @@
+#
+# 编译动态库库。完成动态链接
+#
+
+cpp_srcs := $(shell find src -name *.cpp)
+lib_srcs := $(filter-out src/main.cpp,$(cpp_srcs))
+lib_objs := $(patsubst src/%.cpp,objs/%.o,$(lib_srcs))
+
+include_paths := ./include
+library_paths := ./lib
+linking_libs  := ddd
+
+I_options := $(include_paths:%=-I%) # 头文件路径
+L_options := $(library_paths:%=-L%) # 库路径
+r_options := $(library_paths:%=-Wl,-rpath=%) # 运行时库路径
+l_options := $(linking_libs:%=-l%)  # 库文件
+
+compile_options := -g -O3 -w -std=c++11 -fPIC $(I_options)
+linking_options := $(L_options) $(l_options) $(r_options)
+
+# =========== 编译动态库 ===========
+
+objs/%.o : src/%.cpp
+	@echo "[+] preprocess: $@"
+	@mkdir -p $(dir $@)
+	@g++ -c $^ -o $@ $(compile_options)
+
+lib/libddd.so : $(lib_objs)
+	@echo "[+] build dynamic library: $@"
+	@mkdir -p $(dir $@)
+	@g++ -shared $^ -o $@
+
+dynamic_lib : lib/libddd.so
+
+# =========== 链接动态库 ===========
+
+workspace/exec : objs/main.o
+	@echo "[+] link $@"
+	@mkdir -p $(dir $@)
+	@g++ $^ -o $@ $(linking_options)
+
+run : workspace/exec
+	@echo "[+] run $@"
+	@./$<
+
+debug :
+	@echo $(cpp_srcs)
+	@echo $(lib_srcs)
+	@echo $(lib_objs)
+	@echo $(compile_options)
+
+clean :
+	@rm -rfv objs lib workspace/exec
+
+.PHONY : run debug clean
