@@ -12,8 +12,12 @@ DESCRIPTION "Demo Project of Complex Number"
 LANGUAGES CXX)
 
 # add_executable(目标名称 源文件1 [源文件2...])
-add_executable(helloworld hello.cpp)
+# add_executable(helloworld hello.cpp)
 # add_executable(demo)
+
+add_subdirectory(sdk)
+add_subdirectory(engine)
+add_subdirectory(portal)
 
 # 对demo的属性描述
 # 其他属性有：
