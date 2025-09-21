@@ -7,13 +7,28 @@
         <result column="id" property="id"/>
         <result column="param" property="param"/>
     </resultMap>
+    <update id="updateById">
+        update events set
+        param = #{po.param} format json
+        where id = #{po.id}
+    </update>
+
     <select id="findByParam" resultMap="Event">
         select * from events
         <where>
             <if test="param.id != null">
                 id = #{param.id}
             </if>
-            param ->> "name" = 'alpha'
         </where>
     </select>
+
+    <insert id="insert">
+        insert into events (
+            id,
+            param
+        ) values (
+            #{po.id},
+            #{po.param} format json
+        )
+    </insert>
 </mapper>

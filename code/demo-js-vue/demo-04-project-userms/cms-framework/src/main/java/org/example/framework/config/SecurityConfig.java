@@ -2,16 +2,19 @@ package org.example.framework.config;
 
 import javax.annotation.Resource;
 
-import org.example.framework.config.security.filter.JwtAuthenticationTokenFilter;
-import org.example.framework.config.security.handle.AuthenticationEntryPointImpl;
-import org.example.framework.config.security.handle.LogoutSuccessHandlerImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.framework.security.filter.JwtAuthenticationTokenFilter;
+import org.example.framework.security.handle.AuthenticationEntryPointImpl;
+import org.example.framework.security.handle.LogoutSuccessHandlerImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -30,15 +33,21 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 public class SecurityConfig {
     /**
+     * 自定义用户认证逻辑
+     */
+    @Resource
+    private UserDetailsService userDetailsService;
+
+    /**
      * 跨域过滤器
      */
-    @Autowired
+    @Resource
     private CorsFilter corsFilter;
 
     /**
      * token认证过滤器
      */
-    @Autowired
+    @Resource
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
     /**
@@ -52,6 +61,17 @@ public class SecurityConfig {
      */
     @Resource
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
+
+    /**
+     * 身份验证实现
+     */
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+        return new ProviderManager(daoAuthenticationProvider);
+    }
 
     /**
      * <table>
@@ -92,9 +112,11 @@ public class SecurityConfig {
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                 requests.antMatchers("/login", "/register", "/captchaImage").permitAll()
                     // 静态资源，可匿名访问
-                    .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**")
-                    .permitAll()
-                    // TODO swagger
+                    .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
+                    // .antMatchers("/swagger-ui.html", "/swagger-resources/**").permitAll()
+                    .antMatchers("/v3/api-docs", "/swagger-ui/**").permitAll()
+                    .antMatchers("/test/**").permitAll()
+                    // TODO ~~swagger~~ and other
                     // .antMatchers("/swagger-ui.html", "/swagger-resources/**",
                     // "/webjars/**","/*/api-docs","/druid/**")
                     // .permitAll()

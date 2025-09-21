@@ -51,7 +51,7 @@ todo 本文基于的规范版本
 >
 > - X509 证书详解 （[link-en-OpenSSL Certificate Authority](https://jamielinux.com/docs/openssl-certificate-authority/index.html),[link-en-X509 证书详解](https://blog.csdn.net/blue0bird/article/details/78656536),[link-cn-X509 证书详解（中文翻译）](https://www.cnblogs.com/nirvanan/articles/13815185.html)）
 
-`X.509` 标准是密码学里公钥证书的格式标准。
+`X.509` 标准是密码学里公钥**证书的格式标准**。
 `X.509` 证书己应用在包括 TLS/SSL（WWW 万维网安全浏览的基石）在内的众多 Internet 协议里，同时它也有很多非在线的应用场景，比如电子签名服务。
 `X.509` 证书含有公钥和标识（主机名、组织或个人），并由证书颁发机构（CA）签名（或自签名）。
 
@@ -251,6 +251,9 @@ Certificate 的简称
 **示例命令**：
 
 ```bash
+# 查看证书详情
+keytool -printcert -file test.cer
+
 # 将.pem结尾的PEM格式证书转换成.crt结尾的PEM格式证书 （内容完全一样，就是改了个后缀）
 openssl x509 -in cert.pem -outform PEM -out cert.crt
 # 从密钥库导出证书
@@ -275,7 +278,7 @@ openssl pkcs7 -print_certs -in certificate.p7b -out certificate.cer
 openssl pkcs12 -export -in certificate.cer -inkey privateKey.key -out certificate.pfx -certfile CACert.cer
 ```
 
-#### `.pkcs12`/`.pfx`/`.p12` - PKCS（Public-Key Cryptography Standards，公玥密码学）
+#### `.pkcs12`/`.pfx`/`.p12` - PKCS（Public-Key Cryptography Standards，公玥加密标准）
 
 **格式**： `PKCS#12` 是一种二进制的跨平台的标准格式。
 （RSA 定义的 “描述个人信息交换语法标准” 有多个标准，pkcs（Public-Key Cryptography Standards，公玥密码学）标准是其中一个）
@@ -320,6 +323,9 @@ openssl pkcs12 -in for-iis.pfx -out for-iis.pem -nodes
 例如：
 如果你是在 Java 环境中工作，可能会使用 `.keystore` 或 `.jks` 文件；
 如果你需要跨平台兼容性，则可能更倾向于使用 `.p12` 或 `.pfx` 文件。
+
+当应用需要使用 SSL/TLS 进行通信时，我们将会使用到密钥库（keystore）和信任库（truststore）。
+在 JDK8 之前，这些文件的默认格式为 JKS；从 JDK9 开始，默认格式为 PKCS12。
 :::
 
 **示例命令**：
@@ -389,11 +395,17 @@ openssl ocsp -issuer "Microsoft Azure RSA TLS Issuing CA 04.crt" -CAfile chain.p
 
 @tab openssl 介绍
 
+<!-- ============================= -->
+
+OpenSSL 是 SSL（Secure Sockets Layer） 的一个实现。
+
 todo openssl 中文文档 —— https://www.openssl.net.cn/
 
 todo openssl 英文文档 —— https://docs.openssl.org/master/
 
 @tab keytool 介绍
+
+<!-- ============================= -->
 
 keytool 是 Java 开发工具包 JDK1.4 之后引入的一个命令行工具，用于管理和生成 密钥对、数字证书 以及管理 密钥库。它主要用于安全通信和身份验证，通过使用公钥/私钥对和相关证书实现自我认证。
 
@@ -520,15 +532,30 @@ keytool -changealias -keystore yourjks.jks -alias oldalias -destalias newalias
 
 ### 转换
 
+#### 去除密码
+
+去除 pem 格式的 key 的密码：
+（输出的密码不输入即可）
+
+```bash
+openssl rsa -in test.key -out test1.key
+```
+
 #### `.der` 转 `.pem` （以及反向）
 
 二进制转 base64
 
+DER \-\-\> PEM
+
 ```bash
 # 将der格式证书转pem格式
 openssl x509 -in cert.crt -inform der -outform pem -out cert.pem
-# PEM到DER
-openssl x509 -in cert.crt -outform der-out cert.der
+```
+
+PEM \-\-\> DER
+
+```bash
+openssl x509 -in cert.crt -outform der -out cert.der
 ```
 
 #### `.p12` 转 `.crt` + `.key`
@@ -540,26 +567,57 @@ openssl pkcs12 -in keystore.p12 -nocerts -nodes -out my_store.key
 
 #### `.crt` + `.key` 转 `.p12`
 
+合并 PEM 格式输出 PFX(p12)
+
 ```bash
+openssl pkcs12 -export -in server.crt -inkey server.key -out mycert.p12
+# 指定intermedian和CA
 openssl pkcs12 -export -in server.crt -inkey server.key -out mycert.p12 -name alias_name -CAfile myCA.crt
+openssl pkcs12 -export -in server.crt -inkey server.key -out mycert.p12 -name alias_name -CAfile myCA.crt -certfile server.crt
 ```
 
-#### `.der`/`.pem` 转 `.jks`
+#### `.der`/`.pem` 转 `.p12` （以及反向）
+
+```bash
+openssl pkcs12 -in cert2.pfx -out cert22.pem -nodes
+```
+
+#### `.der`/`.pem` 转 `.jks` （以及反向）
+
+CER \-\-\> JKS：
+导入证书/秘钥
 
 ```bash
 keytool -import -keystore cert.jks -file cert.der
 # 别名
-keytool -import -alias youralias -keystore cert.jks -file cert.der
-keytool -import -alias youralias -keystore output.jks -file cert.der -keypass youraliaspass
+keytool -import -keystore cert.jks -file cert.der -alias youralias
+keytool -import -keystore cert.jks -file cert.der -alias youralias -keypass youraliaspass
+keytool -import -keystore cert.jks -file cert.der -alias youralias -keypass youraliaspass -v -noprompt
 ```
 
-#### `.p12` 转 `.jks`
+JKS \-\-\> CER：
+导出证书/秘钥
 
 ```bash
-# 方式1
-keytool -importkeystore -srckeystore keystore.p12 -srcstoretype PKCS12 -destkeystore keystore.jks -deststoretype JKS -srcalias alias_name -destalias alias_name
-# 方式2
-keytool -importkeystore -v -srckeystore mycert.p12 -srcstoretype pkcs12 -srcstorepass a123456 -destkeystore Aserver.keystore -deststoretype jks -deststorepass b123456
+keytool -export -alias test -keystore test.jks -storepass 123456 -file test.cer
+```
+
+#### `.p12` 转 `.jks` （以及反向）
+
+P12 \-\-\> JKS
+
+```bash
+keytool -importkeystore -srckeystore keystore.p12 -srcstoretype PKCS12 -deststoretype JKS -destkeystore keystore.jks
+# 指定别名
+keytool -importkeystore -srckeystore keystore.p12 -srcstoretype PKCS12 -deststoretype JKS -destkeystore keystore.jks -srcalias alias_name -destalias alias_name
+# 指定密码
+keytool -importkeystore -srckeystore keystore.p12 -srcstoretype pkcs12 -deststoretype jks -destkeystore keystore.jks -srcstorepass a123456 -deststorepass b123456 -v
+```
+
+JSK \-\-\> P12
+
+```bash
+keytool -importkeystore -srckeystore keystore.jks -srcstoretype JKS -deststoretype PKCS12 -destkeystore keystore.p12
 ```
 
 #### `.jks` 转 `.crt` + `.key`
@@ -569,6 +627,9 @@ keytool -importkeystore -v -srckeystore mycert.p12 -srcstoretype pkcs12 -srcstor
 keytool -exportcert -file server.cer -alias server -keystore server.jks -storepass 123456
 
 # todo to .key
+私钥是无法通过keytool从证书库中导出的（脱裤子放屁的规定）。
+如果你特别需要私钥，可以考虑用编程的方式从密钥库文件中去获取。
+参考： https://blog.csdn.net/zyx1260168395/article/details/112802464
 ```
 
 ### 组合
@@ -777,6 +838,14 @@ keytool -list -v -keystore server.jks
 
 1. 配置 http 允许连接 （否则，http 访问会提示 `Bad Request. This combination of host and port requires TLS.`）
 
+## 案例：Spring SSL 双向认证
+
+todo
+
+> - Https 生成证书（keytool），并在 Springboot 中进行配置
+>   - https://blog.csdn.net/zyx1260168395/article/details/112802464
+>   - https://blog.csdn.net/qq_31856061/article/details/125542695
+
 ## 案例：Nginx 单向认证（JKS）
 
 场景： 前后端分离且前后端交互需要用 HTTPS 协议，则需要在前端服务（一般 nginx）上配置 SSL 证书。如果后端由 Java 开发，一般拿到的 SSL 证书是 Java 版的 jks 证书；且前端客户提供的配置好基本环境的 nginx，所需要的证书是 crt 和 key 组合形式，因此需要进行证书转换。
@@ -857,6 +926,7 @@ keytool -list -v -keystore server.jks
 
 > 参考：
 >
+> - 一文看懂 HTTPS、证书机构（CA）、证书、数字签名、私钥、公钥（转） —— https://www.cnblogs.com/kerwincui/p/14179509.html
 > - SSL 证书格式普及，PEM、CER、JKS、PKCS12 —— https://blog.freessl.cn/ssl-cert-format-introduce/
 > - https://blog.csdn.net/qq_33204709/category_12778972.html
 >   - todo 证书学习（一）keytool 工具使用介绍
@@ -865,5 +935,8 @@ keytool -list -v -keystore server.jks
 >   - todo 证书学习（四）X.509 数字证书整理
 >   - todo 证书学习（五）Java 实现 RSA、SM2 证书颁发
 >   - todo 证书学习（六）TSA 时间戳服务器原理 + 7 个免费时间戳服务器地址
+> - Https 生成证书（keytool），并在 Springboot 中进行配置
+>   - https://blog.csdn.net/zyx1260168395/article/details/112802464
+>   - https://blog.csdn.net/qq_31856061/article/details/125542695
 > - todo HTTPS 证书吊销机制 —— https://www.secpulse.com/archives/113075.html
 > - todo OSCP 流程和实践 —— https://blog.csdn.net/anjiyufei/article/details/141951363

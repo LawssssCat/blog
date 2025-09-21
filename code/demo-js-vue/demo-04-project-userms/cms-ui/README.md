@@ -143,3 +143,5 @@ tsconfig.vitest.json  —— TypeScript配置 （只放test相关）
 - 图标配置
 - 组件
   - 登录
+    - token
+    - RBAC(Role Based Access Control) (参考：[link1](https://www.cnblogs.com/KingJA/p/16188877.html))

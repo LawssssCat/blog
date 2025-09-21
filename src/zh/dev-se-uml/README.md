@@ -16,7 +16,7 @@ UML（Unified Modeling Language，统一建模语言）
     - UML 2.x standard compliant
   - 证书
     - ~~[OCSMP(OMG Certified Systems Modeling Professional)](https://www.omg.org/certification/sysml/)~~ 评估认证人员使用 SysML 进行系统建模能力的认证 （价格高到飞起 350 刀/次 至少考 4 次。且国内基本没用？猜的）
-    - 软考，不是主要考 uml，国内相对 ocsmp 有用？
+    - 软考，不是主要考 uml，国内相对 ocsmp 有用！
 - sysml http://production.omgsysml.org/spec/
 
 UML 图分类

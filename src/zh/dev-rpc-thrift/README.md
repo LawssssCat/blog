@@ -8,7 +8,7 @@ category:
   - 系列入口
 ---
 
-跨语言 RPC 实现框架
+跨语言 RPC（Remote Procedure Call，远程过程调用） 实现框架
 
 <!-- more -->
 

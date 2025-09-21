@@ -32,8 +32,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @param msg 返回内容
      */
     public AjaxResult(int code, String msg) {
-        super.put(CODE_TAG, code);
-        super.put(MSG_TAG, msg);
+        this(code, msg, null);
     }
 
     /**
@@ -46,6 +45,10 @@ public class AjaxResult extends HashMap<String, Object> {
     public AjaxResult(int code, String msg, Object data) {
         super.put(CODE_TAG, code);
         super.put(MSG_TAG, msg);
+        this.setData(data);
+    }
+
+    public void setData(Object data) {
         if (StringUtils.isNotNull(data)) {
             super.put(DATA_TAG, data);
         }
@@ -65,7 +68,7 @@ public class AjaxResult extends HashMap<String, Object> {
      *
      * @return 成功消息
      */
-    public static AjaxResult success(Object data) {
+    public static AjaxResult successData(Object data) {
         return AjaxResult.success("操作成功", data);
     }
 

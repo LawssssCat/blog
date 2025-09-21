@@ -1,5 +1,7 @@
+import { localCache } from '@/utils/cache';
 import { BASE_URL, TIME_OUT } from './config';
 import XRequest from './request';
+import { LOGIN_TOKEN } from '@/global/constants';
 
 // const xRequest = new XRequest({
 //   baseURL: "http://example.org/aribnb/api",
@@ -15,6 +17,10 @@ export const xRequest = new XRequest({
   interceptors: {
     requestSuccessFn: (config) => {
       console.log('example 请求成功拦截');
+      const token = localCache.getCache(LOGIN_TOKEN);
+      if (config.headers && token) {
+        config.headers.Authorization = 'Bearer ' + token;
+      }
       return config;
     },
     requestFailureFn: (err) => {

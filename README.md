@@ -45,6 +45,16 @@ pnpm run docs:dev
 | `star`         | 星标文章列表 | `/star/`           |
 | `timeline`     | 时间线列表   | `/timeline/`       |
 
+文章头说明：
+index: false
+timeline: false
+isOriginal: true
+
+默认文章头：
+todo
+
+todo 整理概要 `<!-- more -->`
+
 配置参考
 
 - https://vuejs.press/zh/reference/config.html

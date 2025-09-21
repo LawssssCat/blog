@@ -14,6 +14,7 @@ Java 对象和 JSON 数据之间进行转换。
 参考：
 
 - 原理、使用与高级配置 - https://blog.csdn.net/qq_38411796/article/details/139962039
+- https://andriifedorenko.medium.com/the-perfect-jackson-objectmapper-ac10b8bf8764
 
 ```xml title="pom.xml"
 <dependency>

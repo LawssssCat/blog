@@ -10,6 +10,10 @@ category:
 
 Java Bean 管理框架
 
+alternate
+
+- quarkus —— for kubes
+
 <!-- more -->
 
 <Catalog />

@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: ruoyi-pod
+spec:
+  containers:
+    - name: mysql
+      image: docker.io/library/mysql:5.7.35
+      # imagePullPolicy: IfNotPresent
+      # command:
+      # args:
+      ports:
+        - containerPort: 3306
+          hostPort: 23306
+          # port: 30080             # 服务访问端口，集群内部访问的端口
+          # targetPort: 3306          # pod控制器中定义的端口（应用访问的端口）
+          # nodePort: 23306           # NodePort，外部客户端访问的端口
+      volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        - name: mysql-logs
+          mountPath: /var/lib/logs
+        # - name: mysql-conf
+        #   mountPath: /etc/mysql/mysql.conf.d/mysql.cnf
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: 123456
+        - name: MYSQL_USER
+          value: azi
+        - name: MYSQL_PASSWORD
+          value: 123mysql
+    - name: redis
+      image: docker.io/library/redis:7.2.6
+      command:
+        - "redis-server"
+        - "/usr/local/etc/redis/redis.conf"
+      ports:
+        - containerPort: 6379
+          hostPort: 16379
+      volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        - name: redis-logs
+          mountPath: /logs
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/
+          readonly: true
+    - name: redis-s1
+      image: docker.io/library/redis:7.2.6
+      command:
+        - "redis-server"
+        - "/usr/local/etc/redis/redis-s1.conf"
+      ports:
+        - containerPort: 6380
+          hostPort: 16380
+      volumeMounts:
+        - name: redis-s1-data
+          mountPath: /data
+        - name: redis-s1-logs
+          mountPath: /logs
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/
+          readonly: true
+    - name: redis-s2
+      image: docker.io/library/redis:7.2.6
+      command:
+        - "redis-server"
+        - "/usr/local/etc/redis/redis-s2.conf"
+      ports:
+        - containerPort: 6381
+          hostPort: 16381
+      volumeMounts:
+        - name: redis-s2-data
+          mountPath: /data
+        - name: redis-s2-logs
+          mountPath: /logs
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/
+          readonly: true
+    - name: redis-sentinel
+      image: docker.io/library/redis:7.2.6
+      command:
+        - "redis-sentinel"
+        - "/usr/local/etc/redis/redis-sentinel.config"
+      ports:
+        - containerPort: 26379
+          hostPort: 26379
+      volumeMounts:
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/
+          # readonly: true # Sentinel config file /usr/local/etc/redis/redis-sentinel.config is not writable: Read-only file system. Exiting...
+  volumes:
+    - name: mysql-data
+      persistentVolumeClaim:
+        claimName: ry-mysql-data
+    - name: mysql-logs
+      persistentVolumeClaim:
+        claimName: ry-mysql-logs
+    - name: redis-data
+      persistentVolumeClaim:
+        claimName: ry-redis-data
+    - name: redis-logs
+      persistentVolumeClaim:
+        claimName: ry-redis-logs
+    - name: redis-s1-data
+      persistentVolumeClaim:
+        claimName: ry-redis-s1-data
+    - name: redis-s1-logs
+      persistentVolumeClaim:
+        claimName: ry-redis-s1-logs
+    - name: redis-s2-data
+      persistentVolumeClaim:
+        claimName: ry-redis-s2-data
+    - name: redis-s2-logs
+      persistentVolumeClaim:
+        claimName: ry-redis-s2-logs
+    - name: redis-config
+      configMap:
+        name: ry-config-map
+        items:
+          - key: redis-config
+            path: redis.conf
+          - key: redis-s1-config
+            path: redis-s1.conf
+          - key: redis-s2-config
+            path: redis-s2.conf
+          - key: redis-sentinel-config
+            path: redis-sentinel.config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ry-config-map
+data:
+  redis-config: |-
+    port 6379
+    bind 0.0.0.0
+    appendonly yes
+    save 60 1000
+    maxmemory 512mb
+    maxmemory-policy allkeys-lru
+  redis-s1-config: |-
+    port 6380
+    bind 0.0.0.0
+    slaveof 127.0.0.1 6379
+    appendonly yes
+    save 60 1000
+    maxmemory 512mb
+    maxmemory-policy allkeys-lru
+  redis-s2-config: |-
+    port 6381
+    bind 0.0.0.0
+    slaveof 127.0.0.1 6379
+    appendonly yes
+    save 60 1000
+    maxmemory 512mb
+    maxmemory-policy allkeys-lru
+  redis-sentinel-config: |-
+    sentinel monitor architect-01 127.0.0.1 6379 1

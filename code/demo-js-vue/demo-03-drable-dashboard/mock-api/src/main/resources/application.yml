@@ -1,0 +1,4 @@
+server:
+  port: 23458
+  servlet:
+    context-path: /mock-api

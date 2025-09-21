@@ -8,8 +8,7 @@ import { zhSidebar } from "./sidebar/index.js";
 import { MR_HOPE_AVATAR } from "./logo.js";
 import common from "./config/common.js";
 import footer from "./config/footer.js";
-import mdInclude from "./config/md-include.js";
-import mdCode from "./config/md-code.js";
+import markdown from "./config/md.js";
 
 export default hopeTheme({
   hostname: common.github.blog,
@@ -98,8 +97,10 @@ export default hopeTheme({
   // enable it to preview all changes in time
   hotReload: true,
 
+  // all features are enabled for demo, only preserve features you need here
+  markdown,
+
   plugins: {
-    prismjs: mdCode.prismjs.prismjs,
     blog: true,
 
     // install @waline/client before enabling it
@@ -110,84 +111,10 @@ export default hopeTheme({
     //   serverURL: "https://waline-comment.vuejs.press",
     // },
 
+    copyCode: true,
+
     components: {
       components: ["Badge", "VPCard", "SiteInfo"],
-    },
-
-    // all features are enabled for demo, only preserve features you need here
-    mdEnhance: {
-      align: true,
-      attrs: true,
-      codetabs: true,
-      component: true,
-      demo: true,
-      figure: true,
-      imgLazyload: true,
-      imgSize: true,
-      include: {
-        resolvePath: mdInclude.resolvePath,
-      },
-      mark: true,
-      stylize: [
-        {
-          matcher: "Recommended",
-          replacer: ({ tag }) => {
-            if (tag === "em")
-              return {
-                tag: "Badge",
-                attrs: { type: "tip" },
-                content: "Recommended",
-              };
-          },
-        },
-      ],
-      sub: true,
-      sup: true,
-      tabs: true,
-      vPre: true,
-
-      // install chart.js before enabling it
-      // chart: true,
-
-      // insert component easily
-
-      // install echarts before enabling it
-      // echarts: true,
-
-      // install flowchart.ts before enabling it
-      flowchart: true,
-
-      // gfm requires mathjax-full to provide tex support
-      // gfm: true,
-
-      // install katex before enabling it
-      // katex: true,
-
-      // install mathjax-full before enabling it
-      // mathjax: true,
-
-      // install mermaid before enabling it
-      mermaid: true,
-
-      // playground: {
-      //   presets: ["ts", "vue"],
-      // },
-
-      // install reveal.js before enabling it
-      // revealJs: {
-      //   plugins: ["highlight", "math", "search", "notes", "zoom"],
-      // },
-
-      // install @vue/repl before enabling it
-      // vuePlayground: true,
-
-      // install sandpack-vue3 before enabling it
-      // sandpack: true,
-
-      // 思维导图
-      // 参考： https://theme-hope.vuejs.press/zh/guide/markdown/chart/markmap.html
-      // pnpm add -D markmap-lib markmap-toolbar markmap-view
-      markmap: true,
     },
 
     // install @vuepress/plugin-pwa and uncomment these if you want a PWA

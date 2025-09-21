@@ -10,4 +10,8 @@ import java.util.List;
 @Mapper
 public interface EventMapper {
     List<Event> findByParam(@Param("param")EventPoParam param);
+
+    int updateById(@Param("po") Event event);
+
+    int insert(@Param("po") Event event);
 }

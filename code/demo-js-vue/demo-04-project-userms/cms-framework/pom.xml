@@ -16,18 +16,34 @@
     </description>
 
     <dependencies>
-
         <!-- SpringBoot Web容器 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- 系统模块-->
+        <!-- SpringBoot 拦截器 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- 数据库连接 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
+
+        <!-- 系统模块 -->
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>cms-system</artifactId>
         </dependency>
 
+        <!-- 缓存模块 -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>cms-cache</artifactId>
+        </dependency>
     </dependencies>
 </project>

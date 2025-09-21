@@ -2,13 +2,19 @@ package org.example.framework.web.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.example.cache.context.CacheContext;
+import org.example.common.constant.CacheConstants;
 import org.example.common.constant.Constants;
 import org.example.common.core.domain.model.LoginUser;
 import org.example.common.utils.StringUtils;
-import org.example.common.utils.uuid.IdUtils;
+import org.example.common.utils.key.UUIDUtils;
+import org.example.common.utils.web.IpUtils;
+import org.example.common.utils.web.UserAgentUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class TokenService {
+    protected static final long MILLIS_SECOND = 1000;
+
+    protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
+
+    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+
     @Value("${token.header}")
     private String header;
 
@@ -33,11 +45,8 @@ public class TokenService {
     @Value("${token.expireTime}")
     private int expireTime;
 
-    protected static final long MILLIS_SECOND = 1000;
-
-    protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
-
-    private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+    @Resource
+    private CacheContext cacheContext;
 
     /**
      * 创建令牌
@@ -46,15 +55,49 @@ public class TokenService {
      * @return 令牌
      */
     public String createToken(LoginUser loginUser) {
-        String token = IdUtils.fastUUID();
-        // TODO 完成
-        // loginUser.setToken(token);
-        // setUserAgent(loginUser);
-        // refreshToken(loginUser);
+        String loginUserKey = UUIDUtils.fastUUID();
 
+        // 刷新登录令牌
+        loginUser.setToken(loginUserKey);
+        setUserAgent(loginUser);
+        refreshToken(loginUser);
+
+        // 返回客户端需要记录的登录信息（后续接口请求需要携带该信息，以表明客户端用户身份）
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Constants.LOGIN_USER_KEY, token);
+        claims.put(Constants.LOGIN_USER_KEY, loginUserKey);
         return createToken(claims);
+    }
+
+    /**
+     * 设置用户代理信息
+     *
+     * @param loginUser 登录信息
+     */
+    private void setUserAgent(LoginUser loginUser) {
+        // 解析客户端IP信息
+        String clientIp = IpUtils.getClientIpAddr();
+        loginUser.setIpaddr(clientIp);
+        loginUser.setLoginLocation(IpUtils.getRealAddressByIP(clientIp));
+        // 解析客户端软件信息
+        loginUser.setBrowser(UserAgentUtils.getBrowser());
+        loginUser.setOs(UserAgentUtils.getPlatform());
+    }
+
+    /**
+     * 刷新令牌有效期
+     *
+     * @param loginUser 登录信息
+     */
+    private void refreshToken(LoginUser loginUser) {
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        // 根据uuid将loginUser缓存
+        String userKey = getTokenKey(loginUser.getToken());
+        cacheContext.setObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+    }
+
+    private String getTokenKey(String uuid) {
+        return CacheConstants.LOGIN_TOKEN_KEY + uuid;
     }
 
     /**
@@ -94,8 +137,9 @@ public class TokenService {
             try {
                 Claims claims = parseToken(token);
                 // 解析对应的权限以及用户信息
-                String uuid = (String)claims.get(Constants.LOGIN_USER_KEY);
-                return getLoginUserByUUID(uuid);
+                String loginUserKey = (String)claims.get(Constants.LOGIN_USER_KEY);
+                String tokenKey = getTokenKey(loginUserKey);
+                return cacheContext.getObject(tokenKey, LoginUser.class);
             } catch (Exception e) {
                 log.error("获取用户信息异常: {}", e.getMessage());
             }
@@ -114,17 +158,6 @@ public class TokenService {
             .setSigningKey(secret)
             .parseClaimsJws(token)
             .getBody();
-    }
-
-    /**
-     * 获取用户身份信息
-     *
-     * @param uuid 唯一值
-     * @return 用户身份信息
-     */
-    private LoginUser getLoginUserByUUID(String uuid) {
-        // TODO 完成
-        return new LoginUser();
     }
 
     /**

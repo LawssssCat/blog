@@ -35,4 +35,6 @@ public interface Constants {
      * 令牌前缀
      */
     String LOGIN_USER_KEY = "login_user_key";
+
+    String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 }

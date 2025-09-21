@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "org.example.*")
 public class DemoH2SpringbootApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoH2SpringbootApplication.class, args);

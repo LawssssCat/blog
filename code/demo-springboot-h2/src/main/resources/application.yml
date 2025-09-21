@@ -20,3 +20,9 @@ spring:
       # mode: always # 在所有 bean 初始化完成后执行 SQL 脚本
 mybatis:
   mapper-locations: /mapper/*.xml
+
+logging:
+  level:
+    org.example: debug
+    org.springframework.transaction: debug
+    org.springframework.jdbc: debug

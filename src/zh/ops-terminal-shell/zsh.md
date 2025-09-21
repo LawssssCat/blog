@@ -3,7 +3,7 @@ title: ZSH 介绍
 date: 2024-06-09
 tag:
   - linux
-order: 1
+order: 10
 ---
 
 参考： <https://www.haoyep.com/posts/zsh-config-oh-my-zsh/>
@@ -19,7 +19,7 @@ echo $SHELL
 
 ## oh-my-zsh
 
-官网： http://ohmyz.sh/
+官网： <http://ohmyz.sh/>
 
 主题
 

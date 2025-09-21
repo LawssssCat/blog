@@ -3,7 +3,6 @@
  */
 import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
-import mdCode from "./config/md-code.js";
 import mdGoogleAnalytics from "./config/md-googleanalytics.js";
 
 export default defineUserConfig({
@@ -32,7 +31,6 @@ export default defineUserConfig({
   theme,
 
   plugins: [
-    mdCode.shiki.shikiPlugin, // 代码高亮
     mdGoogleAnalytics.googleAnalyticsPlugin, // 访问统计
   ],
 

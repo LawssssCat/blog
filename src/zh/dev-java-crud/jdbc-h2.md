@@ -3,7 +3,9 @@ title: H2 使用
 date: 2024-09-14
 tag:
   - java
-order: 1
+  - jdbc
+  - h2
+order: 66
 ---
 
 参考：
