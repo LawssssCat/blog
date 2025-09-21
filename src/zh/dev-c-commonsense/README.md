@@ -9,20 +9,20 @@ order: 1
 
 ## 开发环境配置
 
-+ VSCode + gcc + make + gdb —— <https://www.cnblogs.com/lenmom/p/9193388.html>
-代码：
-<RepoLink path="/code/demo-c-base/" />
++ VSCode + gcc + cmake + gdb —— <RepoLink path="/code/demo-c-base/demo-01-workspace/wk/README.md" />
 
 ## 编译&语法
 
+<!-- todo
 详解三大编译器：gcc、llvm 和 clang | <https://zhuanlan.zhihu.com/p/357803433>
+-->
 
 + [gcc](./gcc.md)
 + LLVM
 + LLVM2.0 - Clang
 
-+ makefile
-+ cmake
++ [makefile](./makefile.md)
++ [cmake](./cmake.md)
 
 ## 调试
 
