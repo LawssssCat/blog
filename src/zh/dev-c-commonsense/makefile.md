@@ -3,7 +3,7 @@ title: Makefile 使用笔记
 order: 66
 ---
 
-Makefile是`make`工具使用，用于描述工程如何构建的文件。
+Makefile是`make`工具使用，用于描述工程如何构建的文件，从而进行源码的批量编译。
 
 基本格式：
 
@@ -507,7 +507,7 @@ compilation terminated.
 make: *** [Makefile:6: objs/add.o] Error 1
 ```
 
-```makefile
+```java
 <!-- @include: @project/code/demo-c-base/demo-02-makefile/demo-make-03/Makefile-fail-01-header -->
 ```
 

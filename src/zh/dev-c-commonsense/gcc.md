@@ -103,6 +103,8 @@ gcc calc.o tfunc.o add.o -o calc
 
 @tab 制作动态库
 
+> 动态链接的具体用法参考： [here](#title-dynamic-link)
+
 动态库（shared library）是在业务运行时才从文件系统中加载到运行环境中的，因此无法在编译和链接阶段获取代码段的符号地址（代码段的符号包括引用的全局数据，调用的函数等）。
 
 > 动态链接执行复杂，执行时间比静态链接长。
@@ -197,7 +199,7 @@ gcc calc.c -o calc -loperation -L$(pwd) -Wl,-rpath=$(pwd)
 `-Wl,<选项>` | 将`<选项>`传递给链接器 | &nbsp;
 `-Wl,-rpath="共享库路径"` | 指定运行时共享库（.so文件）路径所在的目录 | &nbsp;
 
-### 查看ELK信息
+#### 查看ELK信息
 
 Linux的可执行文件一般是elf格式（Executable and Linking Format，可执行可连接格式）的，在这个可执行文件的头部包含了很多重要的信息：如文件格式，加载地址，符号表等。
 
@@ -322,6 +324,173 @@ $ echo | clang -x c++ -v -E -
 > + `#include "..."` 优先查找开发者本地文件，用于引用开发团队项目内部或者开发者本地定义的，开发者可以修改的头文件。
 >
 
+### configure
+
+`configure` 是一个脚本文件，定义了执行时可以传入的必要参数，告知配置项目。
+`configure` 程序它会根据传入的配置项目检查程序编译时所依赖的环境以及对程序编译安装进行配置，最终生成编译所需的 `Makefile` 文件供程序 `make` 读入使用进而调用相关编译程式来编译最终的二进制程序。
+
+参考：
+
++ 简述configure、pkg-config、pkg_config_path三者的关系 | <https://www.cnblogs.com/wliangde/p/3807532.html>
+
+### pkg-config 链接库配置生成器
+
+而configure脚本在检查相应依赖环境时(例：所依赖软件的版本、相应库版本等)，通常会通过pkg-config的工具来检测相应依赖环境。
+
+一般来说，如果库的头文件不在 `/usr/include` 目录中，那么在编译的时候需要用 `-I` 参数指定其路径。
+但由于编译的环境和编译后程序运行的环境大概率不同，通过 `-I` 指定的文件路径大概率也不一样，这是需要编译后的 `lib/pkgconfig` 目录中添加 `.pc` 文件来指定库的各种必要信息，包括版本信息、编译和连接需要的参数等。
+这样，不管库文件安装在哪，通过库对应的 `.pc` 文件就可以准确定位，可以使用相同的编译和连接命令，使得编译和连接界面统一。
+
+```txt
+prefix=/opt/gtk/
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+ 
+glib_genmarshal=glib-genmarshal
+gobject_query=gobject-query
+glib_mkenums=glib-mkenums
+ 
+Name: GLib
+Description: C Utility Library
+Version: 2.12.13
+Libs: -L${libdir} -lglib-2.0
+Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include
+```
+
+```bash
+# 列出所有可使用的包
+# 位置在：
+# + /usr/lib/pkgconfig —— 此目录下都是各种.pc文件。
+# + /usr/local/lib/pkgconfig —— 新软件一般都会安装.pc文件
+# + 没有可以自己创建，并且设置环境变量 PKG_CONFIG_PATH 寻找 .pc 文件路径。
+$ pkg-config –-list-all
+
+# 给出在编译时所需要的选项
+$ gcc -c `pkg-config --cflags glib-2.0` sample.c
+# 给出连接时的选项
+$ gcc sample.o -o sample `pkg-config --libs glib-2.0`
+```
+
+```bash
+export PKG_CONFIG_PATH=/opt/gtk/lib/pkgconfig:$PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=/opt/gtk/lib:$LD_LIBRARY_PATH
+```
+
+### 动态链接 {#title-dynamic-link}
+
+Linux支持动态连接库，不仅节省了磁盘、内存空间，而且可以提高程序运行效率。不过引入动态连接库也可能会带来很多问题，例如动态连接库的调试、升级更新和潜在的安全威胁。
+
+> 参考：
+>
+> + 动态符号链接的细节 - <https://www.w3cschool.cn/cbook/ojay2ozt.html> 【非常详细】
+
+为了让动态链接器能够进行符号的重定位，必须把动态链接库的相关信息写入到可执行文件当中：
+
+```bash
+# 通过 readelf -d 可以打印出该文件直接依赖的库
+$ readelf -d test | grep NEEDED
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+# 通过 ldd 命令则可以打印出所有依赖或者间接依赖的库
+$ ldd test
+      linux-gate.so.1 =>  (0xffffe000) # 在文件系统中并没有对应的库文件，它是一个虚拟的动态链接库，对应进程内存映像的内核部分。参考： http://www.linux010.cn/program/Linux-gateso1-DeHanYi-pcee6103.htm
+      libc.so.6 => /lib/libc.so.6 (0xb7da2000)
+      /lib/ld-linux.so.2 (0xb7efc000) # 动态链接器 | 绝对路径 | readelf -x .interp test | interpeter
+      # 程序的加载过程 - 动态链接器
+      # 当 Shell 解释器或者其他父进程通过exec启动我们的程序时，系统会先为ld-linux创建内存映像，然后把控制权交给ld-linux，
+      # 之后ld-linux负责为可执行程序提供运行环境，负责解释程序的运行，因此ld-linux也叫做dynamic loader（或intepreter）
+      # 参考： http://www.ibm.com/developerworks/cn/linux/l-elf/part1/index.html
+```
+
+程序有两种方式使用库
+
++ 编译时通过 `-l`,`-L` 参数隐式使用： `gcc -o test test.c -lmyprintf -L./ -I./`
++ 运行时通过 `LD_LIBRARY_PATH` 环境变量显示使用： `LD_LIBRARY_PATH=$PWD`
+
+::: tip
+**指定动态库位置**：
+
+通过 `LD_LIBRARY_PATH` 参数，它类似 Shell 解释器中用于查找可执行文件的 `PATH` 环境变量，也是通过冒号分开指定了各个存放库函数的路径。
+
+该变量实际上也可以通过 `/etc/ld.so.conf` 文件来指定，一行对应一个路径名。 （一般需要管理员权限） <br>
+为了提高查找和加载动态链接库的效率，系统启动后会通过 `ldconfig` 工具创建一个库的缓存 `/etc/ld.so.cache`。
+如果用户通过 `/etc/ld.so.conf` 加入了新的库搜索路径或者是把新库加到某个原有的库目录下，最好是执行一下 `ldconfig` 以便刷新缓存。
+
+更多参考： `man ld-linux`, `/lib/ld-linux.so.2`
+:::
+
+#### 动态链接器（dynamic linker/loader）
+
+Linux 下 elf 文件的动态链接器是 ld-linux.so，即 `/lib/ld-linux.so.2`。
+通过 `man ld-linux` 可以获取与动态链接器相关的资料，包括各种相关的环境变量和文件都有详细的说明。
+
+如：
+
++ `LD_LIBRARY_PATH`
++ `LD_BIND_NOW`
++ `LD_PRELOAD` 指定预装载一些库，以便替换其他库中的函数，从而做一些安全方面的处理
++ `LD_DEBUG` 用来进行动态链接的相关调试
+
++ `ld.so.conf`
++ `ld.so.cache`
++ `/etc/ld.so.preload` 指定需要预装载的库
+
+#### 运行时库的连接 `LD_LIBRARY_PATH`
+
+库文件在连接（静态库和共享库）和运行（仅限于使用共享库的程序）时被使用，其搜索路径是在系统中进行设置的。
+
+一般Linux系统把 `/lib` 和 `/usr/lib` 两个目录作为默认的库搜索路径，所以使用这两个目录中的库是不需要进行设置搜索路径即可直接使用。
+对于处于默认库搜索路径之外的库，需要将库的位置添加到 库的搜索路径之中。
+设置库文件的搜索路径有下列两种方式，可任选其一使用：
+
+1. 会话生效 —— 在环境变量 `LD_LIBRARY_PATH` 中指明库的搜索路径。
+
+  `export LD_LIBRARY_PATH=/opt/gtk/lib:$LD_LIBRARY_PATH`
+
+1. 永久生效 —— 在 `/etc/ld.so.conf` 文件中添加库的搜索路径（绝对路径）。 ⚠️一般需管理员权限
+
+  e.g.
+
+  ```bash
+  /usr/X11R6/lib
+  /usr/local/lib
+  /opt/lib
+  ```
+
+  ::: tip
+  另外，为了加快程序执行时对共享库的定位速度，避免使用搜索路径查找共享库的低效率，会有 `/etc/ld.so.cache` 库列表文件可以直接读取、搜索。
+  `/etc/ld.so.cache` 是一个非文本的数据文件，不能直接编辑，它是根据 `/etc/ld.so.conf` 中设置的搜索路径由 `/sbin/ldconfig` 命令将这些搜索路径下的共享库文件集中在一起而生成的( `ldconfig` 命令要以 root 权限执行)。
+
+  如当安装完一些库文件(例如刚安装好glib)，或者修改 `ld.so.conf` 增加新的库路径后，需要运行一下 `/sbin/ldconfig` 使所有的库文件都被缓存到 `ld.so.cache` 中。
+  否则 `ld.so.conf` 的更改不生效。
+  :::
+
+### 静态编译
+
+一般在“裸机”上跑的程序会考虑使用静态链接编译，避免动态链接缺失的情况
+
+::: tip
+
+**Linux 和 裸机（baremetal） 区别**：
+
++ Linux —— 在已安装操作系统的机器上跑。一般：个人pc、公司服务器
++ baremetal —— 直接由硬件调起。一般：嵌入式
+
+:::
+
+编译参数：
+
++ gcc —— `-static`
+
+::: tip
+
+静态编译的二进制通过 `ldd` 可以看到 "not a dynamic executable" 的字样。
+而 ~~`-nostdlib`~~ 通过 `ldd` 看到的是 "statically linked"，这表示 “它恰好没有链接到任何库，但在其他方面与普通 PIE 相同，指定了 ELF 解释器。”
+
+todo What's the difference between "statically linked" and "not a dynamic executable" from Linux ldd? | <https://stackoverflow.com/questions/61553723/whats-the-difference-between-statically-linked-and-not-a-dynamic-executable>
+
+:::
+
 ### 交叉编译
 
 “交叉编译” 指在一个平台上生成另一个平台上的可执行文件。
@@ -338,9 +507,64 @@ $ echo | clang -x c++ -v -E -
 + `arm-linux-gcc`
 + `arm-none-linux-gnueabi-gcc-ld`
 
-::: tip
-**Linux 和 裸机（baremetal） 区别**： 
+e.g. 交叉编译脚本
 
-+ Linux —— 在已安装操作系统的机器上跑。一般：个人pc、公司服务器
-+ baremetal —— 直接由硬件调起。一般：嵌入式
-:::
+```bash
+#!/bin/bash
+
+install_arm32() {
+  sudo apt install gcc make gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi
+}
+
+install_arm64() {
+  sudo apt install gcc make gcc-aarch64-linux-gun binutils-aarch64-linux-gnu
+}
+gen_hello() {
+  cat > helloworld.c << EOF
+#include<stdio.h>
+int main()
+{
+  printf("Hello World!\n");
+  return 0;
+}
+EOF
+}
+
+compile_64() {
+  gcc helloworld.c -o helloworld-x86_64
+}
+
+compile_arm32() {
+  arm-linux-gnueabi-gcc helloworld.c -o helloworld-arm -static
+}
+
+compile_arm64() {
+  aarchi64-linux-gnu-gcc helloworld.c -o helloworld-aarch64 -static
+}
+
+# Main.
+# install_arm32
+# install_arm64
+gen_hello
+compile_64 || exit 1
+compile_arm32
+compile_arm64
+```
+
+## 编译原理
+
+todo
+
+## 安全加固
+
+todo
+
+`nm` 可以查看 elf 文件的符号信息
+
+```bash
+$ gcc -c test.c
+$ nm test.o
+00000000 B global
+00000000 T main
+          U printf
+```
