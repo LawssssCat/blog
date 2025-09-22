@@ -13,11 +13,12 @@ LANGUAGES CXX)
 
 # add_executable(目标名称 源文件1 [源文件2...])
 # add_executable(helloworld hello.cpp)
-# add_executable(demo)
+# add_executable(demo main.cpp complex.cpp)
+add_executable(demo) # 将该目标的依赖通过target_sources方法声明
 
-add_subdirectory(sdk)
-add_subdirectory(engine)
-add_subdirectory(portal)
+# add_subdirectory(sdk)
+# add_subdirectory(engine)
+# add_subdirectory(portal)
 
 # 对demo的属性描述
 # 其他属性有：
@@ -30,9 +31,9 @@ add_subdirectory(portal)
 # - STATIC_LIBRARY_OPTIONS
 # - STATIC_LIBRARY_FLAGS
 # - SOURCES
-# target_sources(demo
-#   PRIVATE
-#     main.cpp
-#     complex.cpp
-#     complex.h # 可有可无（cpp中必然有引用该头文件），加上便于IDE显式辅助信息
-# )
+target_sources(demo
+  PRIVATE
+    main.cpp
+    complex.cpp
+    complex.h # 可有可无（cpp中必然有引用该头文件），加上便于IDE显式辅助信息
+)
