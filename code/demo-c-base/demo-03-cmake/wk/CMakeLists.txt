@@ -15,6 +15,7 @@ LANGUAGES CXX)
 # add_executable(helloworld hello.cpp)
 # add_executable(demo main.cpp complex.cpp)
 add_executable(demo) # 将该目标的依赖通过target_sources方法声明
+add_library(complex) # 注意：生成的库名可能不同。linux静态库名libxxx.a、MSVC静态库静态库名xxx.lib
 
 # add_subdirectory(sdk)
 # add_subdirectory(engine)
@@ -34,6 +35,22 @@ add_executable(demo) # 将该目标的依赖通过target_sources方法声明
 target_sources(demo
   PRIVATE
     main.cpp
+    # complex.cpp
+    # complex.h # 可有可无（cpp中必然有引用该头文件），加上便于IDE显式辅助信息
+)
+target_sources(complex
+  PRIVATE
     complex.cpp
-    complex.h # 可有可无（cpp中必然有引用该头文件），加上便于IDE显式辅助信息
+    complex.h
+)
+
+# 构造静态库
+# g++ -c complex.cpp -o complex.o
+# g++ main.cpp complex.o -o demo
+# ar rcs libcomplex.a complex.o # 制作静态库
+# ar -t libcomplex.a # 查看静态库内容
+# g++ main.cpp -L . -l complex -o demo # 链接静态文件，生成可执行程序。通过在当前目录（.）查找库文件（libcomplex.a）的方式
+target_link_libraries(demo
+  PRIVATE
+    complex # libcomplex.a
 )

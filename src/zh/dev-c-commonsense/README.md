@@ -5,7 +5,8 @@ order: 1
 
 文档：
 
-+ 《API Reference Document》 - <https://www.apiref.com/cpp-zh/cpp/utility/functional/bind.html>
++ C/C++参考 —— <https://cppreference.cn/w/>
++ C/C++参考（API Reference Document） —— <https://www.apiref.com/cpp-zh/cpp/utility/functional/bind.html>
 
 ## 开发环境配置
 
