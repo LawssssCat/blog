@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string.h>
 
+#include "config.h"
+
 #include "Circle.h"
 #include "Rectangle.h"
 #include "Triangle.h"
@@ -14,6 +16,7 @@ void usage(char *argv0)
 }
 int main(int argc, char *argv[])
 {
+  std::cout << "Version: " << MYPROJECT_VERSION_MAJOR << "." << MYPROJECT_VERSION_MINOR << std::endl;
   if (argc == 3 && strcmp(argv[1], "c") == 0)
   {
     Circle c(atof(argv[2]));
