@@ -26,6 +26,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |v|
     config.vm.synced_folder "demo-01-workspace/wk", "/home/vagrant/wk", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
     config.vm.synced_folder "demo-03-cmake/wk", "/home/vagrant/wk2", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
+    config.vm.synced_folder "demo-03-cmake/wk2", "/home/vagrant/wk3", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
   end
 
   vm_list.each do |item|
