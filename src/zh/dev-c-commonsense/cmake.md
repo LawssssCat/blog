@@ -794,7 +794,6 @@ endblock()
 message("${myVar}") # dog
 ```
 
-
 ### 生成器表达式（Generator Expression）
 
 格式：
@@ -837,3 +836,19 @@ PRIVATE
   $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/Od>)
   $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2>)
 ```
+
+## 案例
+
+### 分层目录Demo
+
+代码仓：
+<RepoLink path="/code/code/demo-c-base/demo-03-cmake/wk2/CmakeLists.txt" />
+
+包含：
+
++ [x] 分层目录组织方式
++ [ ] 定义接口库（只有接口，没有实现）
++ [ ] 配置和使用第三方库
++ [ ] 集成Google测试框架
++ [ ] 包的安装
++ [ ] 配置和使用自定义包
