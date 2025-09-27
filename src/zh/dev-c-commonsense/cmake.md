@@ -129,31 +129,22 @@ int main() {
 具体写法（格式）不在这体现。
 :::
 
-`cmake` —— 构建脚本生成工具
++ `cmake` —— 构建脚本生成工具
++ `cmake_minimum_required` —— 检查cmake版本，小于指定版本退出执行
++ `project` —— 设置项目名，随后会生成相关变量供开发者使用
++ `add_executable`/`add_library` —— 添加构建目标，指定可执行程序（exe/elf）或者库（lib/so/a）的名称、依赖文件
++ `target_include_directories` —— 为目标添加头文件的查找路径
++ `target_link_libraries` —— 为目标添加静态库/动态库的名称
++ `add_subdirectory` —— 将子目录中的CMakeLists.txt文件添加进来，参与构建脚本的生成
++ `find_package` —— 查找第三方库
 
-`cmake_minimum_required` —— 检查cmake版本，小于指定版本退出执行
++ `ctest` —— 测试用例执行工具
++ `enable_testing` —— 开启测试
++ `add_test` —— 添加测试用例命令
 
-`project` —— 设置项目名，随后会生成相关变量供开发者使用
-
-`add_executable`/`add_library` —— 添加构建目标，指定可执行程序（exe/elf）或者库（lib/so/a）的名称、依赖文件
-
-`target_include_directories` —— 为目标添加头文件的查找路径
-
-`target_link_libraries` —— 为目标添加静态库/动态库的名称
-
-`add_subdirectory` —— 将子目录中的CMakeLists.txt文件添加进来，参与构建脚本的生成
-
-`find_package` —— 查找第三方库
-
-`ctest` —— 测试用例执行工具
-
-`enable_testing` —— 开启测试
-
-`add_test` —— 添加测试用例命令
-
-`-B build` —— 指定生成文件位置
-
-`-L` —— 列出变量名（调试）
++ `-B build` —— 指定生成文件位置
++ `-L` —— （调试）列出变量名
++ `-H` —— （调试）列出变量名解释
 
 ## 基础概念
 
@@ -242,6 +233,10 @@ Generators
       add_executable(exe1 exe1.cpp)
       target_link_libraries(exe1 Eigen)
       ```
+
+      ::: tip
+      配置`target_include_directories`有骚操作
+      :::
 
 ### 变量（Variables）
 

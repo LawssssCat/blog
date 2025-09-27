@@ -10,6 +10,7 @@ set(GTEST_SOURCE_DIR "${PROEJCT_ROOT_DIR}/thirdpart/googletest")
 # 错误：When specifying an out-of-tree source a binary directory must be explicitly specified.
 # add_subdirectory(${CMAKE_HOME_DIRECTORY}/thirdpart/googletest)
 add_subdirectory(${GTEST_SOURCE_DIR} googletest)
+set(BUILD_GMOCK OFF)
 
 add_executable(test_common test_common.cpp)
 target_include_directories(test_common PRIVATE ${GTEST_SOURCE_DIR})
