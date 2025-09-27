@@ -3,7 +3,7 @@ title: cmake 使用笔记
 order: 20
 ---
 
-CMake是一个跨平台的构建系统，它可以根据用户编写`CMakeLists.txt`文件生成适用于不同编译器和操作系统的构建文件。
+CMake（Cross-Platform Make）是一个跨平台的构建系统，它可以根据用户编写`CMakeLists.txt`文件生成适用于不同编译器和操作系统的构建文件。
 如生成 Visual Studio 17 的 `.sln`、XCode 的 `.xcodeproj`、Ninja 的 `.ninja`、make 的 `Makefile`文件。
 进而生成可执行文件、静态库、动态库等目标文件。
 
@@ -30,7 +30,15 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
 <!-- more -->
 
+文档：
+
++ 官方文档 <https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html>
+
 ## Getting Start
+
+::: info
+前提：开始前需要知道c/c++编译是怎么一回事。可以回看[gcc](./gcc.md)内容。
+:::
 
 配置文件：
 `CMakeLists.txt`
@@ -46,7 +54,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
 ```bash
 # 生成Makefile
-$ cmake -B build
+$ cmake -S . -B build
 -- The CXX compiler identification is GNU 15.2.1
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - failed
@@ -84,6 +92,10 @@ cmake_minimum_required(VERSION 3.10)
 #   [VERSION 版本号]
 #   [LANGUAGES 编程语言 ...] # 不填写，默认 LANGUAGES C CXX
 # )
+# tip： 该命令设置后，会设置如下变量。这些变量可以通过message打印。
+# PROJECT_NAME
+# PROJECT_SOURCE_DIR / <PROJECT_NAME>_SOURCE_DIR
+# PROJECT_BINARY_DIR / <PROJECT_NAME>_BINARY_DIR
 project(Helloworld VERSION 0.1 LANGUAGES CXX)
 
 # add_executable(目标名称 源文件1 [源文件2...])
@@ -109,6 +121,39 @@ int main() {
 --- | ---
 `--target <target>` | 执行目标，如Makefile中的目标
 `--config <profile>` | todo
+
+## 常见指令
+
+::: tip
+这里只罗列常见指令及其含义，方便简单理解CMakeLists.txt在写什么。
+具体写法（格式）不在这体现。
+:::
+
+`cmake` —— 构建脚本生成工具
+
+`cmake_minimum_required` —— 检查cmake版本，小于指定版本退出执行
+
+`project` —— 设置项目名，随后会生成相关变量供开发者使用
+
+`add_executable`/`add_library` —— 添加构建目标，指定可执行程序（exe/elf）或者库（lib/so/a）的名称、依赖文件
+
+`target_include_directories` —— 为目标添加头文件的查找路径
+
+`target_link_libraries` —— 为目标添加静态库/动态库的名称
+
+`add_subdirectory` —— 将子目录中的CMakeLists.txt文件添加进来，参与构建脚本的生成
+
+`find_package` —— 查找第三方库
+
+`ctest` —— 测试用例执行工具
+
+`enable_testing` —— 开启测试
+
+`add_test` —— 添加测试用例命令
+
+`-B build` —— 指定生成文件位置
+
+`-L` —— 列出变量名（调试）
 
 ## 基础概念
 
@@ -836,6 +881,17 @@ PRIVATE
   $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Debug>>:/Od>)
   $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2>)
 ```
+
+## 进阶概念
+
+### 测试（Test）
+
+cmake提供ctest可执行程序来拉起CMakeList.txt中配置的测试用例。
+
+在CMakeList.txt中配置测试用例需要如下步骤：
+
+1. 添加`enable_test`指令，生成测试用例入口，如makefile的`make test`目标
+1. 添加`add_test`指令，生成测试用例的入口，如makefile的`make test_myadd_usecase`目标
 
 ## 案例
 

@@ -5,8 +5,16 @@ order: 1
 
 文档：
 
-+ C/C++参考 —— <https://cppreference.cn/w/>
-+ C/C++参考（API Reference Document） —— <https://www.apiref.com/cpp-zh/cpp/utility/functional/bind.html>
++ 语法
+  + ~~C++教程 <https://www.runoob.com/cplusplus/cpp-useful-resources.html>~~
+
++ 接口
+  + 中文
+    + C/C++参考（API Reference Document） —— <https://www.apiref.com/cpp-zh/cpp/utility/functional/bind.html>
+    + C/C++参考 —— <https://cppreference.cn/w/>
+  + 英文
+    + C/C++参考 —— <https://en.cppreference.com/w/cpp/header.html>
+    + cstdlib —— <https://cplusplus.com/reference/cstdlib/>
 
 ## 开发环境配置
 
@@ -33,3 +41,5 @@ order: 1
 
 + [perl](./lib-perl/README.md)
 + [openssl](./lib-openssl/README.md)
+
++ [gtest](./lib-gtest/README.md)

@@ -53,19 +53,19 @@ GNATS（GNU Bug Tracking System） | 一个跟踪GCC和其他GNU程序问题的�
 ↓
 ↓ hello.c （源文件，文本）
 ↓
-预处理器（cpp） —— 注释、宏定义 —— e.g. gcc -E hello.c -o hello.i
+预处理器（cpp） —— 注释、宏定义展开与处理 —— e.g. gcc -E hello.c -o hello.i
 ↓
 ↓ hello.i （修改了的源程序，文本）
 ↓
-编译器（ccl） —— e.g. gcc -S hello.c -o hello.s
+编译器（ccl） —— 生成汇编代码 —— e.g. gcc -S hello.c -o hello.s
 ↓
 ↓ hello.s （汇编程序，文本）
 ↓
-汇编器（as） —— e.g. gcc -c hello.c -o hello.o
+汇编器（as） —— 生成机器码 —— e.g. gcc -c hello.c -o hello.o
 ↓
 ↓ hello.o （目标程序，二进制）（可重定位程序，relocatable object program）
 ↓
-链接器（ld） —— e.g. gcc hello.c -o hello
+链接器（ld） —— 找到数据和函数存储位置 —— e.g. gcc hello.c -o hello
 ↓
 ↓ ←←← prinf.o （链接二进制）
 ↓
