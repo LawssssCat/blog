@@ -1,0 +1,9 @@
+# vscode
+/.vscode/*
+!/.vscode/launch.json
+!/.vscode/tasks.json
+!/.vscode/extensions.json
+
+# 构建产物
+/hello
+/hello.o
