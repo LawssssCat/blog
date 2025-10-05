@@ -1,6 +1,6 @@
 vm_list = [
   { # hash map
-    "name" => "wk-c01",
+    "name" => "demo-c-base-c01",
     "cpu" => "4",
     "mem" => "2048",
     "ip_addr" => "192.168.56.20",
@@ -24,10 +24,11 @@ Vagrant.configure("2") do |config|
 
   # 文件同步
   config.vm.provider "virtualbox" do |v|
-    config.vm.synced_folder "demo-01-workspace/wk", "/home/vagrant/wk", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
-    config.vm.synced_folder "demo-03-cmake/wk", "/home/vagrant/wk2", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
-    config.vm.synced_folder "demo-03-cmake/wk2", "/home/vagrant/wk3", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
-    config.vm.synced_folder "demo-04-gtest/wk", "/home/vagrant/wk4", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
+    config.vm.synced_folder "demo-01-workspace", "/home/vagrant/demo-01-workspace", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
+    config.vm.synced_folder "demo-02-makefile",  "/home/vagrant/demo-02-makefile", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
+    config.vm.synced_folder "demo-03-cmake",     "/home/vagrant/demo-03-cmake", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
+    config.vm.synced_folder "demo-04-gtest",     "/home/vagrant/demo-04-gtest", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
+    config.vm.synced_folder "demo-05-syntax",    "/home/vagrant/demo-05-syntax", type: "virtualbox", mount_options: ["dmode=0770", "fmode=0770"] # 在这里开发，以避免vscode无法在vagrant默认挂载卷中调用gdb问题
   end
 
   vm_list.each do |item|
@@ -47,7 +48,7 @@ Vagrant.configure("2") do |config|
       # 执行shell脚本
       node.vm.provision "shell" do |script|
         script.path = "vagrant.sh" # 脚本路径
-        script.args = [] # 传递参数
+        script.args = ["virtualbox", item["name"], item["ip_addr"]] # 传递参数
       end
 
     end
