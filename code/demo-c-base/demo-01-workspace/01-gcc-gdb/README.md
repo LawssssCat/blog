@@ -11,6 +11,7 @@ make --version
 操作
 
 ```bash
-make
-make clean
+make        # 编译
+output/main # 执行
+make clean  # 清理
 ```
