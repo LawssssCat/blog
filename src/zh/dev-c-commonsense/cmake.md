@@ -32,6 +32,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
 文档：
 
++ CMake菜谱（CMake Cookbook中文版） <https://www.bookstack.cn/read/CMake-Cookbook/content-preface-preface-chinese.md>
 + 官方文档 <https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html>
 
 ## Getting Start
@@ -125,6 +126,8 @@ int main() {
 ## 常见指令
 
 ::: tip
+还未了解cmake的基础概念的话，请先移步[基础概念](#id-base-consensus)。
+
 这里只罗列常见指令及其含义，方便简单理解CMakeLists.txt在写什么。
 具体写法（格式）不在这体现。
 :::
@@ -135,6 +138,7 @@ int main() {
 + `add_executable`/`add_library` —— 添加构建目标，指定可执行程序（exe/elf）或者库（lib/so/a）的名称、依赖文件
 + `target_include_directories` —— 为目标添加头文件的查找路径
 + `target_link_libraries` —— 为目标添加静态库/动态库的名称
++ `target_compile_definitions` —— 为目标添加宏定义（e.g. `-D ENABLE_HTTPS=1`）
 + `add_subdirectory` —— 将子目录中的CMakeLists.txt文件添加进来，参与构建脚本的生成
 + `find_package` —— 查找第三方库
 
@@ -143,52 +147,16 @@ int main() {
 + `add_test` —— 添加测试用例命令
 
 + `-B build` —— 指定生成文件位置
++ `--build build` —— 运行编译脚本，生成可执行程序
++ `--install build` —— 运行安装脚本，将可执行程序及其配置移动到指定位置
 + `-L` —— （调试）列出变量名
 + `-H` —— （调试）列出变量名解释
 
-## 基础概念
+## 基础概念 {id=id-base-consensus}
 
 参考：
 
 + <https://www.bilibili.com/video/BV1MXX3YQEia>
-
-### 生成器（Generator）
-
-生成如 makefile、VS2017 等不同构建工具需要的文件的生成器。
-
-```bash
-# 查看生成器
-$ cmake -G
-CMake Error: No generator specified for -G
-
-Generators
-  Green Hills MULTI            = Generates Green Hills MULTI files
-                                 (experimental, work-in-progress).
-* Unix Makefiles               = Generates standard UNIX makefiles. # --- 💡前面带*号，默认生成器
-  Ninja                        = Generates build.ninja files.
-  Ninja Multi-Config           = Generates build-<Config>.ninja files.
-  Watcom WMake                 = Generates Watcom WMake makefiles.
-  CodeBlocks - Ninja           = Generates CodeBlocks project files
-                                 (deprecated).
-  CodeBlocks - Unix Makefiles  = Generates CodeBlocks project files
-                                 (deprecated).
-  CodeLite - Ninja             = Generates CodeLite project files
-                                 (deprecated).
-  CodeLite - Unix Makefiles    = Generates CodeLite project files
-                                 (deprecated).
-  Eclipse CDT4 - Ninja         = Generates Eclipse CDT 4.0 project files
-                                 (deprecated).
-  Eclipse CDT4 - Unix Makefiles= Generates Eclipse CDT 4.0 project files
-                                 (deprecated).
-  Kate - Ninja                 = Generates Kate project files (deprecated).
-  Kate - Ninja Multi-Config    = Generates Kate project files (deprecated).
-  Kate - Unix Makefiles        = Generates Kate project files (deprecated).
-  Sublime Text 2 - Ninja       = Generates Sublime Text 2 project files
-                                 (deprecated).
-  Sublime Text 2 - Unix Makefiles
-                               = Generates Sublime Text 2 project files
-                                 (deprecated).
-```
 
 ### 属性（Properties）
 
@@ -879,7 +847,144 @@ PRIVATE
 
 ## 进阶概念
 
-### 测试（Test）
+### 包含（include）
+
+`include(xx)` 作用单纯是把指定位置的内容引入到当前文件。
+
+它并不会改变相对路径的锚点，比如在 /CMakeLists.txt 中使用 `include(some/x.cmake)` 引入 `add_subdirectory(x.cpp)` 命令会失败，因为要改成引入 `add_subdirectory(some/cpp)` 命令。
+
+::: tip
+
+因为include有不改变相对路径的锚点的问题（特性？），所以一般在其中写与路径无关的内容，如下载等功能性的函数。
+
+```makefile
+include(FetchContent) # 引入函数
+# https://github.com/google/googletest
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip
+)
+```
+
+:::
+
+### 模块（Module）
+
+::: info
+
+参考：
+
++ <https://cmake.com.cn/cmake/help/latest/manual/cmake-packages.7.html#config-file-packages>
++ <https://cmake.com.cn/cmake/help/latest/guide/using-dependencies/index.html#config-file-packages>
++ <https://cmake.com.cn/cmake/help/latest/command/find_package.html#command:find_package>
+
+:::
+
+在CMake里，模块（Module）是一个包含可重用代码的CMake文件。
+
+可以通过`find_packages`命令找到这些模块，然后通过`target_link_libraries`命令将。
+
+e.g.
+
+```makefile
+find_package(OpenSSL REQUIRED)
+if (NOT OPENSSL_FOUND)
+  message(SEND_ERROR "OpenSSL not found")
+endif()
+target_link_libraries(MyTarget INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+```
+
+Cmake维护一些常用的三方库的模块列表：
+<https://cmake.org/cmake/help/latest/manual/cmake-modules.7.html>
+
+#### 一、查找模块
+
+cmake查找模块有两种模式：
+
+1. 通过查找`Find<PackageName>.cmake`文件，查找模块的引入方式
+
+    ::: warning
+
+    这种形式虽然方便，但是因为模块和三方库是分开维护的，所以会有第三方库过时的情况。
+
+    :::
+
+1. 通过配置文件配置形式查找模块的引入方式
+
+##### 通过FindXxx.cmake文件查找三方包
+
+cmake到下面两个目录查找名为`Find<PackageName>.cmake`的“查找模块”：
+
+1. 在CMake安装目录的modules目录中 （e.g. `/usr/share/cmake/Modules`）
+
+    ```bash
+    $ rpm -qa | grep cmake
+    $ rpm -ql cmake-filesystem-3.31.6-2.fc42.x86_64 | grep -i module
+    $ rpm -ql cmake-data-3.31.6-2.fc42.noarch | grep -i module | grep -i openssl
+    /usr/share/cmake/Help/module/FindOpenSSL.rst
+    /usr/share/cmake/Modules/FindOpenSSL.cmake # ————————————— openssl模块💡
+    ```
+
+1. 在`CMAKE_MODULE_PATH`列表目录中（自定义模块可以添加到这里，`find_packages`会从中优先查找模块）
+
+以OpenSSL为例：
+由`find_package(OpenSSL REQUIRED)`命令开始，cmake会找到FindOpenSSL.cmake文件。
+通过读取这个文件，可以找到OpenSSL的依赖项（相关的头文件、库文件，并且对不同操作系统做了区分），进而对依赖项进行关联。
+
+##### 通过配置文件形式查找三方包
+
+参考：
+<https://cmake.com.cn/cmake/help/latest/manual/cmake-packages.7.html#package-configuration-file>
+
+#### 二、导入目标（Imported Targets）
+
+`find_packages`找到三方包后，会定义“导入目标（Imported Targets）”。
+如对于OpenSSL，会定义 `OpenSSL::SSL`/`OpenSSL::Crypto`/`OpenSSL::applink`/... 等导入目标。
+其中 `OpenSSL` 是名空间，后面 SSL/Crypto/applink/... 等是库的名称，与C++的命名空间类似。
+
+### 生成器（Generator）
+
+生成如 makefile、VS2017 等不同构建工具需要的文件的生成器。
+
+```bash
+# 查看生成器
+$ cmake -G
+CMake Error: No generator specified for -G
+
+Generators
+  Green Hills MULTI            = Generates Green Hills MULTI files
+                                 (experimental, work-in-progress).
+* Unix Makefiles               = Generates standard UNIX makefiles. # --- 💡前面带*号，默认生成器
+  Ninja                        = Generates build.ninja files.
+  Ninja Multi-Config           = Generates build-<Config>.ninja files.
+  Watcom WMake                 = Generates Watcom WMake makefiles.
+  CodeBlocks - Ninja           = Generates CodeBlocks project files
+                                 (deprecated).
+  CodeBlocks - Unix Makefiles  = Generates CodeBlocks project files
+                                 (deprecated).
+  CodeLite - Ninja             = Generates CodeLite project files
+                                 (deprecated).
+  CodeLite - Unix Makefiles    = Generates CodeLite project files
+                                 (deprecated).
+  Eclipse CDT4 - Ninja         = Generates Eclipse CDT 4.0 project files
+                                 (deprecated).
+  Eclipse CDT4 - Unix Makefiles= Generates Eclipse CDT 4.0 project files
+                                 (deprecated).
+  Kate - Ninja                 = Generates Kate project files (deprecated).
+  Kate - Ninja Multi-Config    = Generates Kate project files (deprecated).
+  Kate - Unix Makefiles        = Generates Kate project files (deprecated).
+  Sublime Text 2 - Ninja       = Generates Sublime Text 2 project files
+                                 (deprecated).
+  Sublime Text 2 - Unix Makefiles
+                               = Generates Sublime Text 2 project files
+                                 (deprecated).
+```
+
+### Preset
+
+通过json配置指定cmake工具链的位置。
+
+### 测试（CTest）
 
 cmake提供ctest可执行程序来拉起CMakeList.txt中配置的测试用例。
 
@@ -887,6 +992,9 @@ cmake提供ctest可执行程序来拉起CMakeList.txt中配置的测试用例。
 
 1. 添加`enable_test`指令，生成测试用例入口，如makefile的`make test`目标
 1. 添加`add_test`指令，生成测试用例的入口，如makefile的`make test_myadd_usecase`目标
+
+
+## 案例
 
 ## 案例
 

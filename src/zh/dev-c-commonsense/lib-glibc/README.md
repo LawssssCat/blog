@@ -2,8 +2,9 @@
 title: glibc 使用笔记
 ---
 
-glibc是标准C库的GNU实现。
-我们采用C/C++所写的程序，运行时基本都依赖与它。
+glibc（GNU C Library）是标准C库的GNU实现，为C语言提供了标准的API以及POSIX（可移植操作系统接口）的扩展，其中标准库内容包括输入输出处理、字符串操作、内存管理等。
+
+我们采用C/C++所写的程序，运行时基本都依赖与glibc。
 如果我们想看当前机器glibc的源代码，首先需要知道当前机器glibc的版本号，然后到glibc的官网下载对应版本的源代码。
 
 glibc官网地址: <https://www.gnu.org/software/libc/> \
