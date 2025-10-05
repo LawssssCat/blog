@@ -14,13 +14,10 @@ LANGUAGES CXX)
 # add_executable(目标名称 源文件1 [源文件2...])
 # add_executable(helloworld hello.cpp)
 # add_executable(demo main.cpp complex.cpp)
-add_executable(demo) # 将该目标的依赖通过target_sources方法声明
-add_library(complex) # 注意：生成的库名可能不同。linux静态库名libxxx.a、MSVC静态库静态库名xxx.lib
-
-# add_subdirectory(sdk)
-# add_subdirectory(engine)
-# add_subdirectory(portal)
-
+add_executable(demo # 将该目标的依赖通过target_sources方法声明
+  main.cpp
+  engine/hello.cpp
+)
 # 对demo的属性描述
 # 其他属性有：
 # - INCLUDE_DIRECTORIES
@@ -32,17 +29,14 @@ add_library(complex) # 注意：生成的库名可能不同。linux静态库名l
 # - STATIC_LIBRARY_OPTIONS
 # - STATIC_LIBRARY_FLAGS
 # - SOURCES
-target_sources(demo
-  PRIVATE
-    main.cpp
-    # complex.cpp
-    # complex.h # 可有可无（cpp中必然有引用该头文件），加上便于IDE显式辅助信息
+target_include_directories(demo
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/engine
 )
-target_sources(complex
-  PRIVATE
-    complex.cpp
-    complex.h
-)
+
+add_subdirectory(lib)
+# add_subdirectory(engine)
+# add_subdirectory(portal)
 
 # 构造静态库
 # g++ -c complex.cpp -o complex.o
@@ -51,6 +45,6 @@ target_sources(complex
 # ar -t libcomplex.a # 查看静态库内容
 # g++ main.cpp -L . -l complex -o demo # 链接静态文件，生成可执行程序。通过在当前目录（.）查找库文件（libcomplex.a）的方式
 target_link_libraries(demo
-  PRIVATE
+  PUBLIC
     complex # libcomplex.a
 )

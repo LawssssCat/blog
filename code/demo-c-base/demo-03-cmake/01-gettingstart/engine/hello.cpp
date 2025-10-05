@@ -1,9 +1,12 @@
 #include <iostream>
 
+#include <hello.h>
+
 #include "complex.h"
 
-int main()
-{
+void sayHello() {
+  std::cout << "Hello, World! engine" << std::endl;
+
   Complex a(1, 2);
   Complex b(3, 4);
   Complex c = a + b;
@@ -11,5 +14,4 @@ int main()
   std::cout << "a - b = " << (a - b) << std::endl;
   std::cout << "a * b = " << (a * b) << std::endl;
   std::cout << "a / b = " << (a / b) << std::endl;
-  return 0;
 }
