@@ -1,0 +1,8 @@
+# Hello
+add_library(Hello hello/core.cpp)
+target_include_directories(Hello PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+# Add
+add_library(Add add/core.cpp)
+target_include_directories(Add PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+message("hello, ${CMAKE_CURRENT_SOURCE_DIR}")

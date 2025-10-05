@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "ms-vscode.cpptools", // 语言提示
+    "ms-vscode.cmake-tools", // 项目管理
+    "matepek.vscode-catch2-test-adapter", // 处理 CMake Tools 插件提供用例清单的两个问题：1、用例清单无法跳转用例代码；2、用例代码左侧无启动按钮，要到用例清单找到用例执行；
+  ]
+}
