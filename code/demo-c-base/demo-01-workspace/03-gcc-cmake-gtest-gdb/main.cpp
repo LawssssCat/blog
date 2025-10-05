@@ -1,6 +1,7 @@
 #include "hello/core.h"
+#include "add/core.h"
 
 int main() {
-    sayHello();
+    sayHello(add(1,1));
     return 0;
 }

@@ -2,4 +2,17 @@ cmake_minimum_required(VERSION 3.14)
 project("Demo")
 add_executable(Demo main.cpp)
 add_subdirectory(lib)
-target_link_libraries(Demo PUBLIC Hello)
+target_link_libraries(Demo
+PUBLIC
+  Hello
+  Add
+)
+
+# 测试用例
+include(CTest) # 引入CTest模块。参考 https://cmake.com.cn/cmake/help/latest/module/CTest.html#module:CTest
+if(BUILD_TESTING) # 由CTest模块引入
+  # ... CMake code to create tests ...
+  message("enable testing")
+  enable_testing() # 可忽略，因为引入CTEst时已包含该命令
+  add_subdirectory(tests)
+endif()
