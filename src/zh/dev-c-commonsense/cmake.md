@@ -1009,13 +1009,16 @@ todo 将项目的测试结果在面板中展示
 ### 分层目录Demo
 
 代码仓：
-<RepoLink path="/code/code/demo-c-base/demo-03-cmake/wk2/CmakeLists.txt" />
+<RepoLink path="/code/code/demo-c-base/demo-03-cmake/02-directory/CmakeLists.txt" />
 
 包含：
 
 + [x] 分层目录组织方式
 + [ ] 定义接口库（只有接口，没有实现）
-+ [ ] 配置和使用第三方库
-+ [ ] 集成Google测试框架
++ [x] 配置和使用第三方库（with `source code` for cpp-httplib）
++ [x] 配置和使用第三方库（with `xxx-devel` for openssl）
++ [x] 配置和使用第三方库（with `FetchContent` for googletest）
++ [ ] 配置和使用第三方库（with `vcpkg` for zlib）
++ [x] 集成Google测试框架
 + [ ] 包的安装
 + [ ] 配置和使用自定义包
