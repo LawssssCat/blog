@@ -1,7 +1,4 @@
-// #include <iostream>
-#pragma once
-
-#include <vector>
+#include "sort.h"
 
 // bubble
 void sort_bubble(std::vector<int> &col) {

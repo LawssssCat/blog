@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "sfn.h"
+#include "sort.h"
 
 void do_sort(const char* name, void (*fp)(std::vector<int> &c), std::vector<int> col, std::vector<int> exp) {
   fp(col);

@@ -18,7 +18,7 @@ add_executable(HelloDemo main.cpp)
 find_package(fmt CONFIG REQUIRED)
 target_link_libraries(HelloDemo PRIVATE fmt::fmt)
 
-add_subdirectory(lib/sort)
+add_subdirectory(lib)
 
 # 测试开关
 include(CTest)
