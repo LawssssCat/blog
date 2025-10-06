@@ -25,6 +25,17 @@ target_include_directories(DemoApp
   PUBLIC "${PROJECT_BINARY_DIR}"
 )
 
+# 生成clangd提示
+option(ENABLE_CLANGD_DATABASE '开启compile_command.json生成，引导clangd给出提示' ON)
+if(ENABLE_CLANGD_DATABASE)
+  message("enable clangd 'compile_command.json' generate")
+  # 构建时生成compile_commands.json（重要）
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+  file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/.clangd
+  "CompileFlags:
+    CompilationDatabase: ${CMAKE_CURRENT_BINARY_DIR}/")
+endif()
+
 # 测试
 include(CTest)
 if(BUILD_TESTING) # 由CTest模块引入

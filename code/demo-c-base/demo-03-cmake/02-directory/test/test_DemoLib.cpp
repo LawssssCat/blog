@@ -19,3 +19,12 @@ TEST(DemoTest, Status404) {
   const auto response = request.Get(path);
   EXPECT_EQ(response->status, 404);
 }
+
+TEST(DemoTest, Base64) {
+  const char* host = "https://httpbin.io";
+  const char* path = "/base64/aGVsbG8gd29ybGQ=";
+
+  httplib::Client request(host);
+  const auto response = request.Get(path);
+  EXPECT_EQ(response->body, "hello world");
+}

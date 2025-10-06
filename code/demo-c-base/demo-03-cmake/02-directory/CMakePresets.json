@@ -6,6 +6,7 @@
       "displayName": "my-presets-01",
       "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_VERBOSE_MAKEFILE": "ON",
         "FETCHCONTENT_QUIET": "OFF",

@@ -4,6 +4,7 @@
 
 # clang
 .cache
+/.clangd
 
 # vscode
 /.vscode/*
