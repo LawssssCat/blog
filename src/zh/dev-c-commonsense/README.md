@@ -40,7 +40,7 @@ order: 1
 
 + Jetbrain Clion —— JetBrains公司提供的（著名产品Java的Idea），目前免费（支持ja-netfilter），产品化无需太多配置
   + 工具链：vcpkg + cmake + gcc/clang,llvm + gdb/lldb,gtest
-    + 适合：Idea过来，且了解c/c++工具链各工具作用
+    + 适合：Idea过来，**Windows环境**，且了解c/c++工具链各工具作用
     + 插件：
       + 中文语言包
       + clang-format
@@ -54,7 +54,7 @@ order: 1
 
 + VSCode
   + 工具链：vcpkg + cmake + gcc/clang,llvm + lldb,gtest
-    + 适合：有跨平台构建需求，且了解c/c++工具链各工具作用
+    + 适合：Linux环境或者有跨平台构建需求，且了解c/c++工具链各工具作用
     + Demo：<RepoLink path="/code/demo-c-base/README.md" />
     + 插件
       + ~~C/C++ Extension Pack (ms-vscode.cpptools-extension-pack)~~ —— ❗别下载这个，我们用clang编译，不用gcc编译
@@ -136,6 +136,7 @@ order: 1
 Web
 
 + drogon —— web服务器
++ [cpp-httplib](https://github.com/yhirose/cpp-httplib/blob/master/CMakeLists.txt)
 
 测试
 

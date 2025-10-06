@@ -27,6 +27,8 @@ make test # cmake生成的拉去测试用例的指令，底层调用可执行文
 
 <!-- more -->
 
+## Quick Start
+
 参考：
 
 + 从零搭建一个c/c++工程-将gtest引入到项目中 <https://www.bilibili.com/video/BV1AX4y1J7dh>
@@ -40,3 +42,21 @@ gtest实际上是提供了宏，通过调用宏生成对接框架的测试用例
 + `TEST(测试组名, 测试用例名)`
 + 断言：
   + `EXCEPT_EQ(actual, except)`
+
+## gtest
+
+基本用法
+
+```cpp
+#include <gtest/gtest.h>
+
+#include "swap.h"
+
+TEST(SWAP_TEST, SWAP_TWO_INT) {
+  int val1 = 20;
+  int val2 = 30;
+  swap(val1, val2);
+  EXCEPT_EQ(30, val1);
+  EXCEPT_EQ(20, val2);
+}
+```

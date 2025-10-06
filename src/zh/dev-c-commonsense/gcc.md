@@ -44,6 +44,23 @@ GNATS（GNU Bug Tracking System） | 一个跟踪GCC和其他GNU程序问题的�
 `libtool` | 一个基本库，支持make程序的描述文件使用的简化共享库用法的脚本。 | &nbsp;
 `make` | 一个工具程序，它会读makefile脚本来确定程序中哪部分需要编译和连接，然后发布必要的命令。它读出的脚本（makefile或Makefile）定义了文件关系和依赖关系。 | make工具的支持库
 
+### 常见命令
+
++ `-B <directory>` 将目录添加到编译器的搜索路径
++ `-v` 显示编译器调用的程序
++ `-E` 仅进行预处理（不要编译、汇编或链接）
++ `-S` 仅进行编译（不要汇编或链接）
++ `-c` 仅进行编译和汇编（不要链接）
++ `-o <file>` 指定输出文件路径和名称
++ `-pie` 创建一个动态链接位置无关的可执行文件
++ `-I` 指定“头文件”的包含路径
++ `-L` 指定“链接库”的包含路径
++ `-shared` 创建共享库/动态库
++ `-static` 使用静态链接
+
++ `--help`
++ `--version`
+
 ### 编译过程
 
 简单来说：首先把源代码编译成目标文件， 然后把目标文件链接起来。
@@ -75,7 +92,7 @@ GNATS（GNU Bug Tracking System） | 一个跟踪GCC和其他GNU程序问题的�
 
 #### 制作库文件
 
-::: tabs
+:::::: tabs
 
 @tab 制作静态库
 
@@ -149,7 +166,24 @@ gcc -shared tfunc.o add.o -o liboperation.so
 gcc calc.c -o calc -loperation -L$(pwd) -Wl,-rpath=$(pwd)
 ```
 
+::: info
+注意：动态库在Windows和Linux上有区别
+
++ Linux 的搜索路径如下：
+  + `LD_LIBRARY_PATH`环境变量中的目录
+  + 系统共享库目录（通常是`/lib`或者`/lib64`）
+  + 系统库目录，如`/usr/lib`、`/usr/lib64`等
+  + `RPATH`、`RUNPATH`指定的路径
++ Windows 的搜索路径如下：
+  + 进程的可执行文件所在的目录
+  + 当前目录
+  + System32目录
+  + Windows目录
+  + `PATH`环境变量中的目录
+
 :::
+
+::::::
 
 #### 文件后缀
 

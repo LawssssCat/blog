@@ -33,19 +33,20 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 文档：
 
 + CMake菜谱（CMake Cookbook中文版） <https://www.bookstack.cn/read/CMake-Cookbook/content-preface-preface-chinese.md>
-+ 官方文档 <https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html>
++ 现代CMake教程 <https://crossroadw.github.io/ModernCMake/>
++ 官方文档 ~~<https://cmake.org/cmake/help/latest/module/GNUInstallDirs.html>~~ （[CN](https://cmake.com.cn/cmake/help/latest/)）
 
 ## Getting Start
 
 ::: info
-前提：开始前需要知道c/c++编译是怎么一回事。可以回看[gcc](./gcc.md)内容。
+前提：需要知道c/c++编译是怎么一回事。可以回看[gcc](./gcc.md)内容。
 :::
 
 配置文件：
 `CMakeLists.txt`
 
 代码仓：
-<RepoLink path="/code/code/demo-c-base/demo-03-cmake/wk/CmakeLists.txt" />
+<RepoLink path="/code/code/demo-c-base/demo-03-cmake/01-gettingstart/CmakeLists.txt" />
 
 最简例子：
 
@@ -131,6 +132,8 @@ int main() {
 这里只罗列常见指令及其含义，方便简单理解CMakeLists.txt在写什么。
 具体写法（格式）不在这体现。
 :::
+
++ `-DCMAKE_VERBOSE_MAKEFILE=ON` —— 环境变量，打印详细日志
 
 + `cmake` —— 构建脚本生成工具
 + `cmake_minimum_required` —— 检查cmake版本，小于指定版本退出执行
@@ -993,8 +996,13 @@ cmake提供ctest可执行程序来拉起CMakeList.txt中配置的测试用例。
 1. 添加`enable_test`指令，生成测试用例入口，如makefile的`make test`目标
 1. 添加`add_test`指令，生成测试用例的入口，如makefile的`make test_myadd_usecase`目标
 
+### 打包（CPack）
 
-## 案例
+todo 为打包需求提供了DSL
+
+### 统计（CDash）
+
+todo 将项目的测试结果在面板中展示
 
 ## 案例
 
