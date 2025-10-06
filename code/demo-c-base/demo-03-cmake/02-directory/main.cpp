@@ -14,6 +14,7 @@ void usage(char *argv0)
   std::cout << "\t" << argv0 << " r <widtd> <length>" << std::endl;
   std::cout << "\t" << argv0 << " t <a> <b> <c>" << std::endl;
 }
+
 int main(int argc, char *argv[])
 {
   std::cout << "Version: " << MYPROJECT_VERSION_MAJOR << "." << MYPROJECT_VERSION_MINOR << std::endl;

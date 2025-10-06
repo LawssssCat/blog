@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "(ctest) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "presentation": {
+                "hidden": true
+            },
+            "cwd": "${cmake.testWorkingDirectory}",
+            "program": "${cmake.testProgram}",
+            "args": [
+                "${cmake.testArgs}"
+            ],
+            "logging": {
+                "engineLogging": "warning",
+                "exceptions": true
+            }
+        }
+    ]
+}

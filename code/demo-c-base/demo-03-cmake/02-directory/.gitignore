@@ -1,0 +1,11 @@
+# cmake
+/build
+/out
+
+# clang
+.cache
+
+# vscode
+/.vscode/*
+!/.vscode/launch.json
+!/.vscode/extensions.json

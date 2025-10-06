@@ -6,6 +6,6 @@ target_sources(Shape
     src/Rectangle.cpp
 )
 target_include_directories(Shape
-  PUBLIC # 依赖该库的目标都会包含这些头文件
+  PUBLIC # 该目标、依赖该目标的，都会包含这些头文件
     include
 )

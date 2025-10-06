@@ -1,6 +1,0 @@
-{
-  "cmake.debugConfig": {
-    // "console": "externalTerminal"
-    "args": ["c", "10"]
-  },
-}
