@@ -1,0 +1,15 @@
+# cmake
+/out
+/build
+# /CMakePresets.json
+/CMakeUserPresets.json
+
+# .vscode
+/.vscode
+
+# clangd
+/.cache
+/.clangd
+
+# nohup
+.nohup.out
