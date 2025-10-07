@@ -2,6 +2,7 @@
 
 add_executable(test_main
   test_arr.cpp
+  test_class.cpp
   test_heap.cpp
   test_syntax_function.cpp
   test_sort.cpp

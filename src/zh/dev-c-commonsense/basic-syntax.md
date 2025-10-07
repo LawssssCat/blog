@@ -21,6 +21,30 @@ todo gcc版本和支持的语言标准对照表
 
 ## 基础概念
 
+### 头文件
+
+使头文件只包含一次的操作：
+
+::: tabs
+
+@tab if define
+
+```cpp
+#ifndef __SHAPE_H__
+#define __SHAPE_H__
+// some...
+#endif // !__SHAPE_H__
+```
+
+@tab pragma once
+
+```cpp
+@pragma once
+// some...
+```
+
+:::
+
 ### 变量（Variable）
 
 概念：
@@ -141,7 +165,7 @@ int main() {
 
 :::
 
-### 条件判断
+### 条件判断（if/else）
 
 if
 
@@ -173,7 +197,7 @@ switch(变量) {
 }
 ```
 
-### 循环
+### 循环（for/while）
 
 for
 
@@ -257,7 +281,7 @@ for (auto w:weights) {
 
 :::::
 
-### 字符串
+### 字符串（String）
 
 :::: tabs
 
@@ -306,7 +330,7 @@ word1 == word2; // 正确，注意需要类型为string
 
 ::::
 
-### 函数
+### 函数（Function）
 
 函数声明： 说明函数有什么形参（parameter）、返回值
 
@@ -398,7 +422,17 @@ word1 == word2; // 正确，注意需要类型为string
   3、函数中存在递归调用；（中断错误`Segmentation Fault!`❌）
   :::
 
-### 指针与引用
+### 指针（Ptr）与引用（Ref）
+
+```cpp
+SubClass obj;
+BaseClass* pBase = &obj; // 指针
+BaseClass& refBase = ojb; // 引用
+
+obj.greet();     // 子类重写方法
+pBase->greet();  // 父类方法
+refBase.greet(); // 父类方法
+```
 
 概念：
 
@@ -427,10 +461,309 @@ word1 == word2; // 正确，注意需要类型为string
 
 + 智能指针 —— 为了避免“地址访问错误”、“内存泄漏”等问题，方便内存管理，C++新增“`memory`”辅助内存管理。
 
-  `shared_ptr` 共享指针 自动管理动态分配的内存，在不使用时自动释放分配的内存
+  `shared_ptr` 共享指针 自动管理动态分配的内存，在不使用时（内部维护的地址引用计数为零时）自动释放分配的内存
 
   ```cpp
   #include <memory>
   shared_ptr<int> pInt(new int(2));
   cout << *pInt;
   ```
+
+### 类（Class）
+
+#### 类定义
+
+```cpp
+class 类名称 {
+  成员变量0; // 默认private
+  构造函数():成员变量0(初始化值); // 1
+  ~析构函数(); // 2
+public:     // 其他类可访问
+  成员变量1; // tips:驼峰命名
+  成员函数1();
+private:    // 仅自己可访问
+  成员变量2;
+  成员函数2();
+protected:  // 继承可访问
+  成员变量3;
+  成员函数3();
+};
+```
+
+成员函数可以写在类外面：
+
+```cpp
+class Shape {
+  protected:
+    std::string shapeName;
+  public:
+    bool draw() {
+      return true;
+    };
+    float area();
+}
+float Shape::area() {
+  return 0.0f;
+}
+```
+
+访问类成员有如下方法：
+
++ `Shape::positionX` —— 通过类名
++ `shape.getPositionX()` —— 通过实例
++ `ptr->getPositionX()` —— 通过指针
+
+##### 静态成员（static）
+
+特点：
+
++ 全局生效，与具体类实例无关
++ 静态访问静态，不能访问实例
+
+```cpp
+class Demo {
+public:
+  void cheer();
+private:
+  static unsigned int count;
+public:
+  static void hello();
+}
+
+unsigned int Demo::count = 0;
+void Demo::hello() {
+  // some... // ❗只能访问静态变量
+}
+
+Demo::count;
+Demo::hello();
+```
+
+##### 构造函数
+
+构造函数
+
+```cpp
+class Shape{
+  public:
+    Shape();
+    Shape(int x, int y);
+}
+
+Shape s1;
+Shape s2(1,2);
+```
+
+##### 拷贝构造函数
+
+alias: 复制构造函数、浅拷贝和深拷贝问题
+
+```cpp
+class Shape {
+  int x;
+  int y;
+private:
+  int* m_pValue;
+public:
+  Shape(const Shape& other) { // 拷贝构造函数。如果缺省，编译器会自动生成。
+    m_pValue = new int(*other.m_pValue); // 通过重写拷贝构造函数，手动指向一块新的地址
+  };
+}
+Shape s1;
+Shape s2 = s1;         // 调用拷贝构造函数【注意❗】
+Shape s3(s1);          // 调用拷贝构造函数
+Shape s4 = Shape(s1);  // 调用拷贝构造函数
+Shape* ps5 = new Shape(s1);  // 调用拷贝构造函数
+```
+
+##### 析构函数 `~`
+
+```cpp
+class Example {
+  private:
+    int* pInt;
+  public:
+    Example() { // 构造函数
+      pInt = new int(2);
+    }
+    // ~Example() { // 析构函数 —— 只能有一个，不能带参数，在类销毁前做操作。如果缺省，编译程序会自动生成一个空的析构函数
+    virtual ~Example() { // 如果类可能被继承，必须将其析构函数设置为虚构函数
+      delete pInt;
+    }
+}
+```
+
+::: warning
+如果类可能被继承，必须将其析构函数设置为虚构函数。
+否则内存释放时可能不会触发结构函数。
+
+```cpp
+BaseClass* pc = new SubClass();
+delete pc; // ❗如果BaseClass析构函数不是virtual函数，则不会调用SubClass析构函数。
+```
+
+:::
+
+##### const成员函数
+
+这种函数不允许修改成员变量
+
+```cpp
+class ConstExample {
+private:
+  int m_a;
+public:
+  void hello();
+  int calculate(int a, int b) const;
+}
+int ConstExample::calculate(int a, int b) const {
+  m_a++; // ❌错误，编译报错
+  hello(); // ❌错误，编译报错。因为非const函数可能修改成员变量
+  return 1;
+}
+```
+
+##### const对象
+
+const对象无法调用非const函数
+
+##### this指针
+
+`this->hello()`
+
+`(*this).hello()`
+
+链式调用
+
+```cpp
+class X {
+public:
+  X& add(const X& other) {
+    return *this; // 返回了自己的引用的赋值对象 —— 即自己
+  }
+}
+X a(),b(),c();
+a.add(b).add(c); // 链式调用
+```
+
+##### 友元（friend）
+
+类私有或保护的类成员，可以通过“友元（friend）”供外部的函数或者其他类访问。
+
+```cpp
+class A {
+  int m_value;
+friend class B; // 对类友元
+friend void increase(A&); // 对函数友元
+}
+class B {
+  void x(A& a) { // 借助友元调用私有/保护成员
+    a.m_value++;
+  }
+}
+void increase(A& a) {
+  a.m_value++;
+}
+```
+
+##### 运算符 `=()` 成员
+
+todo
+
+#### 类继承（Polymorphic，多态）
+
+```cpp
+class 派生类名称: public 基类名称 {
+  // ...
+}
+
+// public:
+// 这里public表示派生类从基类成员继承的最大限制范围。
+// 如果是public，继承的限制范围不变
+// 如果是protected，继承的public方法变为protected方法
+// 如果是private，继承的public、protected方法变为private方法
+```
+
+::: warning
+
+下面几类成员不会被继承
+
++ 构造函数、析构函数 —— 虽然不继承，但是在子类被创建或销毁时也会被调用
++ 运算符`=()`成员
++ 类的友元
+
+:::
+
+##### 虚函数（virtual）
+
+```cpp
+class BaseClass {
+public:
+  void greet() {}
+  virtual void vgreet() {} // 注意
+}
+class SubClass:public BaseClass {
+public:
+  void greet() {
+    // 子类实现
+  }
+  void vgreet() {
+    // 子类实现
+  }
+}
+```
+
+方法重写和指针/引用的方法调用
+
+```cpp
+SubClass obj;
+BaseClass* pBase = &obj; // 指针
+BaseClass& refBase = ojb; // 引用
+
+obj.greet();     // 子类重写方法
+pBase->greet();  // 父类方法
+refBase.greet(); // 父类方法
+```
+
+虚函数/虚拟方法：如果指针找到该方法，会找子类是否重写了
+
+```cpp
+SubClass obj;
+BaseClass* pBase = &obj; // 指针
+BaseClass& refBase = ojb; // 引用
+
+obj.vgreet();     // 子类重写方法
+pBase->vgreet();  // 子类重写方法
+refBase.vgreet(); // 子类重写方法
+```
+
+##### 纯虚函数、抽象类（Abstract Class）/接口类（Interface Class）
+
+```cpp
+class Shape {
+  public:
+    virtual void draw()=0; // 末尾的“=0”表示纯虚函数。这种函数需要等待被实现。
+}
+```
+
+##### 重写标识符（override）
+
+```cpp
+class SubClass {
+  void greet() override {
+    // xxx...
+  }
+}
+```
+
+##### final
+
+防止类/函数继续被重写
+
+```cpp
+class SubClass final { // 防止类被继承
+  void greet() override final { // 防止方法被重写
+    // xxx...
+  }
+}
+```

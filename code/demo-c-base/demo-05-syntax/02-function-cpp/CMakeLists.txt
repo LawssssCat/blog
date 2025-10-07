@@ -19,6 +19,7 @@ find_package(fmt CONFIG REQUIRED)
 target_link_libraries(HelloDemo PRIVATE fmt::fmt)
 
 add_subdirectory(lib)
+add_subdirectory(Shape)
 
 # 测试开关
 include(CTest)

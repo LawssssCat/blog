@@ -11,6 +11,9 @@
   + [vs:gcc,cmake,gtest,gdb](demo-01-workspace/03-gcc-cmake-gtest-gdb)
   + [vs:vcpkg,gcc,cmake,gtest,gdb](demo-01-workspace/04-vcpkg-gcc-cmake-gtest-gdb)
   + [vs:vcpkg,clang-llvm,cmake,gtest,lldb](demo-01-workspace/01-vcpkg-clang_llvm-cmake-gtest-gdb) —— best
++ ~~makefile使用例子 [link_makefile_demo](./demo-02-makefile/)~~ （请忽略）
++ cmake使用例子 [link_cmake_demo](./demo-03-cmake/)
++ c++语法测试用例 [link_syntax_cpp](./demo-05-syntax/)
 
 ## 常用Vagrant操作
 

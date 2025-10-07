@@ -107,6 +107,8 @@ order: 1
 
   + 源码下载、`./configure`、`make`、`make install` （推荐）
   + cmake `FetchContent`
+  + [vcpkg](./vcpkg.md)
+  + conan
   + xrepo
   + bazel
   + meson
@@ -115,6 +117,7 @@ order: 1
 + [MinGW](./mingw.md)
 + cygwin
 
+语法： [link_cpp_syntax](./basic-syntax.md)
 
 ## 调试
 
@@ -129,6 +132,9 @@ order: 1
 
 + [perl](./lib-perl/README.md)
 + [openssl](./lib-openssl/README.md)
+
++ boost
++ [poco](./lib-poco/README.md)
 
 + fmt —— 格式化库
 + zlib —— 压缩库

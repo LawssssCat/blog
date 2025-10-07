@@ -1020,5 +1020,5 @@ todo 将项目的测试结果在面板中展示
 + [x] 配置和使用第三方库（with `FetchContent` for googletest）
 + [ ] 配置和使用第三方库（with `vcpkg` for zlib）
 + [x] 集成Google测试框架
-+ [ ] 包的安装
++ [ ] 包的安装（参考：<https://www.bilibili.com/video/BV1ZboeYgErH/>）
 + [ ] 配置和使用自定义包
