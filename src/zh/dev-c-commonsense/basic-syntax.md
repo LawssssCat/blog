@@ -666,10 +666,6 @@ void increase(A& a) {
 }
 ```
 
-##### 运算符 `=()` 成员
-
-todo
-
 #### 类继承（Polymorphic，多态）
 
 ```cpp
@@ -765,5 +761,367 @@ class SubClass final { // 防止类被继承
   void greet() override final { // 防止方法被重写
     // xxx...
   }
+}
+```
+
+### 结构体（Struct）
+
+::: tip
+**结构体（Struct）和类（Class）的区别？**
+等价
+:::
+
+```cpp
+struct 结构体名称 {
+  变量类型 成员变量;
+};
+```
+
+```cpp
+struct Student {
+  char name[100];
+  char id[10];
+  short gender;
+  time_t birthday;
+};
+struct Student sb = {"Tom", "001", 0, 1};
+Student sb2 = {"Tom", "001", 0, 1};
+Student sb3{"Tom", "001", 0, 1};
+Student sb4 = {}; // 空
+```
+
+可以在定义时指定结构体变量
+
+```cpp
+struct Student {
+  char name[100];
+  char id[10];
+  short gender;
+  time_t birthday;
+} sb1, sb2 = {"Tom", "001", 0, 1};
+```
+
+#### typedef 定义别名
+
+```cpp
+typedef struct _Student {
+  char name[100];
+  char id[10];
+  short gender;
+  time_t birthday;
+} Sb;
+Sb sb = {"Tom", "001", 0, 1};
+```
+
+#### 序列化（Serialize）
+
+基础变量结构体可以直接序列化、反序列化到文件、网络等
+
+```cpp
+typedef struct _Student {
+  char name[100];
+  char id[10];
+  short gender;
+  time_t birthday;
+} Sb;
+Sb sb = {"Tom", "001", 0, 1};
+
+// 写入
+FILE* f = fopen(fname, "wb");
+fwrite(&sb, sizeof(sb), sizeof(char), f);
+fclose(f);
+
+// 读出
+Sb sx = {};
+FILE* f = fopen(fname, "rb");
+fread(&sx, sizeof(sx), sizeof(char), f);
+fclose(f);
+```
+
+#### 指定占用字节长度
+
+常用在底层驱动、网络通信中。
+
+```cpp
+// 通过指定位数，使整个结构体刚好占用 x 位
+struct Header {
+  unsigned int flag:1;
+  unsigned int sig:1;
+  unsigned int sn:4;
+  unsigned int reserved:2;
+  unsigned int crc:8;
+}
+```
+
+### 联合（union）
+
+联合（union）在同一时间只能使用一种类型。
+联合（union）内存中所占大小由成员类型最大的决定。
+
+```cpp
+union MyUnionType {
+  unsigned long l;    // 4byte
+  unsigned char c[8]; // 8byte --- 最大，决定了联合的大小
+  struct {            // 4byte
+    unsigned char i;
+    unsigned char o;
+    unsigned short v;
+  } s;
+}
+```
+
+```cpp
+MyUnionType data {};
+data.l = 0x3EUL; // 被下面语句覆盖
+data.s = {'f','s', 12}; // 覆盖上一条语句
+```
+
+### 枚举（enum）
+
+```cpp
+enum ColorType {
+  Red=1,
+  Blue=2,
+  Yellow, // 3，取值由上一个加一
+  Green=6
+};
+```
+
+加上`class`关键字，可以避免枚举名称冲突
+
+```cpp
+enum class ColorType {
+  Red,
+  Blue,
+  Yellow,
+  Green
+};
+enum class ColorType2 {
+  Red,
+  Blue,
+  Yellow,
+  Green
+};
+ColorType color;
+color = ColorType::Red;
+```
+
+### 运算符重载
+
+```cpp
+返回类型 operator<<(参数1, 参数2)
+// tips：返回值和参数1类型相同的话，可以实现链式调用
+cout << a << b << endl; // 链式调用
+```
+
+可以重载的运算符：
+
++ 一元运算符
+  `!`
+  `++` （包括：前缀、后缀） `--` （包括：前缀、后缀）
+  `*` （解引用）
+  `&` （取地址）
+  `~`
++ 二元运算符
+  `+` `-` `*` `/` `%`
+  `<` `>` `=` `!=` `>=` `<=` `==`
+  `<<` `>>` `&` `^` `|`
+  `&&` `||`
+  `+=` `-=` `*=` `/=` `%=` `|=`
++ 其他
+  `=` 赋值运算符（有默认实现：数值拷贝，调用拷贝构造函数）
+  `()` 函数调用运算符
+  `->` 间接引用运算符
+  `[]` 下标运算符
++ 不能重载的运算符
+  `.` 成员运算符
+  `*` 函数指针成员运算符
+  `::` 域解析运算符
+  `? =` 三元运算符
+  `sizeof`
+  `typeid`
+
+#### 一元运算符重载
+
+例子：为`vector`提供`<<`运算重载，以便打印容器内容
+
+```cpp
+#include <iostream>
+#include <vector>
+int main(void) {
+  std::vector<int> numbers(1,3,5,7,9);
+  std::cout<<numbers<<std::endl;
+}
+ostream& operator<<(ostream& o, const vector<int>& numbers) {
+  o<<"[";
+  unsigned int last = numbers.size()-1;
+  for(int i=0;i<last;i++) o<<numbers[i]<<",";
+  o<<numbers[last]<<"]";
+  return o;
+}
+```
+
+作为成员方法重载
+
+```cpp
+class Complex {
+private:
+  float r;
+  float i;
+public:
+  Complex(float real, float imaginary):r(real),i(imaginary){};
+  Complex operator+(const Complex& other) const {
+    return Complex(this->r+other.r,this->+other.i);
+  }
+}
+```
+
+前缀运算符、后缀运算符
+
+```cpp
+class ExampleClass {
+private:
+  int m_a;
+  // 前缀增量运算符 ++a
+  ExampleClass& operator++() {
+    m_a++;
+    return *this;
+  }
+  // 后缀增量运算符 a++
+  ExampleClass operator++(int) {
+    ExampleClass temp = *this; // 克隆
+    operator++();
+    return temp;
+  }
+}
+```
+
+#### 二元运算符重载
+
+```cpp
+class Complex {
+public:
+  float r;
+  float i;
+public:
+  Complex(float real, float imaginary):r(real),i(imaginary){};
+  // c = a + b;
+  Complex operator+(const Complex& other) const {
+    return Complex(this->r+other.r,this->i+other.i);
+  }
+  // c = a + 1f;
+  Complex operator+(float r) const {
+    return Complex(this->r+r,this->i);
+  }
+  // c = 1f + a;
+  friend Complex operator+(float a, const Complex& b) { // 通过友元，将扩展方法给到fload类型
+    return b+a;
+  }
+}
+```
+
+#### 函数调用运算符`()`重载
+
+```cpp
+返回类型 operator()(参数列表)
+```
+
+e.g.
+
+```cpp
+// 一次函数： y = kx + b = fn(x)
+struct LinearFunction {
+  double k; // 斜率
+  double b; // 截距
+  double operator()(double x) const {
+    return k*x + b;
+  }
+}
+```
+
+#### 间接引用运算符`->`重载
+
+```cpp
+返回指针或者引用 operator->()
+```
+
+::: info
+[智能指针](#todo)就是通过使用“间接引用运算符”重载实现的。
+:::
+
+```cpp
+struct Complex {
+  float r,i;
+}
+class LocalPtr {
+private:
+  Complex* m_ptr;
+public:
+  LocalPtr(Complex* p):m_ptr(p){} // 构造函数
+  ~LocalPtr() { // 析构函数
+    if(m_ptr) delete m_ptr; // 释放指针引用
+  }
+  Complex* operator->() { // 重载“间接引用运算符”
+    return m_ptr;
+  }
+  LocalPtr& operator=(const LocalPtr&)=delete;
+  LocalPtr(const LocalPtr&)=delete;
+}
+int main(void) {
+  LocalPtr pComplex(new Complex({0.1,0,5}));
+  pComplex->i++;
+}
+```
+
+#### 下标运算符`[]`重载
+
+让对象成员可以像数组一样通过下标访问
+
+```cpp
+变量类型 operator[](参数)
+```
+
+```cpp
+class Array {
+private:
+  vector<float> numbers;
+public:
+  Array(vector<float> n):numbers(n){}; // 构造函数
+  float operator[] (int i) {
+    int size = numbers.size();
+    assert(i<size&&i>-size);
+    if (i<0) return numbers[size+i];
+    return numbers[i];
+  }
+}
+int main() {
+  Array arr(vector<float>{1,2,3,4,5,6,7,8,9});
+  std::cout<<arr[1]<<std::endl;
+  std::cout<<arr[-1]<<std::endl;
+}
+```
+
+#### 类型转换运算符
+
+```cpp
+operator 转换类型();
+```
+
+e.g.
+
+```cpp
+class Complex {
+public:
+  float r;
+  float i;
+public:
+  Complex(float real, float imaginary):r(real),i(imaginary){};
+  operator float() const {
+    return r;
+  }
+}
+int main() {
+  Complex a(0.1, 2);
+  std::cout<<float(a)<<std::endl;
 }
 ```

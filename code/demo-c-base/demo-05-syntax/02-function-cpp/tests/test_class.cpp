@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -83,4 +84,21 @@ TEST(test_class, single_getInstance) {
   Singleton* s1 = Singleton::getInstance();
   Singleton* s2 = Singleton::getInstance();
   ASSERT_EQ(s1, s2);
+}
+
+// 运算符重载
+ostream& operator<<(ostream& o, const vector<int>& numbers) {
+  o<<"[";
+  unsigned int last = numbers.size()-1;
+  for(int i=0;i<last;i++) o<<numbers[i]<<",";
+  o<<numbers[last]<<"]";
+  return o;
+}
+TEST(test_class, operation_overload) {
+  std::vector<int> numbers = {1,2,3,4,5};
+  // 写法1
+  std::cout << numbers << std::endl;
+  // 写法2
+  operator<<(std::cout, numbers);
+
 }
