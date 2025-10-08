@@ -398,29 +398,30 @@ word1 == word2; // 正确，注意需要类型为string
 
   :::
 
-+ **内联函数（inline function）** —— 为提高函数性能而作的改进。
-  内联函数在预处理时会被直接被放入函数中，因此不会有调用普通函数时的状态存储、出栈入栈操作、跳转指令等性能消耗。
-  代价是占用更多硬盘、内存资源。
-  内联函数一般用在短小但常用的函数中。
+#### 内联函数（inline function） —— 为提高函数性能而作的改进 {id=id-base-function-inline}
 
-  ```cpp
-  inline int add(int a, int b) {
-    return a + b;
-  }
-  ```
+内联函数在预处理时会被直接被放入函数中，因此不会有调用普通函数时的状态存储、出栈入栈操作、跳转指令等性能消耗。
+代价是占用更多硬盘、内存资源。
+内联函数一般用在短小但常用的函数中。
 
-  ::: info
-  内联函数（关键字`inline`）属于建议说明，编译器可以选择忽略的。
-  编译器内部也有优化操作，会将普通函数优化为内联函数。
-  因此知道这关键字即可。
-  :::
+```cpp
+inline int add(int a, int b) {
+  return a + b;
+}
+```
 
-  ::: warning
-  有几种情况不能作为内联函数：
-  1、函数中有复杂控制语句如循环、switch等；
-  2、函数中有静态变量；
-  3、函数中存在递归调用；（中断错误`Segmentation Fault!`❌）
-  :::
+::: info
+内联函数（关键字`inline`）属于建议说明，编译器可以选择忽略的。
+编译器内部也有优化操作，会将普通函数优化为内联函数。
+因此知道这关键字即可。
+:::
+
+::: warning
+有几种情况不能作为内联函数：
+1、函数中有复杂控制语句如循环、switch等；
+2、函数中有静态变量；
+3、函数中存在递归调用；（中断错误`Segmentation Fault!`❌）
+:::
 
 ### 指针（Ptr）与引用（Ref）
 
@@ -743,6 +744,10 @@ class Shape {
 ```
 
 ##### 重写标识符（override）
+
+::: tip
+添加重载标识符可以检查出一些定义和实现不一致的问题，因此代码规范上一般要求添加。
+:::
 
 ```cpp
 class SubClass {
@@ -1123,5 +1128,347 @@ public:
 int main() {
   Complex a(0.1, 2);
   std::cout<<float(a)<<std::endl;
+}
+```
+
+### 宏（Macro）
+
+```cpp
+#define 标识符 替换表达式
+```
+
+::: tip
+宏的标识符一般使用“全大写、`_`符号分隔”。
+当然，这不是必须的。
+:::
+
+#### 宏常量【不推荐】
+
+```cpp
+#define MAX_SIZE 1000
+```
+
+::: warning
+
+很多库使用宏定义常量。
+但这样定义会有很多问题：重名覆盖、难以溯源、等
+因此，很多现代的规范要求用静态常量替代这种宏定义常量。
+
+```cpp
+static const int MAX_SIZE=999;
+```
+
+:::
+
+#### 条件编译
+
+```cpp
+#define LARGE_ARRAY
+
+#undef MAXSIZE
+#ifdef LARGE_ARRAY
+  #define MAXSIZE 60
+#else
+  #define MAXSIZE 20
+#endif
+```
+
+#### 宏函数
+
+```cpp
+#define 标识符(参数列表) 替换表达式
+```
+
+```cpp
+// #define MUL(a,b) a*b // bug:MUL(3,1+1) => 3*1+1
+#define MUL(a,b) (a)*(b)
+```
+
+::: tip
+如果没有特殊需求（如rust的内存检查），可以使用[内联函数](#id-base-function-inline)替换宏函数。
+
+```cpp
+inline int mul(int a, int b) {return a*b;}
+```
+
+优势：
+
+1. 不容易出错
+1. 容易调试
+
+:::
+
+#### `#`和`##`
+
+`#` 会将表达式作为字符串变量替换。
+e.g.
+
+```cpp
+#define PRINT(a) cout<<#a<<" = "<<(a)<<endl;
+float a = 3.0;
+PRINT(a*2+3); // 输出：a*2+3 = 9
+```
+
+`##` 用于连接两个标识符。
+e.g.
+
+```cpp
+#define MEMBER(type,a) type m_##a
+struct Demo {
+  MEMBER(int, a);
+  MEMBER(float, b);
+}
+/* 替换结果：
+struct Demo {
+int m_a;
+float m_b;
+}
+*/
+```
+
+#### 换行
+
+```cpp
+#define PROPERTY(Type,number) \
+  private: \
+    Type m_##member; \
+  public: \
+    const Type& get##member() const{return m_##member;} \
+    void set##member(Type m){m_##member = m;}
+```
+
+#### 可变参的宏函数
+
+```cpp
+#define LOG(o, ...) fprintf(o, "[%s:%d]",__FILE__,__LINE__); \
+                    fprintf(o,__VA__ARGS__);
+```
+
+#### 常用宏
+
+标识符 | 类型 | 说明
+--- | --- | ---
+`__LINE__` | int | 源文件行号
+`__FILE__` | string | 源文件名
+`__DATE__` | string | 编译日期
+`__TIME__` | string | 编译时间
+`__cplusplus` | int | 编译器版本号，e.g.199711
+
+#### 模板（Template）
+
+::: tip
+Java中的泛型。
+:::
+
+##### 函数模板
+
+```cpp
+template<class 标识符1, class 标识符2, ...> 函数声明;
+template<typename 标识符1, typename 标识符2, ...> 函数声明; // 与class等价，只是typename规范的出现时间比class晚。
+```
+
+e.g.
+
+```cpp
+template<class T>
+void swap(T& a, T&b) { // 标准库有更优的实现，这里只做例子
+  T temp = a;
+  a = b;
+  b = temp;
+}
+int main(void) {
+  int a = 10, b = 13;
+  // swap<int>(a,b);
+  swap(a,b); // <int>可省略，自动推断
+  float c = 3f;
+  swap<float>(a,c); // 当参数类型不一致，无法自动推断，需要显示声明模板参数类型
+  return 0;
+}
+```
+
+::: tip
+优先级上，手动实现的函数比函数模板生成的函数优先级要高。
+也就是说：
+1、允许标识符一样参数一样的直接函数声明和函数模板生成的函数同时存在；
+2、如果同时存在，使用直接函数声明；
+:::
+
+###### 隐式实例化（Implicit Instantiation）、显式实例化（Explicit Instantiation）
+
+函数模板默认只有在被调用时才会根据参数类型生成具体函数。
+
+如下面函数模板被指定两种类型的入参，就会生成这两个入参类型对应的具体函数：
+
+```cpp
+template<class T> T max(T a, T b) {
+  return a>b?a:b;
+}
+int main() {
+  int a = 10, b = 13;
+  float c = 1f;
+  max(a,b); // 生成： int max(int a, int b) {...}
+  max<float>(a,c); // 生成： float max(float a, float b) {...}
+}
+```
+
+也可以提前显式实例化：
+
+```cpp
+template float max<float>(float a, float b);
+```
+
+###### 显式特化
+
+`template<> void f<int>(int)`
+
+可以对特殊的类型`T`做不同的实现
+
+##### 类模板
+
+```cpp
+template<typename T>
+class Vector3 {
+private:
+  T m_vec[3]; // 成员属性
+public:
+  Vector3(T v1, T v2, T v3) { // 构造方法
+    m_vec[0] = v1;
+    m_vec[1] = v2;
+    m_vec[2] = v3;
+  }
+  T getMax(); // 成员函数（定义）
+}
+template<typename T>
+T Vector<T>::getMax() { // 成员函数（实现）
+  T temp = m_vec[0]>m_vec[1]?m_vec[0]:m_vec[1];
+  return temp>m_vec[2]?temp:m_vec[2];
+}
+
+Vector3<int> vec1(1,2,3);         // 初始化
+Vector3<float> vec2(1.1,2.1,3.1); // 初始化
+```
+
+::: info
+支持默认值写法： `template<typename T=char> ....`。
+调用： `Vector3<>` = `Vector3<char>`
+:::
+
+##### 类模板特化、偏特化
+
+::: tabs
+
+@tab 一般
+
+```cpp
+template<typename T>
+class Vector3 {
+private:
+  T m_vec[3]; // 成员属性
+public:
+  Vector3(T v1, T v2, T v3) { // 构造方法
+    m_vec[0] = v1;
+    m_vec[1] = v2;
+    m_vec[2] = v3;
+  }
+  T getMax(); // 成员函数（定义）
+}
+template<typename T>
+T Vector<T>::getMax() { // 成员函数（实现）
+  T temp = m_vec[0]>m_vec[1]?m_vec[0]:m_vec[1];
+  return temp>m_vec[2]?temp:m_vec[2];
+}
+```
+
+@tab 特化
+
+```cpp
+template<>
+class Vector3<char> {
+private:
+  char m_vec[4]; // 不同
+public:
+  Vector3(char v1, char v2, char v3) {
+    m_vec[0] = v1;
+    m_vec[1] = v2;
+    m_vec[2] = v3;
+    m_vec[3] = 0; // 不同
+  }
+  const char* asString() const {
+    return m_vec;
+  }
+}
+```
+
+:::
+
+##### 非类型参数（None-type Parameter）
+
+::: info
+坑：非类型取值不能是变量。（编译器编译过程无法识别）
+:::
+
+e.g.
+
+```cpp
+template<typename T, int N>
+class Vector {
+private:
+  T m_values[N];
+public:
+  Vector(T values[N]) {
+    for(int i=0;i<n;i++) {
+      m_values[i] = values[i];
+    }
+  }
+  T getMax() {
+    T maxValue = m_values[0];
+    for(T v:m_values) maxValue = maxValue>v?maxValue:v;
+    return maxValue;
+  }
+}
+
+float values[5] = {1.0f,-0.3f,0.7f,0.8f,1.2f};
+const int n = 5; // 必须是常量，不能是变量。是变量则编译器报错
+Vector<float,n> vector5(values);
+cout<<vector5.getMax();
+```
+
+##### 模板类型参数
+
+::: tip
+这种定义方式在tls库/工具库里经常见到，要理解作用。
+:::
+
+```cpp
+// <template <template 模板参数类型> typename 参数名>
+template<template <typename T> typename 参数名>
+class 类名 {
+  // ...
+}
+```
+
+e.g.
+
+```cpp
+template<template <typename> typename Container, typename T> // 定义两个模板类型：Container和T。其中Container类型是模板类类型
+class Wrapper {
+private:
+  Container<T> m_values;
+public:
+  Wrapper(const Container<T>& o):m_values(o){}
+  void print() {
+    for(auto v:m_values) cout<<v<<endl;
+  }
+}
+
+int main() {
+  // 1
+  vector<int> ls = {1,23,4,5,6,7};
+  Wrapper<vector, int> example(ls);
+  example.print();
+  // 2
+  set<int> ss = {1,2,3,4,5,5,1};
+  Wrapper<set,int> example2(ss);
+  example2.print();
 }
 ```
