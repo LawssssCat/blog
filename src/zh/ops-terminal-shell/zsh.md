@@ -1,8 +1,5 @@
 ---
 title: ZSH 介绍
-date: 2024-06-09
-tag:
-  - linux
 order: 10
 ---
 
