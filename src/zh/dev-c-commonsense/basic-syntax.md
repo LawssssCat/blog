@@ -1472,3 +1472,243 @@ int main() {
   example2.print();
 }
 ```
+
+### 命名空间（namespace）
+
+处理并行开发中的重名问题
+
+```cpp
+namespace 标识符 {
+  // 类、对象、变量、函数等等都可以放在这里
+}
+```
+
+#### 限定名（Qualified Name）、using
+
+```cpp
+namespace MyNamespace {
+  int foo(int a, int b) {
+    return a + b;
+  }
+}
+
+// 限定名（Qualified Name） MyNamespace::foo
+MyNamespace::foo(0,1);
+
+// 通过 using 引入命名空间的全部内容
+using namespace MyNamespace
+foo(0,1);
+// 或者 using 特定标识符
+using namespace MyNamespace::foo
+foo(0,1);
+```
+
+using 作用范围
+
+```cpp
+int func(void) {
+  using namespace MyNamespace // 作用范围是方法内部
+}
+```
+
+::: tip
+对于较大的文件，建议用尽量少的作用范围，以避免标识符冲突问题
+:::
+
+#### 默认命名空间（Global Namespace，全局命名空间）
+
+```cpp
+void foo() {
+  cout<<"Global Foo"<<endl;
+}
+namespace MyNamespace {
+  void foo() {
+    cout<<"MyNamespace Foo"<<endl;
+  }
+}
+
+using MyNamespace::foo;
+int main(void) {
+  foo();   // MyNamespace Foo
+  ::foo(); // Global Foo
+}
+```
+
+### 异常（Exception）
+
+```cpp
+try {
+  // ...代码
+  throw exception; // 异常
+} catch(Type e) {
+  // ...代码
+}
+```
+
+e.g.
+
+```cpp
+float divide(float a, float b) {
+  if (b==0) // bug float!=0
+    throw runtime_err("Divided by Zero!");
+  return a/b;
+}
+int main(void) {
+  try {
+    int c = devide(3.1,0);
+    cout<<"c=."<<c<<endl;
+  } catch(runtime_error& e) {
+    cout<<"exception:"<<e.what()<<endl;
+  }
+  return 0;
+}
+```
+
+#### throw
+
+c++可以将各种变量、对象、指针作为异常抛出。
+
+:::::: tabs
+
+@tab string
+
+```cpp
+int main(void) {
+  try {
+    throw "这是一个字符串异常";
+  } catch(const char* e) {
+    cout<<e<<endl;
+  }
+}
+```
+
+@tab int
+
+```cpp
+int main(void) {
+  try {
+    throw 2;
+  } catch(int e) {
+    cout<<e<<endl;
+  }
+}
+```
+
+@tab struct
+
+```cpp
+struct my_exception {
+  string mess;
+  unsigned int errorno;
+}
+int main(void) {
+  try {
+    throw my_exception("My exception");
+  } catch(my_exception e) {
+    cout<<e.mess<<":"<<e.errorno<<endl;
+  }
+}
+```
+
+@tab 函数指针
+
+```cpp
+string exception_func() {
+  return "这是一个异常";
+}
+int main(void) {
+  try {
+    throw exception_func;
+  } catch (string (*e)()) {
+    cout<<e()<<endl;
+  }
+}
+```
+
+::::::
+
+虽然可以使用自定义的异常类型，但是一般使用std提供的异常类 `std::exception`。
+
+```cpp
+class my_exception:public exception {
+private:
+  unsigned int error_code;
+  string reason;
+public:
+  my_exception(const string& message, int code):reason(message),error_code(code);
+  virtual const char* what() const noexcept override {
+    return reason.c_str();
+  }
+}
+int main(void) {
+  try {
+    throw my_exception("自定义异常", 1000);
+  } catch(my_exception& e) {
+    const<<e.what()<<endl;
+  }
+  return 0;
+}
+```
+
+#### catch
+
+```cpp
+int main(void) {
+  try {
+    // 代码。。。。。。。。。
+  } catch(runtime_error& e) {
+    // 运行时异常
+  } catch(my_exception& e) {
+    // 自定义异常
+  } catch(exception& e) {
+    // std通用异常（一般正规异常都会继承这个类，当然只是约定俗成，所以会有后面的catch(...)）
+  } catch(...) {
+    // 其他未知的异常（一般对于未知异常应该继续往外抛出让能处理的处理，而非私自捕获又不处理，导致问题被隐藏而非解决或被告知）
+    throw; // 要抛出这种未知异常，直接写throw即可，
+  }
+  return 0;
+}
+```
+
+#### 资源回收问题
+
+当遇到异常，资源回收是一个问题：
+
+```cpp
+class MyResource {
+private:
+  string m_name;
+public:
+  MyResource(const char* name):m_name(name) {cout<<"MyResource Construct"<<m_name<<endl;}
+  virtual ~MyResource() {cout<<"MyResource Destruct"<<m_name<<endl;}
+}
+void doSomething() {
+  MyResource res = new MyResource("[doSomething]"); // 创建在堆中，需要手动释放
+  throw runtime_error("xxx");
+  delete *pRes; // 由于上一行代码抛出异常，导致释放语句未被执行，导致内存泄漏
+}
+int main() {
+  try {
+    MyResource res("[main]"); // 创建在栈中，会自动释放
+    doSomething();
+  } catch(runtime_error& e) {
+    cout<<e.what()<<endl;
+  }
+}
+```
+
+针对这种问题，可以通过“智能指针”解决
+
+```cpp
+void doSomething() {
+  shared_ptr<MyResource> pRes(new MyResource("[doSomething]")); // 智能指针：当异常出现，智能指针会被销毁，在之前智能指针会调用MyResource的析构函数
+  throw runtime_error("xxx");
+  delete *pRes;
+}
+```
+
+::: tip
+上述资源管理方式称为“RAII（Resource Acquisition Is Initialization，资源获取即初始化）”。
+这种方式在现在C++编程中应用广泛。
+:::
+
