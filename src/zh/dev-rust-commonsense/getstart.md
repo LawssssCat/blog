@@ -13,6 +13,7 @@ order: 2
 
 镜像源
 
+- 门户 <https://help.mirrorz.org/fedora/>
 - 字节跳动 <https://rsproxy.cn/>
 
 ## 环境配置

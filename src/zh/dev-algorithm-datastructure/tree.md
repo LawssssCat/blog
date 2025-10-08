@@ -1,9 +1,6 @@
 ---
 title: 树（Tree）
-date: 2024-07-08
-tag:
-  - datastructure
-order: 1
+order: 11
 ---
 
 ## 遍历

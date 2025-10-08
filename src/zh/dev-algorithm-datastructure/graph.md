@@ -1,9 +1,6 @@
 ---
 title: 图（Graph）
-date: 2024-07-08
-tag:
-  - datastructure
-order: 1
+order: 11
 ---
 
 todo https://www.youtube.com/watch?v=B5hxqxBL2d0

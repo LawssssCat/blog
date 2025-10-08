@@ -270,7 +270,7 @@ fn main() {
 
 #### 结构体（structure，缩写成 struct）
 
-https://rustwiki.org/zh-CN/rust-by-example/custom_types/structs.html
+<https://rustwiki.org/zh-CN/rust-by-example/custom_types/structs.html>
 
 结构体（structure，缩写成 struct）有 3 种类型，使用 struct 关键字来创建：
 
@@ -302,7 +302,7 @@ struct Rectangle {
 
 #### 枚举（enumeration）
 
-https://rustwiki.org/zh-CN/rust-by-example/custom_types/enum.html
+<https://rustwiki.org/zh-CN/rust-by-example/custom_types/enum.html>
 
 ```rust
 // 创建一个 `enum`（枚举）来对 web 事件分类。注意变量名和类型共同指定了 `enum`

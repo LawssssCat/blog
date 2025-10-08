@@ -11,6 +11,7 @@ import footer from "./config/footer.js";
 import markdown from "./config/md.js";
 
 export default hopeTheme({
+  pure: true,
   hostname: common.github.blog,
 
   author: {
