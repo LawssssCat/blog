@@ -132,6 +132,8 @@ TEST(test_class, class_reference) {
   show(b);
   MyClass* b1;
   show(b1);
+  MyClass* b2;
+  show(b2);
   // MyClass* b3 = nullptr;
   // show(b3); // Signal received: SIGSEGV
   std::cout << "========= 栈" << std::endl;

@@ -435,6 +435,14 @@ pBase->greet();  // 父类方法
 refBase.greet(); // 父类方法
 ```
 
+```cpp
+// 数组的指针
+int numbers[] = {1,2,3,4,5,6};
+int *ptr = numbers;
+cout<<hex<<(unsigned long long)numbers<<endl;
+cout<<hex<<(unsigned long long)ptr<<endl;
+```
+
 概念：
 
 + 引用变量 `int &a`;
@@ -442,9 +450,113 @@ refBase.greet(); // 父类方法
 + 指针 `int* p = {1,2}`
 + 常量指针 `const int* p = &a;` 无法修改指针指向值（如`*p = 3`），可修改指针指向的内容
 + 指针常量 `int* const p = &a;` 可修改指针指向的值，无法指针指向的地址（如`p++`）
-+ 指向堆内存
+
+#### 函数指针
+
+:::::: tip
+函数指针常用在回调函数中。 参考[link_回调函数](#id-xx-function-callback)。
+下面具体介绍函数指针写法。
+::::::
+
+函数存储在内存中，因此有函数的地址。
+
+可以通过“函数名称”获得函数地址：
 
   ```cpp
+double multiply(double a, double b) {
+  return a*b;
+}
+cout<<hex<<(unsigned long long)multiply<<endl; // 地址值：7ff61ade1450
+double (*fn_ptr)(double, double) = multiply; // 函数引用fn_ptr
+// double (*fn_ptr)(double, double) = &multiply; // 函数引用fn_ptr（写法二）
+double res = fn_ptr(1f,2f); // 函数调用
+// double res = (*fn_ptr)(1f,2f); // 函数调用（写法二）
+// double res = *fn_ptr(1f,2f); // 函数调用（错误：结果是函数调用结果作为地址求值）
+cout<<res<<endl; // 函数调用结果：3f
+```
+
+格式：
+
+```cpp
+返回值 (*函数指针名称)(参数列表);
+```
+
+也可以通过`typedef`可以定义函数指针类型的别名：
+
+```cpp
+typedef double (*MyFuncTypePtr)(double, double); // 写法一：指针类型定义
+// typedef double (MyFuncTypePtr2)(double, double); // 写法二：值类型定义
+int main(void) {
+  MyFuncTypePtr ptr1 = multiply;
+  // MyFuncTypePtr2* ptr2 = multiply; // 写法二
+  double res = ptr1(0.4, 1.5);
+  // res = ptr2(4,5);
+  cout<<res<<endl;
+}
+```
+
+::: tip
+使用`auto`自动类型推断关键字，可以方便定义函数指针：
+
+```cpp
+double add(double a, double b) {
+  return a+b;
+}
+int main(void) {
+  auto funcPtr = add;
+  double res = funcPtr(4.2,1.5);
+}
+```
+
+坑：`auto`关键字只能用在初始化单个变量时使用，当要定义函数指针数组时则无法使用`auto`关键字
+
+```cpp
+double add(double a, double b) {
+  return a+b;
+}
+double multiply(double a, double b) {
+  return a*b;
+}
+typedef double (*MyFuncPtr)(double a, double b);
+int main(void) {
+  // auto funcPtr[2] = {add,multiply}; // ❌语法错误
+  MyFuncPtr funcPtr[2] = {add,multiply};
+  double res = funcPtr(4.2,1.5);
+}
+```
+
+:::
+
+#### 类函数指针
+
+```cpp
+// 类成员函数指针
+返回类型 (类名::*函数指针名称)(参数列表);
+```
+
+```cpp
+class DemoClass {
+public:
+  double add(double a, double b) {return a+b}
+  double multiply(double a, double b) {return a*b}
+}
+
+int main(void) {
+  double (DemoClass::*ptrMemberFunc)(double, double); // 类成员函数指针定义
+  ptrMemberFunc = DemoClass::add; // 类成员函数指针赋值
+  DemoClass obj;
+  double result = (obj.*ptrMemberFunc)(0.5,2.1); // 类成员函数指针调用
+}
+```
+
+#### 智能指针
+
+申请创建的堆内存在函数退出后仍然有效。
+需要调用销毁方法才会释放这块堆内存。
+如果申请的堆内存在程序中没有释放机制，就会认为程序有“内存泄漏”问题。
+
+```cpp
+// 指向堆内存的指针
   char* p1 = new char; // 申请内存
   int* p2 = new int(2); // 申请内存 + 初始化
   char* p3 = new char[3]; // 申请内存（数组）
@@ -456,11 +568,9 @@ refBase.greet(); // 父类方法
   delete[] p4;
   ```
 
-  ::: tip
-  申请创建的堆内存在函数退出后仍然有效。需要调用销毁方法才会释放这块堆内存。如果申请的堆内存在程序中没有释放机制，就会认为程序有“内存泄漏”问题。
-  :::
+智能指针 —— 为了避免“地址访问错误”、“内存泄漏”等问题，方便内存管理，C++新增“`memory`”辅助内存管理。
 
-+ 智能指针 —— 为了避免“地址访问错误”、“内存泄漏”等问题，方便内存管理，C++新增“`memory`”辅助内存管理。
+##### shared_ptr（共享指针）
 
   `shared_ptr` 共享指针 自动管理动态分配的内存，在不使用时（内部维护的地址引用计数为零时）自动释放分配的内存
 
@@ -558,6 +668,8 @@ Shape s2(1,2);
 ##### 拷贝构造函数
 
 alias: 复制构造函数、浅拷贝和深拷贝问题
+
+alias：转换构造函数（Conversion Constructor）
 
 ```cpp
 class Shape {
@@ -910,6 +1022,107 @@ enum class ColorType2 {
 ColorType color;
 color = ColorType::Red;
 ```
+
+### 类型转换（Type Casting）
+
+包括：
+
++ 显式转换
++ 隐式转换
+
+#### 隐式转换
+
+基础类型
+
+```cpp
+int a = 2;
+float b = a; // 隐式转换
+
+double c = 3.5e39;
+b = c; // 隐式转换，但有问题（精度降低）：值超过类型最大值，最终b存储为“无穷大”
+```
+
+类继承关系：
+
+略
+
+复制构造函数/转换构造函数：
+
+```cpp
+class ClassA {};
+class ClassB {
+  public ClassB (const Class& a) {}
+}
+
+ClassA a;
+ClassB b = a;
+```
+
+#### 显式转换
+
+```cpp
+int a = 2;
+float b = (float)a;
+```
+
+显式转换的话，编译器不会校验是否有转换函数，这会导致运行问题。
+避免上述问题，有以下几种显式引用的方法：
+
++ `static_cast <转换类型> (表达式)` —— 静态转换，只在编译时有检查，在运行时不做检查。要求转换前后两个类型有继承关系或者转换函数。
++ `dynamic_cast <转换类型> (表达式)` —— 动态转换，在编译、运行两个阶段分别有检查
+
+  + 编译阶段：检查基类类是否支持多态，即是否存在虚函数（`virtual`），否则语法检查阶段报错
+  + 运行阶段：
+    + 对于指针：检查派生类是否包含基类的**所有成员**，否则派生类指针引用为空（`nullptr`）
+
+      ```cpp
+      SubClass *ptr = dynamic_cast<BaseClass *>(&obj);
+      if (!ptr) cout<<"无法将指针转换，因为派生类没有包含基类的所有成员";
+      ```
+
+    + 对于引用：如果没法转换，会抛出`bad_cast`异常
+
+      ```cpp
+      BaseClass bas;
+      try {
+        SubClass sub = dynamic_cast<SubClass>(bas);
+      } catch(bad_cast& e) {
+        // ...
+      }
+      ```
+
+  ::: info
+  多态类型转换需要RTTI（Run Time Type Information，运行时类型信息）。
+  RTTI信息在编译时生成，通过xx选项控制（默认开启）。
+  :::
+
++ `reinterpret_cast <转换类型> (表达式)` —— 重解释转换，不进行检查，只负责将一个类型的指针转换为另一个类型的指针。
+
+  ```cpp
+  // long address = reinterpret_cast<long>(&other); // 编译报错，提示精度丢失，因为地址为longlong类型
+  long long address = reinterpret_cast<long long>(&other);
+  ```
+
+  ::: info
+  应用场景：
+  1、与内存和硬件的直接交互的底层程序和接口程序；
+  2、与操作系统组件进行交互，需要精确数据格式；
+  3、处理网络或多媒体数据的应用程序；
+  :::
+
++ `const_cast <转换类型> (表达式)` —— 常量转换
+
+  ```cpp
+  int Hello(char* str) { // 函数声明参数是非常量的
+    // ...
+  }
+  const char* str = "world!";
+  hello(const_cast<char*>(str)); // 由于需要调用函数，所以需要转换。
+  ```
+
+  ::: warning
+  将常量指针转换为非常量指针，在转换后指针指向的地址仍然是不可修改的，否则运行报错。
+  :::
 
 ### 运算符重载
 
@@ -1711,4 +1924,399 @@ void doSomething() {
 上述资源管理方式称为“RAII（Resource Acquisition Is Initialization，资源获取即初始化）”。
 这种方式在现在C++编程中应用广泛。
 :::
+
+## 进阶玩法
+
+### 回调函数 {id=id-xx-function-callback}
+
+回调函数可以有如下多种形式：
+
+::: tabs
+
+@tab 函数指针形式
+
+```cpp
+bool compare(float a, float b) {
+  return a < b;
+}
+main(void) {
+  vector<float> numbers{0.1,3,0.0,-3.4,7,100,-100};
+  sort(numbers.begin(),numbers.end(),compare);
+  for (auto number:numbers)
+    cout<<number<<",";
+}
+```
+
+@tab 重载类函数形式
+
+这种方式更加灵活
+
+```cpp
+struct Compare {
+  bool compare(float a, float b) {
+    return a < b;
+  }
+}
+main(void) {
+  vector<float> numbers{0.1,3,0.0,-3.4,7,100,-100};
+  sort(numbers.begin(),numbers.end(),Compare());
+  for (auto number:numbers)
+    cout<<number<<",";
+}
+```
+
+@tab lambda形式
+
+todo
+
+:::
+
+## 标准库
+
+### 容器
+
+alias： 集合
+
+C++标准库里的所谓“容器”是用来存储“对象”的。
+
+C++标准库里的容器使用“类模板”实现，可以支持多种类型的元素。
+
+常用容器：
+
++ 序列容器（Sequence Container） —— 可按顺序读取其中元素
+  + array
+  + vector
+  + deque
+  + list
++ 关联容器（Associative Container） —— 通过键值映射来访问元素
+  + map
+  + set
+
+::: tip
+选择方式：
+
++ 如果需要高效的随机存取，而不在乎插入、删除的效率 —— 使用 vector
++ 如果需要高效的随机存取，且需要高效在**两端**插入、删除数据 —— 使用 deque
++ 如果不关心随机存取效率，而需要高效在**任意位置**插入、删除数据 —— 使用list
+
+:::
+
+#### 数组（array）
+
+array是固定大小的数组。
+与c风格数组不同的是，array数组提供复制、迭代等更多的方法。
+
+`template<typename T, std::size_t N>std::array`
+
+```cpp
+TEST(test_container, array_iterator) {
+  const int n = 5;
+  std::array<float, n> numbers{1,2,3,4,5};
+  for (auto v : numbers) {
+    std::cout<<v<<" ";
+  }
+}
+```
+
+#### 向量（vector） {id=id-std-col-vector}
+
+动态数组，内存连续，支持随机访问、高效末尾输入/删除
+
+```cpp
+#include <vector>
+template <class T, class Alloc = allocator<T>> class vector;
+```
+
+##### 初始化
+
+```cpp
+// 等价：
+vector<int> numbers = {1,2,3,4,5};
+vector<int> numbers{1,2,3,4,5};
+vector<int> numbers({1,2,3,4,5});
+```
+
+::: tip
+vector有构造函数`vector(std::initializer_list<int> __l, const std::allocator<int> &__a = std::vector<int>::allocator_type())`。
+而`vector<int> numbers{1,2,3,4,5}`写法中的数组会被转换为`__l`的值，所以这种写法等价于`vector<int> numbers({1,2,3,4,5})`写法。
+:::
+
+```cpp
+const int size = 5;
+float value = 3.0;
+vector<float> values(size, value);
+// 等价
+vector<float> values{3f,3f,3f,3f,3f};
+```
+
+##### 元素访问
+
+```cpp
+vector<float> values{3f,3f,3f,3f,3f};
+
+// 下标（不做越界检查，直接终止进程：Signal received: SIGABRT）
+numbers[1]++;
+
+// at方法，越界抛出异常
+try {
+  numbers.at(10) = 2000;
+} catch(out_of_range& e) {
+  // ...
+}
+```
+
+##### 迭代器 （`vector<T>::iterator/begin/end/rbegin/rend`）
+
+```cpp
+vector<int> numbers {1,2,3,4,5};
+vector<int>::iterator it;
+for(it = numbers.begin();it!=numbers.end();++it) {
+  cout << *it << ",";
+}
+
+// 逆向
+vector<int>::iterator it;
+for(it = numbers.end()-1;it>=numbers.begin();--it) {
+  cout << *it << ",";
+}
+
+// 逆向（写法二：反向迭代器）
+vector<int>::reverse_iterator it;
+for(it = numbers.rbegin();it!=numbers.rend();++it) {
+  cout << *it << ",";
+}
+```
+
+###### 迭代器失效问题
+
+迭代器在[增加/删除](#id-std-container-vector-insert)后需要更新，否则结果会错误（甚至导致死循环）。
+
+```cpp
+#include <vector>
+#include <iostream>
+using namespace std;
+int main(void) {
+  vector<int> numbers{1,2,3,4,5,6,7,8,9};
+  auto it = numbers.begin();
+  cout<<"插入前：*it="<<*it<<endl; // 1
+  auto it2 = numbers.insert(it, 99);
+  cout<<"插入后：*it="<<*it<<endl; // 666666666666666666 （随机乱码）
+  cout<<"插入后：*it2="<<*it2<<endl; // 99
+  return 0;
+}
+```
+
+##### 插入（`insert push_back emplace`）、移除（`erase pop_back`）、提前保留n大小空间（`reserve(std::size_t n)`） {id=id-std-container-vector-insert}
+
+```cpp
+TEST(test_container, use_emplace) {
+  class Complex {
+  protected:
+    double m_i;
+    double m_r;
+  public:
+    Complex(double i, double r) : m_i(i), m_r(r) {
+      std::cout << "构造函数 " << (unsigned long long) this << std::endl;
+    }
+    Complex(const Complex& other) : m_i(other.m_i), m_r(other.m_r) {
+      std::cout << "拷贝构造函数 " << (unsigned long long) this << std::endl;
+    }
+    ~Complex() {
+      std::cout << "解构函数 " << (unsigned long long) this << std::endl;
+    }
+  };
+  std::vector<Complex> values;
+  values.reserve(999); // 预分配内存，避免扩容
+  std::cout << "==== emplace " << values.size() << std::endl;
+  values.emplace( // "安放"
+    values.end(), // 插入的位置
+    0.1, 0.2 // 构造函数参数
+  );
+  // 输出：
+  // 构造函数 a
+  std::cout << "==== insert " << values.size() << std::endl;
+  values.insert( // "插入"
+    values.end(),
+    Complex(0.2, 0.4)
+  );
+  // 输出：
+  // 构造函数 a
+  // 拷贝构造函数 c
+  // 解构函数 a
+  std::cout << "==== end " << values.size() << std::endl;
+  // 解构函数 a
+  // 解构函数 c
+}
+```
+
+#### 双端队列（deque）
+
+动态数组，连续数组结构，支持随机访问、高效首尾插入/删除
+
+::: info
+deque提供两级数组结构：第一级类似vector存储数据；另一级维护容器的首位地址。
+:::
+
+`template <class T, class Alloc = allocator<T>> class deque;`
+
+```cpp
+#include <iostream>
+#include <deque>
+using namespace std;
+int main(void) {
+  deque<float> dq{1,2,3,4,5};
+  dq.push_front(0.2); // 队列头加数据
+  dq.push_back(0.3); // 队列尾加数据
+}
+```
+
+#### 链表（list）
+
+动态数组，双向链表结构（非连续存储结构），支持高效首位，不支持随机访问
+
+`template <class T,class Alloc = allocator<T>> class list;`
+
+```cpp
+std::list<int> ls {1,2,3,4,5};
+show(&ls); // list[1,2,3,4,5]
+auto it = ls.begin();
+it++; // 支持正向
+std::cout << *it << std::endl; // 2
+auto it2 = ls.insert(it, -1); // 插入，返回insert指针
+std::cout << *it << std::endl; // 2
+std::cout << *it2 << std::endl; // -1
+show(&ls); // list[1,-1,2,3,4,5]
+it2++;
+std::cout << *it2 << std::endl; // 2
+auto it3 = ls.erase(it2); // 删除，返回next指针
+std::cout << *it3 << std::endl; // 3
+it3--; // 支持逆向
+std::cout << *it3 << std::endl; // -1
+show(&ls); // list[-1,3,4,5]
+```
+
+#### 集合（set/unordered_set）
+
+集合中的值都是唯一的。
+
+##### set
+
+和map一样数据结构是红黑树（tree、bucket）实现的key值。
+
+```cpp
+template<
+  class Key,
+  class Compare = std::less<Key>,
+  class Allocator = std::allocator<Key>
+> class set;
+```
+
+#### multiset
+
+todo
+
+#### 键值对（map/unordered_map）
+
+##### map
+
+按Key排序升序排序
+
+红黑树（平衡二叉树）
+
+搜索、增加/删除 时间复杂度 `O(logN)`
+
+```cpp
+template<
+  class Key, // 键
+  class T,   // 值
+  class Compare = std::less<key>, // 比较元素的类
+  class Allocator = std::allocator<std::pair<const Key, T>> // 内存分配类
+> class map;
+```
+
+Demo
+
+```cpp
+TEST(test_container, map_print) {
+  std::map<std::string, float> prices{
+    {"苹果", 5.5},
+    {"香蕉", 6.9},
+    {"葡萄", 8.5},
+  };
+  {
+    // 插入
+    prices["火龙果"] = 9.6;
+  }
+  {
+    // 插入（方式二）
+    auto res = prices.insert(std::make_pair("桔子", 3.0));
+    auto insert_key = res.first->first;
+    auto insert_value = res.first->second;
+    auto insert_success = res.second;
+    std::cout << "[insert] res:key=" << insert_key << ",value=" << insert_value << ",success=" << insert_success << std::endl;
+  }
+  // 遍历
+  for (const auto& p : prices)
+    std::cout << "[show] " << p.first << ":" << p.second << std::endl;
+  // 删除
+  auto erase_num = prices.erase("苹果");
+  std::cout << "[delete] 删除数量:" << erase_num << std::endl;
+  // 查找
+  {
+    // 查找固定值 find
+    auto it = prices.find("香蕉");
+    if (it != prices.end())
+      std::cout << "[find] key=" << it->first << ",value=" << it->second << std::endl;
+  }
+  {
+    // 查找范围 upper_bound/lower_bound
+    // key1 , key2 , ... keyn , upper , other , ...
+    // [ ------ found ------- ]  上限  [ ignore....... ]
+    auto upper = prices.upper_bound("火龙果"); // 上限
+    for(auto it = prices.begin(); it!=upper; it++)
+      std::cout << "[upper] key=" << it->first << ",value=" << it->second << std::endl;
+  }
+  {
+    // 查找范围 equal_range
+    // key1 , key2 , ... keyn , range , other , ...
+    // [ ---------- left ----------- ] [ ------ right ------ ]
+    // [ ------ left ------- ] middle  [ ------ right ------ ]
+    auto range = prices.equal_range("火龙果"); // 上限
+    for(auto it = prices.begin(); it!=range.first; it++)
+      std::cout << "[range-left] key=" << it->first << ",value=" << it->second << std::endl;
+    std::cout << "[range-middle] key=" << range.first->first << ",value=" << range.first->second << std::endl;
+    for(auto it = range.second; it!=prices.end(); it++)
+      std::cout << "[range-right] key=" << it->first << ",value=" << it->second << std::endl;
+  }
+}
+```
+
+##### multimap
+
+与map不同的是一个key可以有多个value
+
+```cpp
+template<
+  class Key,
+  class T,
+  class Compare = std:less<Key>,
+  class Allocator = std::allocator<std::pair<const Key, T>>
+> class multimap;
+```
+
+```cpp
+TEST(test_container, multimap_print) {
+  std::multimap<float, std::string> prices{
+    {5.5f, "苹果"},
+    {6.9f, "香蕉"},
+    {8.5f, "葡萄"},
+    {3.5f, "桔子🍋"},
+  };
+  prices.insert(std::make_pair(3.5f, "橙子🍊"));
+  auto r = prices.equal_range(3.5f);
+  for (auto it = r.first; it!=r.second; it++) {
+    std::cout << "[equal_range] key=" << it->first << ",value=" << it->second << std::endl;
+  }
+}
+```
 

@@ -5,6 +5,7 @@ add_executable(test_main
   test_class.cpp
   test_heap.cpp
   test_syntax_function.cpp
+  test_container.cpp
   test_sort.cpp
 )
 
