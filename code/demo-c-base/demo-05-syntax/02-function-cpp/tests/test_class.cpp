@@ -100,5 +100,42 @@ TEST(test_class, operation_overload) {
   std::cout << numbers << std::endl;
   // 写法2
   operator<<(std::cout, numbers);
-
 }
+
+
+// 函数引用
+static int x = 0;
+class MyClass {
+public:
+  MyClass(int num) {
+    n = num;
+    std::cout << "init MyClass, x=" << n << std::endl;
+  }
+  void hello() {
+    std::cout << "hello, x=" << n << std::endl;
+  }
+private:
+  int n;
+};
+void show(MyClass* x) {
+  std::cout << "address:" << (unsigned long long) x << std::endl;
+  x->hello();
+}
+TEST(test_class, class_reference) {
+  std::cout << "========= new class" << std::endl;
+  // MyClass a = new MyClass(); // No viable conversion from 'MyClass *' to 'MyClass' (fix available)clang(typecheck_nonviable_condition)
+  // MyClass& a = new MyClass(); // Non-const lvalue reference to type 'MyClass' cannot bind to a temporary of type 'MyClass *'clang(lvalue_reference_bind_to_temporary)
+  MyClass* a = new MyClass(++x);
+  show(a);
+  std::cout << "========= 空指针" << std::endl;
+  MyClass* b;
+  show(b);
+  MyClass* b1;
+  show(b1);
+  // MyClass* b3 = nullptr;
+  // show(b3); // Signal received: SIGSEGV
+  std::cout << "========= 栈" << std::endl;
+  MyClass c(++x);
+  show(&c);
+}
+

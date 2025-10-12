@@ -1,0 +1,5 @@
+# project(proj2)
+
+message("[${CMAKE_CURRENT_SOURCE_DIR}] [${PROJECT_NAME}] MY_SSS = ${MY_SSS}")
+set(MY_SSS "proj0_666")
+message("[${CMAKE_CURRENT_SOURCE_DIR}] [${PROJECT_NAME}] MY_SSS = ${MY_SSS} [modify]")
