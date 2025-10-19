@@ -987,6 +987,86 @@ Generators
 
 通过json配置指定cmake工具链的位置。
 
+### 构建缓存（加速）
+
+ccache/sccache
+
+`CC="ccache gcc" CXX="ccache g++" cmake ..`
+
+#### ccache
+
+[ccache（compiler cache，编译器缓存）](https://ccache.dev/)是一个开源的**编译加速工具**，主要用于C/C++编译过程。
+通过**缓存编译结果**来减**少重复编译的时间**，从而显著加快**增量编译（如修改少量代码后重新编译）**的速度。
+
+::: tip
+通常缓存位于`~/.cache/cache`隐藏目录中，并在多个项目之间共享。
+:::
+
+##### 安装
+
+参考：
+
++ <https://github.com/ccache/ccache/blob/master/doc/install.md>
++ <https://www.cnblogs.com/sinferwu/p/15507638.html>
+
+:::::: tabs
+
+@tab 直接替换`gcc`/`clang`
+
+```bash
+cp ccache /usr/local/bin/
+ln -s ccache /usr/local/bin/gcc
+ln -s ccache /usr/local/bin/g++
+```
+
+> 编译时，会查找`PATH`中首个发现的`gcc`/`clang`作为实际的编译工具。
+> 当然，可以通过[配置](#id-ccache-config)指定实际的构建工具。
+
+@tab 环境变量（推荐）
+
+```bash
+$ yum install ccache
+$ cmake -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache ...
+```
+
+::::::
+
+##### 常用命令
+
+参考：
+
++ <https://github.com/ccache/ccache/wiki/CMake>
++ <https://ccache.dev/manual/4.12.1.html#_name>
+
+```bash
+ccache [ccache options]
+ccache [KEY=VALUE …​] compiler [compiler options]
+compiler [compiler options]
+```
+
+```bash
+# 查看版本
+ccache --version
+
+# 查看缓存统计
+ccache -s
+# 清理缓存
+ccache -C
+```
+
+##### 配置 {id=id-ccache-config}
+
+参考：
+<https://ccache.dev/manual/4.9.html#_configuration>
+
+```bash
+export CCACHE_DIR=~/.cache/ccache
+```
+
+#### sccache
+
+todo 测试远程缓存特性
+
 ### 测试（CTest）
 
 cmake提供ctest可执行程序来拉起CMakeList.txt中配置的测试用例。
@@ -1018,7 +1098,7 @@ todo 将项目的测试结果在面板中展示
 + [x] 配置和使用第三方库（with `source code` for cpp-httplib）
 + [x] 配置和使用第三方库（with `xxx-devel` for openssl）
 + [x] 配置和使用第三方库（with `FetchContent` for googletest）
-+ [ ] 配置和使用第三方库（with `vcpkg` for zlib）
++ [x] 配置和使用第三方库（with `vcpkg` for zlib）
 + [x] 集成Google测试框架
 + [ ] 包的安装（参考：<https://www.bilibili.com/video/BV1ZboeYgErH/>）
 + [ ] 配置和使用自定义包

@@ -39,7 +39,7 @@ order: 1
 开发工具
 
 + Jetbrain Clion —— JetBrains公司提供的（著名产品Java的Idea），目前免费（支持ja-netfilter），产品化无需太多配置
-  + 工具链：vcpkg + cmake + gcc/clang,llvm + gdb/lldb,gtest
+  + 工具链：vcpkg + cmake + gcc/clang,llvm + ccache +gdb/lldb,gtest
     + 适合：Idea过来，**Windows环境**，且了解c/c++工具链各工具作用
     + 插件：
       + 中文语言包
@@ -53,7 +53,7 @@ order: 1
     + todo <https://zhuanlan.zhihu.com/p/145801160>
 
 + VSCode
-  + 工具链：vcpkg + cmake + gcc/clang,llvm + lldb,gtest
+  + 工具链：vcpkg + cmake + gcc/clang,llvm + ccache + lldb,gtest
     + 适合：Linux环境或者有跨平台构建需求，且了解c/c++工具链各工具作用
     + Demo：<RepoLink path="/code/demo-c-base/README.md" />
     + 插件
@@ -95,7 +95,7 @@ order: 1
   + [clang](./llvm/clang.md)
 
 + [makefile](./makefile.md)
-+ [cmake](./cmake.md)
++ [cmake](./cmake.md) （with ccahce/sccache）
 + 包管理
 
   习惯：
