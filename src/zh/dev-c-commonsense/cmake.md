@@ -136,12 +136,19 @@ int main() {
 + `-DCMAKE_VERBOSE_MAKEFILE=ON` —— 环境变量，打印详细日志
 
 + `cmake` —— 构建脚本生成工具
++ `ccmake` —— 命令行UI
 + `cmake_minimum_required` —— 检查cmake版本，小于指定版本退出执行
 + `project` —— 设置项目名，随后会生成相关变量供开发者使用
 + `add_executable`/`add_library` —— 添加构建目标，指定可执行程序（exe/elf）或者库（lib/so/a）的名称、依赖文件
++ `set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY {PROJECT_BINARY_DIR})` —— 编译“静态库”输出位置
++ `set(CMAKE_LIBRARY_OUTPUT_DIRECTORY {PROJECT_BINARY_DIR})` —— 编译“动态库”输出位置
++ `set(CMAKE_RUNTIME_OUTPUT_DIRECTORY {PROJECT_BINARY_DIR})` —— 编译“可执行文件”输出位置
++ `set_target_properties(SqrtLibrary PROPERTIES POSITION_INDEPENDENT_CODE {BUILD_SHARED_LIBS})` —— 声明共享库位置无关（PIC）
++ `target_compile_definitions` —— 为目标添加宏定义（e.g. `-D ENABLE_HTTPS=1`）
++ `target_compile_options`
++ `target_compile_features`
 + `target_include_directories` —— 为目标添加头文件的查找路径
 + `target_link_libraries` —— 为目标添加静态库/动态库的名称
-+ `target_compile_definitions` —— 为目标添加宏定义（e.g. `-D ENABLE_HTTPS=1`）
 + `add_subdirectory` —— 将子目录中的CMakeLists.txt文件添加进来，参与构建脚本的生成
 + `find_package` —— 查找第三方库
 
@@ -987,6 +994,66 @@ Generators
 
 通过json配置指定cmake工具链的位置。
 
+`cmake --preset`
+
++ **CMakePresets.json**： 用于指定项目范围内的构建详细信息。通常包含通用的配置选项，适用于所有开发者。
++ **CMakeUserPresets.json**： 用于开发者指定自己的本地构建详细信息。通常包含特定于开发者的配置选项。 （加入`.gitignore`文件）
+
+```json
+{
+  "version": 8,             // 整数，支持的版本
+  "cmakeMinimumRequired": { // 构建此项目所需的最低CMake版本 （可选）
+    "major": 3,
+    "minor": 14,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "vcpkg-preset",
+      "displayName": "vcpkg-preset",
+      "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
+      "hidden": false, // （可选）当为true时，cmake不会直接调用该配置。一般用在被继承（inherits）的配置上
+      // "inherits": "default",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}", // 使用 sourceDir 和 presetName 宏
+      "installDir": "/path/to/install",
+      "environment": {},
+      "cacheVariables": { // 【重要】相当于 cmake -D....
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "FETCHCONTENT_QUIET": "OFF",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "CMAKE_C_COMPILER": "/usr/bin/clang",
+        "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      },
+      "vendor": {  // 包含供应商特定的信息。供更上层ide调用，CMake不对此做任何解析 （可选）
+        "example.com/ExampleIDE/1.0": {
+          "customSetting1": "value1",
+          "customSetting2": {
+            "subSetting1": "subValue1",
+            "subSetting2": "subValue2"
+          }
+        },
+      },
+      "toolset": // 工具集的配置
+    }
+  ],
+  "buildPresets": [ // 构建预设
+    {
+      "name": "build-debug",
+      "configurePreset": "vcpkg-preset",
+      "configuration": "Debug",
+      "jobs": 10,
+      "verbose": true
+    }
+  ],
+  "testPresets": [ // 测试预设
+
+  ]
+}
+```
+
 ### 构建缓存（加速）
 
 ccache/sccache
@@ -1076,13 +1143,110 @@ cmake提供ctest可执行程序来拉起CMakeList.txt中配置的测试用例。
 1. 添加`enable_test`指令，生成测试用例入口，如makefile的`make test`目标
 1. 添加`add_test`指令，生成测试用例的入口，如makefile的`make test_myadd_usecase`目标
 
+e.g.
+
+```bash
+enable_testing()
+
+# does the application run
+add_test(NAME Runs COMMAND Tutorial 25)
+
+# does the usage message work?
+add_test(NAME Usage COMMAND Tutorial)
+set_test_properties(Usage
+  PROPERTIES PASS_REGULAR_EXPRESSION 'Usage:.*.number')
+
+# define a function to simplify adding tests
+function(do_test target arg result)
+  add_test(NAME Comp {arg} COMMAND {target} {arg})
+  set_test_properties(Comp {arg} PROPERTIES_PASS_REGULAR_EXPRESSION {result})
+endfunction(do_test)
+# do a bunch of result based tests
+do_test(Tutorial 4 "4 is 2")
+do_test(Tutorial 9 "9 is 3")
+do_test(Tutorial 5 "5 is 2.236")
+# ...
+```
+
+#### 单元构建（Unity Builds）
+
+todo `set_target_properties(myTarget PROPERTIES UNITY_BUILD ON)`
+
+todo 可能遇到的ODR问题介绍、处理
+
+#### 预编译头文件（PCH）
+
+像string等大的头文件会被重复处理影响构建速度。
+预编译头文件（PCH）可以将上述头文件一次引入重复使用。
+PCH头文件一般包含常用的标准头文件和项目头文件。
+
+todo `target_precompile_headers(myTarget PRIVATE "pch.h")`
+
+### 统计（CDash）
+
+将项目的测试结果在面板（dashboard）中显式
+
+```bash
+# enable testing
+enable_testing()
+
+# enable dashboard script
+include(CTest)
+
+set(CTEST_PROJECT_NAME 'CMakeTutorial')
+set(CTEST_NIGHTLY_START_TIME '00:00:00 EST')
+
+set(CTEST_DROP_METHOD 'http')
+set(CTEST_DROP_SITE 'my.cdash.org')
+set(CTEST_DROP_LOCATION '/submit.php?=project=CMakeTutorial')
+set(CTEST_DROP_SITE_CDASH TRUE)
+```
+
+### 安装（Install）
+
+```bash
+install(TARGETS MathFunctions DESTINATION lib)
+install(FILES MathFunctions.h DESTINATION include)
+```
+
 ### 打包（CPack）
 
 todo 为打包需求提供了DSL
 
-### 统计（CDash）
+制作安装包
 
-todo 将项目的测试结果在面板中展示
+```bash
+include(InstallRequiredSystemLibraries)
+set(CPACK_RESOURCE_FILE_LICENSE '{CMAKE_CURRENT_SOURCE_DIR}/License.txt')
+set(CPACK_PACKAGE_VERSION_MAJOR '{Tutorial_VERSION_MAJOR}')
+set(CPACK_PACKAGE_VERSION_MINOR '{Tutorial_VERSION_MINOR}')
+include(CPack)
+```
+
+```bash
+# 生成二进制
+# -G generator
+# -C Configuration
+cpack -G ZIP -C Debug
+# 生成源文件
+cpack --config CPackSourceConfig.cmake
+```
+
+参考：
+<https://www.bilibili.com/video/BV15q4y1Z7EP>
+
+```bash
+# 安装结果
+${INSTALL_PATH}/bin/Tutorial
+${INSTALL_PATH}/include/MathFunctions.h
+${INSTALL_PATH}/include/TutorialConfig.h
+${INSTALL_PATH}/lib/cmake/MathFunctions/MathFunctionsConfig.cmake
+${INSTALL_PATH}/lib/cmake/MathFunctions/MathFunctionsConfigVersion.cmake
+${INSTALL_PATH}/lib/cmake/MathFunctions/MathFunctionsTargets-noconfig.cmake
+${INSTALL_PATH}/lib/cmake/MathFunctions/MathFunctionsTargets.cmake
+${INSTALL_PATH}/lib/libMathFunctions.so
+${INSTALL_PATH}/lib/libSqrtLibrary.a
+```
 
 ## 案例
 
