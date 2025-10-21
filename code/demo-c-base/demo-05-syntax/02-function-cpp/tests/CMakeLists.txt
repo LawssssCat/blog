@@ -1,12 +1,16 @@
 
 
 add_executable(test_main
+  test_hello.cpp
   test_arr.cpp
+  test_func.cpp
   test_class.cpp
   test_heap.cpp
   test_syntax_function.cpp
-  test_container.cpp
   test_sort.cpp
+  test_std_container.cpp
+  test_std_function.cpp
+  test_std_pointer.cpp
 )
 
 target_link_libraries(test_main PRIVATE mylib)

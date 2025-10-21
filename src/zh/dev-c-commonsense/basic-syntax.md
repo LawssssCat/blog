@@ -236,6 +236,16 @@ do {
 } while(条件判断);
 ```
 
+#### 坑：地址不变问题
+
+```cpp
+for f(int i; i<10; i++)
+{
+    int c=0; // 地址不变！！！
+    cout<<c<<&c<<endl;
+}
+```
+
 ### 数组（Array）
 
 ::::: c风格
@@ -425,6 +435,8 @@ inline int add(int a, int b) {
 
 ### 指针（Ptr）与引用（Ref）
 
+指针：指向内存区域地址的变量
+
 ```cpp
 SubClass obj;
 BaseClass* pBase = &obj; // 指针
@@ -549,11 +561,18 @@ int main(void) {
 }
 ```
 
-#### 智能指针
+#### 智能指针 {id=id-base-point-smart}
 
-申请创建的堆内存在函数退出后仍然有效。
-需要调用销毁方法才会释放这块堆内存。
-如果申请的堆内存在程序中没有释放机制，就会认为程序有“内存泄漏”问题。
+智能指针 —— 为了避免“地址访问错误”、“内存泄漏”等问题，方便内存管理，C++新增“`memory`”辅助内存管理。
+
+::: tip
+
+普通指针的问题：
+
++ 内存泄漏（Memory Leak）问题
+
+  申请创建的堆内存在函数退出后仍然有效，需要调用销毁方法才会释放这块堆内存。
+  如果申请的堆内存在程序中没有释放机制，就会认为程序有“内存泄漏（Memory Leak）”问题。
 
 ```cpp
 // 指向堆内存的指针
@@ -568,7 +587,60 @@ int main(void) {
   delete[] p4;
   ```
 
-智能指针 —— 为了避免“地址访问错误”、“内存泄漏”等问题，方便内存管理，C++新增“`memory`”辅助内存管理。
++ 内存悬空（Dangling Pointer）问题
+
+  如果指针指向一块已经释放的内存地址区域，那么这个指针就是悬空指针（Dangling Pointer）。
+  使用悬空指针会造成不可预料的结果。
+
++ 野指针（Wild Pointer）问题
+
+  定义了一个指针却未初始化其指向有效的内存区域时，这个指针就是野指针（Wild Pointer）。
+  使用野指针访问内存一般会造成"segmentation fault"错误。
+
+使用智能指针正是为了解决上述问题。
+
+:::
+
+类型 | 特点 | 适用场景
+--- | --- | ---
+`unique_ptr` | 不能同时有两个`unique_ptr`指向同一个地址。 | 适用于普通指针场景，如容器
+
+##### unique_ptr
+
+特点：
+不能同时有两个`unique_ptr`指向同一个地址。
+
+模板
+
+```cpp
+template <
+  class T,
+  class Deleter = std::default_delete<T>
+> class unique_ptr;
+template <
+  class T,
+  class Deleter
+> class unique_ptr<T[], Deleter>; // 针对数组对象的特化版本
+```
+
+常用函数
+
+```cpp
+T* get()                          // 返回指针
+T* operator->();                  // get()
+T& operator*();                   // *get()
+T* release();                     // 解除管理
+void reset(T* newObject);         // 释放原有对象，纳管新指定对象
+void swap(unique_ptr<T>& other);  // 与其他指针交换纳管对象
+```
+
+Demo
+
+```cpp
+unique_ptr<A> ptr1(new A(参数));
+
+unique_ptr<A> ptr = make_unique<A>(参数);
+```
 
 ##### shared_ptr（共享指针）
 
@@ -579,6 +651,10 @@ int main(void) {
   shared_ptr<int> pInt(new int(2));
   cout << *pInt;
   ```
+
+##### weak_ptr
+
+todo
 
 ### 类（Class）
 
@@ -1264,7 +1340,7 @@ struct LinearFunction {
 ```
 
 ::: info
-[智能指针](#todo)就是通过使用“间接引用运算符”重载实现的。
+[智能指针](#id-base-point-smart)就是通过使用“间接引用运算符”重载实现的。
 :::
 
 ```cpp
@@ -1566,7 +1642,7 @@ Vector3<float> vec2(1.1,2.1,3.1); // 初始化
 调用： `Vector3<>` = `Vector3<char>`
 :::
 
-##### 类模板特化、偏特化
+##### 类模板特化、偏特化/部分特化（Partial Specialization）
 
 ::: tabs
 
@@ -1921,7 +1997,7 @@ void doSomething() {
 ```
 
 ::: tip
-上述资源管理方式称为“RAII（Resource Acquisition Is Initialization，资源获取即初始化）”。
+上述资源管理方式称为“[RAII（Resource Acquisition Is Initialization，资源获取即初始化）](#id-cpp-raii)”。
 这种方式在现在C++编程中应用广泛。
 :::
 
@@ -1970,6 +2046,10 @@ main(void) {
 todo
 
 :::
+
+### RAII（Resource Acquisition Is Initialization，资源获取即初始化） {id=id-cpp-raii}
+
+todo <https://www.bilibili.com/video/BV1Fg411M7ZS/>
 
 ## 标准库
 
@@ -2320,3 +2400,169 @@ TEST(test_container, multimap_print) {
 }
 ```
 
+## 函数（function）
+
+在STL标准库中，提供了一些函数包装的模板，这些模板可以对函数或者调用的对象进行包装，方便其他函数调用
+
+### std::function
+
+`std::function`是一个通用的多态函数封装器，它将一个可调用的对象（比如函数指针、函数对象、Lambda函数等）进行封装，方便在后续的代码中调用。
+
+#### 对外声明
+
+```cpp
+template<typename _Signature>
+  class function;
+```
+
+具体声明
+
+```cpp
+template<class R, class... Args>
+  class function<R(Args...)>
+  // R operator()(Args... args)
+```
+
+```cpp
+function<R(Args...)> fname = target;
+```
+
+demo
+
+```cpp
+double multiply(double a, double b) {
+  return a*b;
+}
+TEST(test_std_function, demo_normal_function) {
+  // 普通函数
+  std::function<double(double,double)> func1 = multiply;
+  double res = func1(1.1, 2.3);
+  std::cout << "[demo normal function] " << res << std::endl;
+}
+
+struct Linear {
+  float k_, b_;
+  Linear(float k, float b) : k_(k), b_(b) {}
+  float f(float x) {
+    return k_ * x + b_;
+  }
+};
+TEST(test_std_function, demo_class_function) {
+  Linear l(1.2, 2.3);
+
+  // 成员函数
+  std::function<float(Linear&, float)> mf = &Linear::f;
+  float res = mf(l, 5);
+  std::cout << "[demo class function] " << res << std::endl;
+
+  // 成员属性
+  std::function<float(Linear&)> k = &Linear::k_;
+  std::cout << "[demo class property] " << k(l) << std::endl;
+}
+```
+
+#### 类型擦除模式
+
+只要可转换的可以忽略类型差异
+
+```cpp
+int add(int a, int b) {
+  return a+b;
+}
+struct Substruct {
+  float operator()(float a, float b) {
+    return a-b;
+  }
+};
+TEST(test_std_function, demo_type_remove) {
+  std::map<char, std::function<double(double,double)>> calculator {
+    {'+', add},
+    {'-', Substruct()},
+    {'*', [](int a, int b) -> int {return a*b;}}, // 类型擦除
+  };
+  std::cout << "[demo type_remove] " << calculator['+'](12.6, 3.9) << std::endl; // 15
+}
+```
+
+### std::mem_fn
+
+这个模板可以进一步简化类方法的调用。
+
+```cpp
+template<class M, class T>
+/* unspecified */ mem_fn(M T::* pm) noexcept;
+```
+
+Demo
+
+```cpp
+struct Foo {
+  float w;
+  float calculate(float a, float b) {return 2*a+w*b;}
+  Foo& operator+=(float a) {
+    w+=a;
+    return *this;
+  }
+};
+TEST(test_std_function, demo_mem_fn) {
+  Foo f{1.0};
+  // 类函数
+  auto memfn = std::mem_fn(&Foo::calculate); // 直接用auto接受类型
+  float res = memfn(f, 2.1, 3.2);
+  std::cout << "[demo mem_fn] calc=" << res << std::endl;
+  // 类函数 function （对比）
+  std::function<float(Foo&, float, float)> memfn4diff = &Foo::calculate;
+  float res4diff = memfn4diff(f, 2.1, 3.2);
+  std::cout << "[demo mem_fn4diff] calc=" << res4diff << std::endl;
+  ASSERT_EQ(res, res4diff);
+  // 类操作
+  auto op_add_assign = std::mem_fn(&Foo::operator+=);
+  op_add_assign(f, 2.0); // 1.0 + 2.0 = 3.0
+  std::cout << "[demo mem_fn] w=" << f.w << std::endl;
+}
+```
+
+### std::bind/std::cref
+
+```cpp
+template<class F, class... Args>
+  bind(F&& f, Args&&... args);
+```
+
+`std::bind`是个函数模板，它用来生成一个函数调用的转发包装器（也就是一个函数对象）。
+调用包装器时就相当于调用它所包装的函数或者对象f
+
+`std::cref`是在使用`std::bind`函数模板是绑定参数变量的函数。（全称"Content Reference"）
+
+```cpp
+int sum(int a, int b, int c) {
+  return a+b+c;
+}
+TEST(test_std_function, demo_bind) {
+  int res1;
+  {
+    // 默认参数
+    auto f = std::bind(sum, 1, 2, 3);
+    res1 = f();
+    std::cout << "[bind] res=" << res1 << std::endl;
+  }
+  int res2;
+  {
+    // 预置参数
+    auto f = std::bind(sum, 1, std::placeholders::_1, 3);
+    res2 = f(2);
+    std::cout << "[bind] res=" << res2 << std::endl;
+  }
+  ASSERT_EQ(res1, res2);
+  int res3;
+  {
+    // 变量参数
+    int n = 22;
+    auto f = std::bind(sum, 1, 2, std::cref(n)); // 注意：不能直接传入n变量
+    n = 3;
+    res3 = f();
+    std::cout << "[bind] res=" << res3 << std::endl;
+  }
+  ASSERT_EQ(res1, res3);
+}
+```

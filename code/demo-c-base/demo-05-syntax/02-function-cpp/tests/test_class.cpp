@@ -5,27 +5,46 @@
 
 #include "Singleton.h"
 
+class TestClassTest : public testing::Test {
+  void SetUp() override {
+    std::cout << "---- setup" << std::endl;
+  }
+  void TearDown() override {
+    std::cout << "---- teardown" << std::endl;
+  }
+};
+
 // class:构造方法、拷贝构造方法、析构方法
 static int n = 0;
 class Shape {
 public:
   Shape(int nn) { // 构造函数
+    std::cout<<(unsigned long long)this<<" construct"<<std::endl;
     n = nn;
   }
   Shape(Shape& x) { // 拷贝构造函数
+    std::cout<<(unsigned long long)this<<" copy"<<std::endl;
     n++;
   }
   ~Shape() { // 析构函数
-    std::cout<<"free"<<std::endl;
+    std::cout<<(unsigned long long)this<<" free"<<std::endl;
     n = -1;
   }
 };
-TEST(test_class, construct_copy) {
+Shape* g_p;
+void xxx() {
   Shape p(0);
   Shape p2 = p;
   ASSERT_EQ(n, 1); // 因为调用了一次“拷贝构造函数”
   // delete &p2;
   // ASSERT_EQ(n, -1); // 因为调用了一次“析构构造函数”
+  g_p = &p;
+}
+TEST_F(TestClassTest, construct_copy) {
+  std::cout << "====== start" << std::endl;
+  xxx();
+  std::cout << "====== end" << std::endl;
+  std::cout << "g_p:" << (unsigned long long) g_p << std::endl; // 悬空指针（Dangling Pointer）
 }
 
 
@@ -38,7 +57,7 @@ public:
   ,m_xx(99) // 初始化属性
   {}
 };
-TEST(test_class, sub_class) {
+TEST_F(TestClassTest, sub_class) {
   SubShape p;
   SubShape p2 = p;
   ASSERT_EQ(n, 1); // 因为调用了一次“拷贝构造函数”
@@ -65,7 +84,7 @@ public:
     return 2;
   }
 };
-TEST(test_class, virtual_method) {
+TEST_F(TestClassTest, virtual_method) {
   SubClass sb;
   BaseClass* pbb = &sb; // 指针
   BaseClass& refbb = sb; // 引用
@@ -80,7 +99,7 @@ TEST(test_class, virtual_method) {
 }
 
 // 单例模式
-TEST(test_class, single_getInstance) {
+TEST_F(TestClassTest, single_getInstance) {
   Singleton* s1 = Singleton::getInstance();
   Singleton* s2 = Singleton::getInstance();
   ASSERT_EQ(s1, s2);
@@ -94,7 +113,7 @@ ostream& operator<<(ostream& o, const vector<int>& numbers) {
   o<<numbers[last]<<"]";
   return o;
 }
-TEST(test_class, operation_overload) {
+TEST_F(TestClassTest, operation_overload) {
   std::vector<int> numbers = {1,2,3,4,5};
   // 写法1
   std::cout << numbers << std::endl;
@@ -121,14 +140,14 @@ void show(MyClass* x) {
   std::cout << "address:" << (unsigned long long) x << std::endl;
   x->hello();
 }
-TEST(test_class, class_reference) {
+TEST_F(TestClassTest, class_reference) {
   std::cout << "========= new class" << std::endl;
   // MyClass a = new MyClass(); // No viable conversion from 'MyClass *' to 'MyClass' (fix available)clang(typecheck_nonviable_condition)
   // MyClass& a = new MyClass(); // Non-const lvalue reference to type 'MyClass' cannot bind to a temporary of type 'MyClass *'clang(lvalue_reference_bind_to_temporary)
   MyClass* a = new MyClass(++x);
   show(a);
   std::cout << "========= 空指针" << std::endl;
-  MyClass* b;
+  MyClass* b; // 野指针（Wild Pointer）
   show(b);
   MyClass* b1;
   show(b1);
