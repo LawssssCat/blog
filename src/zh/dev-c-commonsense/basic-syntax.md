@@ -652,9 +652,79 @@ unique_ptr<A> ptr = make_unique<A>(参数);
   cout << *pInt;
   ```
 
+这个指针有几个独特的类型转换：
+
++ 静态转换`dynamic_pointer_cast`
++ 动态转换`static_pointer_cast`
++ 常量转换`const_pointer_cast`
+
+:::::: warning
+
+如果存在循环依赖，会有内存泄漏问题。
+需要结合`weak_ptr`使用。
+
+::::::
+
 ##### weak_ptr
 
-todo
+一般结合`shared_ptr`使用。
+
+```cpp
+TEST(test_pointer, demo_weak_ptr) {
+  class Ax {
+  public:
+    int &x;
+    Ax(int &a): x(a) {};
+    ~Ax() {
+      x = 666;
+    }
+  };
+  std::weak_ptr<Ax> w_p1;
+  int n = 10;
+  {
+    std::shared_ptr<Ax> s_p1(new Ax(n));
+    std::shared_ptr<Ax> s_p2 = s_p1;
+
+    w_p1 = s_p2; // 可以直接赋值
+    ASSERT_EQ(w_p1.use_count(), 2); // 引用数 = 两个共享指针
+  }
+  ASSERT_EQ(w_p1.use_count(), 0); // 引用数 = 0
+  ASSERT_TRUE(w_p1.expired()); // 没有引用，所以释放了
+  ASSERT_EQ(n, 666);
+}
+```
+
+```cpp
+TEST(test_pointer, demo_weak_ptr2) {
+  class Rectangle {
+  double m_a;
+  double m_b;
+  public:
+    Rectangle(double a, double b): m_a(a), m_b(b) {}
+  };
+  std::weak_ptr<Rectangle> w_p1;
+  {
+    std::shared_ptr<Rectangle> s_p1(new Rectangle(3.5, 4.1));
+    std::shared_ptr<Rectangle> s_p2 = s_p1;
+    w_p1 = s_p2;
+    // std::cout << "w_p1:" << w_p1 << std::endl;
+    ASSERT_EQ(w_p1.use_count(), 2);
+    // 获取控制权
+    // 方式一
+    // std::shared_ptr<Rectangle> s_p3(w_p1); // 可以，但会抛出异常当引用为零，需要改为下面的lock方式
+    // 方式二
+    std::shared_ptr<Rectangle> s_p3 = w_p1.lock(); // lock是线程安全的原子操作（atomic operation），且不会抛出异常当引用为零
+    std::cout << "s_p3:" << s_p3 << std::endl; // shared_ptr重载了插入操作符，会打印里封装的指针
+    // ASSERT_LT(s_p3, 0);
+    ASSERT_EQ(w_p1.use_count(), 3);
+  }
+  ASSERT_EQ(w_p1.use_count(), 0);
+  std::shared_ptr<Rectangle> s_p3 = w_p1.lock(); // 释放了，无法再获取控制权，返回的是一个空指针
+  std::cout << "s_p3:" << s_p3 << std::endl;
+  // ASSERT_EQ(w_p1, 0);
+  ASSERT_EQ(w_p1.use_count(), 0);
+}
+```
 
 ### 类（Class）
 
