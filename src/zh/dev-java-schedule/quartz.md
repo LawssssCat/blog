@@ -1,9 +1,5 @@
 ---
 title: Quartz 使用
-date: 2024-05-12
-tag:
-  - java
-  - schedule
 order: 32
 ---
 
@@ -23,21 +19,24 @@ API： <https://www.quartz-scheduler.org/api/2.3.0/index.html>
 - 支持分布式和集群能力
 - 易于与 Spring 集成（Quartz 是 Spring 默认的调度框架）
 
-概念：
+## 概念
 
-- 任务详情（JobDetail）
+- 任务（Job） —— 定时执行的具体任务内容
 
   - Job 实现： 开发者根据业务需要，实现 `org.quartz.job` 接口的类
   - Job 相关类：
     - JobBuilder
     - JobDataMap
 
+- 任务详情（JobDetail） —— 与任务相关的其他配置信息 💡 `任务:任务详情=1:n`
+
   ::: info
   **为什么设计成 JobDetail + Job，不直接使用 Job？**
-  Sheduler 每次执行，都会根据 JobDetail 创建一个新的 Job 实例，这样就可以规避 “并发访问” 的问题。
+  Scheduler 每次执行，都会根据 JobDetail 创建一个新的 Job 实例，这样就可以规避 “并发访问” 的问题。
   :::
 
-- 触发器（Trigger） —— 触发规则 💡 `任务:触发器=1:n`
+- 触发器（Trigger） —— 主要赋值描述任务执行的时间规则/触发规则 💡 `任务:触发器=1:n`，`任务详情:触发器=1:1`
+
   - Trigger 实现包括：
     - SimpleTrigger： 延时任务/定时任务
     - CronTrigger： 使用 cron 表达式定义触发任务的时间规则
@@ -49,10 +48,12 @@ API： <https://www.quartz-scheduler.org/api/2.3.0/index.html>
     - JobDataMap
     - TriggerBuilder
     - ScheduleBuilder
+
 - 调度器（Scheduler） —— 将 “任务” 和 “触发器” 关联
+
   - Scheduler 实现包括：
     - RemoteScheduler
-    - StdSchduler
+    - StdScheduler
   - Scheduler 状态：
     - start
     - stop
@@ -61,7 +62,7 @@ API： <https://www.quartz-scheduler.org/api/2.3.0/index.html>
   - Scheduler 相关类：
     - SchedulerFactory： 用于创建 Scheduler
       - StdSchedulerFactory： properties 配置
-      - DirecttSchedulerFactory： 通过代码配置
+      - DirectSchedulerFactory： 通过代码配置
     - JobStore： 存储运行时信息，包括 Trigger/Scheduler/JobDetail/业务锁等 | 默认只在 Job 被添加到调度程序（Scheduler，任务执行计划表）的时候，存储一次关于该任务的状态信息数据
       - RAMJobStore： 内存存储任务调度状态
       - JDBCJobStore： 通过数据库持久化任务调度状态 【持久化、集群】
@@ -72,7 +73,8 @@ API： <https://www.quartz-scheduler.org/api/2.3.0/index.html>
     - ThreadPool
       - SimpleThreadPool
       - 自定义线程池
-- 监听器（Listener）
+
+- 监听器（Listener） —— 任务回调工具，使事件处理更加灵活
 
 ## 任务调用：间隔 SimpleTrigger
 
@@ -81,21 +83,9 @@ SimpleTrigger 是比较简单的一类触发器，支持场景：
 - 在指定时间内执行一次任务 —— 设定开始时间，不设定循环，（~~设定结束时间~~）
 - 在指定时间内执行多次任务（可指定任务执行次数/任务执行时间段） —— 设定开始时间，设定循环（间隔/次数），（~~设定结束时间~~）
 
-::: tabs
-
-@tab 测试类
-
 ```java
 <!-- @include: @project/code/demo-java-schedule/demo-quartz-01-simple/src/test/java/org/example/job/SimpleJobTest.java -->
 ```
-
-@tab 抽象类
-
-```java
-<!-- @include: @project/code/demo-java-schedule/demo-quartz-01-simple/src/test/java/org/example/job/AbstractSimpleJobTest.java -->
-```
-
-:::
 
 ## 任务调用：日期 CronSchedule
 
@@ -143,7 +133,7 @@ todo demo
 :::
 
 ```java
-<!-- @include: @project/code/demo-java-schedule/demo-quartz-01-simple/src/test/java/org/example/job/SimpleJobStateTest.java -->
+<!-- @include: @project/code/demo-java-schedule/demo-quartz-01-simple/src/test/java/org/example/job/PersistJobDataAfterExecutionTest.java -->
 ```
 
 ## 监听器 listener
@@ -163,7 +153,7 @@ scheduler.getListenerManager().addJobListener(new MyJobListener(), KeyMatcher.ke
 ```
 
 ```java
-<!-- @include: @project/code/demo-java-schedule/demo-quartz-01-simple/src/main/java/org/example/listener/MyJobListener.java -->
+<!-- @include: @project/code/demo-java-schedule/demo-quartz-01-simple/src/test/java/org/example/job/JobListenerTest.java -->
 ```
 
 ## 调度持久化 JobStore
@@ -174,7 +164,7 @@ JobStore 负责存储调度器的 “工作数据”： 任务（Job）、触发
 
 todo
 
-## 配置 prperties
+## 配置 properties
 
 <https://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration>
 
@@ -201,19 +191,13 @@ org.quartz.jobStore.class: org.quartz.simpl.RAMJobStore
 # Configure Plugins
 # ===================
 
-org.quartz.plugin.triggHistory.class: org.quartz.plugins.history.LoggingJobHistoryPlugin
+org.quartz.plugin.triggerHistory.class: org.quartz.plugins.history.LoggingJobHistoryPlugin
 org.quartz.plugin.jobInitializer.class: org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin
 org.quartz.plugins.jobInitializer.fileNames: quartz_data.xml
 org.quartz.plugins.jobInitializer.failOnFileNoFound: true
 org.quartz.plugins.jobInitializer.scanInterval: 120
 org.quartz.plugins.jobInitializer.wrapInUserTransaction: false
 ```
-
-## 集群
-
-Quartz 可单独使用，可在集成在服务器内参数实务，可集成在集群中负责平衡和故障转移。
-
-todo
 
 ## 集成 spring
 
@@ -241,9 +225,9 @@ todo
 
 ## 持久化 with spring
 
-~~参考： https://zhuanlan.zhihu.com/p/522284183~~
+~~参考： <https://zhuanlan.zhihu.com/p/522284183>~~
 
-初始化 sql 脚本： ~~https://gitee.com/qianwei4712/code-of-shiva/blob/master/quartz/quartz.sql~~
+初始化 sql 脚本： ~~<https://gitee.com/qianwei4712/code-of-shiva/blob/master/quartz/quartz.sql>~~
 
 ```yml title="application.yaml"
 # 开发环境配置
@@ -331,3 +315,9 @@ public class ScheduleConfig {
     }
 }
 ```
+
+## 集群
+
+Quartz 可单独使用，可在集成在服务器内参数实务，可集成在集群中负责平衡和故障转移。
+
+todo

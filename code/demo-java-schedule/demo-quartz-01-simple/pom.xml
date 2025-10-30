@@ -12,10 +12,12 @@
     <artifactId>demo-quartz-01-simple</artifactId>
 
     <dependencies>
+        <!-- 核心包 -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
+        <!-- 工具包 -->
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz-jobs</artifactId>

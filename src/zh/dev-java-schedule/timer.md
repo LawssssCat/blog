@@ -1,9 +1,5 @@
 ---
 title: Timer 使用
-date: 2024-05-12
-tag:
-  - java
-  - schedule
 order: 21
 ---
 

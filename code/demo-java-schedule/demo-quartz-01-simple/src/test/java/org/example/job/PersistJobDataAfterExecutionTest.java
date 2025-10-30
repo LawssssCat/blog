@@ -10,28 +10,28 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-public class SimpleJobTest implements Job {
+@PersistJobDataAfterExecution // 持久化 JobDataMap 数据
+@DisallowConcurrentExecution // 通常同 @PersistJobDataAfterExecution 一起使用，避免当同一个 job（JobDetail） 的两个实例被并发执行时，由于竞争导致 JobDataMap 中存储的数据不确定的
+public class PersistJobDataAfterExecutionTest implements Job {
     private final static AtomicInteger jobCounter = new AtomicInteger(0);
 
     @Test
     void test() throws SchedulerException, InterruptedException {
-        int repeat = 0; // 重复0次
+        int repeat = 1;
         SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
                 .withIntervalInSeconds(1) // 间隔
                 .withRepeatCount(repeat);// 次数
 
         log.info("create JobDetail");
-        JobDetail jobDetail = JobBuilder.newJob(SimpleJobTest.class)
-                .withIdentity("simpleJob-test", "quartz-test")
-                .usingJobData("msg", "hello-jobDetail")
+        JobDetail jobDetail = JobBuilder.newJob(PersistJobDataAfterExecutionTest.class)
+                .usingJobData("count", 0)
                 .build();
 
         log.info("create Trigger");
         Trigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity("simpleJob-test-trigger", "quartz-test")
                 .withSchedule(simpleScheduleBuilder)
                 .startNow() // 1次
-                .usingJobData("msg", "hello-trigger")
+                .usingJobData("count", 0)
                 .build();
 
         log.info("create Scheduler");
@@ -60,22 +60,28 @@ public class SimpleJobTest implements Job {
      */
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
+        int n = jobCounter.get();
+        log.info("~~~~~~~~~~{}", n);
         // job detail
         JobDetail jobDetail = jobExecutionContext.getJobDetail();
-        Assertions.assertEquals("simpleJob-test", jobDetail.getKey().getName());
 
         // trigger
         Trigger trigger = jobExecutionContext.getTrigger();
-        Assertions.assertEquals("simpleJob-test-trigger", trigger.getKey().getName());
 
         // data map 优先级
-        Assertions.assertEquals("hello-jobDetail", jobDetail.getJobDataMap().getString("msg"));
-        Assertions.assertEquals("hello-trigger", trigger.getJobDataMap().getString("msg"));
+        Assertions.assertEquals(n, getAndIncrement("count", jobDetail.getJobDataMap())); // 持久化，值会继承上一次Job
+        Assertions.assertEquals(0, getAndIncrement("count", trigger.getJobDataMap())); // 不会继承
 
         // count
         log.info("getFireTime={}, getNextFireTime={}, count={}",
                 jobExecutionContext.getFireTime(),
                 jobExecutionContext.getNextFireTime(),
                 jobCounter.incrementAndGet());
+    }
+
+    private int getAndIncrement(String key, JobDataMap map) {
+        int value = map.getInt(key);
+        map.put(key, value + 1);
+        return value;
     }
 }

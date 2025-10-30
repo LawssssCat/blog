@@ -6,30 +6,29 @@ import org.junit.jupiter.api.Test;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-public class CronJobTest implements Job {
+public class DailyTimeIntervalTest implements Job {
     private final static AtomicInteger jobCounter = new AtomicInteger(0);
 
     @Test
     void test() throws SchedulerException, InterruptedException {
         int repeat = 2;
-        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("0/1 * * * * ?");
+        DailyTimeIntervalScheduleBuilder dailyTimeIntervalScheduleBuilder = DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
+                .withInterval(1, DateBuilder.IntervalUnit.SECOND) // 间隔
+                .withRepeatCount(repeat); // 次数
 
         log.info("create JobDetail");
-        JobDetail jobDetail= JobBuilder.newJob(CronJobTest.class)
-                .withIdentity("cron-test", "quartz-test")
+        JobDetail jobDetail = JobBuilder.newJob(DailyTimeIntervalTest.class)
+                .withIdentity("interval-test", "quartz-test")
                 .build();
 
         log.info("create Trigger");
         Trigger trigger = TriggerBuilder.newTrigger()
+                .withSchedule(dailyTimeIntervalScheduleBuilder)
                 .startNow() // 1次
-                .withSchedule(cronScheduleBuilder) // 一秒一次
-                .endAt(calcEndAt(repeat)) // 2次
                 .build();
 
         log.info("create Scheduler");
@@ -51,15 +50,9 @@ public class CronJobTest implements Job {
         Assertions.assertTrue(scheduler.isShutdown());
     }
 
-    private Date calcEndAt(int repeat) {
-        Calendar calender = Calendar.getInstance();
-        calender.add(Calendar.SECOND, repeat);
-        return calender.getTime();
-    }
-
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        log.info("hello~{}", jobCounter.getAndIncrement());
+        log.info("hello~{}", jobCounter.incrementAndGet());
         // 制造阻塞，观察异步情况 —— 默认异步执行，下一个任务不会被当前阻塞影响
         try {
             TimeUnit.SECONDS.sleep(1);

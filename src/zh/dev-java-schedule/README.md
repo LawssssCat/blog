@@ -26,9 +26,9 @@ java 定时任务创建/管理/调度/分布式/弹性
 
 ## API/框架
 
-- [timer](./timer.md)
-- [SpringBoot `@scheduled`](./springboot_schedule.md)
-- [quartz](./quartz.md)
+- [timer](./timer.md) —— 不便于管理
+- [SpringBoot `@scheduled`](./springboot_schedule.md) —— 不便于持久化、分布式场景
+- [quartz](./quartz.md) —— 便于管理、持久化、分布式场景
 - xxl-job
 - elastic-job
 - power-job
