@@ -1,0 +1,6 @@
+# vscode
+/.vscode
+
+# cmake
+/build
+/out
