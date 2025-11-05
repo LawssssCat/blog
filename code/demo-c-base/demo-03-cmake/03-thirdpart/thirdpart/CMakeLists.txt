@@ -10,3 +10,12 @@ FetchContent_Declare(
   SOURCE_DIR "${PROJECT_ROOT_PATH}/thirdpart/googletest"
 )
 FetchContent_MakeAvailable(googletest)
+
+message("thirdpart:jsoncpp")
+# jsoncpp_lib
+FetchContent_Declare(
+  jsoncpp
+  SOURCE_DIR "${PROJECT_ROOT_PATH}/thirdpart/jsoncpp"
+)
+FetchContent_MakeAvailable(jsoncpp)
+

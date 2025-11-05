@@ -14,7 +14,8 @@ function handle_download() {
     echo "clone $thirdpart_home_abs ..."
     local tmp_dir="/tmp/$thirdpart_home_abs"
     rm -rf "$tmp_dir"
-    git clone --depth 1 -b "$thirdpart_tag" -- "$thirdpart_url" "$tmp_dir"
+    # git clone --depth 1 -b "$thirdpart_tag" -- "$thirdpart_url" "$tmp_dir"
+    git clone -q --progress --depth 1 -b "$thirdpart_tag" -- "$thirdpart_url" "$tmp_dir"
     rm -rf "$tmp_dir/.git"
     mkdir -p "$(dirname "$thirdpart_home_abs")"
     mv "$tmp_dir" "$thirdpart_home_abs" # fix file busy problem
@@ -25,6 +26,7 @@ function handle_download() {
 function main() {
   echo ----- download start -----
   handle_download googletest https://github.com/google/googletest.git v1.17.0
+  handle_download jsoncpp    https://github.com/open-source-parsers/jsoncpp.git 1.9.6
   echo ------ download ok ------
 }
 

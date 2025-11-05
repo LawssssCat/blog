@@ -4,13 +4,13 @@
     {
       "name": "my-preset",
       "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "binaryDir": "/tmp/project-cmake/03-thirdpart/build/",
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_VERBOSE_MAKEFILE": "ON",
         "FETCHCONTENT_QUIET": "OFF",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+        "xxxxxxxx_CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
         "CMAKE_C_COMPILER": "/usr/bin/clang",
         "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
         "CMAKE_C_COMPILER_LAUNCHER": "ccache",
