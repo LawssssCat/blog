@@ -27,6 +27,7 @@ function main() {
   echo ----- download start -----
   handle_download googletest https://github.com/google/googletest.git v1.17.0
   handle_download jsoncpp    https://github.com/open-source-parsers/jsoncpp.git 1.9.6
+  handle_download fmt        https://github.com/fmtlib/fmt.git 12.1.0
   echo ------ download ok ------
 }
 

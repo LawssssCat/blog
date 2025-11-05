@@ -19,3 +19,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(jsoncpp)
 
+message("thirdpart:fmt")
+# fmt:fmt
+FetchContent_Declare(
+  fmt
+  SOURCE_DIR "${PROJECT_ROOT_PATH}/thirdpart/fmt"
+)
+FetchContent_MakeAvailable(fmt)
+
+message("thridpart end")
