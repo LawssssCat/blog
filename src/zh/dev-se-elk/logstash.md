@@ -8,6 +8,8 @@ order: 10
 Logstash is an open source data collection engine with real-time pipelining capabilities。
 Logstash 是开源的服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到您最喜欢的“存储库”中。
 
+> Logstash作为Elastic Stack的重要组成部分，在Elasticsearch数据采集和处理过程中扮演着重要的角色。
+
 ## 概念
 
 ```txt
@@ -39,13 +41,9 @@ Logstash 提供众多输出选择，可以将数据发送到指定的地方，�
 
 + **编码插件（Codeos）**：
 【可选】
-在Logstash的数据流（input|decode|filter|encode|output）中描述decode/encode的处理，常用：json、multiline
+在Logstash的数据流（input|decode|filter|encode|output）中描述decode/encode的处理，常用：json、multiline、[rubydebug](https://www.elastic.co/guide/en/logstash/6.4/plugins-codecs-rubydebug.html)
 
-## 安装
-
-> 下载：
->
-> + <https://www.elastic.co/cn/downloads/logstash>
+## 目录
 
 目录结构： <https://www.elastic.co/guide/en/logstash/7.1/dir-layout.html>
 
@@ -54,6 +52,11 @@ Logstash 提供众多输出选择，可以将数据发送到指定的地方，�
 ├── logs/   # 日志文件
 ├── bin/    # 二进制脚本，包括用于启动Logstash的logstash和用于安装插件的logstash-plugin
 ├── config/ # Configuration files，including logstash.yml and jvm.options
+│   ├── logstash.yml       # 用于控制logstash的执行过程。参考：https://www.elastic.co/docs/reference/logstash/logstash-settings-file
+│   ├── pipelines.yml      # 如果有多个pipeline时使用该配置来配置多pipeline执行。参考：https://www.elastic.co/docs/reference/logstash/multiple-pipelines
+│   ├── startup.options    # 仅适用于Lniux系统，用于设置系统启动项目！
+│   ├── log4j2.properties  # 日志。参考：https://www.elastic.co/docs/reference/logstash/logging
+│   └── jvm.options
 ├── data/
 ├── jdk/    # 【兼容性】Java程序运行环境
 ├── lib/
@@ -70,6 +73,16 @@ Logstash 提供众多输出选择，可以将数据发送到指定的地方，�
 ├── LICENSE
 └── NOTICE.TXT
 ```
+
+## 安装
+
+### 本体安装
+
+#### 安装方式一：压缩包安装
+
+> 下载：
+>
+> + <https://www.elastic.co/cn/downloads/logstash>
 
 解压以后可以对logstash进行简单的测试。
 
@@ -90,6 +103,14 @@ kkk
     "@version" => "1"
 }
 ```
+
+#### 安装方式二：RPM包安装
+
+todo
+
+#### 安装方式三：Docker运行
+
+todo
 
 ### 插件安装
 
@@ -353,11 +374,29 @@ logstash-output-syslog
 
 ## 配置
 
-### 语法
+### logstash.yaml
+
+worker相关配置：
+
++ `pipeline.workers`：
+该参数用以指定Logstash中执行filter和output的线程数。
+当如果发现CPU使用率尚未达到上限，可以通过调整该参数，为Logstash提供更高的性能。
+建议将Worker数设置适当超过CPU核数可以减少IO等待时间对处理过程的影响。
+实际调优中可以先通过`-w`指定该参数，当确定好数值后再写入配置文件中。
++ `pipeline.batch.size`:
+该指标用于指定单个worker线程一次性执行flilter和output的event批量数。
+增大该值可以减少IO次数，提高处理速度，但是也以为这增加内存等资源的消耗。
+当与Elasticsearch联用时，该值可以用于指定Elasticsearch一次bluck操作的大小。
++ `pipeline.batch.delay`:
+该指标用于指定worker等待时间的超时时间，如果worker在该时间内没有等到`pipeline.batch.size`个事件，那么将直接开始执行filter和output而不再等待。
+
+### pipeline
+
+#### 语法
 
 Logstash 设计了自己的 DSL —— 包括有区域、注释、数据类型(布尔值/字符串/数值/数组/哈希)、条件判断、字段引用、等。
 
-#### 数据类型
+##### 数据类型
 
 Logstash 支持少量的数据值类型：
 
@@ -367,7 +406,7 @@ Logstash 支持少量的数据值类型：
 + array `match => ["datetime", "UNIX", "ISO8601"]`
 + hash `options => { key1 => "value1", key2 => "value2" }`
 
-#### 区段（section）
+##### 区段（section）
 
 Logstash 用 `{}` 来定义区域。
 区域内可以包括插件区域定义，你可以在一个区域内定义多个插件。
@@ -380,7 +419,7 @@ input {
 }
 ```
 
-#### 字段引用（field reference）
+##### 字段引用（field reference）
 
 如果想在 Logstash 配置中使用字段的值，只需要把字段的名字写在中括号 `[]` 里就行了，这就叫字段引用。
 
@@ -390,7 +429,7 @@ input {
 "the longitude is %{[geoip][location][0]}" # 变量内插，在字符串里使用字段引用
 ```
 
-#### 条件判断（condition）
+##### 条件判断（condition）
 
 表达式支持下面这些操作符：
 
@@ -420,7 +459,17 @@ todo redis
 #### FILTER
 
 todo date
+
 todo grok 【重要】 todo grok语法
+
+```json
+     filter {
+        grok {
+            match => { "message" => "%{COMBINEDAPACHELOG}"}
+        }
+    }
+```
+
 todo dissect —— 基于分隔符原理解析数据，解决grok解析时消耗cpu资源过多问题。direct语法简单，能处理的场景也比较有限。（它只能处理格式相似，且有分隔符的字符串。）
 
 todo mutate —— 最频繁使用的插件，可以对字段进行各种操作，比如重命名、删除、替换、更新等
@@ -431,11 +480,38 @@ todo 标记事件的某方面属性。可以有多个标签，可以通过过滤
 
 todo geoip —— 根据ip地址提供对应的地域信息，包括国别、省市、经纬度等，对于可视化地图和区域统计非常有用。 todo 依赖的数据库，是否联网
 
+```json
+     filter {
+        geoip {
+            source => "clientip"
+        }
+    }
+```
+
 #### OUTPUT
 
 todo redis
 todo kafka
-todo elasticsearch
+
+todo elasticsearch todo https://www.elastic.co/guide/en/logstash/8.18/logstash-modules.html
+
+```json
+    output {
+        elasticsearch {
+            hosts => [ "localhost:9200" ]
+        }
+    }
+```
+
+> 查询Elasticsearch确认数据是否正常上传（注意替换查询语句中的日期）
+> `curl -XGET 'http://172.16.16.17:9200/logstash-2018.10.09/_search?pretty&q=response=200'`
+
+### 密钥库
+
+参考：
+<https://www.elastic.co/docs/reference/logstash/keystore>
+
+todo https://www.elastic.co/docs/reference/logstash/keystore
 
 ## 例子
 
@@ -474,7 +550,7 @@ output
 ```bash
 # 对配置文件进行检查
 bin/logstash -f test-pipeline.conf --config.test_and_exit
-# 启动
+# 启动（包含动态重载配置功能）
 bin/logstash -f test-pipeline.conf --config.reload.automatic
 ```
 
