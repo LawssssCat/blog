@@ -8,6 +8,8 @@ order: 10
 Logstash is an open source data collection engine with real-time pipelining capabilities。
 Logstash 是开源的服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到您最喜欢的“存储库”中。
 
+## 概念
+
 ```txt
 Logstash Pipeline:
 Data Source -> INPUTS | FILTERS | OUTPUTS -> Elasticsearch
@@ -34,6 +36,10 @@ Logstash 过滤器能够解析各个事件，识别已命名的字段以构建�
 【必须】
 负责数据输出（outputs ship them elsewhere），常用：elasticsearch、file、graphite、statsd。
 Logstash 提供众多输出选择，可以将数据发送到指定的地方，并且能够灵活地解锁众多下游用例。
+
++ **编码插件（Codeos）**：
+【可选】
+在Logstash的数据流（input|decode|filter|encode|output）中描述decode/encode的处理，常用：json、multiline
 
 ## 安装
 
@@ -71,15 +77,17 @@ Logstash 提供众多输出选择，可以将数据发送到指定的地方，�
 bin/logstash -e 'input { stdin {} } output { stdout {} }'
 kkk
 {
-         "event" => {
+    "event" => { # Logstash 将数据流中等每一条数据称之为一个事件（event）。
         "original" => "kkk"
     },
-    "@timestamp" => 2025-11-23T04:20:54.481028474Z,
-       "message" => "kkk",
-          "host" => {
+    # type 标记事件的唯一类型
+    # tags 标记事件的某方面属性。可以有多个标签，可以通过过滤器中 add_tag/remove_tag/add_field/remove_field 匹配成功时生效
+    "@timestamp" => 2025-11-23T04:20:54.481028474Z, # 标记事件的发生时间
+    "message" => "kkk",
+    "host" => { # 标记事件发生的设备
         "hostname" => "demo-se-elk"
     },
-      "@version" => "1"
+    "@version" => "1"
 }
 ```
 
@@ -343,9 +351,6 @@ logstash-output-syslog
 
 意即工作线程。Logstash 会运行多个线程。你可以用 bin/logstash -w 5 这样的方式强制 Logstash 为过滤插件运行 5 个线程。
 
-todo 概念
-Logstash 将数据流中等每一条数据称之为一个事件（event）。
-
 ## 配置
 
 ### 语法
@@ -403,6 +408,34 @@ if "_grokparsefailure" not in [tags] {
 } else {
 }
 ```
+
+### 常用插件
+
+#### INPUT
+
+todo file
+todo http
+todo redis
+
+#### FILTER
+
+todo date
+todo grok 【重要】 todo grok语法
+todo dissect —— 基于分隔符原理解析数据，解决grok解析时消耗cpu资源过多问题。direct语法简单，能处理的场景也比较有限。（它只能处理格式相似，且有分隔符的字符串。）
+
+todo mutate —— 最频繁使用的插件，可以对字段进行各种操作，比如重命名、删除、替换、更新等
+
+todo json
+
+todo 标记事件的某方面属性。可以有多个标签，可以通过过滤器中 add_tag/remove_tag/add_field/remove_field 匹配成功时生效
+
+todo geoip —— 根据ip地址提供对应的地域信息，包括国别、省市、经纬度等，对于可视化地图和区域统计非常有用。 todo 依赖的数据库，是否联网
+
+#### OUTPUT
+
+todo redis
+todo kafka
+todo elasticsearch
 
 ## 例子
 
