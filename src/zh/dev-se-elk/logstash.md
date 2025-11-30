@@ -83,7 +83,7 @@ kkk
 }
 ```
 
-## 插件
+### 插件安装
 
 虽然logstash默认安装了大部分的插件，但是有些插件没有默认安装，如`logstash-output-syslog`、`logstash-output-jdbc`
 
@@ -233,7 +233,7 @@ logstash-patterns-core
 
 :::
 
-### 在线安装
+#### 在线安装
 
 ```bash
 $ bin/logstash-plugin install logstash-output-jdbc
@@ -275,7 +275,7 @@ $ sed -i 's@https://rubygems.org@https://gems.ruby-china.com@g' ${LOGSTASH_HOME}
 
 :::
 
-### 离线安装
+#### 离线安装
 
 在实际应用过程中有些生产环境是封闭的网络环境，没法连接外网。这时候就需要离线安装插件。
 
@@ -285,7 +285,7 @@ $ sed -i 's@https://rubygems.org@https://gems.ruby-china.com@g' ${LOGSTASH_HOME}
 + 全量打包：一种就是在有网络的环境下将插件装好，将整个logsash包离线拷到生产环境。
 + 插件打包：一种就是在有网络的环境下将插件装好，将部分logstash的需要离线安装的插件离线到生产环境，然后进行离线安装。
 
-#### 离线插件包制作、安装
+##### 离线插件包制作、安装
 
 离线插件包制作
 
@@ -311,11 +311,48 @@ logstash-input-syslog
 logstash-output-syslog
 ```
 
-## 语法
+## 启动
+
+### 命令行
+
+#### `-e '配置'`
+
+::: tip
+
+可以不写任何具体配置，直接运行 `bin/logstash -e ''` 效果等同于  `bin/logstash -e 'input { stdin {} } output { stdout {} }'`。
+
+:::
+
+#### `--config '配置文件路径'` 或 `-f '配置文件路径'`
+
+真实运用中，我们会写很长的配置，甚至可能超过 shell 所能支持的 1024 个字符长度。所以我们必把配置固化到文件里，然后通过  这样的形式来运行。
+如： `bin/logstash -f agent.conf`
+
+此外，logstash 还提供一个方便我们规划和书写配置的小功能。
+你可以直接用 `bin/logstash -f /etc/logstash.d/` 来运行。logstash 会自动读取 `/etc/logstash.d/` 目录下所有的文本文件，然后在自己内存里拼接成一个完整的大配置文件，再去执行。
+
+#### `--configtest` 或 `-t`
+
+意即测试。用来测试 Logstash 读取到的配置文件语法是否能正常解析。Logstash 配置语法是用 grammar.treetop 定义的。尤其是使用了上一条提到的读取目录方式的读者，尤其要提前测试。
+
+#### `--log` 或 `-l`
+
+意即日志。Logstash 默认输出日志到标准错误。生产环境下你可以通过 bin/logstash -l logs/logstash.log 命令来统一存储日志。
+
+#### `--filterworkers` 或 `-w`
+
+意即工作线程。Logstash 会运行多个线程。你可以用 bin/logstash -w 5 这样的方式强制 Logstash 为过滤插件运行 5 个线程。
+
+todo 概念
+Logstash 将数据流中等每一条数据称之为一个事件（event）。
+
+## 配置
+
+### 语法
 
 Logstash 设计了自己的 DSL —— 包括有区域、注释、数据类型(布尔值/字符串/数值/数组/哈希)、条件判断、字段引用、等。
 
-### 数据类型
+#### 数据类型
 
 Logstash 支持少量的数据值类型：
 
@@ -325,7 +362,7 @@ Logstash 支持少量的数据值类型：
 + array `match => ["datetime", "UNIX", "ISO8601"]`
 + hash `options => { key1 => "value1", key2 => "value2" }`
 
-### 区段（section）
+#### 区段（section）
 
 Logstash 用 `{}` 来定义区域。
 区域内可以包括插件区域定义，你可以在一个区域内定义多个插件。
@@ -338,7 +375,7 @@ input {
 }
 ```
 
-### 字段引用（field reference）
+#### 字段引用（field reference）
 
 如果想在 Logstash 配置中使用字段的值，只需要把字段的名字写在中括号 `[]` 里就行了，这就叫字段引用。
 
@@ -348,7 +385,7 @@ input {
 "the longitude is %{[geoip][location][0]}" # 变量内插，在字符串里使用字段引用
 ```
 
-### 条件判断（condition）
+#### 条件判断（condition）
 
 表达式支持下面这些操作符：
 
@@ -366,39 +403,6 @@ if "_grokparsefailure" not in [tags] {
 } else {
 }
 ```
-
-## 命令行
-
-### `-e '配置'`
-
-::: tip
-
-可以不写任何具体配置，直接运行 `bin/logstash -e ''` 效果等同于  `bin/logstash -e 'input { stdin {} } output { stdout {} }'`。
-
-:::
-
-### `--config '配置文件路径'` 或 `-f '配置文件路径'`
-
-真实运用中，我们会写很长的配置，甚至可能超过 shell 所能支持的 1024 个字符长度。所以我们必把配置固化到文件里，然后通过  这样的形式来运行。
-如： `bin/logstash -f agent.conf`
-
-此外，logstash 还提供一个方便我们规划和书写配置的小功能。
-你可以直接用 `bin/logstash -f /etc/logstash.d/` 来运行。logstash 会自动读取 `/etc/logstash.d/` 目录下所有的文本文件，然后在自己内存里拼接成一个完整的大配置文件，再去执行。
-
-### `--configtest` 或 `-t`
-
-意即测试。用来测试 Logstash 读取到的配置文件语法是否能正常解析。Logstash 配置语法是用 grammar.treetop 定义的。尤其是使用了上一条提到的读取目录方式的读者，尤其要提前测试。
-
-### `--log` 或 `-l`
-
-意即日志。Logstash 默认输出日志到标准错误。生产环境下你可以通过 bin/logstash -l logs/logstash.log 命令来统一存储日志。
-
-### `--filterworkers` 或 `-w`
-
-意即工作线程。Logstash 会运行多个线程。你可以用 bin/logstash -w 5 这样的方式强制 Logstash 为过滤插件运行 5 个线程。
-
-todo 概念
-Logstash 将数据流中等每一条数据称之为一个事件（event）。
 
 ## 例子
 
