@@ -506,7 +506,8 @@ CompletionService 的底层原理： 阻塞队列、线程池
 
 ### CompletableFuture
 
-JDK8 引入，解决 Future 和 CompletionService 都不擅长的 “异步任务编排组合” 问题。
+JDK8 引入，解决 Future 和 CompletionService 都不擅长的 “异步任务编排组合” 问题，提供了“基于事件的异步编程范式”的支持。
+在我们的日常优化中，最常用手段便是多线程并行执行。这时候就会涉及到 CompletableFuture 的使用。
 
 ```java
 // Future 异步计算的结果
@@ -514,98 +515,225 @@ JDK8 引入，解决 Future 和 CompletionService 都不擅长的 “异步任�
 class CompletableFuture implements CompletionStage, Future
 ```
 
-CompletableFuture 内部使用 ForkJoinPool 线程池高效地调度和执行任务。
-CompletableFuture 以对任务完成的监听机制，实现非阻塞的特性。当任务完成时，它会遍历所有注册的回调函数，并在合适的线程中执行这些回调。通过这种机制，CompletableFuture 能够在任务完成后及时返回结果或触发后序处理逻辑，而不会阻塞主线程的执行。
-
 特性：
 
 1. 解决 Future 的这些缺陷
 1. 函数式编程
 1. 异步任务编排组合（可以将多个异步任务串联起来，组成一个完整的链式调用）能力
 
-函数接口：
+原理：
+CompletableFuture 内部默认使用 ForkJoinPool 线程池（CPU密集型）执行任务。
+CompletableFuture 以对任务完成的监听机制，实现非阻塞的特性。当任务完成时，它会遍历所有注册的回调函数，并在合适的线程中执行这些回调。通过这种机制，CompletableFuture 能够在任务完成后及时返回结果或触发后序处理逻辑，而不会阻塞主线程的执行。
 
-- 通过 `thenApply`/`thenAccept`/`thenRun` 方法，注册回调函数，这些函数会在 CompletableFuture 完成时被异步调用。这样，处理任务的结果不必阻塞当前线程。
+#### 注册回调函数 —— `thenApply`/`thenAccept`/`thenRun`
 
-  ```java
-  CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello");
+通过 `thenApply`/`thenAccept`/`thenRun` 方法，注册回调函数，这些函数会在 CompletableFuture 完成时被异步调用。这样，处理任务的结果不必阻塞当前线程。
 
-  future.thenApply(result -> {
-      // Non-blocking callback to process the result
-      System.out.println("Received result: " + result);
-      return result.toUpperCase();
-  });
+```java
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "Hello");
 
-  // Continue with other non-blocking operations
-  ```
+future.thenApply(result -> {
+    // Non-blocking callback to process the result
+    System.out.println("Received result: " + result);
+    return result.toUpperCase();
+});
 
-- 通过 `thenCombine`/`thenAcceptBoth`/`runAfterBoth`/`applyToEither`/`acceptEither` 等方法，将多个 CompletableFuture 的结果组合在一起，而不必阻塞等待每个任务的完成。
+// Continue with other non-blocking operations
+```
 
-  ```java
-  CompletableFuture<String> firstTask = CompletableFuture.supplyAsync(() -> {
-      // Simulate some computation
-      return "First Task";
-  });
+#### 任务的完成 —— 通过 `thenCombine`/`thenAcceptBoth`/`runAfterBoth`/`applyToEither`/`acceptEither` 等方法，将多个 CompletableFuture 的结果组合在一起，而不必阻塞等待每个任务的完成。
 
-  CompletableFuture<String> secondTask = CompletableFuture.supplyAsync(() -> {
-      // Simulate some computation
-      return "Second Task";
-  });
+```java
+CompletableFuture<String> firstTask = CompletableFuture.supplyAsync(() -> {
+    // Simulate some computation
+    return "First Task";
+});
 
-  CompletableFuture<String> thirdTask = CompletableFuture.supplyAsync(() -> {
-      // Simulate some computation
-      return "Third Task";
-  });
+CompletableFuture<String> secondTask = CompletableFuture.supplyAsync(() -> {
+    // Simulate some computation
+    return "Second Task";
+});
 
-  // 使用thenCompose确保任务按照顺序完成
-  CompletableFuture<String> result = firstTask.thenCompose(result1 ->
-          secondTask.thenCompose(result2 ->
-                  thirdTask.thenApply(result3 -> result1 + " -> " + result2 + " -> " + result3)
-          )
-  );
+CompletableFuture<String> thirdTask = CompletableFuture.supplyAsync(() -> {
+    // Simulate some computation
+    return "Third Task";
+});
 
-  // 异步获取结果
-  result.thenAcceptAsync(System.out::println);
+// 使用thenCompose确保任务按照顺序完成
+CompletableFuture<String> result = firstTask.thenCompose(result1 ->
+        secondTask.thenCompose(result2 ->
+                thirdTask.thenApply(result3 -> result1 + " -> " + result2 + " -> " + result3)
+        )
+);
 
-  // 阻塞等待所有任务完成
-  result.join();
-  ```
+// 异步获取结果
+result.thenAcceptAsync(System.out::println);
 
-- CompletableFuture 异常处理
+// 阻塞等待所有任务完成
+result.join();
+```
 
-  ::: tabs
+#### 异常处理
 
-  @tab exceptionally
+::: tabs
 
-  ```java
-  CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
-      throw new RuntimeException();
-  })
-  .exceptionally(ex -> "errorFirstTask") // 处理异常并返回新结果
-  .thenApply(firstTask -> firstTask + "secondTask")
-  .thenApply(secondTask -> secondTask + "thirdTask")
-  .thenApply(thirdTask -> thirdTask + "lastTask")
-  ```
+@tab exceptionally
 
-  @tab `handle(BiFunction fn)`
+```java
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+    throw new RuntimeException();
+})
+.exceptionally(ex -> "errorFirstTask") // 处理异常并返回新结果
+.thenApply(firstTask -> firstTask + "secondTask")
+.thenApply(secondTask -> secondTask + "thirdTask")
+.thenApply(thirdTask -> thirdTask + "lastTask")
+```
 
-  ```java
-  CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "resultA")
-  .thenApply(firstTask -> firstTask + "secondTask")
-  .thenApply(secondTask -> {throw new RuntimeException();})
-  .handle(new BiFunction<Object, Throwable, Object>() { // 定义异常处理
-      @Override
-      public Object apply(Object re, Throwable throwable) {
-          if (throwable != null) {
-              return "errorThirdTask ";
-          }
-          return re;
-      }
-  })
-  .thenApply(thirdTask -> thirdTask + "lastTask");
-  ```
+@tab `handle(BiFunction fn)`
 
-  :::
+```java
+CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "resultA")
+.thenApply(firstTask -> firstTask + "secondTask")
+.thenApply(secondTask -> {throw new RuntimeException();})
+.handle(new BiFunction<Object, Throwable, Object>() { // 定义异常处理
+    @Override
+    public Object apply(Object re, Throwable throwable) {
+        if (throwable != null) {
+            return "errorThirdTask ";
+        }
+        return re;
+    }
+})
+.thenApply(thirdTask -> thirdTask + "lastTask");
+```
+
+:::
+
+#### 超时处理（timeout）
+
+参考：
+<https://segmentfault.com/a/1190000045099797>
+
+##### JDK9+
+
+JDK自身支持。略
+
+```java
+public CompletableFuture<T> orTimeout(long timeout, TimeUnit unit) {
+    if (unit == null)
+        throw new NullPointerException();
+    if (result == null)
+        whenComplete(new Canceller(Delayer.delay(new Timeout(this), timeout, unit)));
+    return this;
+}
+```
+
+##### JDK8
+
+JDK 8 中 CompletableFuture 没有上述方法，但我们可以实现一个：
+
+```java
+CompletableFutureExpandUtils.orTimeout(异步任务, 超时时间, 时间单位);
+```
+
+```java
+package com.jd.jr.market.reduction.util;
+
+import com.jdpay.market.common.exception.UncheckedException;
+
+import java.util.concurrent.*;
+import java.util.function.BiConsumer;
+
+/**
+ * CompletableFuture 扩展工具
+ *
+ * @author zhangtianci7
+ */
+public class CompletableFutureExpandUtils {
+
+    /**
+     * 如果在给定超时之前未完成，则异常完成此 CompletableFuture 并抛出 {@link TimeoutException} 。
+     *
+     * @param timeout 在出现 TimeoutException 异常完成之前等待多长时间，以 {@code unit} 为单位
+     * @param unit    一个 {@link TimeUnit}，结合 {@code timeout} 参数，表示给定粒度单位的持续时间
+     * @return 入参的 CompletableFuture
+     */
+    public static <T> CompletableFuture<T> orTimeout(CompletableFuture<T> future, long timeout, TimeUnit unit) {
+        if (null == unit) {
+            throw new UncheckedException("时间的给定粒度不能为空");
+        }
+        if (null == future) {
+            throw new UncheckedException("异步任务不能为空");
+        }
+        if (future.isDone()) {
+            return future;
+        }
+
+        return future.whenComplete(new Canceller(Delayer.delay(new Timeout(future), timeout, unit)));
+    }
+
+    /**
+     * 超时时异常完成的操作
+     */
+    static final class Timeout implements Runnable {
+        final CompletableFuture<?> future;
+
+        Timeout(CompletableFuture<?> future) {
+            this.future = future;
+        }
+
+        public void run() {
+            if (null != future && !future.isDone()) {
+                future.completeExceptionally(new TimeoutException());
+            }
+        }
+    }
+
+    /**
+     * 取消不需要的超时的操作
+     */
+    static final class Canceller implements BiConsumer<Object, Throwable> {
+        final Future<?> future;
+
+        Canceller(Future<?> future) {
+            this.future = future;
+        }
+
+        public void accept(Object ignore, Throwable ex) {
+            if (null == ex && null != future && !future.isDone()) {
+                future.cancel(false);
+            }
+        }
+    }
+
+    /**
+     * 单例延迟调度器，仅用于启动和取消任务，一个线程就足够
+     */
+    static final class Delayer {
+        static ScheduledFuture<?> delay(Runnable command, long delay, TimeUnit unit) {
+            return delayer.schedule(command, delay, unit);
+        }
+
+        static final class DaemonThreadFactory implements ThreadFactory {
+            public Thread newThread(Runnable r) {
+                Thread t = new Thread(r);
+                t.setDaemon(true);
+                t.setName("CompletableFutureExpandUtilsDelayScheduler");
+                return t;
+            }
+        }
+
+        static final ScheduledThreadPoolExecutor delayer;
+
+        static {
+            delayer = new ScheduledThreadPoolExecutor(1, new DaemonThreadFactory());
+            delayer.setRemoveOnCancelPolicy(true);
+        }
+    }
+}
+```
+
+#### 例子
 
 ::: details
 
@@ -1143,6 +1271,10 @@ concurrencyLevel 配置与 segment 数量的关系： <https://www.infoq.cn/arti
 ### 问题：多线程间，事务失效（❗ 解决方案有问题）
 
 todo 移到 spring 并在这里提示
+
+参考：
+
+- https://www.bilibili.com/video/BV1Lf421Q7BY/
 
 ::: warning
 多线程间共享一个事务，本身违背隔离性，应优先解决设计问题，而非下面所述代码问题。
