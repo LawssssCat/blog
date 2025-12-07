@@ -7,120 +7,82 @@ tag:
 order: 66
 ---
 
-## 概念
+本文主要整理Java操作线程、协程方式
 
-### JUC
+## 概念：进程、线程、协程
 
-JUC `java.util.concurrent` 缩写
+- **进程（Process）** —— 程序，是系统分配资源的单位
+  - 范围： 一个系统，多个进程
+  - 查看： 可通过`ps -ef`查看进程列表
+  - JDK： 通过`java -jar xxx.jar`启动的JVM就是一个进程，可通过`jps -mlvV`查看
 
-并发场景进行多线程编程的工具类
+- **线程（Thread）/内核线程（Kernel-Level Thread，KLT）** —— 线程，是CPU核心调度的最小单位（一个CPU物理核心只能同时运行一个线程），在程序中共享进程资源，系统提供接口
+  - 特点： 直接由操作系统内核（Kernel）支持的线程。这种线程由操作系统内核来完成线程切换，操作系统内核通过操纵调度器（Scheduler）对线程进行调度，并负责将线程的任务映射到各个处理器上。
+  - 范围： 一个进程，多个线程
+  - JDK： 提供JUC（java.util.concurrent）接口
+  （JDK的线程接口实现参考openjdk代码：Thread.c/jvm.cpp/thread.cpp/os_linux.cpp）
+  - 限制： 通过`sysctl kernel.threads-max;cat /proc/sys/kernel/threads-max`可查看一个进程可以启动的最大线程数量。可以通过`sysctl -w kernel.threads-max=102400;sysctl -p`修改。
+  （当实际线程数量超过上述设置值后，Java 继续创建线程会报错：Exception in thread "main" java.lang.OutOfMemoryError: unable to create new native thread）
 
-### 进程、线程、协程
+  ::: tip
 
-**进程** —— 一个应用，系统资源分配单位
+  如果要为应用估计工作线程数，可参考如下公式：
 
-**线程** —— 一个应用的其中一个任务，共享进程资源
+  - 计算密集型： `线程数 = CPU个数 + 1`
+  - IO密集型： `线程数 = CPU个数 * 2 + 1` （还需考虑：吞吐量（tps））
 
-**协程**/**虚拟线程（Visual Thread）** —— 在一个任务中，实现多任务有序的协作开展任务
+  :::
 
-- 一个线程中可以有多个虚拟线程
-- 不由系统管理，由 jvm 管理
-- 由于由 jvm 管理，完全在内存中进行状态切换，所以创建和销毁的开销小，更高效
+- **协程（Coroutines）/用户线程（User Thread，UT）** —— 程序中让出线程控制权的线程管理方式，不依赖系统接口，一般由开发语言提供接口或开发者自行实现
+  - 特点： 由程序在内存中管理，创建和销毁的开销相对小，相对相对内核线程更高效
+  - 范围： 一个线程，多个协程代码
+  - JDK：
+    - 在Java 1.2之前，实现Thread接口的是其内部实现的用户线程，由于存在问题之后的版本回归系统的内核线程。
+    - 在Java 19中实装虚拟线程（Visual Thread）特性，该特性提供了协程接口。
+  （相比其他语言通过新增`yield`语句来控制让出线程控制权，虚拟线程提供的接口和JDK线程接口类似，便于开发者适应）
 
-::: tip
-可以形象的理解： 进程=饭馆；线程=饭桌；协程=座椅；
-:::
+## 概念：并发、并行、串行
 
-#### 内核线程
+- **并行** = 多个任务**同时**执行（同时占用不同的CPU核心时间）
+（在Java中可以使用`Runtime.getRuntime().availableProcessors()`查询当前逻辑处理器核心数）
+- **串行** = 多个任务**先后**执行（前后脚占用相同/不同的CPU核心时间）
+- **并发** = 多个任务**轮流**执行（轮流占用CPU核心时间）
+  时间片、上下文切换：
+  - **时间片**： 为了让一个 CPU 核心并发执行多个线程，操作系统设计了 “时间片” 机制，即 CPU 核心轮流执行不同线程小段时间，让多个任务的状态在一个大时间内总能保持更新。
+  - **上下文切换**： 两个连续的时间片可能给到同一个线程，也可能给到不同的线程。当两个连续的时间片给到不同的线程后，CPU 核心执行到对应时间片时，由于执行的是另外的线程任务，就需要进行线程上下文的切换。
 
-线程实现方式有三种：
+## 线程
 
-1. 使用内核线程实现
-1. 使用用户线程实现
-1. 使用用户线程 + 内核线程混合实现
+todo 线程创建 —— 线程/线程池/协程
 
-内核线程（Kernel-Level Thread，KLT）就是直接由操作系统内核（Kernel）支持的线程。这种线程由操作系统内核来完成线程切换，操作系统内核通过操纵调度器（Scheduler）对线程进行调度，并负责将线程的任务映射刀各个处理器上。
+- 线程模型
+  - JMM内存模型（指令重排、内存屏障） —— violated
+- 线程池模型
+  - 核心线程数、工作队列、最大线程数、拒绝策略
+  - Fork/Join
+  - 动态线程池（非原生）
+- 协程模型
 
-> 可以参考 linux 源码
->
-> ```bash
-> Thread.c
-> jvm.h
-> jvm.cpp
-> thread.cpp
-> os_linux.cpp
-> ```
->
-> 参考： <https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=11>
+todo 线程安全问题（ABA） —— 加锁
 
-**Java 创建线程的方式就是采用内核线程的方式创建的**
+- synchronized
+  - 偏向锁/轻量级锁/重量级锁
+  - 乐观锁/非阻塞锁，自旋锁（spinlock）/CAS（Compare and Swap）
+- Lock 接口
+  - ReentrantLock 可重入锁
+  - CountDownLatch 类/CyclicBarrier 类 —— 多线程 join 同步
+  - Semaphore 类 —— 通过实现经典的信号量机制来实现同步。（Java 支持二进制的信号量和一般信号量）
+  - Phaser 类 —— 允许控制那些分割成多个阶段的任务的执行。（在所有任务都完成当前阶段之前，任何任务都不能进入下一阶段）
+- ThreadLocal
+- 死锁
 
-#### 内核线程数量
+todo 线程编排接口
 
-```bash
-# 查看指定参数
-sysctl -a | grep threads-max # 查看所有参数
-sysctl kernel.threads-max
-cat /proc/sys/kernel/threads-max # 内核参数在 /proc/sys 目录下的格式为： 目录.文件
+## 协程
 
-# 修改指定参数
-sysctl -w kernel.threads-max=102400 # 修改 /etc/sysctl.conf 文件，该文件在系统重启后自动加载
+todo 原理
 
-# 手动生效配置
-sysctl -p
-```
-
-当实际线程数量超过上述设置值后，Java 继续创建线程会报错：
-
-```bash
-Exception in thread "main" java.lang.OutOfMemoryError: unable to create new native thread
-  at java.lang.Thread.start0(Native Method)
-  at java.lang.Thread.start(Thread.java:717)
-  at Test02.main(Test02.java:9)
-```
-
-#### 用户线程
-
-一般认为，一个线程只要不是内核线程，都是用户线程（User Thread，UT）
-
-用户线程指完全建立再用户自己的程序线程库上，系统内核不能感知到存在的线程（用户线程的创建、同步、销毁和调度完全由用户程序完成，不需要内核的帮助）。
-
-对比：
-
-- 系统线程上下文切换需要系统调度，代价高；用户线程不需要调用内核，操作快速且代价低，且能够支持规模更大的线程数量
-- 系统线程调用方便，只要是支持多线程的系统都能轻松调起；用户线程调用复杂，需要用户程序自己处理线程的创建、销毁、切换和调度
-
-在 Java 1.2 之前 Thread 是用户线程，从 1.2 版本之后采用了内核线程，但如今考虑更好的程序性能，JDK 17 又推出 “协程/~~纤程~~/虚拟线程” 来辅助用户定义用户线程。
-
-### 并发、并行、串行
-
-并行 = 多个线程**同时**执行**完整**任务
-
-串行 = 多个线程**依次**执行**完整**任务
-
-并发 = 多个线程**轮流**执行**部分**任务
-
-### 线程数、CPU 的核心数
-
-线程是 CPU 调度的最小单位 —— 即同一时刻，一个 CPU 核心数量运行一个线程
-
-#### 逻辑处理器（Intel 超线程技术）
-
-Intel 引入超线程技术后，产生了 “逻辑处理器” 的概念，即使 CPU 核心数与线程数可以形成 1:2 的关系。
-
-::: tip
-在 Java 中使用 `Runtime.getRuntime().availableProcessors()` 可以获取当前的 CPU 核心数。 ❗ 实际上是逻辑处理器核心数
-:::
-
-::: tip
-更多的线程一般意味着更多线程创建/销毁开销、更频繁的上下文切换，所以一般需要根据现有的 CPU 核心数量/逻辑处理器核心数量估算最大可并发的线程数。
-:::
-
-### 时间片、上下文切换
-
-**时间片**： 为了让一个 CPU 核心并发执行多个线程，操作系统设计了 “时间片” 机制，即 CPU 核心轮流执行不同线程小段时间，让多个任务的状态在一个大时间内总能保持更新。
-
-**上下文切换**： 两个连续的时间片可能给到同一个线程，也可能给到不同的线程。当两个连续的时间片给到不同的线程后，CPU 核心执行到对应时间片时，由于执行的是另外的线程任务，就需要进行线程上下文的切换。
+## 【待整理】
 
 ## Thread API
 
@@ -612,7 +574,9 @@ CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> "resultA"
 #### 超时处理（timeout）
 
 参考：
-<https://segmentfault.com/a/1190000045099797>
+
+- <https://segmentfault.com/a/1190000045099797> —— Java CompletableFuture 异步超时实现探索
+- <https://juejin.cn/post/7411345808527147062>/<https://www.cnblogs.com/HuaTalkHub/p/18697082> —— 【异步编程实战】如何实现超时功能（以CompletableFuture为例）
 
 ##### JDK9+
 
@@ -862,6 +826,13 @@ todo 例子 AtomicStampedReference
 
 ### 锁
 
+### 死锁问题
+
+- todo 参考： https://www.bilibili.com/video/BV1Xd4y1m7Bs/
+- todo demo 哲学家就餐：吃饭围一圈，每人中间间隔一只筷子，优先左手拿筷子，导致右手拿筷子时筷子被占用，导致死锁 —— 处理：顺序释放筷子占用，直到一个人拿到两个筷子
+- todo jps 看 PID
+- todo jstack 看死锁分析 / jconsole
+
 #### 悲观锁/互斥锁/阻塞锁
 
 悲观锁 —— 获取锁/释放锁均有 “线程状态的切换”，这会消耗性能
@@ -1061,22 +1032,6 @@ e.g.
 - synchronized 非公平
 - ReentrantLock 可公平、可非公平 `new ReentrantLock(true) ; // fair true/false 默认 false`
 
-#### 死锁问题
-
-todo 参考： https://www.bilibili.com/video/BV1Xd4y1m7Bs/
-
-todo demo 哲学家就餐：吃饭围一圈，每人中间间隔一只筷子，优先左手拿筷子，导致右手拿筷子时筷子被占用，导致死锁 —— 处理：顺序释放筷子占用，直到一个人拿到两个筷子
-
-todo jps 看 PID
-
-todo jstack 看死锁分析 / jconsole
-
-todo trylock
-
-## 生产者/消费者模型
-
-todo
-
 ## 并发数据结构
 
 Java API 中的常见数据结构（例如 ArrayList、Hashtable 等）并不能在并发应用程序中使用，除非采用外部同步机制。
@@ -1160,31 +1115,7 @@ demo:
 <!-- @include: @project/code/demo-java-thread/demo-01-simple/src/test/java/org/example/thread/ForkJoinPoolTest.java -->
 ```
 
-## 原理：AQS 框架
-
-AQS（AbstractQueuedSynchronizer，抽象队列同步器） 主要用来构建锁和同步器
-
-todo Java 面试题：AQS 条件等待和唤醒的实现原理 —— https://www.bilibili.com/video/BV1gN411J7Na/
-todo Java 面试题：AQS 实现原理之互斥模式 —— https://www.bilibili.com/video/BV1mF41117VQ/
-todo Java 面试题：AQS 共享模式在读写锁中的应用 —— https://www.bilibili.com/video/BV1Rh4y1z7Zn/
-
-todo JavaGuide | AQS 详解 —— https://javaguide.cn/java/concurrent/aqs.html
-
-todo 美团 | 从 ReentrantLock 的实现看 AQS 的原理及应用 —— https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html
-
-todo ~~AQS 是什么？AbstractQueuedSynchronizer 之 AQS 原理及源码深度分析 —— https://blog.csdn.net/A_art_xiang/article/details/133985680~~
-
 ## 问题
-
-### 问题：应用的线程数应该设置成多少？
-
-- 计算密集型： `线程数 = CPU个数 + 1`
-- IO 密集型： `线程数 = CPU个数 * 2 + 1`
-
-其他因素：
-
-- 超线程技术
-- 吞吐量（tps）
 
 ### 问题：循环中使用多线程
 
@@ -1544,10 +1475,35 @@ public class NacosConfigListener implements ApplicationRunner {
 
 :::
 
-#### 队列缩容处理
+## 参考
 
-todo 多余线程的处理
+- openjdk线程源码实现 —— <https://www.bilibili.com/video/BV1Bw4m1Z7eg?p=11>
 
-#### 开源框架
+## 待整理
 
-- `dynamic-tp` —— 美团开源的动态线程池，支持通过 nacos 配置中心配置线程池，对线程池进行扩缩容。
+特性：
+
+todo Java 22 引入 Structured Task Scope 和 Subtask 处理结构化的异步行为 | 结合虚拟线程和结构化并发 | 虚拟线程使得阻塞不是问题，结构化并发让异步编程更直观。 | 有可能替代 `CompletableFuture`
+
+模型：
+
+todo 生产者/消费者模型
+
+工具：
+
+todo 多线程测试方式 <https://github.com/awaitility/awaitility> 【开源框架】
+
+todo `dynamic-tp` —— 美团开源的动态线程池，支持通过 nacos 配置中心配置线程池，对线程池进行扩缩容。 【开源框架】
+
+todo 多余线程的处理 —— 队列缩容处理
+
+todo 分布式锁 —— 原理就是找 redis/mq 这些第三方存锁的状态，加锁时候去看一下，加了锁更新一下。 <https://www.bilibili.com/video/BV1vM4m1k7qB/>
+
+todo AQS（AbstractQueuedSynchronizer，抽象队列同步器）框架 主要用来构建锁和同步器
+
+- todo Java 面试题：AQS 条件等待和唤醒的实现原理 —— https://www.bilibili.com/video/BV1gN411J7Na/
+- todo Java 面试题：AQS 实现原理之互斥模式 —— https://www.bilibili.com/video/BV1mF41117VQ/
+- todo Java 面试题：AQS 共享模式在读写锁中的应用 —— https://www.bilibili.com/video/BV1Rh4y1z7Zn/
+- todo JavaGuide | AQS 详解 —— https://javaguide.cn/java/concurrent/aqs.html
+- todo 美团 | 从 ReentrantLock 的实现看 AQS 的原理及应用 —— https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html
+- todo ~~AQS 是什么？AbstractQueuedSynchronizer 之 AQS 原理及源码深度分析 —— https://blog.csdn.net/A_art_xiang/article/details/133985680~~
