@@ -3,7 +3,9 @@ title: Flume
 order: 10
 ---
 
-Flume是分布式的、可靠的、高可用的服务，用于有效地采集、聚合和移动大量日志数据。
+<https://flume.apache.org/documentation.html>
+
+Flume 是分布式的、可靠的、高可用的服务，用于有效地采集、聚合大量数据源数据（如日志文件、网络数据源、消息队列等），并将大规模数据从各种采集、传输和加载到数据存储系统（如 Hadoop HDFS、Apache HBase、Apache Hive 等）。
 
 ## 版本
 
@@ -16,12 +18,12 @@ Flume运行的核心是Agent。Flume以Agent为最小的独立运行单位，它
 
 Flume Agent 包含三个核心组件，分别是：
 
-+ source组件 —— 与数据源进行交互，采集数据，封装成event（事件，对应的是一条记录，有结构：header=键值对、body=采集到的数据内容）（一般一行日志一个event）
-+ channel组件 —— 将source传输的event进行缓存，然后传输给sink
-+ sink组件 —— 将接收到的event下沉到存储系统或者是下一个Agent的source组件中
++ 数据源（Source）组件 —— 与数据源进行交互，采集数据，封装成event（事件，对应的是一条记录，有结构：header=键值对、body=采集到的数据内容）（一般一行日志一个event）
++ 通道（Channel）l组件 —— 将source传输的event进行缓存，然后传输给sink
++ 接收器（Sink）组件 —— 将接收到的event下沉到存储系统或者是下一个Agent的source组件中
 + 其他组件
   + selector —— 将event分发到不同的channel
-  + interceptor —— 拦截、修改event
+  + 拦截器（Interceptor） —— 拦截、修改event。允许用户对采集的数据进行预处理和转换，以满足特定需求。
 
 ```txt
 数据源： kafka消息队列、磁盘上的数据、http/web数据
@@ -171,7 +173,11 @@ a1.sinks.k1.channel = c1
 
 #### 安装方式一：压缩包安装
 
+下载：
+<http://archive.apache.org/dist/flume>
+
 ```bash
+wget https://archive.apache.org/dist/flume/1.8.0/apache-flume-1.8.0-bin.tar.gz
 tar -zxvf apache-flume-1.8.0-bin.tar.gz -C /usr/local
 cd /usr/local
 mv apache-flume-1.8.0-bin flume

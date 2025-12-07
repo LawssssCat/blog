@@ -1,9 +1,7 @@
 ---
-title: 接口开发
-date: 2024-12-08
+title: 接口设计、模拟、定义
 order: 10
 ---
-
 
 ## 接口定义工具
 
@@ -11,32 +9,30 @@ order: 10
 
 ## 接口模拟工具
 
-mockoon
++ mockoon —— api 模拟，前端开发配合 `server.proxy` 配置使用
++ Fake Rest API <https://instantwebtools.net/fake-rest-api/>
 
 ## 接口调试工具
 
 参考：
 
-- https://apifox.com/apiskills/api-test-tools/
++ <https://apifox.com/apiskills/api-test-tools/>
 
-| 工具名称          | 支持的系统            | 是否免费     | 是否开源 | 是否支持自动化 | 工具地址                                     |
-| ----------------- | --------------------- | ------------ | -------- | -------------- | -------------------------------------------- |
-| Karate DSL        | Java-based            | 免费         | 是       | 是             | https://github.com/intuit/karate             |
-| RestAssured       | Java-based            | 免费         | 是       | 是             | https://github.com/rest-assured/rest-assured |
-| Swagger (OpenAPI) | Web-based             | 免费         | 是       |                | https://swagger.io/                          |
-| Insomnia          | Windows, macOS, Linux | 部分功能免费 | 是       |                | https://insomnia.rest/                       |
-| Apifox            | Windows, macOS, Linux | 是           | 否       |                | https://apifox.com/                          |
-| Postman           | Windows, macOS, Linux | 部分功能免费 | 否       |                | https://www.postman.com/                     |
-| Fiddler           | Windows, macOS, Linux | 部分功能免费 | 否       |                | https://www.telerik.com/fiddler              |
-| Katalon Studio    | Windows, macOS, Linux | 部分功能免费 | 否       |                | https://www.katalon.com/                     |
-| SoapUI            | Windows, macOS, Linux | 部分功能免费 | 否       |                | https://www.soapui.org/                      |
-| Paw               | macOS                 | 部分功能免费 | 否       |                | https://paw.cloud/                           |
-| Cypress           |                       |              |          | 是             |
-| hoppscotch        |
-bruno | 
-burpsite | 
-Repable | 
-Fiddler Everywhere | 
-Charles | 
-
-Fake Rest API <https://instantwebtools.net/fake-rest-api/>
+| 工具名称 | 说明 |
+| --- | --- |
+| JMeter | 开源，Java实现，功能丰富，30年（2025年12月7日）专业的接口测试、压测工具，支持插件扩展 |
+| [Karate DSL](https://github.com/intuit/karate) | 开源，Java实现，可编程 |
+| [RestAssured](https://github.com/rest-assured/rest-assured) | 开源，Java实现，可编程 |
+| [Insomnia](https://github.com/Kong/insomnia) | 开源（需登录，部分功能收费），支持Windows, macOS, Linux系统，支持插件扩展 |
+| [Apifox](https://apifox.com/) | 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统 |
+| [Postman](https://www.postman.com/) | 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统 |
+| [Fiddler](https://www.telerik.com/fiddler) | 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统，网络测试 |
+| [Katalon Studio](https://www.katalon.com/) | 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统 |
+| [SoapUI](https://www.soapui.org/) | 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统 |
+| [Paw](https://paw.cloud/) | 闭源（需登录，部分功能收费），支持macOS系统 |
+| Cypress | |
+| hoppscotch | |
+| bruno | |
+| burpsite | |
+| Repable | |
+| Charles | |

@@ -1,20 +1,14 @@
 ---
 title: Swagger 使用
-date: 2024-12-08
 order: 66
 ---
-
-todo https://medium.com/@f.s.a.kuzman/using-swagger-3-in-spring-boot-3-c11a483ea6dc
-https://github.com/fadykuzman/swagger-demo/blob/main/src/main/java/dev/codefuchs/swaggerdemo/plant/PlantApi.java
-
-~~todo https://swagger.io/tools/open-source/getting-started/~~
 
 > - Swagger 代码仓库： <https://github.com/swagger-api>
 > - SpringDoc 文档： <https://springdoc.org/>
 
 ## Swagger 生态
 
-<b style="background:#636">Swagger ecosystem: <https://swagger.io/docs/specification/v3_0/about/></b>
+Swagger ecosystem: <https://swagger.io/docs/specification/v3_0/about/>
 
 基于 [OpenAPI](https://github.com/OAI/OpenAPI-Specification) 规范编写的接口文档（yaml/json 格式），
 可以通过 [swagger-js](https://github.com/swagger-api/swagger-js)（alias `swagger-client`） 解析其中内容，
@@ -1154,10 +1148,13 @@ public class SwaggerProvider implements SwaggerResourcesProvider {
 
 todo
 
-## 附录
-
 ## 参考
 
 swagger 历史：
 
 - Swagger 系列：Spring Boot 2.x 集成 Spring Doc（Swagger 3.0） https://www.cnblogs.com/vic-tory/p/17690501.html
+
+todo https://medium.com/@f.s.a.kuzman/using-swagger-3-in-spring-boot-3-c11a483ea6dc
+https://github.com/fadykuzman/swagger-demo/blob/main/src/main/java/dev/codefuchs/swaggerdemo/plant/PlantApi.java
+
+~~todo https://swagger.io/tools/open-source/getting-started/~~
