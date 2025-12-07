@@ -20,7 +20,7 @@ order: 10
 
 | 工具名称 | 说明 |
 | --- | --- |
-| JMeter | 开源，Java实现，功能丰富，30年（2025年12月7日）专业的接口测试、压测工具，支持插件扩展 |
+| [JMeter](./test-jmeter.md) | 开源，Java实现，功能丰富，30年（2025年12月7日）专业的接口测试、压测工具，支持插件扩展 |
 | [Karate DSL](https://github.com/intuit/karate) | 开源，Java实现，可编程 |
 | [RestAssured](https://github.com/rest-assured/rest-assured) | 开源，Java实现，可编程 |
 | [Insomnia](https://github.com/Kong/insomnia) | 开源（需登录，部分功能收费），支持Windows, macOS, Linux系统，支持插件扩展 |
