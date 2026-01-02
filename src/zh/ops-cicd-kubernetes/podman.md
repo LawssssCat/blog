@@ -1,8 +1,5 @@
 ---
 title: Podman 介绍
-date: 2024-04-04
-tag:
-  - Podman
 order: 66
 ---
 

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learning-k8s-demo-deployment
+  labels:
+    app: learning-k8s-demo-deployment
+spec:
+  replicas: 3 # 指定期望的Pod副本数
+  selector:
+    matchLabels:
+      app: learning-k8s-demo-deployment-pod # 选择器，用于匹配要管理那些Pod实例
+  strategy:
+    type: RollingUpdate # 默认策略
+    rollingUpdate:
+      maxUnavailable: 1 # 在更新过程中，最多有多少个Pod实例不可用
+      maxSurge: 1 # 在更新过程中，最多可以创建多少个超出预期副本数的Pod实例
+  template:
+    metadata:
+      labels:
+        app: learning-k8s-demo-deployment-pod
+    spec:
+      containers:
+        - name: learning-k8s-demo-deployment-pod-container-01
+          image: k8s.gcr.io/serve_hostname:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9376
+        - name: learning-k8s-demo-deployment-pod-container-02
+          image: nginx:1.18.0-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: learning-k8s-demo-deployment-service
+spec:
+  selector:
+    app: learning-k8s-demo-deployment-pod
+  type: NodePort
+  ports:
+    - name: nginx
+      port: 8080 # 服务（集群 ）端口
+      nodePort: 31080 # 节点端口
+      targetPort: 80 # 服务端口
+      protocol: TCP
+    - name: hostname
+      port: 8076 # 服务（集群 ）端口
+      nodePort: 31076 # 节点端口
+      targetPort: 9376 # 服务端口
+      protocol: TCP

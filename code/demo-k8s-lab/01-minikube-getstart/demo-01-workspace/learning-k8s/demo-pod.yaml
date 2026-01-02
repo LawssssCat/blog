@@ -1,0 +1,28 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: learning-k8s-demo-pod
+  labels:
+    app: learning-k8s-demo-pod
+spec:
+  containers:
+    - name: learning-k8s-demo-pod-container-01
+      # image: 'kicbase/echo-server:1.0'
+      image: nginx:1.18.0-alpine
+      ports:
+        - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: learning-k8s-demo-pod-service
+spec:
+  selector:
+    app: learning-k8s-demo-pod
+  type: NodePort
+  ports:
+    - name: http
+      port: 8080 # 服务（集群 ）端口
+      nodePort: 31002 # 节点端口
+      targetPort: 80 # 服务端口
+      protocol: TCP
