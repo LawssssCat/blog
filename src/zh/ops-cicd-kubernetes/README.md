@@ -117,3 +117,12 @@ https://coding.gs/2024/04/03/k3d/getting-started-with-k3d/
   - Dashboard
   - Federation
   - Fluentd-elasticsearch
+
+## 工具
+
+### Helm
+
+helm是kubernetes的包管理工具，可以将应用程序打包成一个可复用的单元，方便在集群中部署和管理。
+helm的核心是chart，chart是应用程序的打包文件，包含应用程序的配置、部署文件和依赖关系。
+
+[link_helm](./helm.md)

@@ -1,8 +1,12 @@
 # README
 
+启动虚拟机
+
 ```bash
 vagrant up
 ```
+
+安装minikube
 
 ```bash
 # vi ~/.bashrc
@@ -37,7 +41,7 @@ curl -LO https://github.com/kubernetes/minikube/releases/download/v1.26.1/miniku
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
-<https://www.cnblogs.com/davyyy/p/12531032.html>
+启动k8s环境（通过minikube使用docker驱动）<https://www.cnblogs.com/davyyy/p/12531032.html>
 
 ```bash
 # minikube start
@@ -60,16 +64,19 @@ alias kubectl="minikube kubectl -- " # 命令别名
 source <(kubectl completion bash) # 命令补全
 ```
 
+minikube常用命令
+
 ```bash
 minikube node list
 minikube ssh -n minikube
-```
 
-```bash
+# 启动ingress插件
 # minikube addons enable ingress 启动错误排查
 # https://www.cnblogs.com/wangiqngpei557/p/15365861.html
 minikube addons enable ingress
 ```
+
+k8s常用命令
 
 ```bash
 kubectl get svc
@@ -83,6 +90,8 @@ kubectl get pod
 
 minikube service  learning-k8s-demo-pod-service
 ```
+
+网络平面整理
 
 ```bash
 # vagrant平面
@@ -110,4 +119,27 @@ minikube service  learning-k8s-demo-pod-service
 # cluster-ip
 10.96.0.1
 10.99.100.2
+```
+
+helm安装
+
+```bash
+sudo yum install -y openssl git
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+chmod 700 get_helm.sh
+./get_helm.sh
+
+# 命令补全
+source <(helm completion bash)
+```
+
+helm常用命令
+
+```bash
+helm list
+helm install # helm install test-chart my-chart/
+helm uninstall
+helm history
+helm create
+helm package
 ```
