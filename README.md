@@ -1,31 +1,25 @@
+# 笔记
+
 ```bash
 pnpm run docs:dev
 ```
 
 文件结构介绍
 
-```
+```bash
 .
 ├── .github (可选的) → GitHub 配置文件存放路径
 │    └── workflow → GitHub 工作流配置
 │         └── docs-deploy.yml → 自动部署文档的工作流
 |
 ├── docs → 由你指定的文档文件夹
-│    │
 │    ├── .vuepress (可选的) → 用于存放全局的配置、组件、静态资源等
-│    │    │
 │    │    ├── dist (默认的) → 构建输出目录
-│    │    │
 │    │    ├── public (可选的) → 静态资源目录
-│    │    │
 │    │    ├── styles (可选的) → 用于存放样式相关的文件
-│    │    │
 │    │    ├── config.{js,ts} (可选的) → 配置文件的入口文件
-│    │    │
 │    │    └── client.{js,ts} (可选的) → 客户端文件
-│    │
 │    ├── ... → 其他项目文档
-│    │
 │    └── README.md → 项目主页
 │
 └── package.json → Nodejs 配置文件
@@ -57,8 +51,8 @@ todo 整理概要 `<!-- more -->`
 
 配置参考
 
-- https://vuejs.press/zh/reference/config.html
-- https://vuepress-theme-hope.github.io/v2/zh/guide/layout/sidebar.html
+- <https://vuejs.press/zh/reference/config.html>
+- <https://vuepress-theme-hope.github.io/v2/zh/guide/layout/sidebar.html>
 
 永久链接（permalink）
 
@@ -67,8 +61,10 @@ todo 整理概要 `<!-- more -->`
 
 图标
 
-- Iconify: https://icon-sets.iconify.design/
-- Iconfont: https://www.iconfont.cn/
-- Fontawesome: https://fontawesome.com/icons
+- Iconify: <https://icon-sets.iconify.design/>
+- Iconfont: <https://www.iconfont.cn/>
+- Fontawesome: <https://fontawesome.com/icons>
 
-组件库 https://plugin-components.vuejs.press/zh/
+组件库
+
+- <https://plugin-components.vuejs.press/zh/>
