@@ -4,10 +4,13 @@ home: true
 layout: BlogHome
 icon: home
 title: 主页
-heroImage: /logo.svg
-heroText: Steven's 个人博客
-heroFullScreen: true
-tagline: Stay hungry, stay foolish 🍎
+# todo 通过重写BlogHome布局隐藏多余元素
+# pageClass: bloghome-page-class
+# heroHeight: 0
+# heroImage: null # https://vuepress.vuejs.org/images/hero.png
+# heroText: Steven's 个人博客
+# heroFullScreen: false # true
+# tagline: Stay hungry, stay foolish 🍎
 projects:
   - icon: project
     name: 示例项目

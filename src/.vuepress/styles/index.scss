@@ -1,2 +1,15 @@
+// 你可以在这里添加额外的样式，或者覆盖默认样式。
 // place your custom styles here
 @import "config/md-code-shiki.scss";
+
+[vp-container] {
+  // 隐藏首页顶部大图
+  .vp-blog-hero {
+    display: none;
+  }
+
+  // 隐藏首页右小角博客统计信息 for 没用、碍眼、不好看
+  .vp-blog-infos {
+    display: none;
+  }
+}

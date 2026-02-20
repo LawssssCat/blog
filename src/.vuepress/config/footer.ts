@@ -5,7 +5,7 @@ export default {
   displayFooter: true,
   locales: {
     "/zh/": {
-      copyright: "Copyright © 2025 Steven",
+      copyright: "Copyright © 2025-2026 Steven",
     },
   },
 };
