@@ -77,7 +77,7 @@ order: 1
 
 图形系统：
 
-特性维度 | X11（传统显示协议） | Wayland（现代显示协议）
+特性维度 | [X11（传统显示协议）](./tool-x11.md) | Wayland（现代显示协议）
 --- | --- | ---
 设计模式 | 中央总机模式，中转所有请求，效率较低 | 直连对讲模式，客户端直接与内核通信
 安全性 | 较低，应用间缺乏隔离，可相互窥探 | 高，应用被严格沙箱隔离，更安全
@@ -108,3 +108,37 @@ order: 1
 + s `nc -lU c`
 + c `ll /dev/video0` 字设备（Character Devices），如摄像头、鼠标、键盘、... 参考 <https://doc.embedfire.com/linux/h618/driver/zh/latest/linux_driver/base/character_device/character_device.html>
 + b `ll /dev/dm-0` 块设备（Block），如硬盘、USB、...等无法直接字节写入写出，需要通过文件系统操作的设备。可以通过`lsblk`查看块设备情况。
+
+工具：
+
++ 终端会话管理
+  + electerm —— 相比tabby，更喜欢这个
+  + tabby —— 臃肿？
+  + mobaxterm —— 臃肿！（里面还有小游戏...）,专业版价格可以接受（450rmb终身，2025年9月20日）
+  + termius —— 太贵
+  + xshell —— 不面向个人
++ 终端美化
+  + [zsh](./tool-zsh.md)
++ 文件管理可视化
+  + yazi
+  + spf
+  + ranger
++ 文本编辑
+  + vim
+  + ~~nano~~
+  + 文本可视化
+    + 对比 diff
+    + 对比 beyondcompare
++ 窗口/多任务
+  + zellij
+  + [tmux](./tool-tmux.md)
+  + screen
++ 检索内容
+  + grep
+  + fzf
++ 检索命令行
+  + reverse-i-search - ctrl + r - <https://geek-blogs.com/blog/linux-reverse-i-search/>
++ 压缩/解压
+  + tar
+  + zip/unzip
+  + 7z
