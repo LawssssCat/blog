@@ -150,5 +150,7 @@ Web
 + doctest
 + catch2 —— 也是一个测试框架
 
++ lcov（数据处理）、gcov（数据生成）、genhtml（报告可视化） —— 用例覆盖率测试
+
 + googlebench
 + nanobench —— 性能基线测试
