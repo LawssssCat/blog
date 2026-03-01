@@ -6,6 +6,10 @@ tag:
 order: 1
 ---
 
+IoC（Inversion of Control，控制反转）
+DI（Dependency Injection，依赖注入）
+AOP（Aspect Oriented Programming，面向切面编程）
+
 ## spring 扩展点
 
 - https://www.bilibili.com/video/BV1Mt42177MK/
