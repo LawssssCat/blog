@@ -67,6 +67,7 @@ order: 1
 + Linux Mint
 + tails
 + Zorin OS
++ Pop!_OS
 
 + [openwrt](./openwrt/README.md)
 
