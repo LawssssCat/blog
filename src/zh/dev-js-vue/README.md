@@ -199,7 +199,7 @@ Done. Now run:
 
   ```vue
   <template>
-    <p><button @click="awesome++">变</button> {{awesome}}:</p>
+    <p><button @click="awesome++">变</button> : {{awesome}}</p>
     <p>
       <!-- 是否渲染 -->
       <!-- 注意：template标签是vue自创的，作用就是不会被vue渲染 -->
@@ -286,11 +286,13 @@ Done. Now run:
 
   ```vue
   <template>
+  <div>
     <!-- v-for 和 v-if 同时使用 -->
     <!-- 注意：不要写在同一个标签上，否则可能有意外现象 -->
     <template v-for="item in items" :key="item.id">
       <li v-if="!(item.id==1)">{{item.id}} - {{item.message}}</li>
     </template>
+  </div>
   </template>
 
   <script>
@@ -300,6 +302,7 @@ Done. Now run:
         items: [
           { id: 1, message: "Foo" },
           { id: 2, message: "Bar" },
+          { id: 3, message: "Cert!" },
         ],
       }
     },
@@ -311,11 +314,18 @@ Done. Now run:
 
 ### API
 
+> 详细分析重点接口函数
+>
+> 分类方式：
+> 按功能划分（和vue官网一样），更便于定位
+
 官网：
 
 - <https://cn.vuejs.org/api/>
 
-初始化：
+:::::: tabs
+
+@tab 初始化
 
 - createApp —— 指定根组件
 - createSSRApp
@@ -331,7 +341,7 @@ Done. Now run:
 - app.config.optionMergeStrategies —— 配置合并设置
 - app.config.idPrefix —— 为 `useId()` 配置前缀 （只有在有多个 Vue App 的场景有意义）
 
-组件：
+@tab 组件
 
 - app.component —— 注册自定义组件（Components） <https://cn.vuejs.org/guide/components/registration>
 - app.directive —— 注册自定义指令（Directives） <https://cn.vuejs.org/guide/reusability/custom-directives>
@@ -340,13 +350,15 @@ Done. Now run:
 - app.provide —— 注册提供给子组件的变量/方法
 - app.runWithContext —— 执行方法，并传递返回值（可以调用当前上下文设置，如通过inject获取provide值）
 - app.version
-- defineComponent
+- defineComponent todo
 - defineAsyncComponent
 
-生命周期：
+@tab 生命周期
 
 - nextTick —— 等待下一次 DOM 更新刷新的工具方法
 - app.onUnmount
+
+::::::
 
 #### SSR
 
@@ -363,6 +375,11 @@ todo 对比
 - mixin：公共逻辑/配置的提取（不包含html和css内容） —— 基于vue2的选项式API做的配置混入，本质上是“对象的合并”
 - 组合式函数： 负责有状态逻辑的封装
 
+mixin问题：
+
+- 数据源不清晰
+- 数据相互覆盖（需要精心维护脆弱的优先级）
+
 例子：
 
 ::::::::: tabs
@@ -373,7 +390,7 @@ todo 对比
 
 ```vue
 <template>
-mixin 对比 组合式函数：
+mixin实现：
 <div ref='devRef'>{{ count }}</div>
 <button @click='handleClick'>add</button>
 </template>
@@ -420,7 +437,52 @@ export default {
 
 ::::::
 
+@tab 组合式函数
+
+:::::: vue-demo
+
+```vue
+<template>
+组合式函实现数：
+</template>
+
+<script>
+import { ref, reactive, onMounted } from 'vue';
+
+
+export default {
+  setup() {
+   
+
+    return {
+    }
+  }
+}
+</script>
+```
+
+```json
+// 配置 (可选)
+{
+  "jsLib": [
+    {
+      
+    }
+  ],
+  "cssLib":[
+  ]
+}
+```
+
+::::::
+
 :::::::::
+
+#### 对比：引用reactive/ref/shallowRef
+
+todo reactive/ref/shallowRef
+
+todo weakmap
 
 ### 自定义组件
 
@@ -542,16 +604,6 @@ npm install pinia
 ```
 
 :::
-
-## VSCode 插件
-
-- Vue - Official —— 开发环境监测、高亮
-- Vue VSCode Snippets —— 提示
-
-## VSCode 缩写
-
-- vbase —— 模板
-- imd —— import xxx 缩写
 
 ## 实战
 

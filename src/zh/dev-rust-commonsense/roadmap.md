@@ -36,6 +36,7 @@ Playground：
 有用的视频：
 
 - 配置 VSCode 的 rust 开发环境 —— <https://www.youtube.com/watch?v=ZhedgZtd8gw>
+- ~~Rust训练营 —— <https://github.com/tyr-rust-bootcamp>~~ （太杂碎）
 
 系统/编译原理：
 

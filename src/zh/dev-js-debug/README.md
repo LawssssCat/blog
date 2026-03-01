@@ -6,6 +6,19 @@ tag:
 order: 1
 ---
 
+todo 埋点 https://www.bilibili.com/video/BV1KhSyYNEzQ/
+
+大前端时代：
+
+1. Web 前端
+2. 移动端 IOS/Android 开发
+3. 桌面端 windows/Mac
+
+   - VSCode => eletron => 跨平台 => Mac/Windows/Linux
+
+4. 其他平台 穿戴设备/车载系统（智能汽车）/VR/AR/...
+5. web3
+
 ## 反调试
 
 原理

@@ -8,6 +8,30 @@ order: 1
 
 网页样式
 
+CSS
+
+::: info
+
+前置知识：浏览器的渲染管线
+
++ Computing Style 样式计算 \
+  样式计算规则：
+  + 确定声明
+  + 层叠冲突
+    1. 优先级
+        + 作者样式表 important
+        + 代理样式表 important （代理样式/默认样式表/浏览器样式）
+        + 作者样式表
+        + 代理样式表
+    1. 特殊性（权重/Specialization） \
+      (0/1,?,?,?) = (是否内联样式,id选择器数量,类选择器/属性选择器/伪类选择器数量,元素选择器/伪元素选择器数量) 【vscode自带计算】
+    1. 源次序： 源代码中的顺序，后面覆盖前面
+  + 自动继承
+  + 使用默认
++ Visual Formatting Model 视觉格式化模型
+
+:::
+
 参考：
 
 + https://www.bilibili.com/video/BV1nM411T77W
