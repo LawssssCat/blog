@@ -11,11 +11,13 @@ order: 1
 --- | --- | ---
 1950年 | NLP（Natural Language Processing，自然语言处理） | 句子成分拆分
 1950年 | AI（Artificial Intelligence，人工智能） | 无
+2016年 | AI元年 | 阿法狗围棋打败李世石，次年打败柯洁 （当年人类围棋技术最顶尖的两人）
 2017年 | AGI（Artificial General Intelligence，通用人工智能） | 大厂提供的LLM实现
 2017年 | LLM（Large Language Model，大语言模型） | 基于输入“猜测”下文作为输出
+2020年 | RAG（Retrieval-Augmented Generation，检索增强生成） | 由FAIR（Facebook AI Research）团队提出，结合信息检索、文本增强、文本生成的NLP技术，将传统信息检索系统的优势与LLM的功能结合在一起，使大模型生成更准确、丰富的文本内容。简称挂知识库。
 2023年 | Agent（智能体） | 处理LLM只能处理推断的问题，扩展爬虫、文件处理、系统操作等能力
 2024年 | MCP（Model Context Protocol，模型上下文协议） | anthropic提出的Agent扩展工具交互规范 （alias: function call， tool calls）。有了交互规范，则可作为单独服务对接不同Agent供应商，Agent供应商只需考虑提示词的书写。
-2024年 | 工作流（flow） | 底码工程在风口的再次起飞
+2024年 | 工作流（flow） | 低码工程在风口的再次起飞
 2025年 | SKILL | anthropic提出的“问题处理指南”概念，处理大模型已知道问题、信息、可调用工具的情况下仍无法提出高效处理方案的问题。本质上是mcp协议里的一个tool工具，里面分门别类的放置skill名称、描述和预制提示词，大模型根据skill名称、描述判断是否继续接收该skill的预制提示词。 （[link_anthropic_skills](https://github.com/anthropics/skills/tree/main/skills)/[link_skillsmp](https://skillsmp.com/zh)/[link_skillsh](https://skills.sh/)）
 
 整理：
