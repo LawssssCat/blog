@@ -6,8 +6,8 @@ order: 1
 
 参考：
 
-- 官网 —— https://cn.vuejs.org/guide/introduction.html
-- ~~4 小时快速入门前端 Vue3+Vite+Pinia —— https://www.bilibili.com/video/BV1aa1NYxECK/~~ （vue2 语法）
+- 官网 —— <https://cn.vuejs.org/guide/introduction.html>
+- ~~4 小时快速入门前端 Vue3+Vite+Pinia —— <https://www.bilibili.com/video/BV1aa1NYxECK/>~~ （vue2 语法）
 
 ## 项目初始化
 
@@ -439,7 +439,7 @@ export default {
 
 @tab 组合式函数
 
-:::::: vue-demo
+::: vue-demo
 
 ```vue
 <template>
@@ -462,7 +462,6 @@ export default {
 ```
 
 ```json
-// 配置 (可选)
 {
   "jsLib": [
     {
@@ -474,7 +473,7 @@ export default {
 }
 ```
 
-::::::
+:::
 
 :::::::::
 
@@ -577,7 +576,7 @@ npm install vue-router@4
 - vuex —— 【过时】 2022 年
 - pinia —— 2019 年 ~ 2024 年 [`issue271`](https://github.com/vuejs/rfcs/pull/271)
 
-https://pinia.vuejs.org/
+<https://pinia.vuejs.org/>
 
 ```bash
 npm install pinia
@@ -609,6 +608,6 @@ npm install pinia
 
 todo 后台管理
 
-todo 权限管理 https://www.bilibili.com/video/BV126DpYrES7/
+todo 权限管理 <https://www.bilibili.com/video/BV126DpYrES7/>
 
-todo ？？？ https://www.bilibili.com/video/BV1Xh411V7b5
+todo ？？？ <https://www.bilibili.com/video/BV1Xh411V7b5>

@@ -135,6 +135,15 @@ export default {
 
 ```json
 // 配置 (可选)
+{
+  "jsLib": [
+    {
+      
+    }
+  ],
+  "cssLib":[
+  ]
+}
 ```
 
 :::
