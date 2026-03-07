@@ -6,6 +6,12 @@ order: 66
 官网：
 <https://learn.microsoft.com/zh-cn/windows/wsl/>
 
+基础知识：
+<https://learn.microsoft.com/zh-cn/windows/wsl/#related-videos>
+
+共享路径位置：
+`\\wsl$`
+
 <!-- more -->
 
 ## 架构版本
@@ -60,10 +66,17 @@ wsl --list --online
 
 # 查看已安装的发行版
 wsl -l -v
+wsl -s Ubuntu # 设置默认发行版
 
 # 导出/导入已安装的发行版
 wsl --export Ubuntu ubuntu.tar
 wsl --import Ubuntu2 ubuntu.tar
+wsl --import Ubuntu2 C:\\my\\wsl\\Ubuntu2 ubuntu.tar
+wsl --unregister Ubuntu # 卸载发行版
+
+# 管理发行版安装路径
+wsl --manage Ubuntu2 --resize 300MB # 设置大小
+wsl --manage Ubuntu2 --move C:\my\wsl\Ubuntu3 # 移动路径
 ```
 
 ## 高级配置
@@ -82,6 +95,10 @@ systemd=true # 启动systemd支持
 [wsl2]
 networkingMode=mirrored
 ```
+
+## 发行版制作
+
+todo <https://learn.microsoft.com/zh-cn/windows/wsl/build-custom-distro>
 
 ## 其他
 
