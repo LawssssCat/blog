@@ -54,20 +54,26 @@ order: 1
 
 发行版：
 
-+ ???
++ yum/dnf（Dandified YUM） - [RPM（RPM Package Manager）](https://geek-blogs.com/blog/rocky-linux-package-manager/)
   + ~~[Centos](./redhat/README.md)~~
   + Fedora 【桌面】
   + RHEL
+  + suse
   + Kail
-+ Debian
+  + Rocky Linux
++ apt - deb
+  + Debian
   + [ubuntu](./ubuntu/README.md) 【桌面】
-+ Rocky Linux
-+ suse
-+ arch 【桌面】
-+ Linux Mint
-+ tails
-+ Zorin OS
-+ Pop!_OS
+  + Deepin
+  + Linux Mint
+  + Pop!_OS 【桌面】
+  + tails
+  + ~~Zorin OS 【桌面】~~ （[link_介绍](https://www.youtube.com/watch?v=q1qCzx3sakA)）
+  + ~~SteamOS 【桌面】【游戏】~~ （转Arch Linux体系）
++ pacman
+  + Arch Linux 【桌面】
+  + Manjaro 【桌面】
+  + SteamOS 【桌面】【游戏】
 
 + [openwrt](./openwrt/README.md)
 
@@ -75,6 +81,11 @@ order: 1
 
 + GNOME
 + KDE
++ 主题
+  + DANK LINUX （[link_介绍](https://www.bilibili.com/video/BV1M6AizkEdk/)）
++ 兼容win
+  + wine
+  + DXVK Vulkan
 
 图形系统：
 
@@ -112,15 +123,29 @@ order: 1
 
 工具：
 
++ GUI窗口管理器（Window Manager）
+  + Niri
+  + Hyprland
++ GUI终端模拟器（Terminal Emulator）
+  + ghostty
+  + kitty
+  + alacritty
 + 终端会话管理
   + electerm —— 相比tabby，更喜欢这个
   + tabby —— 臃肿？
   + mobaxterm —— 臃肿！（里面还有小游戏...）,专业版价格可以接受（450rmb终身，2025年9月20日）
   + termius —— 太贵
   + xshell —— 不面向个人
-+ 终端美化
++ 终端窗口（shell）
+  + sh
+  + bash
   + [zsh](./tool-zsh.md)
-+ 文件管理可视化
+  + fish
++ 终端窗口多任务
+  + zellij
+  + [tmux](./tool-tmux.md)
+  + screen
++ 终端窗口文件管理可视化
   + yazi
   + spf
   + ranger
@@ -130,10 +155,6 @@ order: 1
   + 文本可视化
     + 对比 diff
     + 对比 beyondcompare
-+ 窗口/多任务
-  + zellij
-  + [tmux](./tool-tmux.md)
-  + screen
 + 检索内容
   + grep
   + fzf
