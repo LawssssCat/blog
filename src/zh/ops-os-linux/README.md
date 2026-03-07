@@ -70,6 +70,7 @@ order: 1
   + tails
   + ~~Zorin OS 【桌面】~~ （[link_介绍](https://www.youtube.com/watch?v=q1qCzx3sakA)）
   + ~~SteamOS 【桌面】【游戏】~~ （转Arch Linux体系）
+  + ~~wubuntu 【桌面】~~ （[link_介绍](https://www.bilibili.com/video/BV17FCWYVERN/)） 有趣的系统，模仿win交互，但[wsl2](../ops-os-vm/wsl.md)更好。
 + pacman
   + Arch Linux 【桌面】
   + Manjaro 【桌面】
