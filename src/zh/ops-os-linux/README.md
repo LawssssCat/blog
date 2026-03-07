@@ -9,6 +9,14 @@ order: 1
 
 内核包括：
 
++ 初始化程序 —— 系统启动时的第一个进程，负责启动其他所有进程 （参考：[link_介绍](https://edu.51cto.com/article/note/29696.html)）
+  + System V init —— Unix 系统中最早的一种初始化程序，广泛应用于早期的 Linux 发行版。它的核心思想是通过运行级别（runlevel）来定义系统启动时的运行状态。
+    + `/etc/inittab` —— 配置
+    + `/etc/rc.d/rc` —— 根据运行级别执行的文件
+  + ~~Upstart —— 2006年发布，旨在解决 System V init 的启动效率问题和硬件动态变化的响应问题。~~ （停止更新，被systemd取代）
+    + `/etc/init/myservice.conf` —— 配置
+  + Systemd —— 2010年发布，不仅是一个初始化程序，还提供了一整套系统管理工具。核心思想是基于单元（unit）管理，每个服务、设备、套接字等都被抽象为一个单元，通过配置文件（`.service`、`.socket`等）进行管理。
+    + `/etc/systemd/system/myservice.service` —— 配置
 + 文件系统
   + 系统将所有资源（硬件、状态、数据）抽象为可通过路径访问的“**文件**”，统一了访问接口。
   + **硬件**（CPU、内存等硬件设备）、**配置**（系统配置参数）、**状态**（运行时状态）在系统层面都被视为文件对象。
@@ -54,29 +62,49 @@ order: 1
 
 发行版：
 
-+ yum/dnf（Dandified YUM） - [RPM（RPM Package Manager）](https://geek-blogs.com/blog/rocky-linux-package-manager/)
-  + ~~[Centos](./redhat/README.md)~~
++ yum/dnf（Dandified YUM） - [RPM（RPM Package Manager）](https://geek-blogs.com/blog/rocky-linux-package-manager/)格式
+  + ~~[Centos](./redhat/README.md)~~ 停止维护
+  + ~~AlmaLinux~~ （金主：[CloudLinux](https://cloudlinux.com/)） 目标补充Centos空缺
   + Fedora 【桌面】
   + RHEL
-  + suse
-  + Kail
+  + suse （发行商：SUSE（德国）） 0
+  + openSuse
+  + Kail （发行商：[Offensive Security](https://www.offsec.com/)） 1
   + Rocky Linux
-+ apt - deb
-  + Debian
-  + [ubuntu](./ubuntu/README.md) 【桌面】
-  + Deepin
+  + euler
+  + openEuler （金主：[开放原子开源基金](https://www.openatom.org/)）
++ apt - deb格式
+  + Debian （发行商：[The Debian Project](https://debian-handbook.info/browse/stable/the-debian-project.html)）
+  + [ubuntu](./ubuntu/README.md) 【桌面】 （发行商：[Canonical Group Limited](https://canonical.com/)）
   + Linux Mint
   + Pop!_OS 【桌面】
-  + tails
+  + ~~Deepin~~ （发行商：[统信软件技术有限公司](https://www.uniontech.com/)） DDDD
   + ~~Zorin OS 【桌面】~~ （[link_介绍](https://www.youtube.com/watch?v=q1qCzx3sakA)）
   + ~~SteamOS 【桌面】【游戏】~~ （转Arch Linux体系）
   + ~~wubuntu 【桌面】~~ （[link_介绍](https://www.bilibili.com/video/BV17FCWYVERN/)） 有趣的系统，模仿win交互，但[wsl2](../ops-os-vm/wsl.md)更好。
-+ pacman
-  + Arch Linux 【桌面】
+  + tails（The Amnesic Incognito Live System，无痕匿名自启动系统） （金主：[Tor Project](https://www.torproject.org/)） 特定场景：极致隐私保护
+  + [openwrt](./openwrt/README.md) 特定场景：嵌入式、路由器系统
+  + ~~Raspberry Pi OS~~ 特定场景：嵌入式
+  + eLxr （金主：AWS） 特定场景：边缘计算
++ apk（Android Application Package）
+  + Android 特定场景：移动端嵌入式
++ IPA（IOS Application Archive）
+  + IOS（iPhone Operating System） 特定场景：移动端嵌入式
++ apk（Alpine Package Keeper）
+  + Alpine Linux （发行商：AlpineLinux社区） ⭐极简主义，是一个由社区开发的基于musl和BusyBox的Linux操作系统
+  + OpenHarmony
++ pacman - bsdtar格式
+  + Arch Linux 【桌面】 （[link_中文维基](https://wiki.archlinuxcn.org/)/[link_介绍](https://www.sysgeek.cn/what-is-arch-linux/)） （发行商：ArchLinux社区） ⭐核心哲学KISS（Keep It Simple, Stupid）原则
   + Manjaro 【桌面】
   + SteamOS 【桌面】【游戏】
-
-+ [openwrt](./openwrt/README.md)
++ Portage（受BSD的Ports启发） - 源码编译
+  + Gentoo Linux （金主：[Gentoo基金会](https://wiki.gentoo.org/wiki/Foundation:Main_Page)） （[link_社区](https://www.gentoo.org/)/[link_中文社区](https://gentoo.net.cn/)/[link_中文社区](https://www.gentoo.org.cn/)/[link_对比Gentoo和Arch系统](https://geek-blogs.com/blog/arch-linux-vs-gentoo/)） ⭐核心哲学“Choose Your Own Adventure（选择你的冒险）”。用于输入理解Linux底层。
++ Ports - 源码编译
+  + FreeBSD （[link_中文社区](https://docs.bsdcn.org/)） ⭐
+  + ~~OpenBSD~~ geek
+  + ~~NetBSD~~
++ RTOS（Real-Time Operating System，实时操作系统） 专为满足实时控制需求而设计
+  + FreeRTOS （金主：AWS） 特定场景：嵌入式、医疗设备、汽车ECU（Electronic Control Unit，电子控制单元）
 
 桌面环境：
 
