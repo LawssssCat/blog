@@ -3,6 +3,9 @@ title: WSL 介绍
 order: 66
 ---
 
+官网：
+<https://learn.microsoft.com/zh-cn/windows/wsl/>
+
 <!-- more -->
 
 ## 架构版本
