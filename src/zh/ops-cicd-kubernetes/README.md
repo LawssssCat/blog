@@ -58,9 +58,7 @@ title: Kubernetes 系列
 
 ### 容器层
 
-- [containerd](./containerd.md)
-- [docker](./docker.md)
-- [podman](./podman.md)
+[link](./container/README.md)
 
 ## 实验环境
 
@@ -100,10 +98,10 @@ https://coding.gs/2024/04/03/k3d/getting-started-with-k3d/
 
 - 控制面板组件
   - etcd
-- kube-apiserver —— 提供所有内部和外部的 API 请求操作的唯一入口。同时也负责整个集群的认证、授权、访问控制、服务发现等等能力。
-- kube-controller-manager —— 负责维护整个 Kubernetes 集群的状态，比如多副本创建、滚动更新等。
+  - kube-apiserver —— 提供所有内部和外部的 API 请求操作的唯一入口。同时也负责整个集群的认证、授权、访问控制、服务发现等等能力。
+  - kube-controller-manager —— 负责维护整个 Kubernetes 集群的状态，比如多副本创建、滚动更新等。
   - cloud-controller-manager
-- kube-scheduler —— 监听未调度的 Pod，按照预定的调度策略绑定到满足条件的节点上。
+  - kube-scheduler —— 监听未调度的 Pod，按照预定的调度策略绑定到满足条件的节点上。
 - 节点组件
   - kubelet
   - kube-proxy
