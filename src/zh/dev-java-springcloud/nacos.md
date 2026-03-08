@@ -27,3 +27,14 @@ Nacos 的关键特性包括：
 > - Consul - CP
 > - ~~CoreDNS（功能少） - xx~~
 > - Zookeeper - CP
+
+应用架构示例：
+
+```bash
+                 | <=> nacos
+客户端 => GateWay |    ↓↑
+                 | <=> 订单服务（sentinel）
+                 | <=> 库存服务（sentinel）
+                      ↓↑
+                sentienl dashboard
+```

@@ -22,4 +22,10 @@ sh script/nacos_startup.sh
 # 登录
 localhost:8848/nacos
 nacos/nacos
+
+# 启动app
+sh script/app_startup.sh
+
+# 请求order服务接口
+curl 127.0.0.1:28666/order/add
 ```

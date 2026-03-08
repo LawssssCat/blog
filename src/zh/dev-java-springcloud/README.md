@@ -36,7 +36,7 @@ Microservices —— 微服务
 - ~~dubbo~~ （不完善）
   - 通讯 —— rpc
   - 注册中心 —— zookeeper/redis
-  - 配置中心 —— diamond
+  - 配置中心 —— diamond/Apollo
 
 - ~~Netfix~~ （闭源）
   - http restful —— 通信方式
@@ -45,7 +45,7 @@ Microservices —— 微服务
   - Netflix Hystrix —— 断路器
   - Netflix Zuul —— 服务网关
   - Spring Cloud Config —— 分布式配置
-  - sleuth + zipkin —— 分布式追踪系统
+  - Admin + sleuth + zipkin —— 分布式追踪系统
 
 ![对比](https://s2.loli.net/2024/08/11/ICRY2FakLbhVy7u.png)
 

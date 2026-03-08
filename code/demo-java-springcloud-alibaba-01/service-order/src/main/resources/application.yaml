@@ -1,5 +1,5 @@
 server:
-  port: 28080
+  port: 28666
 spring:
   application:
     name: service-order # nacos 获取该配置作为服务名称

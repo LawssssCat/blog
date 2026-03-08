@@ -13,6 +13,7 @@
     <description>服务：库存</description>
 
     <dependencies>
+        <!-- web驱动器 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -23,5 +24,4 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
     </dependencies>
-
 </project>

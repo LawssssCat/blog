@@ -15,7 +15,7 @@ public class OrderApplication {
         SpringApplication.run(OrderApplication.class, args);
     }
 
-    @LoadBalanced // 开启负载均衡调用机制：1、解析请求目标的真实地址
+    @LoadBalanced // 开启负载均衡调用机制：1、解析请求目标的真实地址 —— 高版本需要加
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
