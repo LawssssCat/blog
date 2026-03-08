@@ -25,7 +25,7 @@ todo https://www.52pojie.cn/thread-1921814-1-1.html
 
 `shift + shift` | 搜索 any
 
-`Ctrl + Shift + A `| 搜索行为
+`Ctrl + Shift + A`| 搜索行为
 
 `alt + 1` | 项目窗口
 
@@ -142,3 +142,7 @@ jd-gui
 解析代码成时序图
 
 > 有 pro 版本。。。
+
+## 插件开发
+
+todo

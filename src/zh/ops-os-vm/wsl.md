@@ -81,9 +81,12 @@ wsl --manage Ubuntu2 --move C:\my\wsl\Ubuntu3 # 移动路径
 
 ## 高级配置
 
+参考：
+<https://learn.microsoft.com/zh-cn/windows/wsl/wsl-config>
+
 配置文件：
 
-+ `.wslconfig` —— windows配置，对全部子系统生效
++ `.wslconfig` —— windows配置，对全部子系统生效 **【建议：这个配置通过windows的UI界面配置】**
 + `wsl.conf` —— 子系统linux内部配置，只在该子系统中生效
 
 ```bash title='/etc/wsl.conf'
@@ -92,8 +95,28 @@ systemd=true # 启动systemd支持
 ```
 
 ```bash title='%USERPROFILE%/.wslconfig'
+# Settings apply across all Linux distros running on WSL 2
 [wsl2]
-networkingMode=mirrored
+autoProxy=true # 强制 WSL 使用 Windows 的 HTTP 代理信息
+```
+
+> 建议直接通过tun模式进行代理。
+> 而非使用`ALL_PROXY`/`HTTP_PROXY`/`HTTPS_PROXY`。
+
+e.g.
+
+```bash title='%USERPROFILE%/.wslconfig'
+[wsl2]
+nestedVirtualization=true
+ipv6=true
+networkingMode=mirrored # 镜像网络
+autoProxy=true
+[experimental]
+autoMemoryReclaim=gradual # gradual | dropcache | disabled
+dnsTunneling=true
+firewall=true
+# networkingMode=mirrored
+# autoProxy=true
 ```
 
 ## 发行版制作
