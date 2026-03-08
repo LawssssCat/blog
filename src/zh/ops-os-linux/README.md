@@ -62,13 +62,13 @@ order: 1
 
 发行版：
 
-+ yum/dnf（Dandified YUM） - [RPM（RPM Package Manager）](https://geek-blogs.com/blog/rocky-linux-package-manager/)格式
++ yum/dnf（Dandified YUM）/zypper（ZENworks YaST Patch/Package for suse） - [RPM（RPM Package Manager）](https://geek-blogs.com/blog/rocky-linux-package-manager/)格式
   + ~~[Centos](./redhat/README.md)~~ 停止维护
   + ~~AlmaLinux~~ （金主：[CloudLinux](https://cloudlinux.com/)） 目标补充Centos空缺
   + Fedora 【桌面】
   + RHEL
   + suse （发行商：SUSE（德国）） 0
-  + openSuse
+  + [openSuse](./suse/README.md)
   + Kail （发行商：[Offensive Security](https://www.offsec.com/)） 1
   + Rocky Linux
   + euler
