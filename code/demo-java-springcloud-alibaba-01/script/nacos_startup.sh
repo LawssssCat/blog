@@ -9,7 +9,10 @@ TARGET_PATH=${PROJECT_PATH}/build/nacos/
 if [ -z "${JAVA_HOME}" ] && [ -d "/usr/lib/jvm/jre/" ]; then # fedora
 export JAVA_HOME="/usr/lib/jvm/jre/"
 fi
+# 单机模式启动
 chmod +x ${TARGET_PATH}/nacos/bin/startup.sh && ${TARGET_PATH}/nacos/bin/startup.sh -m standalone
+# 集群模式启动
+# todo
 
 # tail
 tail -n 1000 -F ${TARGET_PATH}/nacos/logs/start.out

@@ -39,4 +39,5 @@ build/
 
 # nacos
 /logs/
+/logPath_IS_UNDEFINED/
 /derby.log
