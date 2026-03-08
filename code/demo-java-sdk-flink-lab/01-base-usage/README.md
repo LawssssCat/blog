@@ -74,6 +74,39 @@ Redis
 
 ## 部署、架构
 
+关键组件：
+
++ **客户端（Client）** —— 代码由客户端获取并作转换，之后提交给JobManager
++ **JobManager** —— 对作业进行中央调度管理，它会获取到要执行的作业，然后进行进一步转换处理，然后分发任务给众多的TaskManager
++ **TaskManager** —— 真正对数据的处理的组件
+
+### 部署
+
+Flink支持多种不同的部署场景，还可以和不同的资源管理平台方便地集成。
+
+#### Flink集群搭建
+
+节点服务器 | hadoop102 | hadoop103 | hadoop104
+--- | --- | --- | ---
+角色 | JobManager <br> TaskManager | TaskManager | TaskManager
+
+```bash
+# flink-1.17.0-bin-scala_2.12.tgz 上传 hadoop102 节点 /opt/software
+# 解压到 /opt/module
+$ tar -zxvf flink-1.17.0-bin-scala_2.12.tgz -C /opt/module
+
+# 修改conf/flink-conf.yaml文件，指定hadoop102为JobManager
+$ vim flink-conf.yaml
+# JobManager节点地址
+jobmanager.rpc.address: hadoop102
+jobmanager.bind-host: 0.0.0.0
+rest.address: hadoop102
+rest.bind-address: 0.0.0.0
+# TaskManager节点地址，需要配置为当前机器名
+taskmanager.bind-host: 0.0.0.0
+taskmanager.host: hadoop102
+```
+
 ## 核心功能
 
 基本API(Source/Sink)
