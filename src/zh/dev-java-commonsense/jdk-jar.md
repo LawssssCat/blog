@@ -7,6 +7,17 @@ order: 66
 ---
 
 JAR 文件是一种 Java 归档文件（本质上是一个采用zip标准构建出来的“压缩包”）。
+
+> 背景说明：
+> 由于，`.class`文件是JVM看到的最小可执行文件，而一个大型程序需要编写很多Class，并生成一堆`.class`文件。
+> 所以，使用jar文件打包`.class`文件。
+> e.g.
+> JVM自带的Java标准库rt.jar实际上就是以jar文件形式存放的，一共有60多M。
+
+<!-- more -->
+
+## Jar包结构
+
 JAR 文件包含了程序运行所需的`.class`文件、相关资源和相应的元数据（放在`META-INF`文件夹中）。
 
 e.g. 目录结构
@@ -19,7 +30,15 @@ Demo.jar
 - META-INF —— 元数据（MANIFEST.MF）文件放在这个目录中
 ```
 
-<!-- more -->
+## Jar包使用
+
+一个大型Java程序会生成自己的jar文件，同时引用依赖的第三方jar文件。
+因此，运行一个Java程序，一般来说，命令行写这样：
+
+```bash
+java -cp app.jar:a.jar:b.jar:c.jar org.example.Main
+# 如果漏写了某个运行时需要用到的jar，那么在运行期极有可能抛出ClassNotFoundException。
+```
 
 ## Jar包开发库
 

@@ -7,7 +7,7 @@ order: 1
 ---
 
 Maven 是一个自动化的构建工具，主要用于 Java 项目。
-
+Maven 通过 POM（Project Object Model，项目对象模型）文件来进行项目文件的定义。
 Maven 的主要目标是让开发人员能够在最短时间内完成开发工作的完整状态：
 
 - 简化构建过程
