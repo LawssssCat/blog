@@ -28,4 +28,17 @@ x # 关闭小窗口
 ↑/↓/←/→ # 切换小窗口
 q # 切换小窗口
 z # 最大化/还原小窗口
+
+# cmd
+: # 进入命令行模式
+```
+
+配置
+
+```bash
+vi ~/.tmux.conf
+tmux source ~/.tmux.conf
+
+# 启动鼠标、滚轮 （按住shift回到默认模式，如复制时有用）
+set -g mouse on
 ```
