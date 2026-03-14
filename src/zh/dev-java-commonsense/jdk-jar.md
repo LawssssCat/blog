@@ -6,7 +6,22 @@ tag:
 order: 66
 ---
 
-JAR 文件是一种 Java 归档文件，可以包含多个 Java 类文件、资源文件和其他文件。
+JAR 文件是一种 Java 归档文件（本质上是一个采用zip标准构建出来的“压缩包”）。
+JAR 文件包含了程序运行所需的`.class`文件、相关资源和相应的元数据（放在`META-INF`文件夹中）。
+
+e.g. 目录结构
+
+```bash
+Demo.jar
+- org
+    - example
+        - Main.class —— 编译出来的字节码文件，按其所在的包进行存放
+- META-INF —— 元数据（MANIFEST.MF）文件放在这个目录中
+```
+
+<!-- more -->
+
+## Jar包开发库
 
 Java 中的 `java.util.jar.JarOutputStream` 类是用于创建和输出 JAR 文件的输出流。
 JarOutputStream 类提供了一系列方法来向 JAR 文件中写入条目（Entry，`JarEntry extends ZipEntry`）并设置相关属性。
@@ -30,7 +45,7 @@ JarOutputStream 类提供了一系列方法来向 JAR 文件中写入条目（En
 <!-- @include: @project/code/demo-java-common/demo-io-jar/src/test/java/org/example/jar/CreateJarTest.java -->
 ```
 
-## 创建 Jar 包
+### 创建 Jar 包
 
 ```java
 import java.io.FileOutputStream;
@@ -68,7 +83,7 @@ public class CreateJarFile {
 }
 ```
 
-## 加载 Jar 包
+### 加载 Jar 包
 
 ::: tabs
 
@@ -152,11 +167,11 @@ void testUnpackJar() throws IOException {
 
 :::
 
-## 签名 Jar 包
+### 签名 Jar 包
 
 todo
 
-## 验签 Jar 包
+### 验签 Jar 包
 
 todo
 
