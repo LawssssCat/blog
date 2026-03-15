@@ -150,6 +150,8 @@ link: <RepoLink path="/code/demo-java-module/demo-01-manual" />
     └── module-info.java <------------ here
 ```
 
+#### 编译class
+
 将`.java`编译为`.class`文件
 
 ```bash
@@ -178,6 +180,8 @@ import javax.xml.XMLConstants;
 1 error
 ```
 
+#### 打包jar
+
 将`.class`打包为`.jar`文件
 
 ```bash
@@ -198,6 +202,8 @@ $ tree
 $ java -jar hello.jar # 运行结果
 xml
 ```
+
+#### 打包jmod
 
 将`.jar`打包为`module`文件
 
@@ -225,6 +231,8 @@ java.lang.module.FindException: JMOD format not supported at execution time: hel
 $ java --module-path hello.jar --module hello.world
 xml
 ```
+
+#### 导出自定义jre
 
 制作`module`文件后，可以打包需要的`module`文件作为运行环境
 
@@ -274,6 +282,14 @@ xml
 # 极大地方便了分发和部署。
 ```
 
+#### 打包可执行文件
+
+todo 通过jpackage将自定义的jre打包成可双击执行的程序。
+
+### Demo：结合JavaFX使用
+
+todo <https://www.bilibili.com/video/BV1bG411F7nB>
+
 ### 详细定义规则
 
 模块描述的信息有：
@@ -291,19 +307,24 @@ module java.sql { // 模块名
     requires java.base; // 可不写，任何模块都会自动引入java.base
     requires java.logging;
     requires static java.transaction.xa; // 可选依赖项 https://dev.java-lang.cn/learn/modules/optional-dependencies/
-    requires transitive java.xml; // “转发”依赖项 https://dev.java-lang.cn/learn/modules/implied-readability/
+    requires transitive java.xml; // 传递依赖项，模块A依赖模块B时会自动依赖模块B中的transitive依赖。 https://dev.java-lang.cn/learn/modules/implied-readability/
 
 
-    // 【“导出（exports）”和“打开（opens）”】
+    // 【“导出（exports）”和“打开/开放反射（opens）”】
     // 默认情况下，所有类型，即使是public 类型，也只在模块内部可访问。要让模块外部的代码访问类型，包含该类型的包需要导出或打开。
     // 1、“导出（exports）”的包中的公共类型和成员在编译时和运行时可用 —— 详细将在关于“强封装”的部分中讨论
-    // 2、“打开（opens）”的包中的所有类型和成员可以在运行时通过反射访问 —— 详细将在关于“反射”的部分中讨论
+    // 2、“打开/开放反射（opens）”的包中的所有类型和成员可以在运行时通过反射访问 —— 详细将在关于“反射”的部分中讨论
     // 3、“限定词”允许您仅向特定模块导出/打开包。 —— 详细参考： https://dev.java-lang.cn/learn/modules/qualified-exports-opens/
+    // -------------------------
+    // 导出：指定依赖该模块时，哪些包可以被访问
     // -------------------------
     // for each API package:
     // 构成公共API的包
     exports java.sql; // 包中的公共类型和成员在编译时和运行时可用
-    exports javax.sql;
+    exports javax.sql to xxx_module; // 限定导出，限定导出的包只能给特定的模块使用
+    // -------------------------
+    // 打开/开放反射：允许模块中的私有属性、私有方法可以通过反射访问
+    // -------------------------
     // for each package intended for reflection:
     // opens $PACKAGE; // 包中的所有类型和成员可以在运行时通过反射访问 https://dev.java-lang.cn/learn/modules/opening-for-reflection/
     opens com.example.app.entities;
