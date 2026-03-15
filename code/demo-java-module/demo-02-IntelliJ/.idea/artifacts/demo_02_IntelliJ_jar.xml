@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="demo-02-IntelliJ:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/demo_02_IntelliJ_jar</output-path>
+    <root id="archive" name="demo-02-IntelliJ.jar">
+      <element id="module-output" name="demo-02-IntelliJ" />
+      <element id="module-output" name="MyLib" />
+    </root>
+  </artifact>
+</component>
