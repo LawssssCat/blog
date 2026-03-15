@@ -5,6 +5,7 @@ import org.example.lib.MyPublicFunc;
 
 import javax.xml.XMLConstants;
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 /**
@@ -17,6 +18,7 @@ public class Main {
         System.out.println("XMLConstants.XML_NS_URI = " + XMLConstants.XML_NS_URI);
         // module custom
         System.out.println("MyPublicFunc.name() = " + MyPublicFunc.name());
+        System.out.println("new Timestamp(System.currentTimeMillis()) = " + new Timestamp(System.currentTimeMillis())); // from MyLib transitive requires
         try {
             // Unable to make field private static final java.lang.String org.example.lib.MyPublicFunc.NAME accessible:
             // module demo.lib does not "opens org.example.lib" to module demo.main

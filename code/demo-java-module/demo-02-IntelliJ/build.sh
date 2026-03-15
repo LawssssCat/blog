@@ -8,3 +8,4 @@
 java --module-path "./out/production/demo-02-IntelliJ;./out/production/MyLib" --module "demo.main/org.example.Main"
 
 java -jar "./out/artifacts/demo_02_IntelliJ_jar/demo-02-IntelliJ.jar"
+# --add-opens demo.lib/org.example.lib=demo.main
