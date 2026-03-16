@@ -20,4 +20,4 @@ java --module-path . --module hello.world # ok 指定目录
 # 打包module
 rm hello.jmod
 jmod create --class-path hello.jar hello.jmod
-java --module-path hello.jmod --module hello.world
+java --module-path hello.jmod --module hello.world # todo
