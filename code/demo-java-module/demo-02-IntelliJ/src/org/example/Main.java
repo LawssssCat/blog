@@ -7,6 +7,7 @@ import javax.xml.XMLConstants;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * main
@@ -16,6 +17,9 @@ public class Main {
         System.out.println("args = " + Arrays.toString(args));
         // module jdk xml
         System.out.println("XMLConstants.XML_NS_URI = " + XMLConstants.XML_NS_URI);
+        System.out.println("java.util.List.class.getSimpleName() = " + List.class.getSimpleName());
+        System.out.println("sun.misc.Unsafe.class.getSimpleName() = " + sun.misc.Unsafe.class.getSimpleName());
+//        System.out.println("sun.util.BuddhistCalendar.class.getSimpleName() = " + sun.util.BuddhistCalendar.class.getSimpleName());
         // module custom
         System.out.println("MyPublicFunc.name() = " + MyPublicFunc.name());
         System.out.println("new Timestamp(System.currentTimeMillis()) = " + new Timestamp(System.currentTimeMillis())); // from MyLib transitive requires
