@@ -10,5 +10,7 @@ title: Java使用笔记
   - [modules](./jdk-modules.md)
 - sdk - 三方工具库
 - func - 场景业务
+  - 桌面应用
+    - JavaFX
 - tool - 开发工具
 - rules - 规范
