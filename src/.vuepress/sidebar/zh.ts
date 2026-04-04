@@ -1,7 +1,7 @@
 import { sidebar } from "vuepress-theme-hope";
 
 export const zhSidebar = sidebar({
-  "/zh/": ["", "router.md", "changelog.md", "intro.md"],
+  "/zh/": ["", "index-awesome.md", "router.md", "changelog.md", "intro.md"],
   "/zh/posts/": "structure",
   "/zh/dev-c-commonsense/": "structure",
   "/zh/dev-rpc-thrift/": "structure",
