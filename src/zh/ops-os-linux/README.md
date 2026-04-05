@@ -170,10 +170,15 @@ order: 1
   + bash
   + [zsh](./tool-zsh.md)
   + fish
-+ 终端窗口多任务
-  + zellij
-  + [tmux](./tool-tmux.md)
-  + screen
++ 终端窗口
+  + 进程管理
+    + `ps -ef`/kill
+      + pgrep/pkill
+    + jobs/`fg %1`/`bg %1`
+  + 多任务
+    + zellij
+    + [tmux](./tool-tmux.md)
+    + screen
 + 终端窗口文件管理可视化
   + yazi
   + spf
