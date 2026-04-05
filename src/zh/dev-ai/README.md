@@ -13,7 +13,8 @@ order: 1
 1950年 | AI（Artificial Intelligence，人工智能） | 无
 2016年 | AI元年 | 阿法狗围棋打败李世石，次年打败柯洁 （当年人类围棋技术最顶尖的两人）
 2017年 | AGI（Artificial General Intelligence，通用人工智能） | 大厂提供的LLM实现
-2017年 | LLM（Large Language Model，大语言模型） | 基于输入“猜测”下文作为输出
+2017年 | LLM（Large Language Model，大语言模型） | 指由Transformer架构训练得到的语言模型，本质是基于输入“猜测”下文作为输出。衍生黑化：机器幻觉（Hallucination）、Token
+2019年 | Multimodality，多模态 | 多种形式数据（如文字、声音、图片、味觉、触觉、...）输入、训练、输出，应用如图片/音频/视频输入和生成。（论文：[CLIP](https://github.com/openai/CLIP)）
 2020年 | RAG（Retrieval-Augmented Generation，检索增强生成） | 由FAIR（Facebook AI Research）团队提出，结合信息检索、文本增强、文本生成的NLP技术，将传统信息检索系统的优势与LLM的功能结合在一起，使大模型生成更准确、丰富的文本内容。简称挂知识库。
 2023年 | Agent（智能体） | 处理LLM只能处理推断的问题，扩展爬虫、文件处理、系统操作等能力
 2024年 | MCP（Model Context Protocol，模型上下文协议） | anthropic提出的Agent扩展工具交互规范 （alias: function call， tool calls）。有了交互规范，则可作为单独服务对接不同Agent供应商，Agent供应商只需考虑提示词的书写。
