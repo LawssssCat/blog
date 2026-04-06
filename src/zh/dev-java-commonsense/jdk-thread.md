@@ -1,9 +1,5 @@
 ---
 title: JDK thread 功能
-date: 2024-05-24
-tag:
-  - java
-  - thread
 order: 66
 ---
 
@@ -150,15 +146,52 @@ System.out.println("示例运行结束");
 
 JMM（Java Memory Model，Java 内存模型）
 
-todo 可见性 violated、指令重排 内存屏障
+#### 概念：内存屏障/指令重排/violated可见性
+
+背景：
+编译器可能会对指令进行重排序以提高程序性能。这些优化在单线程中通常是安全的，在多线程中可能导致线程间看到的内存状态不一致，从而引发并发问题。
+内存屏障（Memory Barrier）是一种用于阻止特定类型的指令重排序的声明，通过控制特定指令的执行顺序，确保内存可见性。
+
+内存屏障的分类：
+
+- LoadLoad —— 确保屏障前的加载指令（Load）先于屏障后的加载指令执行
+- StoreStore —— 确保屏障前的存储指令（Store）先于屏障后的存储指令执行
+- LoadStore —— 确保屏障前的加载指令（Load）先于屏障后的存储指令执行
+- StoreLoad —— 确保屏障前的存储指令（Store）先于屏障后的加载指令执行，同时会刷新CPU缓存，确保存储操作的结果对其他线程可见。（这是最强大的屏障，开销也较大）
+
+JVM实现：
+
+- volatile —— Java编译器生成字节码时，当遇到volatile关键字，会对其修饰的变量的操作指令前插入内存屏障，以确保指令执行顺序和内存可见性。
+  - 在写操作（Store）后插入StoreStore屏障和StoreLoad屏障，确保：写操作不被重排序到后面的写操作后（避免当前线程ABA），该写操作的结果对其他线程可见（避免其他线程不可见）
+  - 在读操作（Load）前插入LoadLoad屏障和LoadStore屏障，确保：读操作不被重排序到前面的操作前（避免当前线程AAA），读操作得到最新的内存数据（避免其他线程对该内存的操作不可见）
+
+```java
+private static volatile boolean flag = false;
+private static int value = 0;
+public static void main(String[] args) throws Exception {
+  Thread thread1 = new Thread(() -> {
+    value = 100;
+    flag = true; // volatile写操作，之后会插入StoreStore屏障和StoreLoad屏障
+  });
+  Thread thread2 = new Thread(() -> {
+    while(!flag) { // volatile读操作，之前会插入LoadLoad屏障和LoadStore屏障
+      // 循环等待flat变为true
+    }
+    System.out.println("value = " + value); // 由于有flag的内存屏障，可以读取到flag变化前的变化，所以可以看到value的最新值100
+  });
+  thread2.start();
+  Thread.sleep(100);
+  thread1.start();
+}
+```
 
 ### Java线程安全接口（Thread sync API） {#thread-safe}
 
 线程安全 = 共享数据符合预期
 
-- 原子性 —— atomic
-- 可见性 —— violated
-- 有序性 —— 指令重排、内存屏障、synchronized
+- 原子性 —— synchronized/Lock接口, atomic类
+- 可见性 —— synchronized/Lock接口, atomic类, violated（内存屏障通过避免特定的指令重排确保可见性）
+- 有序性 —— synchronized/Lock接口, atomic类, violated（内存屏障避免指令重排）
 
 同步机制包括：
 

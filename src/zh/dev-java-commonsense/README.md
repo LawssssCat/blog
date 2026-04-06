@@ -8,6 +8,7 @@ title: Java使用笔记
   - [jvm](./jdk-jvm.md)
   - [jar](./jdk-jar.md)
   - [modules](./jdk-modules.md)
+  - [thread](./jdk-thread.md)
   - [bytecode](./jdk-bytecode.md) —— 字节码操作
 - sdk - 三方工具库
 - func - 场景业务
