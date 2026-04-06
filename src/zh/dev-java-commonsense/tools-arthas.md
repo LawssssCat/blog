@@ -304,6 +304,146 @@ tutorials/
 web-ui/
 ```
 
+通过远程监听进入debug模式：
+
+```bash
+版本：
+arthas-all-3.6.8
+wget https://maven.aliyun.com/repository/public/com/taobao/arthas/arthas-packaging/3.6.8/arthas-packaging-3.6.8-bin.zip
+mkdir arthas-packaging-3.6.8-bin
+cd arthas-packaging-3.6.8-bin
+unzip ../arthas-packaging-3.6.8-bin.zip
+
+# 程序启动
+# suspend=y —— 等待idea客户端接入再进入main方法
+java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 arthas-boot.jar
+
+# 调试窗口（附加到远程JVM）
+断点：
+com.taobao.arthas.boot.Bootstrap#main
+```
+
+### 环境变量处理
+
+```bash
+properties:os.name
+properties:os.arch
+MSYSTEM —— e.g. MINGW
+SHELL —— e.g. /bin/bash
+
+
+JAVA_HOME
+properties:java.home —— java家目录
+properties:java.specification.version —— java版本
+
+JAVA_TOOL_OPTIONS
+
+
+ARTHAS_LIB_DIR
+properties:user.home —— 用户家目录
+properties:user.home + .arthas/lib
+properties:java.io.tmpdir + .arthas/lib
+```
+
+### 命令行参数处理
+
+三方件：
+
++ com.taobao.middleware.cli —— 参数解析
++ jline —— 命令行交互
+
+#### arthas-boot.jar
+
+```bash title="arthas-boot.jar"
+e.g.
+java -jar arthas-boot.jar -v --select demo
+
+--help 略
+--verbose 略
+
+--versions
+        local ARTHAS_LIB_DIR/{version}
+        remote https://arthas.aliyun.com/api/versions
+--use-version down to ARTHAS_LIB_DIR/{use-version}/
+--arthasHome
+        1. is directory
+        1. contains "arthas-core.jar"
+        1. contains "arthas-agent.jar"
+        1. contains "arthas-spy.jar"
+--repo-mirror 略
+
+--pid Target pid
+--select select target process by classname or JARfilename
+--target-ip   The target jvm listen ip, default 127.0.0.1
+--telnet-port The target jvm listen telnet port, default 3658
+--http-port   The target jvm listen http port, default 8563
+--session-timeout The session timeout seconds, default 1800 (30min)
+
+--app-name The app name
+--username The username
+--password The password
+
+--stat-url The report stat url
+--tunnel-server The tunnel server url
+--agent-id The agent id register to tunnel server
+
+--attach-only Attach target process only, do not connect
+```
+
+#### arthas-client.jar
+
+```bash title="arthas-client.jar"
+e.g.
+java -jar arthas-client.jar -c session --execution-timeout 20000 127.0.0.1 3658
+
+--help 略
+
+-c,--command Command to execute, multiple commands separated by ;
+
+--execution-timeout
+
+-b,--batch-file The batch file to execute
+
+-w,--width 交互宽度
+-h,--height 交互高度
+```
+
+#### arthas-core.jar
+
+```bash title="arthas-core.jar"
+java -jar arthas-core.jar \
+-pid 1580 \
+-target-ip 127.0.0.1 \
+-telnet-port 3658 \ \
+-http-port 8563 \
+-core arthas-core.jar \
+-agent arthas-agent.jar
+```
+
+进入arthas-core调试需要手动添加`-agentlib`命令行执行
+
+```bash
+ARTHAS_HOME=$(cd .; pwd)
+java -jar \
+-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 \
+arthas-core.jar \
+-pid $(jps|grep demo|awk '{print $1}') \
+-target-ip 127.0.0.1 \
+-telnet-port 3658 \ \
+-http-port 8563 \
+-core ${ARTHAS_HOME}/arthas-core.jar \
+-agent ${ARTHAS_HOME}/arthas-agent.jar
+```
+
+### 启动流程命令依赖
+
+```bash
+arthas-boot.jar —— 入口，下载/调用其他jar包工具
+arthas-client.jar —— 客户端
+jdk/bin/jps
+jdk/lib/tools.jar —— java -Xbootclasspath/a:tools.jar
+```
+
 ### 网络通信架构（netty）
 
 todo

@@ -16,4 +16,5 @@ title: Java使用笔记
   - 桌面应用
     - JavaFX
 - tool - 开发工具
+  - [arthas](./tools-arthas.md) —— 性能调优
 - rules - 规范
