@@ -14,7 +14,9 @@ Java Agent 分为两种：
 >
 > - <https://www.bilibili.com/video/BV1XP4y1N7ZF>
 
-## 主程序运行前指定的Agent
+## 例子
+
+### 主程序运行前指定的Agent
 
 1、入口类需要定义有premain方法
 
@@ -75,7 +77,7 @@ Can-Retransform-Classes: true
 3、使用Agent程序： `-javaagent:AgentTest.jar=params` （这里params对应premain函数的agentOps参数值）
 例如： `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`
 
-## 主程序运行后指定的Agent
+### 主程序运行后指定的Agent
 
 探针程序可以在主程序启动后直接连接到已经启动的jvm中，从而实现例如动态替换类，查看加载类信息的一些功能。
 
@@ -99,7 +101,7 @@ public static void agentmain(String agentOps, Instrumentation inst) {
   if (redefineClass == null) {
     return;
   }
-  // 热替换
+  // 热替换（redefine）
   try {
     byte[] classBytes = Files.readAllBytes(Paths.get(classFile));
     ClassDefinition classDefinition = new ClassDefinition(redefineClass, classBytes);
@@ -162,3 +164,62 @@ public static void main(String[] args) throws Exception {
   target.detach();
 }
 ```
+
+## 概念：探针修改Class的限制
+
+- 主程序运行前指定的Agent
+  - 除了类名外，可以更改任意内容（理论上类名也可以该，但是类名改了的话，ClassLoader会出问题）
+- 主程序运行中指定的Agent
+  - 不能修改Class的文件结构，及不能添加方法、不能添加字段，只能修改方法体的内容，否则会报错 `UnsupportedOperationException: class redefinition failed: attempted to change the schema (add/remove fields)`
+
+## 概念：两种修改类的方法
+
+- retransformClasses
+  - 修改class
+  - 在已存在的Class字节码文件上修改后再进行替换，类似于对class文件进行包装。
+
+  ```java
+  public class AgentPre {
+    public static void premain(String agentOps, Instrumentation inst) {
+      inst.addTransformer(new BaseTransformer());
+    }
+  }
+  public class AgentDynamic {
+    public static void agentmain(String agentOps, Instrumentation inst) {
+      List<Class<?>> data = new ArrayList<>();
+      for (Class<?> clazz : inst.getAllLoadedClasses()) {
+        if ("org.example.controller.HelloController".equals(clazz.getName())) {
+          data.add(clazz);
+        }
+      }
+      inst.addTransformer(new BaseTransformer());
+      inst.retransformClasses(data.toArray(new Class<?>[0]));
+    }
+  }
+  // 一般是使用ASM、javassist子类的字节码操纵技术对字节码进行包装
+  public class BaseTransformer implements ClassFileTransformer {
+    @Override
+    public byte[] transform(ClassLoader loader, // 要转换的类定义加载程序
+      String className, // Java虚拟机规范中定义的完全限定类和接口名称的内部形式的类名称。例如java/util/List
+      Class<?> classBeingRedefined, // 原始的类定义。如果是由重定义或重传出发的，则被重定义或重传的类；如果是类加载，则为null
+      ProtectionDomain protectionDomain, // 正在定义或重新定义的类的保护域
+      byte[] classfileBuffer // 类格式的输入字节缓冲区，不得修改
+    ) throws IllegalClassFormatException {
+      // 例子：ASM
+      ClassReader classReader = new ClassReader(classfileBuffer);
+      PreClassVisitor preClassVisitor = new PreClassVisitor(new ClassWriter(ClassWriter.COMPUTE_MAXS)); // 自定义的类
+      classReader.accept(preClassVisitor, 0);
+      return preClassVisitor.toByteArray();
+    }
+  }
+  ```
+
+- redefineClasses
+  - 重写定义class
+  - 自身提供的Class字节码文件替换掉已存在的class文件
+
+  ```java
+  byte[] classBytes = Files.readAllBytes(Paths.get(classFile));
+  ClassDefinition classDefinition = new ClassDefinition(redefineClass, classBytes);
+  inst.redefineClass(classDefinition);
+  ```
