@@ -57,6 +57,8 @@ Demo.jar
 Manifest-Version: 1.0
 Build-Jdk-Spec: 1.8
 Created-By: core engine team, middleware group, alibaba inc.
+# Premain-Class: xxxxx # 启动jar包时，通过指定agent方式进入的主程序入口
+# Agent-Class: xxxxx   # 运行中jar包，通过virtualMachine.loadAgent指定agent方式进入的主程序入口
 Main-Class: com.taobao.arthas.boot.Bootstrap  # 主程序入口
 # Extension-Name: This attribute specifies a name for the extension contained in the Jar file. The name should be a unique identifier such as the name of the main package comprising the extension.
 Specification-Title: arthas-boot  # Extension的规范

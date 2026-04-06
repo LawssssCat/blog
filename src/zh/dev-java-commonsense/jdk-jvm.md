@@ -135,7 +135,11 @@ OpenJDK 64-Bit Server VM BiSheng (build 21.0.9+11, mixed mode, sharing)
 | Tencent Kona       | 是    | 否             | 通过     | 是           | 否        |
 | Huawei Bisheng     | 是    | 否             | 通过     | 是           | 否        |
 
-### todo 对比各发新版
+## JVM API
 
-https://developer.aliyun.com/article/1108370
-
+```java
+VirtualMachine
+VirtualMachine.list()
+virtualMachine = VirtualMachine.attach("2392") // pid
+virtualMachine.loadAgent
+```

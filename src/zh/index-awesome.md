@@ -170,13 +170,11 @@ VPN：跨局域网安全传输数据
 
 #### JAVA原生
 
+[link_整理](./dev-java-commonsense/README.md)
+
 JVM模型
 
 - todo java 线程模型
-
-Java反射
-
-- todo asm
 
 调试工具
 
@@ -218,7 +216,8 @@ json
 参数交互
 
 - [picocli](https://github.com/remkop/picocli) —— java库，实现命令行交互中的参数/打印处理。支持颜色、自动补全、子命令等功能。
-- [alibaba/cli](https://github.com/alibaba/cli) —— java库，在arthas中有使用
+- apache cli
+- ~~[alibaba/cli](https://github.com/alibaba/cli) —— java库，在arthas中有使用~~
 
 流处理
 
