@@ -172,10 +172,6 @@ VPN：跨局域网安全传输数据
 
 [link_整理](./dev-java-commonsense/README.md)
 
-JVM模型
-
-- todo java 线程模型
-
 调试工具
 
 - jps/jstack/...
