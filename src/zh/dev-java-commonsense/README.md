@@ -10,6 +10,7 @@ title: Java使用笔记
   - [modules](./jdk-modules.md)
   - [thread](./jdk-thread.md)
   - [bytecode](./jdk-bytecode.md) —— 字节码操作
+  - [agent](./jdk-agent.md)
 - sdk - 三方工具库
 - func - 场景业务
   - 桌面应用

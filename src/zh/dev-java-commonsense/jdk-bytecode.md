@@ -12,6 +12,7 @@ Java字节码操作工具：
   - ~~javassist —— 通过内置编译器方式生成字节码~~
   - [Java ASM](#tid-asm) —— 通过API方式生成字节码，已集成至JDK标准 （类似：AST，Abstract Syntax Tree，抽象语法树）
     - bytebuddy —— 基于ASM的库
+      - todo <https://www.bilibili.com/video/BV13m42137Ct>
     - bytekit —— 基于ASM的库，阿里的库，使用上与bytebuddy类似
 - 应用案例
   - Spring代理应用（从SpringBoot2.x起，默认代理使用CGLIB，而不是JDK动态代理）
@@ -57,6 +58,9 @@ asm核心类：
 - ClassReader 用于读取字节码文件，解析类的结构信息。
 - ClassVisitor 用于访问、操作类的各个部分，如类头、字段、方法等。
 - ClassWriter 用于生成新的`byte[]`字节码文件，将修改后的类信息写入文件。
+
+Demo:
+<RepoLink path="/code/demo-java-bytcode/demo-01-asm/" />
 
 ## Spring AOP
 
