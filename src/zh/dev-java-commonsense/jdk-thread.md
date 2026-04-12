@@ -790,10 +790,10 @@ public class CompletableFutureExpandUtils {
 ### 协程/虚拟线程
 
 Java 19 引入虚拟线程概念，Java 21 落地虚拟线程。
+Java 中的虚拟线程就是通过 steal 机制（基于 Fork/Join 框架）实现一个真实线程同时调度多个虚拟线程任务，这避免使用多个真实线程来调度多个协同的任务，从而避免线程间上下文切换的带来的系统开销。
 
-::: tip
-JVM 使用轻量级的任务队列来调度虚拟线程，实现多个协同任务的调度，这避免使用多个真实线程来调度多个协同的任务，从而避免线程间上下文切换的带来的系统开销。
-:::
+Demo：
+代码： <RepoLink path="/code/demo-java-thread/" />
 
 #### 接口：Fork/Join 框架
 
