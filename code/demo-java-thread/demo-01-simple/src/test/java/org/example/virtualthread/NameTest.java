@@ -52,21 +52,56 @@ public class NameTest {
         // 8核 = 16线程 => aps=16
         // available-processor-size:16
         log.info("available-processor-size:{}", availableProcessors);
+        // virtual:TestStealResult[workerSize=16, workTime=224]
         // virtual:TestStealResult[workerSize=16, workTime=1405] —— 线程最少，速度较慢 ==== 但由于工作线程数量太少，过分复用线程，导致steal开销增大，但无理论并行处理数量上限
         log.info("virtual:{}", result_virtual);
+        // stealll:TestStealResult[workerSize=1600, workTime=778]
         // stealll:TestStealResult[workerSize=1600, workTime=831] —— 线程中间，速度较慢 ==== 合理复用线程，资源利用率高，且无理论并行处理数量上限
         log.info("stealll:{}", result_steal);
+        // platfor:TestStealResult[workerSize=7915, workTime=472]
         // platfor:TestStealResult[workerSize=10000, workTime=1336] —— 线程最多，速度较慢 ==== 线程切换耗时
         log.info("platfor:{}", result_platform);
+        // poollll:TestStealResult[workerSize=5977, workTime=283]
         // poollll:TestStealResult[workerSize=3086, workTime=653] —— 线程中间，速度最快 ==== 合理复用线程，资源利用率高，但有线程数量上限
         log.info("poollll:{}", result_pool);
     }
 
-    public static record TestStealResult(int workerSize, long workTime) {}
+    public static record TestStealResult(int workerSize, long workTime, long totalTime) {}
 
     private TestStealResult do_test_steal(int n, ExecutorService factory) throws InterruptedException, ExecutionException {
         log.info("========== ready ==========");
         Object[] records = new Object[n];
+        Thread.sleep(100);
+        log.info("========== start ==========");
+        // 第一次有创建线程开销
+        long startTime = System.currentTimeMillis();
+        do_test_steal_extracted(n, factory, records);
+        // 统计第二次
+        long secondTime = System.currentTimeMillis();
+        do_test_steal_extracted(n, factory, records);
+        do_test_steal_extracted(n, factory, records);
+        do_test_steal_extracted(n, factory, records);
+        do_test_steal_extracted(n, factory, records);
+        long endTime = System.currentTimeMillis();
+        log.info("========== collect ==========");
+        Set<String> usedThreadNameSet = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            Pair<String, String> record = (Pair<String, String>) records[i];
+            usedThreadNameSet.add(record.getLeft());
+            usedThreadNameSet.add(record.getRight());
+        }
+        TestStealResult testStealResult = new TestStealResult(
+                usedThreadNameSet.size(),
+                endTime - secondTime,
+                endTime - startTime
+        );
+        log.info("========== clean ==========");
+        factory.shutdownNow();
+        Thread.sleep(100);
+        return testStealResult;
+    }
+
+    private void do_test_steal_extracted(int n, ExecutorService factory, Object[] records) throws InterruptedException, ExecutionException {
         Object[] list = new Object[n];
         for (int i = 0; i < n; i++) {
             int index = i;
@@ -87,9 +122,6 @@ public class NameTest {
                 records[index] = Pair.of(start, end);
             };
         }
-        Thread.sleep(100);
-        log.info("========== start ==========");
-        long startTime = System.currentTimeMillis();
         for (int i = 0; i < n; i++) {
             Runnable runnable = (Runnable) list[i];
             list[i] = factory.submit(runnable);
@@ -98,22 +130,6 @@ public class NameTest {
             Future future = (Future) list[i];
             future.get();
         }
-        log.info("========== collect ==========");
-        long endTime = System.currentTimeMillis();
-        Set<String> usedThreadNameSet = new HashSet<>();
-        for (int i = 0; i < n; i++) {
-            Pair<String, String> record = (Pair<String, String>) records[i];
-            usedThreadNameSet.add(record.getLeft());
-            usedThreadNameSet.add(record.getRight());
-        }
-        TestStealResult testStealResult = new TestStealResult(
-                usedThreadNameSet.size(),
-                endTime - startTime
-        );
-        log.info("========== clean ==========");
-        factory.shutdownNow();
-        Thread.sleep(100);
-        return testStealResult;
     }
 
     private String getWorkerName(Thread thread) {
