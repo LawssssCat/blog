@@ -3,13 +3,20 @@ title: Java字节码操作
 order: 66
 ---
 
+Java字节码操作可以做到：
+
+- lombok添加getter/setter方法
+- btrace、Arthas和housemd等应用性能监控（APM）、动态诊断Jar包在JVM的运行情况
+- Intellij idea 的 HotSwap（热部署）、Jrebel 等
+- pinpoint、skywalking、newrelic、听云的 APM 产品等链路监控
+
 Java字节码操作工具：
 
 - JDK原生
   - java-proxy —— Java原生代理接口，略
   - ClasFile —— Java22预览特性，有望将ASM替代
 - 三方实现
-  - ~~javassist —— 通过内置编译器方式生成字节码~~
+  - ~~[javassist](http://www.javassist.org/) —— 通过内置编译器方式生成字节码~~
   - [Java ASM](#tid-asm) —— 通过API方式生成字节码，已集成至JDK标准 （类似：AST，Abstract Syntax Tree，抽象语法树）
     - bytebuddy —— 基于ASM的库
       - todo <https://www.bilibili.com/video/BV13m42137Ct>
@@ -30,6 +37,39 @@ Java字节码操作工具：
   - Java ASM系列 <https://space.bilibili.com/1321054247/search?keyword=asm> —— 详细到每个关键字的书写，129+个视频。。。
 - Spring
   - DeeparchWorks|JDK动态代理vsCGLIB深度对比 <https://www.bilibili.com/video/BV1FDQUBNE9n/>
+
+## Instrumentation（插桩）
+
+文档：
+
+- 官方文档： [Instrumentation](https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/Instrumentation.html)
+- JVM虚拟机字节码指令表 <https://segmentfault.com/a/1190000008722128>
+- Java高级特性之Instrumentation <https://www.cnblogs.com/dongguangming/p/12990664.html>
+
+作用：
+（一句话：Instrumentation接口设计初衷是为了收集Java程序运行时的数据，用于监控运行程序状态，记录日志，分析代码用的。）
+Instrumentation 是 Java SE 5 的新特性，它在 java.lang.instrument 包中。
+使用 Instrumentation，开发者可以构建一个独立于应用程序的代理程序（Agent），用来监测和协助运行在 JVM 上的程序，甚至可以替换和修改某些类的定义。
+这样的特性实际上提供了一种虚拟机级别支持的 AOP方式，使得开发者无需对原有应用做任何修改，就可以实现类的动态修改和增强
+
+发展：
+在 Java SE5 中，Instrument 要求在运行前利用命令行参数或者系统参数来设置代理类，但在Java常见的服务器常见中能在运行前添加参数的情况不多，所以这限制了 instrument 的应用上限。
+在 Java SE6 里面，通过 Java Tool API 中的 attach 方式，支持将代码植入代码到运行时的 JVM 程序中，这大大提升了 instrument 的应用上限。
+
+原理：
+java.lang.instrument包的具体实现依赖于 [JVMTI（Java Virtual Machine Tool Interface，Java虚拟机工具接口）](https://docs.oracle.com/javase/8/docs/technotes/guides/jvmti/index.html)。
+JVMTI 从 Java SE 5 开始引入，是一套为 JVM 相关工具提供的本地编程接口集合，通过调用 JVMTI 当中与 Java 类相关的函数，Instrument 可以完成对 Java 类的动态操作。
+（除了 Instrumentation 功能外，JVMTI 还在虚拟机内存管理，线程控制，方法和变量操作等等方面提供了大量可用的函数。关于 JVMTI 的详细信息，可以参考 Java SE 6 JVM TI文档）
+
+> JVMTI（Java Virtual Machine Tool Interface）整合和取代了 JVMPI（Java Virtual Machine Profiler Interface） 和 JVMDI（the Java Virtual Machine Debug Interface）
+
+java.lang.instrument.Instrumentation 接口，常用方法有：
+
+- addTransformer：注册类转换器
+- getAllLoadedClasses：获取当前 JVM 所有已加载类
+- retransformClasses：对已加载类重新转换（需开启`Can-Retransform-Classes`）
+- removeTransformer：移除转换器
+- redefineClasses：完全替换类定义（慎用，会丢失原有类状态）
 
 ## ASM {#tid-asm}
 
