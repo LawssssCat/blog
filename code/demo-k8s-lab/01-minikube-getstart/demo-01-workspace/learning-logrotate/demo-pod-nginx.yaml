@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-nginx-pod
+  template:
+    metadata:
+      labels:
+        app: demo-nginx-pod
+    spec:
+      containers:
+        - name: demo-nginx-container
+          image: docker.io/nginx:1.19.8
+          volumeMounts:
+            - name: log
+              mountPath: /var/log/nginx
+        - name: logrotate
+          # image: docker.io/logrotate:3.21 # todo
+          env:
+            - name: LOGROTATE_FILE_PATTERN
+              value: "/var/log/nginx/*.log"
+            - name: LOGROTATE_FILESIZE
+              value: "1K"
+            - name: LOGROTATE_FILENUM
+              value: "3"
+            - name: CRON_EXPR
+              value: "*/1 * * * *"
+            - name: CRON_LOGLEVEL
+              value: "7"
+          volumeMounts:
+            - name: log
+              mountPath: /var/log/nginx
+      volumes:
+        - name: log
+          emptyDir: {}
