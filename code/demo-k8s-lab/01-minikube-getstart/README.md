@@ -1,12 +1,20 @@
 # README
 
-启动虚拟机
+## 一、环境隔离
+
+### 启动虚拟机
 
 ```bash
 vagrant up
 ```
 
-安装minikube
+## 二、虚拟节点
+
+资料：
+
++ minikube官网 <https://minikube.kubernetes.ac.cn/docs/start>
+
+### 安装minikube
 
 ```bash
 # vi ~/.bashrc
@@ -14,7 +22,13 @@ nc -zv 192.168.10.1 10808
 export http_proxy="http://192.168.10.1:10808"
 export https_proxy="http://192.168.10.1:10808"
 export no_proxy='a.test.com,127.0.0.1,2.2.2.2,192.168.0.0/16,172.0.0.0/8,10.0.0.0/8'
+```
 
+::: tabs
+
+@tab Redhat
+
+```bash
 # https://podman.org.cn/docs/installation
 # sudo dnf -y install podman
 # sudo dnf -y install podman-machine
@@ -41,11 +55,30 @@ curl -LO https://github.com/kubernetes/minikube/releases/download/v1.26.1/miniku
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
+@tab SUSE
+
+```bash
+sudo zypper install docker
+sudo systemctl enable --now  docker
+sudo docker run --rm hello-world
+
+# rootless
+dockerd-rootless-setuptool.sh install -f
+docker context use rootless
+docker run --rm hello-world
+
+# minikube
+minikube start --driver=docker --container-runtime=containerd
+```
+
+:::
+
 启动k8s环境（通过minikube使用docker驱动）<https://www.cnblogs.com/davyyy/p/12531032.html>
 
 ```bash
 # minikube start
 # minikube start -n 3
+# minikube start --driver=docker --container-runtime=containerd
 
 # --vm-driver 如果不写会自动检测，可选值 virtualbox, vmwarefusion, hyperv, vmware
 # --image-mirror-country 需要使用的镜像镜像的国家/地区代码。留空以使用全球代码。对于中国大陆用户，请将其设置为 cn（将自动使用阿里云服务来支持minikube的环境配置）。
@@ -62,13 +95,6 @@ minikube start -n 3 --force --driver=docker
 # vi ~/.bashrc
 alias kubectl="minikube kubectl -- " # 命令别名
 source <(kubectl completion bash) # 命令补全
-```
-
-minikube常用命令
-
-```bash
-minikube node list
-minikube ssh -n minikube
 
 # 启动ingress插件
 # minikube addons enable ingress 启动错误排查
@@ -76,7 +102,24 @@ minikube ssh -n minikube
 minikube addons enable ingress
 ```
 
-k8s常用命令
+### minikube常用命令
+
+```bash
+minikube dashboard
+
+minikube node list
+minikube ssh -n minikube
+
+# demo test
+kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+kubectl get services hello-minikube
+minikube service hello-minikube
+```
+
+## 三、节点管理
+
+### k8s常用命令
 
 ```bash
 kubectl get svc
@@ -91,7 +134,7 @@ kubectl get pod
 minikube service  learning-k8s-demo-pod-service
 ```
 
-网络平面整理
+### 网络平面整理
 
 ```bash
 # vagrant平面
@@ -121,7 +164,7 @@ minikube service  learning-k8s-demo-pod-service
 10.99.100.2
 ```
 
-helm安装
+### helm安装
 
 ```bash
 sudo yum install -y openssl git
@@ -133,7 +176,7 @@ chmod 700 get_helm.sh
 source <(helm completion bash)
 ```
 
-helm常用命令
+### helm常用命令
 
 ```bash
 helm list
