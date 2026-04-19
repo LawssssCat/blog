@@ -20,7 +20,7 @@ netty版本：
   资料 https://www.jianshu.com/p/b0343bfd216e
 + rpc 介绍 https://www.jianshu.com/p/b0343bfd216e
 
-## Demo
+## ~~Demo01~~（3.10.5.Final）
 
 ### 依赖
 
@@ -296,3 +296,10 @@ public class HiHandler extends SimpleChannelHandler {
 ```
 
 :::
+
+## Demo02
+
+<RepoLink path="/code/demo-java-thread/demo-01-nio-netty" />
+
++ io.netty.channel.nio.NioEventLoopGroup —— 线程池
+
