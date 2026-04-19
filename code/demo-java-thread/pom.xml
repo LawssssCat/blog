@@ -16,6 +16,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>demo-01-simple</module>
+        <module>demo-01-nio-netty</module>
     </modules>
 
     <properties>
