@@ -219,6 +219,10 @@ json
 
 - jline —— java库，实现命令行交互中的流式功能
 
+#### 实时通讯
+
+- discord
+
 #### Web服务
 
 API提供
@@ -363,6 +367,19 @@ IP 检测、DNS 泄漏、WebRTC 测试：
 人工智能计算框架
 
 - MindSpore（昇思）
+
+#### 交互界面
+
+agent:
+
+- OpenClaw
+- ClaudeCode
+- OpenCode
+
+chat:
+
+- chatgpt
+- [lobehub](https://github.com/lobehub/lobehub)
 
 ### 多媒体
 
