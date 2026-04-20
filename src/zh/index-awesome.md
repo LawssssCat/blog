@@ -219,10 +219,6 @@ json
 
 - jline —— java库，实现命令行交互中的流式功能
 
-#### 实时通讯
-
-- discord
-
 #### Web服务
 
 API提供
@@ -466,6 +462,15 @@ PPT：
   - 2ch.sc
   - 5ch.net
 - 批踢踢 <https://www.ptt.cc/bbs/hotboards.html>
+
+#### 实时通讯
+
+- discord
+
+#### 文件分享
+
+- [catbox](https://catbox.moe/)
+- ~~sm.ms~~ —— 商业化？
 
 ## 经济
 
