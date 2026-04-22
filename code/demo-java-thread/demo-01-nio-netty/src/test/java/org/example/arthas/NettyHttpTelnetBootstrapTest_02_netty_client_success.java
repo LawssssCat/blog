@@ -9,6 +9,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -52,7 +54,9 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         log.info("server: [{}] initChannel", ch.remoteAddress());
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LoggingHandler());
+                        pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+                        pipeline.addLast(new StringDecoder());
+                        pipeline.addLast(new StringEncoder());
                         pipeline.addLast(new ServerHandler());
                     }
                 });
@@ -79,9 +83,9 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
         });
         fut.get(6000, TimeUnit.MILLISECONDS); // 6s 内完成端口绑定，否则超时
         log.info("------------ client ------------");
-        int n = 1;
+        int n = 2;
         CompletableFuture[] clients = new CompletableFuture[n];
-        for (int x = 0; x < 1; x++) {
+        for (int x = 0; x < n; x++) {
             final int xx = x;
             clients[x] = CompletableFuture.runAsync(() -> {
                 Bootstrap bootstrap = new Bootstrap();
@@ -93,10 +97,10 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         log.info("client: initChannel");
                         ChannelPipeline pipeline = ch.pipeline();
-//                        pipeline.addLast("stringD", new StringDecoder());
-//                        pipeline.addLast("stringC", new StringEncoder());
+                        pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+                        pipeline.addLast("stringD", new StringDecoder());
+                        pipeline.addLast("stringC", new StringEncoder());
 //                        pipeline.addLast("http", new HttpClientCodec());
-                        pipeline.addLast(new LoggingHandler());
                         pipeline.addLast(new ClientHandler());
                     }
                 });
@@ -114,7 +118,7 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
                 for (int i = 0; i < 3; i++) {
                     // 向服务器发送内容
                     log.info("client: channel msg-{}", i);
-                    channel.writeAndFlush("hello");
+                    channel.writeAndFlush("hello, msg-" + i);
                     ThreadUtils.sleepQuietly(Duration.ofSeconds(1));
                 }
             });
@@ -150,7 +154,6 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
          */
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-            // todo 没有进来？？
             Channel channel = ctx.channel();
             log.info("server: [{}] {}", channel.remoteAddress(), msg);
             // 回复

@@ -16,9 +16,24 @@ netty版本：
 
 ## 参考
 
++ netty 核心概念 <https://www.javaspring.net/blog/java-netty/>
 + netty rpc 实现 https://www.bilibili.com/video/av44457831/ \
   资料 https://www.jianshu.com/p/b0343bfd216e
 + rpc 介绍 https://www.jianshu.com/p/b0343bfd216e
+
+## 概念
+
++ 事件驱动模型（Event-Driven Model）
++ 频道（Channel） —— 事件（Event）总线，数据读写的最大可见部分
++ 频道处理器（ChannelHandler） —— 对事件处理的机制（mechanism）实现
+  + ChannelInboundHandler —— 处理进入的数据
+    + ChannelInboundHandlerAdapter
+      + SimpleChannelInboundHandler
+        + 自动泛型转换
+        + 自动资源释放
+  + ChannelOutboundHandler —— 处理发出的数据
++ 管道（ChannelPipeline） —— 一组有序的处理器（Handler）。当事件（Event）到达频道（Channel）后，事件会交由管道中处理器，按编排好的处理器顺序处理事件。
++ ByteBuf —— buffer，读写事件数据的中间介质
 
 ## Demo
 
