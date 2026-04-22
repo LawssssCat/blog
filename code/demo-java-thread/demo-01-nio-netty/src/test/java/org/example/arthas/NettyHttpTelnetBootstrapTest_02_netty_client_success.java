@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
@@ -37,6 +36,9 @@ import java.util.function.Consumer;
 public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
     @Test
     public void test() throws ExecutionException, InterruptedException, TimeoutException, IOException {
+        // 客户端数量
+        // 同一时刻，服务端队列长度需要大于等于客户端连接数量，否则服务端拒绝连接“connect refuse”。
+        int clientNum = 2;
         log.info("------------ start ------------");
         //负责接收客户端连接线程
         EventLoopGroup bossGroup = new NioEventLoopGroup(new DefaultThreadFactory("server-boss", true));
@@ -44,8 +46,12 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
         EventLoopGroup workerGroup = new NioEventLoopGroup(new DefaultThreadFactory("server-worker", true));
         ServerBootstrap boostrap = new ServerBootstrap();
         boostrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-                // 等待建立连接+等待消息处理分发的队列长度
-                .option(ChannelOption.SO_BACKLOG, 1)
+                // BACKLOG用于构造服务端套接字ServerSocket对象
+                // 负载 = 当前服务请求处理线程全满时，用于临时存放已完成三次握手的请求的队列的最大长度
+                // 负载 = 等待建立连接+等待消息处理分发的队列长度
+                .option(ChannelOption.SO_BACKLOG, clientNum)
+                // 是否启用心跳保活机制：todo 机制具体流程
+                .option(ChannelOption.SO_KEEPALIVE, true)
                 // handler 发生在初始化的时候
                 .handler(new LoggingHandler(LogLevel.INFO))
                 // childHandler 发生在客户端连接之后
@@ -61,7 +67,7 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
                     }
                 });
         CompletableFuture<Object> fut = new CompletableFuture();
-        boostrap.bind("0.0.0.0", 31808).addListener(new GenericFutureListener<Future<? super Void>>() {
+        ChannelFuture channelFuture = boostrap.bind("0.0.0.0", 31808).addListener(new GenericFutureListener<Future<? super Void>>() {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception {
                 Consumer<Throwable> doneHandler = (err) -> {
@@ -81,11 +87,28 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
                 }
             }
         });
-        fut.get(6000, TimeUnit.MILLISECONDS); // 6s 内完成端口绑定，否则超时
+        // 等待监听建立
+        // 方法1：
+        Channel serverChannel = channelFuture.sync().channel();
+        // 方法2：
+        // fut.get(6000, TimeUnit.MILLISECONDS); // 6s 内完成端口绑定，否则超时
+        // 监听服务器关闭
+        // serverChannel.closeFuture().sync();
+        serverChannel.closeFuture().addListener(new GenericFutureListener<Future<? super Void>>() {
+            @Override
+            public void operationComplete(Future<? super Void> future) throws Exception {
+                log.info("bind: close {}", future.isSuccess());
+                // 清理服务器资源
+                bossGroup.shutdownGracefully();
+                workerGroup.shutdownGracefully();
+            }
+        });
+
+
+
         log.info("------------ client ------------");
-        int n = 2;
-        CompletableFuture[] clients = new CompletableFuture[n];
-        for (int x = 0; x < n; x++) {
+        CompletableFuture[] clients = new CompletableFuture[clientNum];
+        for (int x = 0; x < clientNum; x++) {
             final int xx = x;
             clients[x] = CompletableFuture.runAsync(() -> {
                 Bootstrap bootstrap = new Bootstrap();
