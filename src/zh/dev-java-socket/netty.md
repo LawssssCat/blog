@@ -3,7 +3,6 @@ title: Netty 介绍
 order: 66
 ---
 
-
 netty版本：
 3.x、4.x、4.x
 
@@ -14,10 +13,15 @@ netty版本：
 2. 游戏服务器开发
 最新的游戏服务器都有部分公司可能已经开始采用 netty4.x 或者 netty5.x
 
+alternative
+
++ Mina
+
 ## 参考
 
-+ netty 核心概念 <https://www.javaspring.net/blog/java-netty/>
-+ netty 官方文档 <https://netty.io/wiki/>
++ 概念：netty 核心概念 <https://www.javaspring.net/blog/java-netty/>
++ 概念：EventLoop <https://zhuanlan.zhihu.com/p/666030635>
++ 文档：netty 官方文档 <https://netty.io/wiki/>
 + netty rpc 实现 <https://www.bilibili.com/video/av44457831/> \
   资料 <https://www.jianshu.com/p/b0343bfd216e>
 + rpc 介绍 <https://www.jianshu.com/p/b0343bfd216e>
@@ -25,6 +29,13 @@ netty版本：
 ## 概念
 
 + 事件驱动模型（Event-Driven Model）
+  + Reactor线程模型
+    + 事件循环执行器（EventLoop implement ScheduleExecutorService） —— 负责 I/O 事件的分发
+      + 当客户端与服务端建立连接后，服务端会创建一个 Channel，并将该 Channel 与 EventLoop 绑定。绑定后，该 Channel 在整个生命周期内所有发生的事件都由该 EventLoop 来处理。
+      + 但是一个 EventLoop 可以绑定多个 Channel。对于 EventLoop 而言，它就是通过不断循环它所绑定的 Channel 事件列表，检测是否有事件发生，如果有，则将该事件分发给 worker 线程处理。
+    + EventLoopGroup —— 一组 EventLoop ，它主要是来维护和管理 EventLoop，一般我们是不会直接使用 EventLoop 的，而是通过 EventLoopGroup 来使用它。
+      + `register()` ：当服务端创建一个 Channel 后，会调用该方法将 Channel 绑定到其中一个 EventLoop 上。
+      + `next()`：返回 EventLoopGroup 中维护的 EventLoop。
 + 频道（Channel） —— 事件（Event）总线，数据读写的最大可见部分
 + 频道处理器（ChannelHandler） —— 对事件处理的机制（mechanism）实现
   + ChannelInboundHandler —— 处理进入的数据

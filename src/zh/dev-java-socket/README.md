@@ -18,3 +18,6 @@ order: 1
 
 todo IO 多路复用 select/poll/epoll
 todo `strace -ff -o ./out java BIOSocket.Java`
+
+todo Doug Lea 大神博客 <https://gee.cs.oswego.edu/>
+todo Scalable IO in Java <https://gee.cs.oswego.edu/dl/cpjslides/nio.pdf>
