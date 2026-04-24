@@ -17,9 +17,10 @@ netty版本：
 ## 参考
 
 + netty 核心概念 <https://www.javaspring.net/blog/java-netty/>
-+ netty rpc 实现 https://www.bilibili.com/video/av44457831/ \
-  资料 https://www.jianshu.com/p/b0343bfd216e
-+ rpc 介绍 https://www.jianshu.com/p/b0343bfd216e
++ netty 官方文档 <https://netty.io/wiki/>
++ netty rpc 实现 <https://www.bilibili.com/video/av44457831/> \
+  资料 <https://www.jianshu.com/p/b0343bfd216e>
++ rpc 介绍 <https://www.jianshu.com/p/b0343bfd216e>
 
 ## 概念
 
