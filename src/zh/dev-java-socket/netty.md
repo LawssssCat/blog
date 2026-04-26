@@ -36,7 +36,13 @@ alternative
     + EventLoopGroup —— 一组 EventLoop ，它主要是来维护和管理 EventLoop，一般我们是不会直接使用 EventLoop 的，而是通过 EventLoopGroup 来使用它。
       + `register()` ：当服务端创建一个 Channel 后，会调用该方法将 Channel 绑定到其中一个 EventLoop 上。
       + `next()`：返回 EventLoopGroup 中维护的 EventLoop。
-+ 频道（Channel） —— 事件（Event）总线，数据读写的最大可见部分
++ 频道（Channel） —— 事件（Event）总线。频道两端绑定一个服务端、一个客户端，是双方数据读写的最大可见部分
+  + 当channel完成register、active、read、readComplete等操作时，会触发pipeline的相应方法
+    + fireChannelRegistered —— 找到next的channel，调用其register方法
+    + fireChannelActive —— 同上
+    + fireChannelRead —— 同上
+    + fireChannelReadComplete —— 同上
++ 管道（ChannelPipeline） —— 保存一组编排好的频道处理器（ChannelHandler）。当事件（Event）到达频道（Channel）后，事件被会交由管道处理，管道会按其编排好的处理器顺序有序触发事件处理。
 + 频道处理器（ChannelHandler） —— 对事件处理的机制（mechanism）实现
   + ChannelInboundHandler —— 处理进入的数据
     + ChannelInboundHandlerAdapter
@@ -44,7 +50,6 @@ alternative
         + 自动泛型转换
         + 自动资源释放
   + ChannelOutboundHandler —— 处理发出的数据
-+ 管道（ChannelPipeline） —— 一组有序的处理器（Handler）。当事件（Event）到达频道（Channel）后，事件会交由管道中处理器，按编排好的处理器顺序处理事件。
 + ByteBuf —— buffer，读写事件数据的中间介质
 
 ## Demo

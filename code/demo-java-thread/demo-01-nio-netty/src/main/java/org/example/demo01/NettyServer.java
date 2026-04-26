@@ -34,7 +34,9 @@ public class NettyServer {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
                             // [Encoding and Decoding]
-                            // In real-world applications, you often need to convert between different data formats. Netty provides ChannelHandlers for encoding and decoding data. For example, if you are working with JSON data, you can use a JsonObjectDecoder and JsonObjectEncoder.
+                            // In real-world applications, you often need to convert between different data formats.
+                            // Netty provides ChannelHandlers for encoding and decoding data.
+                            // For example, if you are working with JSON data, you can use a JsonObjectDecoder and JsonObjectEncoder.
                             // + StringDecoder/StringEncoder
                             // + JsonObjectDecoder/JsonObjectEncoder
                             // [Connection Management]

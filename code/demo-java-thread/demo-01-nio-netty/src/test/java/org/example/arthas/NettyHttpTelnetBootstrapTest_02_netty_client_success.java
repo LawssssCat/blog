@@ -130,19 +130,18 @@ public class NettyHttpTelnetBootstrapTest_02_netty_client_success {
                 log.info("client: bootstrap ok");
                 ChannelFuture connect = bootstrap.connect("127.0.0.1", 31808);
                 log.info("client: connect ok");
-                ChannelFuture sync = null;
                 try {
-                    sync = connect.sync();
+                    ChannelFuture sync = connect.sync();
+                    log.info("client: sync ok");
+                    Channel channel = sync.channel();
+                    for (int i = 0; i < 3; i++) {
+                        // 向服务器发送内容
+                        log.info("client: channel msg-{}", i);
+                        channel.writeAndFlush("hello, msg-" + i);
+                        ThreadUtils.sleepQuietly(Duration.ofSeconds(1));
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
-                }
-                log.info("client: sync ok");
-                Channel channel = sync.channel();
-                for (int i = 0; i < 3; i++) {
-                    // 向服务器发送内容
-                    log.info("client: channel msg-{}", i);
-                    channel.writeAndFlush("hello, msg-" + i);
-                    ThreadUtils.sleepQuietly(Duration.ofSeconds(1));
                 }
             });
         }
