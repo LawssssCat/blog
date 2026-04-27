@@ -76,6 +76,7 @@ order: 1
 + apt - deb格式
   + Debian （发行商：[The Debian Project](https://debian-handbook.info/browse/stable/the-debian-project.html)）
   + [ubuntu](./ubuntu/README.md) 【桌面】 （发行商：[Canonical Group Limited](https://canonical.com/)）
+  + Lubuntu 【桌面】 轻量级Ubuntu <https://lubuntu.me/>
   + Linux Mint
   + Pop!_OS 【桌面】
   + ~~Deepin~~ （发行商：[统信软件技术有限公司](https://www.uniontech.com/)） DDDD
