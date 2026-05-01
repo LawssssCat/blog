@@ -632,10 +632,9 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
                     registerView(JFRView.class);
             bind
                 tunnelClient = new TunnelClient();
-                httpSessionManager = new HttpSessionManager();
-                shellServer = new ShellServerImpl(options);
-                    resolvers.add(new BuiltinCommandResolver());
-                com.taobao.arthas.core.command.BuiltinCommandPack#initCommands
+                httpSessionManager = new HttpSessionManager(); # com.taobao.arthas.core.shell.term.impl.http.session.HttpSessionManager#HttpSessionManager
+                shellServer = new ShellServerImpl(options); # com.taobao.arthas.core.shell.impl.ShellServerImpl#ShellServerImpl
+                builtinCommands = new BuiltinCommandPack(disabledCommands); # com.taobao.arthas.core.command.BuiltinCommandPack#initCommands
                     commandClassList.add(HelpCommand.class);
                     commandClassList.add(AuthCommand.class);
                     commandClassList.add(KeymapCommand.class);
@@ -682,24 +681,26 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
                     commandClassList.add(ProfilerCommand.class);
                     commandClassList.add(VmToolCommand.class);
                     commandClassList.add(StopCommand.class);
-                com.taobao.arthas.core.shell.term.impl.http.session.HttpSessionManager#HttpSessionManager
-                com.taobao.arthas.core.shell.impl.ShellServerImpl#ShellServerImpl
-                com.taobao.arthas.core.shell.command.CommandResolver
-                io.netty.channel.nio.NioEventLoopGroup#NioEventLoopGroup(java.util.concurrent.ThreadFactory)
                 # 3658 telnet
                 shellServer.registerTermServer(new HttpTelnetTermServer(configure.getIp(), configure.getTelnetPort(), options.getConnectionTimeout(), workerGroup, httpSessionManager));
                 # 8563 http
                 shellServer.registerTermServer(new HttpTermServer(configure.getIp(), configure.getHttpPort(), options.getConnectionTimeout(), workerGroup, httpSessionManager));
-                for shellServer.registerCommandResolver(resolver);
-                shellServer.listen(new BindHandler(isBindRef));
-                    com.taobao.arthas.core.shell.term.impl.TelnetTermServer#listen
+                # listen com.taobao.arthas.core.shell.impl.ShellServerImpl#listen
+                for shellServer.registerCommandResolver(resolver); # builtinCommands
+                shellServer.listen(new BindHandler(isBindRef)); # com.taobao.arthas.core.shell.handlers.BindHandler#BindHandler
+                    # 3658 com.taobao.arthas.core.shell.term.impl.httptelnet.HttpTelnetTermServer
+                    termServer.termHandler(new TermServerTermHandler(this));
+                    termServer.listen(handler); # com.taobao.arthas.core.shell.handlers.server.TermServerListenHandler
                         bootstrap = new NettyHttpTelnetTtyBootstrap(workerGroup, httpSessionManager).setHost(hostIp).setPort(port);
                         bootstrap.start
                             httpTelnetTtyBootstrap.start
                                 ServerBootstrap boostrap = new ServerBootstrap();
                                 boostrap.group(group).channel(NioServerSocketChannel.class).handler().childHandler
                                 boostrap.bind(getHost(), getPort()).addListener
-                    com.taobao.arthas.core.shell.term.impl.httptelnet.HttpTelnetTermServer#listen
+                                todo
+                    # 8563 com.taobao.arthas.core.shell.term.impl.HttpTermServer
+                    termServer.termHandler(new TermServerTermHandler(this));
+                    termServer.listen(handler); # com.taobao.arthas.core.shell.handlers.server.TermServerListenHandler
                 sessionManager = new SessionManagerImpl(options, shellServer.getCommandManager(), shellServer.getJobController());
                 httpApiHandler = new HttpApiHandler(historyManager, sessionManager);
                 SpyAPI.init();
@@ -724,10 +725,30 @@ todo ResultView
 todo Subject
 
 todo ShellServer
+    todo Shell —— session
+        todo Term
+        todo Session
+        todo JobController
+        todo Job
+        todo InternalCommandManager
 todo TermServer
-    todo TelnetTermServer
-    todo HttpTermServer
-    todo HttpTelnetTermServer
+    impl
+        todo TelnetTermServer
+        todo HttpTermServer
+        todo HttpTelnetTermServer
+            todo NettyHttpTelnetTtyBootstrap
+    todo TtyConnection
+        todo TtyEventDecoder
+    todo Session
+    todo Readline
+        todo Interaction
+    handler
+        todo echoHandler
+        todo stdinHandler
+        todo stdoutHandlerChain
+        todo SignalHandler
+            interruptHandler
+            suspendHandler
 todo CommandResolver
     todo BuiltinCommandResolver
     todo BuiltinCommandPack
