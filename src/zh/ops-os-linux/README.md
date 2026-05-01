@@ -7,6 +7,19 @@ order: 1
 
 桌面操作系统 = 内核 + 发行版本 + 图形架构（图像子系统 + 桌面环境）
 
+<!-- more -->
+
+## CPU架构
+
++ x86
++ arm / Aarch64
++ LoongArch （龙芯）
+
+## 内核
+
++ Unix 内核
++ Linux 内核 <https://kernel.org/>
+
 内核包括：
 
 + 初始化程序 —— 系统启动时的第一个进程，负责启动其他所有进程 （参考：[link_介绍](https://edu.51cto.com/article/note/29696.html)）
@@ -45,22 +58,7 @@ order: 1
     + `~/.local/share/applications`
     + `~/.local/share/flatpak`
 
-图形架构：
-
-+ 应用 —— 终端、浏览器等有UI的软件
-+ 桌面环境 —— GNOME/KDE
-+ 图形子系统 —— X11/Wayland
-+ 驱动 —— 处理硬件交互
-+ 硬件 —— 显示器、键盘、鼠标
-
----
-
-内核：
-
-+ Unix 内核
-+ Linux 内核
-
-发行版：
+## 发行版
 
 + yum/dnf（Dandified YUM）/zypper（ZENworks YaST Patch/Package for suse） - [RPM（RPM Package Manager）](https://geek-blogs.com/blog/rocky-linux-package-manager/)格式
   + ~~[Centos](./redhat/README.md)~~ 停止维护
@@ -87,6 +85,7 @@ order: 1
   + [openwrt](./openwrt/README.md) 特定场景：嵌入式、路由器系统
   + ~~Raspberry Pi OS~~ 特定场景：嵌入式
   + eLxr （金主：AWS） 特定场景：边缘计算
+  + fnOS —— NAS系统
 + apk（Android Application Package）
   + Android 特定场景：移动端嵌入式
 + IPA（IOS Application Archive）
@@ -98,8 +97,10 @@ order: 1
   + Arch Linux 【桌面】 （[link_中文维基](https://wiki.archlinuxcn.org/)/[link_介绍](https://www.sysgeek.cn/what-is-arch-linux/)） （发行商：ArchLinux社区） ⭐核心哲学KISS（Keep It Simple, Stupid）原则
   + Manjaro 【桌面】
   + SteamOS 【桌面】【游戏】
+  + CachyOS 针对CPU进行优化
 + Portage（受BSD的Ports启发） - 源码编译
   + Gentoo Linux （金主：[Gentoo基金会](https://wiki.gentoo.org/wiki/Foundation:Main_Page)） （[link_社区](https://www.gentoo.org/)/[link_中文社区](https://gentoo.net.cn/)/[link_中文社区](https://www.gentoo.org.cn/)/[link_对比Gentoo和Arch系统](https://geek-blogs.com/blog/arch-linux-vs-gentoo/)） ⭐核心哲学“Choose Your Own Adventure（选择你的冒险）”。用于输入理解Linux底层。
+  + [NixOS](https://nixos.org/) —— Nix是一款采用独特方式进行包管理和系统配置的工具。学习如何构建可复现、声明式且可靠的系统。
 + Ports - 源码编译
   + FreeBSD （[link_中文社区](https://docs.bsdcn.org/)） ⭐
   + ~~OpenBSD~~ geek
@@ -107,7 +108,7 @@ order: 1
 + RTOS（Real-Time Operating System，实时操作系统） 专为满足实时控制需求而设计
   + FreeRTOS （金主：AWS） 特定场景：嵌入式、医疗设备、汽车ECU（Electronic Control Unit，电子控制单元）
 
-桌面环境：
+## 桌面环境
 
 + GNOME
 + KDE
@@ -117,7 +118,15 @@ order: 1
   + wine
   + DXVK Vulkan
 
-图形系统：
+## 图形系统
+
+图形架构：
+
++ 应用 —— 终端、浏览器等有UI的软件
++ 桌面环境 —— GNOME/KDE
++ 图形子系统 —— X11/Wayland
++ 驱动 —— 处理硬件交互
++ 硬件 —— 显示器、键盘、鼠标
 
 特性维度 | [X11（传统显示协议）](./tool-x11.md) | Wayland（现代显示协议）
 --- | --- | ---
@@ -139,11 +148,11 @@ order: 1
   + PPA
   + AUR
 
-新闻：
+## 文件系统
 
-+ Linux-Console.net <https://cn.linux-console.net/>
+[FHS（Filesystem Hierarchy Standard，文件系统层次结构标准）](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/index.html)
 
-文件系统：
+[Linux Filesystem Hierarchy Standard (FHS) – Structure Overview](https://coderepublics.com/blog/redhat/linux-file-system/)
 
 + d `mkdir a`
 + p `mkfifo b` 管道
@@ -151,7 +160,7 @@ order: 1
 + c `ll /dev/video0` 字设备（Character Devices），如摄像头、鼠标、键盘、... 参考 <https://doc.embedfire.com/linux/h618/driver/zh/latest/linux_driver/base/character_device/character_device.html>
 + b `ll /dev/dm-0` 块设备（Block），如硬盘、USB、...等无法直接字节写入写出，需要通过文件系统操作的设备。可以通过`lsblk`查看块设备情况。
 
-工具：
+## 工具
 
 + GUI窗口管理器（Window Manager）
   + Niri
@@ -199,3 +208,7 @@ order: 1
   + tar
   + zip/unzip
   + 7z
+
+## 新闻
+
++ Linux-Console.net <https://cn.linux-console.net/>

@@ -36,6 +36,7 @@ zypper clean # 清除 zypper 本地缓存
 
 zypper search telnet
 zypper install telnet
+zypper --no-refresh install telnet # 跳过刷新库缓存
 zypper remove telnet
 
 zypper info rsync # 查看

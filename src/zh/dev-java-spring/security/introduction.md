@@ -1,23 +1,22 @@
 ---
 title: Spring Security 使用
-date: 2024-11-16
-tags:
-  - Spring
-  - Spring-Security
-  - 安全
-order: 1
 ---
 
-<!-- more -->
+基于Spring web的Filter机制，为应用提供声明式安全访问控制功能。
 
+特点
 
-参考：
+- 与 Spring Boot 集成简单
+- 高度可定制化
+- 支持CSRF（跨站请求伪造攻击）防护
+- 提供 Spring Cloud 分布式组件
 
-- https://www.bilibili.com/video/BV1jh411c7HV/
-
-## 概念：权限体系设计
+功能
 
 - **认证（Authentication）**
+  - 账号密码认证
+  - LDAP
+  - OAuth2.0
 - **授权（Authorization）**
 
 RBAC （Role Based Access Control） 访问控制 —— 基于角色的访问控制。通过 “用户、角色、权限” 三个概念，实现用户分配角色，角色分配权限的权限管理方式。
@@ -73,20 +72,6 @@ R3 -.-> A3
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-security</artifactId>
   </dependency>
-  <!--
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-test</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-security-test</artifactId>
-  </dependency>
-  -->
 </dependencies>
 ```
 

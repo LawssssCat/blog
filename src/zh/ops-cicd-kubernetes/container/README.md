@@ -8,6 +8,11 @@ title: 容器（container）
 - [docker](./docker.md)
 - [podman](./podman.md)
 
+基础能力：
+
+- 命名空间（Namespaces） —— 控制你能看到什么。隔离进程、网络等。
+- 控制组（Cgroups） —— 控制你能使用多少。分配CPU和内存资源。
+
 ## scratch （空镜像） （首个镜像）
 
 scratch是Docker提供的一个特殊的空镜像，不包含任何文件系统、shell、包管理器或其他任何内容。
@@ -46,3 +51,24 @@ docker run -it --rm custom-ubuntu-scratch
 cat /etc/os-release
 ls -la /
 ```
+
+## nsenter （调试容器工具）
+
+解决问题：
+如调试容器网络，容器内缺少工具、权限。
+
+```bash
+CONTAINER_PID=$(docker inspect --format '{{.State.Pid}}')
+sudo nsenter -t $CONTAINER_PID -n -p -m /bin/bash
+
+# 常用网络调试命令
+ip addr show    # 查看容器内虚拟网卡和IP地址
+ip route show   # 查看容器内路由表、默认网关
+iptables -L -n
+netstat -tlupn
+tcpdump -i etho0 # 抓包
+```
+
+参考：
+
+- <https://www.bilibili.com/video/BV1MfQkBeEXR/>
