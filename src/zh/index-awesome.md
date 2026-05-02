@@ -334,12 +334,17 @@ todo <https://www.bilibili.com/video/BV1FP411B7b7/>
 - 交易 <https://bitcoin.org/>
 - 网站访问/浏览器 <https://www.torproject.org/>
 
-IP 检测、DNS 泄漏、WebRTC 测试：
+IP 检测、DNS 泄漏、WebRTC（Web Real-Time Communication，网页实时通信技术） 测试：
 
 - <https://browserleaks.com/>
   - 检查IP劫持： <https://browserleaks.com/ip>
   - 检查DNS信息泄露： <https://browserleaks.com/dns>
 - <https://little-drummer.github.io/IPTest/>
+- <https://ippure.com>
+
+> WebRTC泄露防护：
+>
+> - chrome插件：WebRTC Control
 
 #### 安全监测
 
