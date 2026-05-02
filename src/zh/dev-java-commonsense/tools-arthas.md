@@ -16,6 +16,7 @@ Arthas可以通过全局视角实时查看应用load、内存、gc、线程的�
 
 + 介绍 <https://www.xiehai.zone/arthas/>
 + 源码分析+基本使用 <https://www.bilibili.com/video/BV1hV4y1c7Rx>
++ telnet协议 <https://datatracker.ietf.org/doc/html/rfc729>
 
 <!-- more -->
 
@@ -689,6 +690,7 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
                 for shellServer.registerCommandResolver(resolver); # builtinCommands
                 shellServer.listen(new BindHandler(isBindRef)); # com.taobao.arthas.core.shell.handlers.BindHandler#BindHandler
                     # 3658 com.taobao.arthas.core.shell.term.impl.httptelnet.HttpTelnetTermServer
+                    # both suport http/telnet
                     termServer.termHandler(new TermServerTermHandler(this));
                     termServer.listen(handler); # com.taobao.arthas.core.shell.handlers.server.TermServerListenHandler
                         bootstrap = new NettyHttpTelnetTtyBootstrap(workerGroup, httpSessionManager).setHost(hostIp).setPort(port);
@@ -697,7 +699,34 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
                                 ServerBootstrap boostrap = new ServerBootstrap();
                                 boostrap.group(group).channel(NioServerSocketChannel.class).handler().childHandler
                                 boostrap.bind(getHost(), getPort()).addListener
-                                todo
+                                    initChannel
+                                        ch.pipeline().addLast(new ProtocolDetectHandler(channelGroup, handlerFactory, factory, workerGroup, httpSessionManager));
+                                            channelActive
+                                            channelRead
+                                                TelnetChannelHandler handler = new TelnetChannelHandler(handlerFactory);
+                                                pipeline.addLast(handler);
+                                                ctx.fireChannelActive();
+                                                    TelnetChannelHandler.channelActive
+                                                        conn = new NettyTelnetConnection(factory.get(), ctx); # NettyTelnetConnection(TelnetHandler handler, ChannelHandlerContext context)
+                                                            conn.onInit
+                                                                handler.onOpen # TelnetHandler
+                                                                    conn.writeWillOption(Option.ECHO);
+                                                                    conn.writeWillOption(Option.SGA);
+                                                                    conn.writeDoOption(Option.NAWS);
+                                                                    conn.writeDoOption(Option.TERMINAL_TYPE);
+                                                                    checkAccept();
+                                                pipeline.remove(this);
+                                                ctx.fireChannelRead(in);
+                                                    channelRead # TelnetChannelHandler
+                                                        conn.receive(data); # NettyTelnetConnection —— 处理telnet协议
+                                                            status.handle # io.termd.core.telnet.TelnetConnection.Status#DATA
+                                                                # https://datatracker.ietf.org/doc/html/rfc729
+                                                                IAC -1
+                                                                WILL -5 (options: BINARY=0,ECHO=1,SGA=3,TERMINAL_TYPE=24,NAWS=31)
+                                                                NAWS 31
+                                                                -1
+                                                                BYTE_DO -3
+                                                                NAWS 31
                     # 8563 com.taobao.arthas.core.shell.term.impl.HttpTermServer
                     termServer.termHandler(new TermServerTermHandler(this));
                     termServer.listen(handler); # com.taobao.arthas.core.shell.handlers.server.TermServerListenHandler
@@ -726,29 +755,37 @@ todo Subject
 
 todo ShellServer
     todo Shell —— session
-        todo Term
+        todo Term —— The terminal. （extend Tty —— Provide interactions with the Shell TTY.）
+            todo TtyConnection
+                extends TelnetTtyConnection
+            todo Readline
+                todo Interaction
         todo Session
         todo JobController
         todo Job
         todo InternalCommandManager
-todo TermServer
-    impl
-        todo TelnetTermServer
-        todo HttpTermServer
-        todo HttpTelnetTermServer
-            todo NettyHttpTelnetTtyBootstrap
-    todo TtyConnection
-        todo TtyEventDecoder
-    todo Session
-    todo Readline
-        todo Interaction
-    handler
-        todo echoHandler
-        todo stdinHandler
-        todo stdoutHandlerChain
-        todo SignalHandler
-            interruptHandler
-            suspendHandler
+    todo TermServer —— A server for terminal based applications.
+        impl
+            todo TelnetTermServer
+            todo HttpTermServer
+            todo HttpTelnetTermServer
+                todo NettyHttpTelnetTtyBootstrap
+                    todo NettyHttpTelnetBootstrap
+                        ServerBootstrap —— netty
+                            todo
+                            todo TtyConnection # io.termd.core.telnet.TelnetTtyConnection
+                                todo TtyEventDecoder
+        todo Session
+            todo Job
+        todo Readline
+            todo Interaction
+        handler
+            todo echoHandler
+            todo stdinHandler
+            todo stdoutHandlerChain
+            todo SignalHandler
+                interruptHandler
+                suspendHandler
 todo CommandResolver
     todo BuiltinCommandResolver
     todo BuiltinCommandPack
