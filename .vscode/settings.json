@@ -11,8 +11,10 @@
     "files.trimTrailingWhitespace": false
   },
   "cSpell.words": [
+    "aliyun",
     "Ambari",
     "antv",
+    "arthas",
     "binutils",
     "burpsuite",
     "clangd",
@@ -44,6 +46,7 @@
     "libc",
     "libstdc",
     "lldb",
+    "logback",
     "mktemp",
     "MSVC",
     "playload",
@@ -52,6 +55,7 @@
     "rustc",
     "skinparam",
     "springboot",
+    "taobao",
     "valn",
     "vbase",
     "vcpkg",

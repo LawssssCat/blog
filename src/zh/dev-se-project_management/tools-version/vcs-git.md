@@ -8,7 +8,6 @@ order: 20
 
 + 《完全学会Git, GitHub, Git Server的24堂课》
 
-
 ## 常用命令
 
 ```bash
@@ -91,7 +90,7 @@ git blame .\pnpm-lock.yaml
 git blame -L 1,2 .\pnpm-lock.yaml # 指定行
 
 # log
-git log [args...] 文件1 文件2 ... 
+git log [args...] 文件1 文件2 ...
 # --author=
 # --after=
 # --before=
@@ -148,6 +147,10 @@ git config --global user.email '操作者邮箱'
 ## 统计
 
 todo GitStatus —— Python 开发
+
+## worktree
+
+todo <https://www.bilibili.com/video/BV17GQtBzEX4>
 
 ## GUI
 

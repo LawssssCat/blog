@@ -12,26 +12,26 @@ order: 1
 
 代码仓：
 
-- Github —— 用户最多，私人仓收费
-- Bitbucket —— 免费，不限制私人仓数量
-- GitLab —— 开源
-- Gogs
-- Gitee，码云 —— 适合中国宝宝
++ Github —— 用户最多，私人仓收费
++ Bitbucket —— 免费，不限制私人仓数量
++ GitLab —— 开源
++ Gogs
++ Gitee，码云 —— 适合中国宝宝
 
 ## 提交规范
 
 > 参考：
+>
 > + <https://www.cnblogs.com/anly95/p/13163384.html>
 > + 《Contributing to Angular》 <https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format>
 
 git message:
 
 ```bash
-[Pull Request/Issue No.][type] title...  
+[Pull Request/Issue No.][type] title...
 
 details...
 ```
-
 
 用于说明 commit 的类别，只允许使用下面7个标识。
 

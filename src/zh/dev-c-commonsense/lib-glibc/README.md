@@ -103,3 +103,9 @@ int main(void)
 + Musl libc：为什么我们会需要另一个 libc？ | <https://linuxstory.org/musl-libc-yet-another-libc/>
 
 todo 整理理解
+
+## API
+
+### malloc
+
+todo <https://www.bilibili.com/video/BV1fW9ZB8Eiv>
