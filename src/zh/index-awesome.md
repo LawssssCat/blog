@@ -309,6 +309,15 @@ API消费
 数据库引擎
 
 - PostgreSQL PL/Java —— PostgreSQL 的存储过程、触发器和函数
+- Redis
+
+数据库客户端
+
+- dbeaver
+
+数据库设计
+
+- [drawDB](https://github.com/drawdb-io/drawdb)
 
 数据库操作
 
