@@ -87,7 +87,7 @@ order: 1
   + eLxr （金主：AWS） 特定场景：边缘计算
   + fnOS —— NAS系统
 + apk（Android Application Package）
-  + Android 特定场景：移动端嵌入式
+  + [Android](./android/README.md) 特定场景：移动端嵌入式
 + IPA（IOS Application Archive）
   + IOS（iPhone Operating System） 特定场景：移动端嵌入式
 + apk（Alpine Package Keeper）
@@ -180,6 +180,7 @@ order: 1
   + bash
   + [zsh](./tool-zsh.md)
   + fish
+  + [brush](https://github.com/reubeno/brush) —— A modern bash/POSIX-compatible shell written in Rust
 + 终端窗口
   + 进程管理
     + `ps -ef`/kill

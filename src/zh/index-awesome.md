@@ -15,9 +15,33 @@ title: 世界树
 
 ### 系统管理
 
+#### 包管理工具
+
+windows：
+
+- scoop
+
+linux：
+
+- rpm
+- deb
+
+Android应用商店：
+
+- F-Droid <https://f-droid.org/> —— 开源社区应用
+  - 论坛： <https://forum.f-droid.org/>
+  - 仓库：
+    - <https://guardianproject.info/fdroid/repo?fingerprint=B7C2EEFD8DAC7806AF67DFCD92EB18126BC08312A7F2D6F3862E46013C7A6135>
+
 #### 传输数据、文件上传/下载
 
-工具：
+局域网传输：
+
+- [qrcp](https://github.com/claudiodangelis/qrcp)
+- [localsend](https://github.com/localsend/localsend) ⭐⭐⭐⭐⭐
+  - 支持：windows、Android、Linux、MacOS
+
+BT工具：
 
 - ~~IDM —— 支持：http。 商业软件~~
 - bittorrent  —— 支持：bt。
@@ -71,6 +95,16 @@ VPN：跨局域网安全传输数据
 - ngrok
 - [rathole](https://github.com/rathole-org/rathole)
 - Portr —— 暴露本地htp、tcp、websocket至公网。基于SSH转发确保连接稳定安全，支持多协议隧道（http、tcp、websocket），支持管理后台、支持监控
+
+#### 流量管控
+
+Android防火墙（firewall）
+
+- [Rethink DNS + Firewall + VPN for Android](https://github.com/celzero/rethink-app) —— inspired by [OpenSnitch](https://github.com/evilsocket/opensnitch) and [pi-hole](https://github.com/pi-hole/pi-hole)
+  - firewall exclude（排除）
+  - firewall allow（放行） —— 允许所有IP
+  - firewall isolate（隔离） —— 仅允许白名单的IP
+  - firewall block（拦截） —— 禁止所有IP
 
 #### 系统监控
 
@@ -318,7 +352,23 @@ todo <https://www.bilibili.com/video/BV1FP411B7b7/>
 
 - ~~JECloud 小心商业坑~~
 
+#### 国际化（i18n）
+
+协同、进度管理
+
+- <https://weblate.org/>
+  - <https://hosted.weblate.org/projects/rethink-dns-firewall/>
+
 ### 系统信息安全
+
+#### 身份认证
+
+2FA（two-factor authentication） [link_learnmore](https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication)
+
+- [1Password](https://support.1password.com/one-time-passwords/?mac)
+- [Authy](https://www.authy.com/)
+- [Microsoft Authenticator](https://www.microsoft.com/en-us/security/mobile-authenticator-app)
+- [ente](https://github.com/ente-io/ente/)
 
 #### 安全通信
 
@@ -388,6 +438,12 @@ chat:
 - [lobehub](https://github.com/lobehub/lobehub)
 
 ### 多媒体
+
+#### 文件管理器
+
+Android文件管理器：
+
+- Amaze
 
 #### 视频播放
 
@@ -477,10 +533,19 @@ PPT：
 
 - discord
 
+- [cabal](https://cabal.chat/)
+  - <https://github.com/cabal-club>
+
 #### 文件分享
+
+link（链接指向内容）
 
 - [catbox](https://catbox.moe/)
 - ~~sm.ms~~ —— 商业化？
+
+QRCode（链接即内容）
+
+- QR Scanner
 
 ## 经济
 
