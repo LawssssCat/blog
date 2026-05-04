@@ -183,9 +183,19 @@ Android防火墙（firewall）
 
 #### 分布式资源管理
 
-虚拟机管理：
+资源虚拟化技术：
 
-- vagrant
+- virtualbox
+- vmware
+- hyper-v
+- kvm
+- ESXi
+- Proxmox VE （PVE）
+
+虚拟资源管理：
+
+- vagrant —— 小规模，本地PC
+- OpenShift —— 大规模，商业化
 
 容器管理：
 
@@ -200,6 +210,14 @@ Android防火墙（firewall）
 
 - Spring Cloud
 - ServiceComb 微服务快速搭建框架 | 国产化 Spring Cloud
+
+注册中心：
+
+- zookeeper
+- nacos
+- consul
+- etcd
+- eureka
 
 #### JavaScript原生
 
