@@ -584,7 +584,7 @@ PPT：
   - 5ch.net
 - 批踢踢 <https://www.ptt.cc/bbs/hotboards.html>
 
-- [raddit](https://www.reddit.com/) —— 探索和分享的社区
+- [reddit](https://www.reddit.com/) —— 探索和分享的社区
   - r/板块（SubReddit，如`r/askreddit`）有自己的标题（Snoo，是“what's new”的缩写）、主题、规则、管理员（moderator）、帖子
     - 推荐板块：
       - `r/SipsTea`

@@ -556,8 +556,9 @@ java -jar arthas-boot.jar
     }
 ```
 
+##### 类加载流程（启动服务监听流程）
+
 ```bash title="arthas-agent.jar"
-# 类加载
 com.taobao.arthas.agent334.AgentBootstrap#premain
     java.arthas.SpyAPI
     com.taobao.arthas.core.server.ArthasBootstrap
@@ -587,7 +588,8 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
             loggerContext = LogUtil.initLogger(arthasEnvironment);
             enhanceClassLoader
             initBeans
-                com.taobao.arthas.core.command.view.ResultViewResolver#initResultViews —— ❗注册交互命令
+                # 注册命令的展示
+                com.taobao.arthas.core.command.view.ResultViewResolver#initResultViews
                     registerView(RowAffectView.class);
                     registerView(StatusView.class);
                     registerView(VersionView.class);
@@ -635,6 +637,7 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
                 tunnelClient = new TunnelClient();
                 httpSessionManager = new HttpSessionManager(); # com.taobao.arthas.core.shell.term.impl.http.session.HttpSessionManager#HttpSessionManager
                 shellServer = new ShellServerImpl(options); # com.taobao.arthas.core.shell.impl.ShellServerImpl#ShellServerImpl
+                # 注册命令的处理
                 builtinCommands = new BuiltinCommandPack(disabledCommands); # com.taobao.arthas.core.command.BuiltinCommandPack#initCommands
                     commandClassList.add(HelpCommand.class);
                     commandClassList.add(AuthCommand.class);
@@ -689,62 +692,149 @@ com.taobao.arthas.agent334.AgentBootstrap#premain
                 # listen com.taobao.arthas.core.shell.impl.ShellServerImpl#listen
                 for shellServer.registerCommandResolver(resolver); # builtinCommands
                 shellServer.listen(new BindHandler(isBindRef)); # com.taobao.arthas.core.shell.handlers.BindHandler#BindHandler
-                    # 3658 com.taobao.arthas.core.shell.term.impl.httptelnet.HttpTelnetTermServer
+                    # 启动telnet监听
                     # both suport http/telnet
+                    # 3658 com.taobao.arthas.core.shell.term.impl.httptelnet.HttpTelnetTermServer
                     termServer.termHandler(new TermServerTermHandler(this));
                     termServer.listen(handler); # com.taobao.arthas.core.shell.handlers.server.TermServerListenHandler
                         bootstrap = new NettyHttpTelnetTtyBootstrap(workerGroup, httpSessionManager).setHost(hostIp).setPort(port);
                         bootstrap.start
-                            httpTelnetTtyBootstrap.start
-                                ServerBootstrap boostrap = new ServerBootstrap();
-                                boostrap.group(group).channel(NioServerSocketChannel.class).handler().childHandler
-                                boostrap.bind(getHost(), getPort()).addListener
-                                    initChannel
-                                        ch.pipeline().addLast(new ProtocolDetectHandler(channelGroup, handlerFactory, factory, workerGroup, httpSessionManager));
-                                            channelActive
-                                            channelRead
-                                                TelnetChannelHandler handler = new TelnetChannelHandler(handlerFactory);
-                                                pipeline.addLast(handler);
-                                                ctx.fireChannelActive();
-                                                    TelnetChannelHandler.channelActive
-                                                        conn = new NettyTelnetConnection(factory.get(), ctx); # NettyTelnetConnection(TelnetHandler handler, ChannelHandlerContext context)
-                                                            conn.onInit
-                                                                handler.onOpen # TelnetHandler
-                                                                    conn.writeWillOption(Option.ECHO);
-                                                                    conn.writeWillOption(Option.SGA);
-                                                                    conn.writeDoOption(Option.NAWS);
-                                                                    conn.writeDoOption(Option.TERMINAL_TYPE);
-                                                                    checkAccept();
-                                                pipeline.remove(this);
-                                                ctx.fireChannelRead(in);
-                                                    channelRead # TelnetChannelHandler
-                                                        conn.receive(data); # NettyTelnetConnection —— 处理telnet协议
-                                                            status.handle # io.termd.core.telnet.TelnetConnection.Status#DATA
-                                                                # https://datatracker.ietf.org/doc/html/rfc729
-                                                                IAC -1
-                                                                WILL -5 (options: BINARY=0,ECHO=1,SGA=3,TERMINAL_TYPE=24,NAWS=31)
-                                                                NAWS 31
-                                                                -1
-                                                                BYTE_DO -3
-                                                                NAWS 31
+                            # 省略termd框架处理，直接到回调函数：建立连接，得到conn对象
+                            termHandler.handle(new TermImpl(Helper.loadKeymap(), conn)); # TermServerTermHandler
+                                shellServer.handleTerm(term);
+                                    ShellImpl session = createShell(term);
+                                        Session session = new SessionImpl();
+                                    session.init(); # ShellImpl
+                                        term.interruptHandler(new InterruptHandler(this));
+                                        term.suspendHandler(new SuspendHandler(this));
+                                        term.closeHandler(new CloseHandler(this));
+                                        term.write(welcome + "\n");
+                                    sessions.put(session.id, session); # Put after init so the close handler on the connection is set
+                                    session.readline(); # Now readline
+                                        term.readline # TermImpl
+                                            readline.readline # io.termd.core.readline.Readline
+                    # 启动websocket监听
                     # 8563 com.taobao.arthas.core.shell.term.impl.HttpTermServer
                     termServer.termHandler(new TermServerTermHandler(this));
                     termServer.listen(handler); # com.taobao.arthas.core.shell.handlers.server.TermServerListenHandler
+                        bootstrap = new NettyWebsocketTtyBootstrap(workerGroup, httpSessionManager).setHost(hostIp).setPort(port);
+                        bootstrap.start
+                            略，同上
                 sessionManager = new SessionManagerImpl(options, shellServer.getCommandManager(), shellServer.getJobController());
                 httpApiHandler = new HttpApiHandler(historyManager, sessionManager);
                 SpyAPI.init();
 ```
 
+##### 命令行交互流程
+
+基于如下命令分析：
+`sysprop | grep "java" >> test.txt`
+
+断点：
+com.taobao.arthas.core.shell.handlers.shell.ShellLineHandler#handle
+
+> todo 理解token处理逻辑
+> com.taobao.arthas.core.shell.cli.CliTokens#tokenize
+
+```bash
+com.taobao.arthas.core.shell.handlers.shell.ShellLineHandler#handle
+    CliTokens.tokenize(line);
+    Job job = createJob(tokens);
+        job = shell.createJob(tokens); # com.taobao.arthas.core.shell.impl.ShellImpl
+            job = jobController.createJob(
+                commandManager, # new InternalCommandManager(resolvers); —— 包含十几个命令
+                args, # tokens
+                session, # 会话
+                new ShellJobHandler(this), 
+                term, # 连接
+                null
+            ); # com.taobao.arthas.core.shell.system.impl.GlobalJobControllerImpl
+                job = super.createJob() # com.taobao.arthas.core.shell.system.impl.JobControllerImpl
+                    Process process = createProcess(session, tokens, commandManager, jobId, term, resultDistributor); # com.taobao.arthas.core.shell.system.Process
+                        Command command = commandManager.getCommand(token.value());
+                            # com.taobao.arthas.core.command.BuiltinCommandPack#initCommands
+                            CommandResolver
+                                command = getCommand(resolver, commandName);
+                                    name.equals(command.name())
+                            BuiltinCommandResolver
+                        return createCommandProcess(command, tokens, jobId, term, resultDistributor);
+                            ProcessOutput ProcessOutput = new ProcessOutput(stdoutHandlerChain, cacheLocation, term);
+                            ProcessImpl process = new ProcessImpl(command, remaining, command.processHandler(), ProcessOutput, resultDistributor);
+                            process.setTty(term);
+                    JobImpl job = new JobImpl(jobId, this, process, line.toString(), runInBackground, session, jobHandler);
+                    jobs.put(jobId, job);
+                    return job
+                JobTimeoutTask jobTimeoutTask = new JobTimeoutTask(job);
+                ArthasBootstrap.getInstance().getScheduledExecutorService().schedule(jobTimeoutTask, jobTimeoutInSecond, TimeUnit.SECONDS);
+                jobTimeoutTaskMap.put(job.id(), jobTimeoutTask);
+                job.setTimeoutDate(timeoutDate);
+    job.run();
+        run # com.taobao.arthas.core.shell.system.impl.JobImpl
+            # com.taobao.arthas.core.shell.system.impl.ProcessImpl
+            process.setSession(this.session);
+            process.run(foreground);
+                processStatus = ExecStatus.RUNNING;
+                # 封装process
+                process = new CommandProcessImpl(this, tty); # com.taobao.arthas.core.shell.system.impl.ProcessImpl.CommandProcessImpl
+                resultDistributor = new TermResultDistributorImpl(
+                    process, 
+                    ArthasBootstrap.getInstance().getResultViewResolver(); # 包含initBeans时注册的ViewResolver集合
+                );
+                cl = commandContext.cli().parse(args2);
+                process.setArgs2(args2);
+                process.setCommandLine(cl);
+                # 执行process
+                Runnable task = new CommandProcessTask(process);
+                ArthasBootstrap.getInstance().execute(task);
+                    handler.handle(process); # Handler<CommandProcess>
+                        handler.handle(process);      # com.taobao.arthas.core.shell.command.impl.AnnotatedCommandImpl.ProcessHandler
+                            process(process)  # com.taobao.arthas.core.shell.command.impl.AnnotatedCommandImpl
+                                AnnotatedCommand instance = clazz.newInstance();
+                                instance.process(process);
+                                    # 具体Command的实现，如com.taobao.arthas.core.command.basic1000.SystemPropertyCommand
+                                    process.appendResult(new SystemPropertyModel(System.getProperties()));
+                                        System.getProperties(); # JDK函数
+                                        new SystemPropertyModel; # 包装数据 MVC模式 ResultModel
+                                        ProcessImpl.this.appendResult
+                                            resultDistributor.appendResult # TermResultDistributorImpl
+                                                # 拿View处理器
+                                                getResultView
+                                                    resultViewMap.get(model.getClass())
+                                                # 调用View处理器
+                                                resultView.draw(commandProcess, model)
+                                                    # 具体Command对应的ResultView实现，如SystemPropertyView
+                                                    renderKeyValueTable
+                                                        # 因为是控制台输出，所以这里大量调用text-ui的内容（taobao封装的又一个库，处理字符窜格式化）
+                                                        TableElement table = new TableElement(1, 4).leftCellPadding(1).rightCellPadding(1);
+                                                        RenderUtil.render
+                                                            略
+```
+
 #### arthas-spy.jar
 
-todo
+略，仅作标识作用
+
+#### termd框架
+
+```bash
+termd —— Arthas's terminal implementation is based on termd, an open source library for writing terminal applications in Java.
+版本：
+1.1.7.12
+git checkout -b termd-core-1.1.7.12
+例子：
+examples.events.SshEventsExample
++ ssh 127.0.0.1 -p 4000 -o HostkeyAlgorithms=+ssh-dss
+examples.events.TelnetEventsExample
+examples.events.WebsocketEventsExample
+```
 
 ### 网络通信架构（netty）
 
-todo telnet 3658
-todo TunnelClient
++ telnet 3658
+    启动telnet服务入口
 
-todo http 8563
++ http 8563
+    启动websocket服务入口
 
 ### 组件关系
 
