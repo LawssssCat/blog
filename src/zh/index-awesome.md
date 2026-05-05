@@ -498,7 +498,7 @@ chat:
 
 Android文件管理器：
 
-- Amaze
+- [AmazeFileManager](https://github.com/TeamAmaze/AmazeFileManager)
 
 #### 视频播放
 
@@ -600,7 +600,7 @@ link（链接指向内容）
 
 QRCode（链接即内容）
 
-- QR Scanner
+- [QR Scanner](https://github.com/SecUSo/privacy-friendly-qr-scanner)
 
 ## 经济
 
