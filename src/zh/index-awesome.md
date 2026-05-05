@@ -278,15 +278,42 @@ json
 
 #### Web服务
 
+API描述/API设计
+
+- swagger
+
 API提供
 
-- spring web
-- todo spring flux —— nio
+- 开发框架
+  - spring web
+  - todo spring flux —— nio
+- mock
+  - mockoon —— api 模拟，前端开发配合 `server.proxy` 配置使用
+  - Fake Rest API <https://instantwebtools.net/fake-rest-api/>
 
 API消费
 
-- httpclient
-  - todo https://www.bilibili.com/video/BV1W54y1s7BZ/
+- 开发框架
+  - httpclient
+    - todo https://www.bilibili.com/video/BV1W54y1s7BZ/
+- 客户端 （参考：<https://apifox.com/apiskills/api-test-tools/>）
+  - [Postman](https://www.postman.com/) —— 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统
+  - [Apifox](https://apifox.com/) —— 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统
+  - [Insomnia](https://github.com/Kong/insomnia) —— 开源（需登录，部分功能收费），支持Windows, macOS, Linux系统，支持插件扩展
+  - [hoppscotch](https://github.com/hoppscotch/hoppscotch)
+  - Cypress
+  - bruno
+  - burpsite
+  - Repable
+  - Charles
+- 自动测试
+  - [JMeter](./test-jmeter.md) —— 开源，Java实现，功能丰富，30年（2025年12月7日）专业的接口测试、压测工具，支持插件扩展
+  - [Karate DSL](https://github.com/intuit/karate) —— 开源，Java实现，可编程
+  - [RestAssured](https://github.com/rest-assured/rest-assured) —— 开源，Java实现，可编程
+  - [Fiddler](https://www.telerik.com/fiddler) —— 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统，网络测试
+  - [Katalon Studio](https://www.katalon.com/) —— 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统
+  - [SoapUI](https://www.soapui.org/) —— 闭源（需登录，部分功能收费），支持Windows, macOS, Linux系统
+  - [Paw](https://paw.cloud/) —— 闭源（需登录，部分功能收费），支持macOS系统
 
 权限认证
 
@@ -313,7 +340,8 @@ API消费
 
 数据库客户端
 
-- dbeaver
+- dbeaver —— relational database client
+- another-redis-desktop-manager —— redis client
 
 数据库设计
 
