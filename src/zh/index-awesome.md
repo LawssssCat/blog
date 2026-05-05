@@ -584,6 +584,19 @@ PPT：
   - 5ch.net
 - 批踢踢 <https://www.ptt.cc/bbs/hotboards.html>
 
+- [raddit](https://www.reddit.com/) —— 探索和分享的社区
+  - r/板块（SubReddit，如`r/askreddit`）有自己的标题（Snoo，是“what's new”的缩写）、主题、规则、管理员（moderator）、帖子
+    - 推荐板块：
+      - `r/SipsTea`
+      - `r/whatisit`
+      - `r/askreddit`
+      - `r/explainlikeimfive` 像解释给5岁孩纸一样
+      - `r/todayilearned`
+      - `r/LifeProTips`
+      - `r/IAmA` Ask Me Anything
+      - `r/Showerthoughts` 浴中奇思
+  - u/用户（Redditor）可以创建或加入板块，在板块内发布帖子、对帖子点赞或点踩，收到赞的用户会增加“Karma”值（表示用户的活跃程度）
+
 #### 实时通讯
 
 - discord
