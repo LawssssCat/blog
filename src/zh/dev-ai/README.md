@@ -20,6 +20,8 @@ order: 1
 2024年 | MCP（Model Context Protocol，模型上下文协议） | anthropic提出的Agent扩展工具交互规范 （alias: function call， tool calls）。有了交互规范，则可作为单独服务对接不同Agent供应商，Agent供应商只需考虑提示词的书写。
 2024年 | 工作流（flow） | 低码工程在风口的再次起飞
 2025年 | SKILL | anthropic提出的“问题处理指南”概念，处理大模型已知道问题、信息、可调用工具的情况下仍无法提出高效处理方案的问题。本质上是mcp协议里的一个tool工具，里面分门别类的放置skill名称、描述和预制提示词，大模型根据skill名称、描述判断是否继续接收该skill的预制提示词。 （[link_anthropic_skills](https://github.com/anthropics/skills/tree/main/skills)/[link_skillsmp](https://skillsmp.com/zh)/[link_skillsh](https://skills.sh/)）
+2026年 | Harness Agent | todo
+2026年 | A2A（Agent to Agent） | todo
 
 整理：
 
@@ -31,11 +33,15 @@ order: 1
   + **Claude Opus 4.5** —— 是 Anthropic 2025 年发布的旗舰通用模型，擅长推理、思考、编码。
   + ~~**Claude Sonnet 4.5** —— 提供了一个理想的性能与成本平衡，适用于中等复杂度的文本生成任务。它在稳定性、响应速度和任务处理能力上表现优异，特别适合那些需要稳定输出的任务，如常规文案创作、博客写作等。~~<span style="color:black;background:black">废话生成器Plus</span>
   + ~~**Claude Haiku 4.5** —— 是最轻量级的模型，适合需要高频率请求和快速响应的场景。它主要面向短文本生成任务和快速问答，成本最低，适合预算有限的小型团队或单一任务需求。~~
-+ Agent —— 人机信息收集、语言模型交互、操作系统交互
-  + **Manus**
-  + **Claude Code**
-  + **Open Code**
-  + **OpenClaw**
++ 飞猪
+  + 模型管理
+    + CC Switch —— 切换模型配置、网络调整、使用统计
+  + Agent —— 人机信息收集、语言模型交互、操作系统交互
+    + Manus
+    + Claude Code
+    + Open Claw
+    + OpenCode
+    + Hermes —— 会【自动】自己创建一堆skill
 + MCP协议
   + **claude** （see: Claude Protocol Inspector） —— 该协议存在很多问题，但符合工程直觉，在风起飞猪时代用的人多
     + 模型（model）
