@@ -123,6 +123,26 @@ Android防火墙（firewall）
 
 - networkmanager
 
+#### 个人隐私
+
+身份认证
+
+2FA（two-factor authentication） [link_learnmore](https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication)
+
+- [1Password](https://support.1password.com/one-time-passwords/?mac)
+- [Authy](https://www.authy.com/)
+- [Microsoft Authenticator](https://www.microsoft.com/en-us/security/mobile-authenticator-app)
+- [ente](https://github.com/ente-io/ente/)
+
+密码管理
+
+- KeePassXC
+
+数据加密
+
+- GPG
+- Cryptomator —— 提供加密虚拟磁盘
+
 ### 软件开发
 
 #### 软件和硬件中间层
@@ -416,14 +436,7 @@ todo <https://www.bilibili.com/video/BV1FP411B7b7/>
 
 ### 系统信息安全
 
-#### 身份认证
-
-2FA（two-factor authentication） [link_learnmore](https://docs.github.com/en/authentication/securing-your-account-with-two-factor-authentication-2fa/configuring-two-factor-authentication)
-
-- [1Password](https://support.1password.com/one-time-passwords/?mac)
-- [Authy](https://www.authy.com/)
-- [Microsoft Authenticator](https://www.microsoft.com/en-us/security/mobile-authenticator-app)
-- [ente](https://github.com/ente-io/ente/)
+windows后门查询： <https://www.bilibili.com/video/BV12K4EzLEBJ/>
 
 #### 安全通信
 
