@@ -2,6 +2,8 @@
 title: 英文（english）
 ---
 
+embargo 禁令
+
 moderate severity 中等严重程度
 
 instrument
@@ -20,7 +22,13 @@ arrival 到达
 
 ## 简写
 
+FOSS（Free and Open-Source Software，自由开源软件）
+
+Distro（distribution，发行版）
+
 CVE（Common Vulnerabilities and Exposures，公共漏洞和暴露/公共漏洞和枚举） —— 公开披露的网络安全漏洞列表。IT 人员、安全研究人员查阅 CVE 获取漏洞的详细信息，进而根据漏洞评分确定漏洞解决的优先级。
+
+PTO（Paid Time Off，带薪休假）
 
 ETD（Estimated Time of Departure，预计送出时间） —— 表达预测船舶或者飞机从某个港口或机场出发的时间，是“预测”作用。
 
