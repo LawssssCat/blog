@@ -669,6 +669,13 @@ PPT：
 
 #### 文件分享
 
+互联网平台
+
+- pixiv —— 图片分享
+- wallhaven —— 壁纸
+  - <https://wallhaven.cc/w/d8gygl>
+  - <https://wallhaven.cc/w/1k3evw>
+
 link（链接指向内容）
 
 - [catbox](https://catbox.moe/)

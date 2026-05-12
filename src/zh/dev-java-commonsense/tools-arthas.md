@@ -158,6 +158,26 @@ metaspace                        28M       28M        -1         99.20%
     at app//demo.MathGame.main(MathGame.java:17)
 ```
 
+`thread`
+
+`thread 1` 线程ID=1的线程堆栈
+
+`thread -n 3` 最忙的3个线程堆栈
+
+`thread -b`
+
+源码分析： （MVC模式）
+
++ C： com.taobao.arthas.core.command.monitor200.ThreadCommand#process
+
++ M： com.taobao.arthas.core.command.model.ThreadModel
+
++ V： com.taobao.arthas.core.command.view.ThreadView#draw
+
+### memory 内存
+
+`memory`
+
 ### jad 反编译
 
 ```bash
@@ -267,17 +287,21 @@ ts=2026-03-10 01:10:47.736; [cost=0.106589ms] result=@ArrayList[
 
 略
 
+### options
+
+一些arthas的全局配置查看、修改
+
+options
+
+options dump true # 修改
+
 ### quit/exit & stop
 
 quit和exit会退出会话，但arthas还会在后台运行，端口会占用，下次连接能直接连上。
 
 stop可以完全退出arthas。
 
-### todo
-
-todo 监听地址修改 for web
-
-## 源码分析
+## 启动流程分析
 
 ```bash
 git clone git@github.com:alibaba/arthas.git
@@ -828,73 +852,10 @@ examples.events.TelnetEventsExample
 examples.events.WebsocketEventsExample
 ```
 
-### 网络通信架构（netty）
+### 网络通信架构
 
-+ telnet 3658
++ telnet 3658  （netty）
     启动telnet服务入口
 
 + http 8563
     启动websocket服务入口
-
-### 组件关系
-
-todo ResultModel
-todo ResultView
-
-todo Subject
-
-todo ShellServer
-    todo Shell —— session
-        todo Term —— The terminal. （extend Tty —— Provide interactions with the Shell TTY.）
-            todo TtyConnection
-                extends TelnetTtyConnection
-            todo Readline
-                todo Interaction
-        todo Session
-        todo JobController
-        todo Job
-        todo InternalCommandManager
-    todo TermServer —— A server for terminal based applications.
-        impl
-            todo TelnetTermServer
-            todo HttpTermServer
-            todo HttpTelnetTermServer
-                todo NettyHttpTelnetTtyBootstrap
-                    todo NettyHttpTelnetBootstrap
-                        ServerBootstrap —— netty
-                            todo
-                            todo TtyConnection # io.termd.core.telnet.TelnetTtyConnection
-                                todo TtyEventDecoder
-        todo Session
-            todo Job
-        todo Readline
-            todo Interaction
-        handler
-            todo echoHandler
-            todo stdinHandler
-            todo stdoutHandlerChain
-            todo SignalHandler
-                interruptHandler
-                suspendHandler
-todo CommandResolver
-    todo BuiltinCommandResolver
-    todo BuiltinCommandPack
-todo AnnotatedCommand
-todo Command
-    todo AnnotatedCommandImpl
-todo Tty
-    todo CommandProcess
-todo Handler
-    todo ProcessHandler
-
-### 命令实现流程
-
-todo client -> server
-
-### 命令实现原理
-
-todo trace/thread/dashboard处理方式
-
-## use-case
-
-别人使用arthas一些好的实践，帮助增加定位问题思路。
