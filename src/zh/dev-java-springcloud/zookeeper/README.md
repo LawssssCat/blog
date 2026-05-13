@@ -1,185 +1,35 @@
 ---
 title: zookeeper 介绍
-order: 66
 ---
 
-Zookeeper是一个分布式协调服务的开源框架。主要用来解决分布式集群中系统的一致性问题，例如怎样避免同时操作同一数据造成脏读问题。
-
-+ ZooKeeper本质上是一个分布式的小文件存储系统。提供基于类似文件系统的目录树方式的数据存储，并且可以对树种的节点进行有效管理。
-
-+ ZooKeeper提供给客户端**监控**存储在zk内部数据的功能，从而可以达到基于数据的集群管理的功能（**分布式服务管理平台**）。常用于管理apache的各种技术服务，如Hadoop（大象）、Hive（蜜蜂）、Pig（猪）等。
-当然也能实现诸如：
-统一命名服务（dubbo）、分布式配置管理（solor）的配置集中管理、分布式消息队列（sub/pub）、分布式锁、分布式协调等功能。
+Zookeeper是一个分布式协调服务的开源框架。主要用来解决分布式集群中系统的一致性问题。
 
 <!-- more -->
 
-## 应用场景
+## 基本概念
 
-zookeeper提供的服务包括：
-统一命名服务、统一配置管理、统一集群管理、服务器节点动态上下线、负载均衡等。
+> 参考：
+>
+> + [wangzhiwubigdata/God-Of-BigData - Zookeeper简介及核心概念](https://github.com/wangzhiwubigdata/God-Of-BigData/blob/master/%E5%A4%A7%E6%95%B0%E6%8D%AE%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/Zookeeper%E7%AE%80%E4%BB%8B%E5%8F%8A%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5.md)
 
-### 统一配置管理
+## 一致性
 
-ZNode `/Config` 的数据变更会通知所有客户端
+> 参考：
+>
+> + [bilibili - 动画讲解：ZAB(Zookeeper Atomic Broadcast)算法原理](https://www.bilibili.com/video/BV1WN411c7xh)
 
-### 服务器节点动态上下线
+一致性取舍：
+CP —— 保证一致性（Consistency）、分区容错性（Partition Tolerance），不保证可用性（Availability）
 
-分布式服务管理平台关心：
-
-+ 接收服务的上下线
-+ 接收观察者（客户端）的注册
-+ 观察服务上下限变化，一旦服务列表发生变化，Zookeeper负责将变化通知相关观察者
-
-### 统一命名服务
-
-“正向代理”
-
-### 负载均衡
-
-“反向代理”
-
-## 系统架构
-
-### 集群架构
-
-zookeeper有两种部署模式：单机模式、集群模式
-
-+ 单机模式 —— 当配置文件中不包含`server....=....`配置时为单机模式，否则为集群模式
-+ 集群模式 —— 集群模式下至少要有两个节点且需要有半数节点的服务存活，否则客户端无法操作数据
-
-zookeeper的集群有两类角色：
-
-+ 一个leader —— 任务为“事务请求的唯一处理者（为了确保事务一致性）”。其中有事务如：写数据、更新数据、创建节点、删除节点、...
-+ 零到多个follower/observer —— 任务为“处理读请求、转发事务请求”
-
-::: tip
-具体那些节点是leader/follower，这些细节在下面“一致性算法”中会详细阐述。
-:::
-
-### 一致性算法
-
-todo
-
-#### 服务端：选举机制
-
-在Zookeeper集群中，leader不是配置出来的，是通过集群内部的选举机制产生的。
-
-选举机制：
-
-1. 节点1启动，节点1状态为LOOKING状态。此时集群只有一个节点，集群不会响应任何报文
-1. 节点2启动，节点2状态为LOOKING状态。节点1、节点2在同一集群且集群无leader，选取id大的为leader，节点2为leader、节点1为follower
-1. 节点3启动，节点2状态为LOOKING状态。节点3加入上述集群，集群中已有leader，则节点3为follower
-1. 节点4启动，同节点3...
-
-#### ZAB一致性协议
-
+一致性算法：
 ZAB（Zookeeper Atomic Broadcast，ZK原子广播）是Zookeeper中用来保证分布式事务最终一致性的协议。
 
-::: info
+该一致性算法需要理解的事件：
 
-ZAB、RAFT等众多分布式一致性算法都是对paxos算法的（简化）实现。
-其中，ZAB协议是为分布式协调服务Zookeeper专门设计的一种支持崩溃恢复和原子广播协议。
++ 选举：todo
++ todo
 
-:::
-
-ZAB协议要求：
-
-1. **广播消息**
-    1. 对于客户端发送的写请求（事务请求），均由leader接收。
-    1. Leader将请求包装为“事务”，给该事务分配一个全局递增的、唯一的ID，称为事务ID（ZXID）
-    1. Leader将事务以“提议（Proposal）”的形式广播到follower节点。
-    1. Leader如果收到**半数**的Follower反馈ACK，则执行commit操作（先自己提交，再通知Follower提交）
-
-    @startuml
-    node "Leader 1"
-    node "Follower 2"
-    node "Follower 3"
-    node "Client 1"
-
-    [Client 1] -up-> [Follower 2] : 1. update request /znode
-    [Follower 2] -right-> [Leader 1] : 2. redirect
-    [Leader 1] -left-> [Follower 2] : 3. proposal
-    [Leader 1] -right-> [Follower 3] : 3. proposal
-    [Follower 2] -right-> [Leader 1] : 4. ACK
-    [Follower 3] -left-> [Leader 1] : 4. ACK
-    [Leader 1] -left-> [Follower 2] : 5. commit
-    [Leader 1] -right-> [Follower 3] : 5. commit
-    @enduml
-
-1. **Leader奔溃问题**
-    正如上面提到的，当leader宕机后，有一套高效可靠的leader选举算法选出新的leader。
-    新leader需要解决如下问题：
-    + ZAB协议确保那些已经在leader提交的事务最终会被所有服务器提交
-    + ZAB协议确保那些仅在leader提出/复制的事务最终会被所有服务器丢弃
-
-#### 客户端：观察者机制（Watcher）
-
-Zookeeper使用Watcher机制实现分布式数据的发布和订阅功能，从而实现分布式的通知功能：
-Zookeeper允许客户端向服务端注册一个Watcher监听，当服务端的一些指定事件出发了这个Watcher，那么Zookeeper会向指定客户端发送一个事件通知。
-
-相关进程/线程
-
-+ 客户端线程
-+ 客户端WatcherManager
-+ Zookeeper服务器
-
-工作流程：
-
-+ 客户端向zookeeper服务器注册的同时，会将Watcher对象存储在客户端的WatcherManager当中
-+ 当Zookeeper服务器触发Watcher事件后，会向客户端发送通知
-+ 客户端线程从WatcherManager中取出对应的Watcher对象来执行回调逻辑
-
-@startuml
-node "Zookeeper Server"
-node "Micro Service" {
-  [Zookeeper Client]
-  [Zookeeper WatcherManager]
-}
-[Zookeeper Client] -up-> [Zookeeper Server] : 1. register
-[Zookeeper Client] -right-> [Zookeeper WatcherManager] : 1. Watcher Object
-[Zookeeper Client] <-down- [Zookeeper Server] : 2. notify
-[Zookeeper Client] <-left- [Zookeeper WatcherManager] : 3. Watcher Object
-@enduml
-
-### 数据模型
-
-ZooKeeper以树形节点（ZNode，ZookeeperNode）的形式进行数据（元数据，MetaData）存储。
-
-e.g.
-
-```bash
-/ —— 根节点
-/Znode01
-/Znode01/a
-/Znode01/b
-/Znode02/a
-```
-
-ZNode节点数据为描述数据（data about data），描述数据的属性，如存储位置、历史数据、资源查找、文件记录等，最大存储1MB
-
-#### 节点类型（ZNode Type）
-
-Zookeeper节点类型：
-
-+ **持久性节点（Persistent）** —— 最常见的一种节点，被创建后会一直存在服务器（客户端与zookeeper断开连接后，该节点依旧存在），直到被主动清除
-  + **顺序的持久性节点（Sequential-Persistent）** —— 有顺序的持久节点（在创建节点时，会在节点名后面加上一个数字后缀，来表示其顺序，由父节点维护，例如：Znode001，Znode002，....）
-+ **临时性节点（Ephemeral）** —— 它的生命周期和客户端会话绑定在一起，客户端关闭该节点会被清理掉。【注意：临时节点不能创建子节点】
-  + **顺序的临时性节点（Sequential-Ephemeral）** —— 有序的临时节点
-
-#### 事务（ZXID）
-
-在Zookeeper中，和事务有关的操作有：数据节点的创建/删除、数据节点内容的更新等。对于每一个事务请求，Zookeeper都会为其分配一个全局唯一的事务ID（ZXID，通常是64位自增长数字）。每个XID对应一次更新操作，这些ZXID可以简介识别出Zookeeper处理这些操作请求的全局顺序。
-
-::: tip
-
-事务（Transaction）用于保护系统数据的ACID特性：
-
-+ 原子性（Atomic）
-+ 一致性（Consistency）
-+ 隔离性（Isolation）
-+ 持久性（Durability）
-
-:::
+## 维护
 
 ### 配置文件
 
@@ -226,7 +76,7 @@ clientPort=2181
 #metricsProvider.exportJvmInfo=true
 ```
 
-## 安装启动
+### 安装启动
 
 Apache Zookeeper 发布版本：
 <https://zookeeper.apache.org/releases.html>
@@ -240,7 +90,7 @@ Apache Zookeeper 版本归档：
 测试代码仓：
 <RepoLink path="/code/demo-zookeeper/demo-01-baseusage/" />
 
-### 单机模式（JAR，STANDALONE）
+#### 单机模式（JAR，STANDALONE）
 
 安装
 
@@ -283,7 +133,7 @@ Mode: standalone
 /opt/zookeeper/bin$ ./zkCli.sh
 ```
 
-### 集群模式（JAR，CLUSTER）
+#### 集群模式（JAR，CLUSTER）
 
 <https://zookeeper.apache.org/releases.html>
 
@@ -538,7 +388,3 @@ public class Main {
     }
 }
 ```
-
-#### todo 易用性封装
-
-todo
