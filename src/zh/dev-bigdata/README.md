@@ -53,7 +53,7 @@ Microservices —— 微服务
 
 ### 服务管理
 
-- [zookeeper](./zookeeper/README.md) —— 服务注册中心
+- [zookeeper](./zookeeper.md) —— 服务注册中心
 - [nacos](./nacos.md) —— 服务管理
 
 ### 消息中间件
