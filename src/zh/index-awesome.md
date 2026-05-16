@@ -661,6 +661,7 @@ PPT：
 
 - [吾爱破解论坛](https://www.52pojie.cn/) —— 致力於軟體安全與病毒分析的非營利性技術論壇，由A-new、Hmily、ZzAge共同創建於2008年3月13日，有三个官方团队：LCG（Love Crack Group，吾愛破解小組）、LSG（Love Security Group，吾愛安全小組）、管理團隊
 - ~~[易码工作室/文曲星](https://www.emsky.net/bbs)~~
+- <https://linux.do/>
 
 #### 实时通讯
 
