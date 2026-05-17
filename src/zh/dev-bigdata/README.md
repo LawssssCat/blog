@@ -1,61 +1,155 @@
 ---
-title: SpringCloud微服务架构
+title: 大数据服务架构设计与实践
 ---
 
-SpringCloud是Java微服务（microservice）架构的构建标准之一。
+设计大数据服务架构，是要解决一个问题：
+如何基于有限的资源，处理（采集、分析、存储、检索）海量、多元的数据。
 
-标准中有如下元素：
+有如下理论：
 
-```bash
-API Gateway —— 接口网关
-Service Registry —— 服务注册
-Config Server —— 配置中心
-Distributed Tracing —— 分布式链路追踪
-Microservices —— 微服务
-```
+- 分布式理论 —— 提供高效、可靠、可伸缩的计算和存储资源
+- 大数据处理理论 —— 提供处理（采集、分析、存储、检索）海量、多元数据的高效解决方案
 
-> 参考：
->
-> - 微服务论文 - <https://martinfowler.com/articles/microservices.html> （[link_翻译](http://blog.cuicc.com/blog/2015/07/22/microservices)）
-> - SpringCloud 官方文档 - <https://sca.aliyun.com/en/docs/2022/overview/what-is-sca/>
-> - SpringCloud 介绍 - <https://www.cnblogs.com/qdhxhz/p/14563991.html>
+参考：
+
+- <https://github.com/wangzhiwubigdata/God-Of-BigData/blob/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80%E4%B8%80%EF%BC%9A%20%E4%B8%80%E8%87%B4%E6%80%A7%E3%80%812PC%E5%92%8C3PC.md>
 
 <!-- more -->
 
-## 解决方案
+## 分布式系统的问题
 
-组合后能形成完整分布式系统功能的软件选型集合，用于简化Java服务的分布式系统功能开发
+基于分布式系统（distributed system）搭建的服务可以提供高效、可靠、可伸缩的特性，但需要考虑这些问题：
 
-- [Spring Cloud Alibaba](./springcloud-alibaba.md) —— 服务快速集成
-  - 通讯 —— restful/rpc/dubbo/feign `httpclient("url", params)`/`restTemplate("url", params)`
-  - 服务治理/注册中心（服务注册/发现/剔除） —— nacos/nacos config
-  - 网关 —— gateway
-  - 容错 —— sentinel
-  - 排错/链路追踪 —— skywalking
+- 通信延迟 —— 节点处于不同的物理或逻辑地点，节点上各自保存的数据即便有同步机制，页无法保证节点间保存的数据是实时一致的
+- 三种响应状态 —— 节点间通信必然有三种结果，即成功、失败、超时（可能由于节点故障或通信延迟），需要合理处理这三种状态
+- 网络分区 —— 可能由于网线被挖断，AB两地区域无法通信，其中的节点会形成可通信的大小两个网络区域，需要合理处理这种情况
 
-- ~~dubbo~~ （不完善）
-  - 通讯 —— rpc
-  - 注册中心 —— zookeeper/redis
-  - 配置中心 —— diamond/Apollo
+## CAP猜想、BASE思想
 
-- ~~Netfix~~ （闭源）
-  - http restful —— 通信方式
-  - Netflix Eureka / consul —— 服务发现
-  - Netflix Ribbon —— 服务负载均衡
-  - Netflix Hystrix —— 断路器
-  - Netflix Zuul —— 服务网关
-  - Spring Cloud Config —— 分布式配置
-  - Admin + sleuth + zipkin —— 分布式追踪系统
+基于上述问题，[埃里克·布鲁尔（Eric Brewer）](https://people.eecs.berkeley.edu/~brewer/papers/)在2000年的学术会议 ACM PODC（分布式计算原理研讨会） 上发表了题为《[构建鲁棒的分散式系统（Towards Robust Distributed Systems）](https://github.com/emintham/Papers/blob/master/Brewer-%20Towards%20Robust%20Distributed%20Systems.pdf)》的经典主题演讲，演讲阐述了他基于自己研发搜索引擎和分布式缓存的工程经验，指出传统的数据库过度依赖追求绝对完美的ACID强事务特性，这在海量数据和互联网规模下是无法扩展的。同时，他首次系统性地抛出了两个改变行业的想法：（这想法后续被其他人完善，下面列举完善后的版本）
 
-![对比](https://s2.loli.net/2024/08/11/ICRY2FakLbhVy7u.png)
+- CAP猜想（Brewer's Conjecture）：
+  在分布式网络中，一致性（Consistency）、可用性（Availability）和分区容错性（Partition tolerance）三者不可兼得，系统设计必须进行权衡和取舍。
+  - **C（Consistency，一致性/Linearizability，线性一致性/Atomic Consistency，原子一致性）** —— 不管节点间数据如何同步数据，客户端要求读到的数据“永远”是最新的
+  - **A（Availability，可用性）** —— 不管多少个节点“不可访问”，客户端要求接口请求永远被响应
+  - **P（Partition tolerance，分区容忍性）** —— 不管网络分区是否出现或恢复，要求分布式系统都能“正常”运转 （这里的“正常”指系统的正常，而非要求服务的正常）
 
-## 组件
+  > 由于网络分区是无法避免的，不能一旦出现网络分区就重建集群，这在工程上不可取。
+  > 同时，由于网络分区的存在，一致性和可用性无法同时并存：
+  > - 如果满足可用性，那么当网络分区，则一致性无法满足，因为无法让一个分区的数据修改同步到另外一个分区上
+  > - 如果满足一致性，那么当网络分区，则可用性无法满足，因为此时必须阻止读、写才能保证一致性
 
-### 服务管理
+- BASE思想：
+  这是对传统数据库ACID（原子性、一致性、隔离性、持久性）思想的妥协，是现代大规模分布式系统的底层哲学。
+  这是基于CAP猜想提出的工程方法论，其核心思想是“既是无法做到强一致性（Strong Consistency），但每个应用都可以根据自身的业务特点，采用适当的方式来使系统达到最终一致性（Eventual Consistency）
+  - **Basically Available（基本可用）**
+    ——
+    当分布式系统出现不可预知的故障时，允许损失部分可用性，但要保证核心可用。
+    站在更高维度考虑“可用性”问题：
+    可用性不是0或1的问题，而是核心服务是什么的问题。
+    如服务高峰，与其让100%的用户都因为系统卡死而无法打开页面，不如让100%的用户都能顺利下单，但其中50%的非核心功能（如看大图）暂时不可用。
+  - **Soft State（软状态）**
+    ——
+    指允许系统中的数据存在中间状态，并认为该中间状态不影响系统的整体可用性。
+  - **Eventually Consistent（最终一致性）**
+    ——
+    系统不需要实时保证强一致性，但数据在经过一段时间的同步后，最终会达到一致的状态。
 
-- [zookeeper](./zookeeper.md) —— 服务注册中心
-- [nacos](./nacos.md) —— 服务管理
+> 笑话：ACID（酸）和 BASE（碱）是完全相反、互相中和的物质。
 
-### 消息中间件
+## 不同业务场景的“分布式一致性（Distributed Consensus）”要求
 
-- [kafka](./kafka.md) —— 消息中间件
+实际场景对一致性需求不一样，具体区分有如下三种：
+
+- **强一致性（Strong Consistency）** —— 写完立马读到更新后的值。
+  - 场景：强调数据一致，即C（Consistency，一致性）和P（Partition tolerance，分区容忍性），但无法保证A（Availability，可用性），如典型的raft算法中当可用且互通的节点小于半数则集群不可用。
+    - **分布式事务场景**，如电商库存、金融交易、医疗记录场景，如银行转账时必须等待所有节点实时余额一致才能确认交易，否则业务系统会重试或报错挂起等待人工干预。
+    （这种场景的实际运行上一般会有“对账”行为，但这种行为是指两个“业务不互通”系统间的三方干预行为，所以并不意味着单个分布式系统的数据不一致，不是一个概念）
+    - **分布式锁**，协调节点访问，防止分布式并发冲突。
+  - 共识算法：
+    - ~~主从同步复制，写入需所有节点确认，任何节点失败/响应超时都会阻塞重试 —— MySQL~~ （效率极低）
+    - paxos —— 过于复杂，导致落地版本都是它的简化版，如raft、zab
+    - raft —— etcd、consul
+    - ZAB（Zookeeper Atomic Broadcast，Zookeeper原子广播） —— zookeeper
+    - kraft —— kafka
+    - ~~Redlock —— Redis Sentinel（哨兵模式）~~ （有争议的强一致性：极度依赖系统时钟，如果时钟跳变无法保证100%强一致）
+- **弱一致性（Weak Consistency）** —— 写完之后不要求任何时间（能在其他节点）读到更新后的值。也即是说，甚至允许某些节点永远无法督导更新后的值。
+  - 场景：强调系统稳定，即A（Availability，可用性）和P（Partition tolerance，分区容忍性），同时能保证一定程度的C（Consistency，一致性）
+    - 实时音视频传输：VoIP 电话、视频直播。丢掉一个数据包（一帧画面）比让画面卡住等待重传更合适
+    - 高性能采样监测：如每秒采集一万次的传感器数据，偶尔丢几个点不影响整体趋势分析
+    - CDN缓存
+  - 共识算法：
+    - 本地缓存策略：如客户端本地缓存，完全不与服务器校验。
+- **最终一致性（Eventual Consistency）** —— 这是弱一致性的子集，添加了“数据最终会一致”约束。即写完之后的一段时间内才能读到更新后的值。
+  - 场景：
+    - **NoSQL场景**，如可通过超时时间（timeout）、TTL（生存时间/过期时间）等手段使其重新查库从而使数据更新
+    - 社交网络状态：微博粉丝数、点赞数，不同用户看到的数字可能略有差异，但静置一段时间后会统一
+    - 分布式对象存储，如AWS S3或阿里云OSS，上传一张照片后立刻访问可能404，但几百毫秒后就能访问。
+    - DNS（域名系统），你修改了 IP，全球各级 DNS 服务器逐步同步，最终全球一致。
+  - 共识算法：
+    - Gossip —— Redis Cluster（主从架构）通过该算法实现状态节点发现。 （注意：redis的数据同步还只是简单的异步复制）
+    - ~~Zen Discovery —— Elasticsearch（7.0之前）的自研算法，容易脑裂~~
+    - Cluster State Coordination —— Elasticsearch（7.x 及以后）的算法（借鉴了raft思想，理论上可以强一致，但是他从性能考虑，只是把数据写到log里，通过refresh机制落盘后才可读，所以还是归类为仅保证最终一致）
+    - Peer-to-Peer（异步同步） —— eureka
+    - Gossip 协议 + NRW 机制 —— Cassandra
+    - CRDT（Conflict-Free Replicated Data Types） —— 社交平台：如点赞、评论、动态等操作，可以容忍一定的延迟和不一致；分布式缓存：如用户会话、商品库存等，能够容忍短期的不一致
+
+> 还有**可调一致性（Tunable Consistency）**，采用混合策略，允许动态选择模型，如CockroachDB支持强一致与最终一致切换
+
+
+todo 2PC
+
+微服务管理：
+
+- Spring Cloud
+- ServiceComb 微服务快速搭建框架 | 国产化 Spring Cloud
+
+注册中心：
+
+- zookeeper
+- nacos
+- consul
+- etcd
+- eureka
+
+## 大数据处理理论
+
+todo hadoop
+todo hdfs
+todo yarn
+todo hive
+todo spark
+todo hbase
+
+
+
+  ::: tip
+
+  一般就是在CP和AP之间做抉择：
+
+  - CP —— 数据“永远”最新，但服务可能出现短暂不可用。即 
+    - 行为：
+      - 线性一致性（Linearizability） —— 所有操作按全局顺序执行，写入后读取必见最新值。
+      - 原子性更新 —— 如两阶段提交（2PC）确保事务要么全部成功，要么全部失败。
+      - **如果出现分区 —— 可能会变得不可写入，导致后续业务终止/挂起**。
+
+      - 共识算法：Paxos、Raft确保全局操作顺序（如Etcd）。
+
+    - 例子：
+      
+  - AP —— 服务“永远”可用，但数据可能过时、冲突/丢失。
+    - 定义：
+    - 行为：
+      - 弱一致性：写入后不保证立即同步，可能存在短暂旧值。
+      - 异步传播：通过消息队列、版本控制等机制逐步同步数据。
+      - **如果出现分区 —— 只要还有节点存活就能写入，但是分区恢复后大概率要处理多节点数据冲突问题，导致系统业务可能需要有对账功能（如果要保证业务数据多端/端到端一致的话）**
+    - 实现：
+      - 异步复制：主节点写入后异步同步副本（如Cassandra）。
+      - 读取修复（Read Repair）：读操作检测并修复副本间差异。
+      - 版本控制：时间戳或向量时钟解决冲突（如DynamoDB）。
+    - 性能：
+      - 吞吐量： 高（异步处理减少阻塞）
+      - 延迟：  低（本地写入即返回）
+      - 问题： _节点间交互会变得复杂，需设计补偿机制（如重试、幂等性）处理冲突_。
+    - 例子：
+  :::
