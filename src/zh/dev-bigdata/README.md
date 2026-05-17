@@ -16,7 +16,9 @@ title: 大数据服务架构设计与实践
 
 <!-- more -->
 
-## 分布式系统的问题
+## 分布式系统理论
+
+### 分布式面临的问题（物理局限性）
 
 基于分布式系统（distributed system）搭建的服务可以提供高效、可靠、可伸缩的特性，但需要考虑这些问题：
 
@@ -24,7 +26,33 @@ title: 大数据服务架构设计与实践
 - 三种响应状态 —— 节点间通信必然有三种结果，即成功、失败、超时（可能由于节点故障或通信延迟），需要合理处理这三种状态
 - 网络分区 —— 可能由于网线被挖断，AB两地区域无法通信，其中的节点会形成可通信的大小两个网络区域，需要合理处理这种情况
 
-## CAP猜想、BASE思想
+### 分布式要解决的问题（核心痛点）
+
+- **分布式ID（Distributed ID）** —— 希望得到一个全局唯一的ID。在分布式系统中需要权衡有序性（号段模式自增、雪花算法）和生成效率（UUID）。
+  （
+  [link_解决方案整理](https://github.com/wangzhiwubigdata/God-Of-BigData/blob/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA/%E5%88%86%E5%B8%83%E5%BC%8FID%E7%94%9F%E6%88%90%E5%99%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
+  ）
+- **分布式锁（Distributed Lock）** —— 希望在多节点并发环境下，实现共享资源的互斥访问。在分布式系统中需要权衡安全性（CP方案：etcd/zookeeper的强一致锁）和执行效率（AP方案：redis的高性能锁）。 （实践中一般选择后者，因为能兼顾性能和99.999999...%的情况，剩下的情况加个乐观锁和重试机制也能解决）
+  （
+  [link_解决方案](https://github.com/wangzhiwubigdata/God-Of-BigData/blob/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.md)
+  /
+  [link_解决方案_2](https://github.com/wangzhiwubigdata/God-Of-BigData/blob/master/%E5%88%86%E5%B8%83%E5%BC%8F%E7%90%86%E8%AE%BA/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88(%E4%BA%8C).md)
+  ）
+- **分布式事务场景（Distributed Transaction）**
+  - 纵向：跨服务协同（Coordination）问题，即“事务原子性” —— 一个业务操作涉及前后多个微服务调用（如下单操作会经过订单微服务、库存微服务），如何保证多级调用的微服务不掉一致，要么一起成功提交、要么一起失败d回滚？
+    - 解决方案：**原子提交协议（Atomic Commit Protocol）**
+      - [XA模式（eXtended Architecture/刚性事务/2PC）](./Atomic_Protocol-2pc.md) —— Seata（XA模式） （这算法有巨大性能问题，仅在思想实验或有沉重技术债务的初期分布式系统中使用）
+      - ~~[3PC](./Atomic_Protocol-3pc.md)~~ （这算法依然没法解决数据不一致的致命问题，同时还增加了算法的复杂度，所以只在思想实验上有使用）
+      - TODO Saga 模式（柔性事务 / 长事务）
+      - TODO TCC模式 —— Controller层面控制
+      - TODO Seate的AT模式（Automatic Transaction）
+      - TODO 空回滚、幂等、悬挂等问题
+  - 横向：数据复制（Replication）问题，即“状态一致性” —— 一个微服务存在多个实例，一个实例的状态变化如何一致同步到其他实例上？
+    - 解决方案：[CAP理论和BASE思想](#cap_base)
+
+### 数据复制，一致性问题
+
+#### CAP猜想、BASE思想 {id=cap_base}
 
 基于上述问题，[埃里克·布鲁尔（Eric Brewer）](https://people.eecs.berkeley.edu/~brewer/papers/)在2000年的学术会议 ACM PODC（分布式计算原理研讨会） 上发表了题为《[构建鲁棒的分散式系统（Towards Robust Distributed Systems）](https://github.com/emintham/Papers/blob/master/Brewer-%20Towards%20Robust%20Distributed%20Systems.pdf)》的经典主题演讲，演讲阐述了他基于自己研发搜索引擎和分布式缓存的工程经验，指出传统的数据库过度依赖追求绝对完美的ACID强事务特性，这在海量数据和互联网规模下是无法扩展的。同时，他首次系统性地抛出了两个改变行业的想法：（这想法后续被其他人完善，下面列举完善后的版本）
 
@@ -42,32 +70,30 @@ title: 大数据服务架构设计与实践
 - BASE思想：
   这是对传统数据库ACID（原子性、一致性、隔离性、持久性）思想的妥协，是现代大规模分布式系统的底层哲学。
   这是基于CAP猜想提出的工程方法论，其核心思想是“既是无法做到强一致性（Strong Consistency），但每个应用都可以根据自身的业务特点，采用适当的方式来使系统达到最终一致性（Eventual Consistency）
-  - **Basically Available（基本可用）**
+  - **BA（Basically Available，基本可用）**
     ——
     当分布式系统出现不可预知的故障时，允许损失部分可用性，但要保证核心可用。
     站在更高维度考虑“可用性”问题：
     可用性不是0或1的问题，而是核心服务是什么的问题。
     如服务高峰，与其让100%的用户都因为系统卡死而无法打开页面，不如让100%的用户都能顺利下单，但其中50%的非核心功能（如看大图）暂时不可用。
-  - **Soft State（软状态）**
+  - **S（Soft State，软状态）**
     ——
     指允许系统中的数据存在中间状态，并认为该中间状态不影响系统的整体可用性。
-  - **Eventually Consistent（最终一致性）**
+  - **E（Eventually Consistent，最终一致性）**
     ——
     系统不需要实时保证强一致性，但数据在经过一段时间的同步后，最终会达到一致的状态。
 
 > 笑话：ACID（酸）和 BASE（碱）是完全相反、互相中和的物质。
 
-## 不同业务场景的“分布式一致性（Distributed Consensus）”要求
+#### 不同的一致性要求
 
-实际场景对一致性需求不一样，具体区分有如下三种：
+不同实际业务场景对“分布式一致性（Distributed Consensus）”需求不一样，具体区分有如下三种：
 
 - **强一致性（Strong Consistency）** —— 写完立马读到更新后的值。
   - 场景：强调数据一致，即C（Consistency，一致性）和P（Partition tolerance，分区容忍性）。但无法保证A（Availability，可用性），如典型的raft算法中当可用且互通的节点小于半数则集群不可用。
     - 电商库存、金融交易、医疗记录场景，如银行转账时必须等待所有节点实时余额一致才能确认交易，否则业务系统会重试或报错挂起等待人工干预。
     （这种场景的实际运行上一般会有“对账”行为，但这种行为是指两个“业务不互通”系统间的三方干预行为，所以并不意味着单个分布式系统的数据不一致，不是一个概念）
   - 共识算法：
-    - ~~[2PC](./Consensus_Algorithm-2pc.md) —— Seata（XA模式）~~ （这算法有巨大性能问题，仅在思想实验或有沉重技术债务的初期分布式系统中使用） TODO TCC模式和Seate的AT模式
-    - ~~[3PC](./Consensus_Algorithm-3pc.md)~~ （这算法依然没法解决数据不一致的致命问题，同时还增加了算法的复杂度，所以只在思想实验上有使用）
     - ~~主从同步复制，写入需所有节点确认，任何节点失败/响应超时都会阻塞重试 —— MySQL~~ （效率极低）
     - paxos —— 核心思想是三阶段投票（Prepare -> Accept -> Learn）。过于复杂，导致落地版本都是它的简化版，如raft、zab
     - raft —— etcd、consul、TiKV、RethinkDB
@@ -88,13 +114,13 @@ title: 大数据服务架构设计与实践
         - 业务：
           - 用户Token/状态缓存：存储用户的登录 Session、鉴权 Token。
           - 高频计数器：微博的实时热搜点赞数、直播间的在线观看人数、视频播放量。
-        - 技术：redis
+        - 技术：redis、Memcached
       - **列族/宽列存储场景（Wide-Column/Column-Family Store）** —— 解决海量数据（PB级）的大规模并行读写、水平扩展问题。
         - 业务：
           - 大数据日志/追踪：系统监控日志、APM 链路追踪数据（SkyWalking存储）。
           - 物联网（IoT）传感器数据：智能电表、车联网每秒上传的车速、油耗、温度等时序轨迹数据。
           - 社交时间线（Feed流）：微信朋友圈、微博的动态流，拉取好友的最新发布列表。
-        - 技术：Cassandra、HBase、ClickHouse
+        - 技术：Cassandra、HBase、ClickHouse/InfluxDB
         （💡这里HBase、ClickHouse特别在于其元数据维护都是“强一致”的，但都通过各自手段使性能达标）
       - **文档存储场景（Document Store）** —— 提供数据以类似JSON/BSON的半结构化文档格式的存储和查询。相比于“全文检索场景”，这里强调支持频繁、复杂的修改和严格的事务（ACID）支持。
         - 业务：
@@ -105,7 +131,7 @@ title: 大数据服务架构设计与实践
         - 业务：
           - 电商多维商品搜索：根据品牌、价格区间、颜色、销量、好评率等十几类条件组合筛选商品。
           - ELK 日志分析平台：安全审计、全量系统日志的高效检索。
-        - 技术：ElasticSearch
+        - 技术：ElasticSearch（ES）、Solr、OpenSearch/elasticsearch-oss
     - 分布式对象存储，如AWS S3或阿里云OSS，上传一张照片后立刻访问可能404，但几百毫秒后就能访问。
     - DNS（域名系统），你修改了 IP，全球各级 DNS 服务器逐步同步，最终全球一致。
   - 共识算法：
