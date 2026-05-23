@@ -154,6 +154,13 @@ Android防火墙（firewall）
 - GPG
 - Cryptomator —— 提供加密虚拟磁盘
 
+- ~~BitLocker —— 上市公司为了方便监管，大概会不小心被留有后门~~
+- LUKS（Linux Unified Key Setup）
+  - todo Arch Linux全盘加密安装：EFI，swap与LVM on LUKS <https://www.bilibili.com/video/BV1jx4kegEH9/?>
+  - todo Gentoo LUKS 全盤加密安裝過程 <https://www.bilibili.com/video/BV1624y147rc/>
+  - todo 全盘加密安装Debian GNU/Linux通用操作系统 <https://www.bilibili.com/video/BV1V6R2YeEv9/>
+  - todo 实机安装 Arch Linux: 命令行 全盘加密 安全启动 <https://www.bilibili.com/video/BV1LhfVB1EHE/>
+
 ### 硬件开发
 
 #### 电路设计
@@ -677,6 +684,13 @@ PPT：
 
 #### 文档/blog（博客）
 
+在线博客 —— 直接用别人产品，就不用自己搭了
+
+- <https://www.blogger.com/> —— 不会随便删你东西
+- 中文
+  - 博客园（cnblog）
+  - ~~csdn —— 文章所有权归平台~~
+
 检索系统
 
 - [algolia](https://www.algolia.com/developers)
@@ -694,7 +708,9 @@ PPT：
 
 论坛列表
 
+- 新闻
 - 维基 <https://zh.wikipedia.org/zh-cn/BBS>
+- 娱乐
 - 4chan <https://www.4chan.org/>
 - 8kun <https://8kun.top/index.html>
 - 2channel
@@ -716,7 +732,8 @@ PPT：
       - `r/IAmA` Ask Me Anything
       - `r/Showerthoughts` 浴中奇思
   - u/用户（Redditor）可以创建或加入板块，在板块内发布帖子、对帖子点赞或点踩，收到赞的用户会增加“Karma”值（表示用户的活跃程度）
-
+- 技术
+  - [Hacker News](https://news.ycombinator.com/news)
 - [吾爱破解论坛](https://www.52pojie.cn/) —— 致力於軟體安全與病毒分析的非營利性技術論壇，由A-new、Hmily、ZzAge共同創建於2008年3月13日，有三个官方团队：LCG（Love Crack Group，吾愛破解小組）、LSG（Love Security Group，吾愛安全小組）、管理團隊
 - ~~[易码工作室/文曲星](https://www.emsky.net/bbs)~~
 - <https://linux.do/>

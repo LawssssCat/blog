@@ -12,6 +12,8 @@ Coordinator 协调者
 
 Participant 参与者
 
+proprietary 专利，专属，专有
+
 embargo 禁令
 
 moderate severity 中等严重程度
@@ -41,7 +43,11 @@ arrival 到达
 
 FOSS（Free and Open-Source Software，自由开源软件）
 
+[FSF（the Free Software Foundation）](https://www.fsf.org/)
+
 Distro（distribution，发行版）
+
+[GNU](https://www.gnu.org/)
 
 ### 开发过程
 
@@ -58,6 +64,8 @@ Distro（distribution，发行版）
 CVE（Common Vulnerabilities and Exposures，公共漏洞和暴露/公共漏洞和枚举） —— 公开披露的网络安全漏洞列表。IT 人员、安全研究人员查阅 CVE 获取漏洞的详细信息，进而根据漏洞评分确定漏洞解决的优先级。
 
 POC（Proof of Concept，概念验证） —— 指漏洞利用条件的示例代码
+
+backdoor —— 后门
 
 ### 社会人文
 
