@@ -7,21 +7,6 @@ alias:
 order: 1
 ---
 
-技术以外的东西，人均至少哲学家
-
-> 老虎机<br>（Slot Machine） | 氛围编程<br>（Vibe Coding）
-> --- | ---
-> 买筹码<br>（Buy tokens.） | 买Token<br>（Buy tokens.）
-> 转动老虎机<br>（Pull the lever.） | 写提示词然后点生成<br>（Write a vague prompt and hit "Generate"）
-> 可能中头奖，或者什么都没有<br>（Could be a jackpot, could be nothing.） | 可能得到一个功能正常的应用程序，或者根本无法运行的垃圾<br>（Could be a perfect, bug-free app, could be a hallucinated mess that doesn't even compile.）
-> 闪烁的灯光，诱人的动画<br>（Flashing lights! "BIG WIN!" Jingles!） | 你说的绝对正确！好主意！<br>（"Excellent idea!","Certainly!","Here is the perfect solution for you!"）
-> 我有我自己的策略<br>（"I have a system."） | 我是一名提示词工程师<br>（"I'm a prompt engineer"）
-> 再转一次，我就会把他们都赢回来！<br>（Just one more spin, I can win it all back.） | 再一个提示词，bug就会消失！<br>（"Just one more prompt, it'll fix the bug this time."）
-> 赌场永远盈利<br>（The house always wins） | OpenAI永远盈利<br>（OpenAI always wins.）
-> 过去的4小时去哪了？<br>（"Where did the last 4 hours go?"） | 等等，我刚才花了4小时为我可以再20分钟内写完的函数写提示词吗？<br>（"Wait, I spent 3 hours prompting for a function I could have written in 20 minutes?"）
-
-技术以内，用AI看代码、学语言（人类语言、计算机语言）太爽了！
-
 <!-- more -->
 
 ## 概念
@@ -95,3 +80,28 @@ GPU
   + 用户问题（messages.text）
   + 系统提示词（system.text）
   + 工具列表（tool）
+
+## 笑话
+
+### 老虎机
+
+老虎机<br>（Slot Machine） | 氛围编程<br>（Vibe Coding）
+--- | ---
+买筹码<br>（Buy tokens.） | 买Token<br>（Buy tokens.）
+转动老虎机<br>（Pull the lever.） | 写提示词然后点生成<br>（Write a vague prompt and hit "Generate"）
+可能中头奖，或者什么都没有<br>（Could be a jackpot, could be nothing.） | 可能得到一个功能正常的应用程序，或者根本无法运行的垃圾<br>（Could be a perfect, bug-free app, could be a hallucinated mess that doesn't even compile.）
+闪烁的灯光，诱人的动画<br>（Flashing lights! "BIG WIN!" Jingles!） | 你说的绝对正确！好主意！<br>（"Excellent idea!","Certainly!","Here is the perfect solution for you!"）
+我有我自己的策略<br>（"I have a system."） | 我是一名提示词工程师<br>（"I'm a prompt engineer"）
+再转一次，我就会把他们都赢回来！<br>（Just one more spin, I can win it all back.） | 再一个提示词，bug就会消失！<br>（"Just one more prompt, it'll fix the bug this time."）
+赌场永远盈利<br>（The house always wins） | OpenAI永远盈利<br>（OpenAI always wins.）
+过去的4小时去哪了？<br>（"Where did the last 4 hours go?"） | 等等，我刚才花了4小时为我可以再20分钟内写完的函数写提示词吗？<br>（"Wait, I spent 3 hours prompting for a function I could have written in 20 minutes?"）
+
+### 零基础编程
+
+我对编程一窍不通。完全零基础。
+
+我刚刚在30分钟内构建了3个完全功能的网页应用。
+
+http://localhost:3000/
+http://localhost:8000/
+http://localhost:5000/
