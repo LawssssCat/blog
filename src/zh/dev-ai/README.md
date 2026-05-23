@@ -43,7 +43,16 @@ order: 1
 2026年 | Harness Agent | “Vibe Coding Plus” HA是模型以外的任何东西
 2026年 | A2A（Agent to Agent） | todo
 
-## 模型
+## 产品
+
+### 算力
+
+GPU
+
++ 英伟达（Nvidia）
++ Cerebras
+
+### 模型
 
 （划掉“将就”模型，避免眼花缭乱）
 （todo 赛博斗蛐蛐）
@@ -56,8 +65,6 @@ order: 1
 + ~~**Claude Sonnet 4.5** —— 提供了一个理想的性能与成本平衡，适用于中等复杂度的文本生成任务。它在稳定性、响应速度和任务处理能力上表现优异，特别适合那些需要稳定输出的任务，如常规文案创作、博客写作等。~~<span style="color:black;background:black">废话生成器Plus</span>
 + ~~**Claude Haiku 4.5** —— 是最轻量级的模型，适合需要高频率请求和快速响应的场景。它主要面向短文本生成任务和快速问答，成本最低，适合预算有限的小型团队或单一任务需求。~~
 + MiniMax
-
-## 产品
 
 ### 模型管理
 
