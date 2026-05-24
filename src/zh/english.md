@@ -8,11 +8,15 @@ inference 推理
 
 diagnostic 诊断
 
+aggressive 挑衅
+
 election 选举
 
 Coordinator 协调者
 
 Participant 参与者
+
+censor 审核员
 
 proprietary 专利，专属，专有
 

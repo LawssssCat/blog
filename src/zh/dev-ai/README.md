@@ -39,11 +39,15 @@ GPU
 
 ### 模型
 
-（划掉“将就”模型，避免眼花缭乱）
-（todo 赛博斗蛐蛐）
+全球模型排行榜：
+
++ <https://artificialanalysis.ai/>
+
+---
 
 + GPT-5 mini —— OpenAI 擅长逻辑和数学
 + Gemini 3 Flash —— Google 擅长图片处理
++ Qwen
 + DeepSeek V3.1 —— 中国公司、MoE架构、中文最强、极致便宜
 + **GLM-4.7** —— ~~是中国公司 Zhipu AI 发布的大型语言模型，定位为高性能、开源的大模型。~~<span style="color:black;background:black">特点是便宜。</span>
 + **Claude Opus 4.5** —— 是 Anthropic 2025 年发布的旗舰通用模型，擅长推理、思考、编码。
@@ -62,8 +66,8 @@ GPU
 + Manus
 + Claude Code
 + Open Claw
-+ OpenCode
-+ Hermes —— 会【自动】自己创建一堆skill
++ [OpenCode](./ai-agent-opencode.md)
++ [Hermes Agent](https://github.com/nousresearch/hermes-agent) —— 会【自动】自己创建一堆skill
 
 ## 协议
 

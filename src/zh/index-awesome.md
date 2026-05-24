@@ -698,11 +698,21 @@ PPT：
 - xxx ？？？ —— 页面（单页面）离线保存
 - GoFullPage - Full Page Screen Capture —— 全屏截图
 
-#### 邮件通信
+#### 邮件通信（email）
 
 邮件服务
 
 - ewomail
+
+邮箱供应商
+
+- 教育邮箱 —— 教育邮箱（Edu邮箱）是为学生、教师及教育机构提供的专属邮箱服务，通常可享受免费或折扣的教育资源、软件订阅（如GitHub学生包、Office 365等）以及学术工具。 <https://www.freex.cc/edumail.html>
+  - 亚利桑那州立大学（Arizona State University, ASU）
+  - 美国自由大学（Liberty University）
+  - 芝加哥城市学院（City Colleges of Chicago, CCC）
+  - 塔科马社区学院（Tacoma Community College, TCC）
+  - 乔利埃特初级学院（Joliet Junior College, JJC）
+  - 低地技术学院（Technical College of the Lowcountry, TCL）
 
 #### 文档/blog（博客）
 
@@ -756,6 +766,7 @@ PPT：
   - u/用户（Redditor）可以创建或加入板块，在板块内发布帖子、对帖子点赞或点踩，收到赞的用户会增加“Karma”值（表示用户的活跃程度）
 - 技术
   - [Hacker News](https://news.ycombinator.com/news)
+  - [O站](https://www.ozabc.com/c/8-category/8) —— 分享AI、网络、实用工具
 - [吾爱破解论坛](https://www.52pojie.cn/) —— 致力於軟體安全與病毒分析的非營利性技術論壇，由A-new、Hmily、ZzAge共同創建於2008年3月13日，有三个官方团队：LCG（Love Crack Group，吾愛破解小組）、LSG（Love Security Group，吾愛安全小組）、管理團隊
 - ~~[易码工作室/文曲星](https://www.emsky.net/bbs)~~
 - <https://linux.do/>
