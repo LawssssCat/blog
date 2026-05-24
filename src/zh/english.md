@@ -4,6 +4,8 @@ title: 英文（english）
 
 miscellaneous 杂项
 
+inference 推理
+
 diagnostic 诊断
 
 election 选举
