@@ -2,6 +2,24 @@
 title: 英文（english）
 ---
 
+[英语水平等级](https://www.coe.int/en/web/common-european-framework-reference-languages/table-1-cefr-3.3-common-reference-levels-global-scale)
+
+- A1 —— 可以理解并使用简单的句子进行表达；用英文作简单的自我介绍、提问题；能听懂慢速英语并进行简单的对话
+- A2 —— 能使用高频的日常英语；能正确描述关于一个人的具体信息，如：家庭背景、职业生涯等；能通过对话进行信息交换
+- B1 —— 能理解不同情景下的信息；旅游时能应付大部分的事情；能在熟悉的领域发表一些看法；能描述个人的工作经验、梦想并能提供合理的解释
+- B2 —— 能读懂专业领域较复杂的文章、论文、新闻等；能流利地与当地人进行口语对话；能写出脉络较为清晰、论点明确的文章；能对较广的话题分析利弊
+- C1 —— 能理解长、难句子并读懂隐含的意义；自然地、流畅地使用英文进行表达；灵活地使用语言，有效地用于社交、学术和专业目的；能生产结构合理，脉络清晰的专业文章
+- C2 —— 轻松驾驭几乎所有听到或读到的东西；能用重新组织语言总结来口头和书面资料的信息；可以非常顺畅、精确地用英语表达，无论在多复杂的情况下
+
+## 工具
+
+- [English-level-up-tips](https://github.com/byoungd/English-level-up-tips) —— 英语学习指导
+
+- local-trans —— 本地翻译模型
+  - Local Translator —— WebUI交互界面
+
+## 单词
+
 miscellaneous 杂项
 
 inference 推理
