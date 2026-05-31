@@ -7,26 +7,29 @@ alias:
 order: 1
 ---
 
-<!-- more -->
-
-## 概念
+编年体AI圈大事记：
 
 年份 | 概念 | 说明
 --- | --- | ---
-1950年 | NLP（Natural Language Processing，自然语言处理） | 句子成分拆分
-1950年 | AI（Artificial Intelligence，人工智能） | 无
+1950年 | **NLP（Natural Language Processing，自然语言处理）** | 句子成分拆分
+1950年 | AI（Artificial Intelligence，人工智能） | 阿兰·麦席森·图灵（Alan Turing）发表论文《计算机器与智能》，正式提出“图灵测试”，这是 AI 概念的真正起点。
 2016年 | AI元年 | 阿法狗围棋打败李世石，次年打败柯洁 （当年人类围棋技术最顶尖的两人）
-2017年 | AGI（Artificial General Intelligence，通用人工智能） | 大厂提供的LLM实现
-2017年 | LLM（Large Language Model，大语言模型） | 指由Transformer架构训练得到的语言模型，本质是基于输入“猜测”下文作为输出。衍生黑化：机器幻觉（Hallucination）、Token
+2017年 | PLM（Pre-trained Language Model，预训练语言模型/小模型） | 指 ELMo、BERT、GPT-1 等早期“小规模”预训练模型。它们证明了“先在海量文本上盲读，再回考场精调（Pre-train + Fine-tune）”的技术路线可行，是 LLM 爆发前的直接孵化器。
+2017年 | **LLM（Large Language Model，大语言模型）** | 基于论文《Attention Is All You Need》指出的Transformer架构训练得到的语言模型，本质是基于输入“猜测”下文作为输出。衍生黑话：机器幻觉（Hallucination）、Token
+2017年 | AGI（Artificial General Intelligence，通用人工智能 —— 指具有与人类同等或超越人类广泛智能的AI） | 大厂提供的LLM“实现”（打印引号是因为实际效果欠缺，但确实能引起资本幻觉）
 2019年 | Multimodality，多模态 | 多种形式数据（如文字、声音、图片、味觉、触觉、...）输入、训练、输出，应用如图片/音频/视频输入和生成。（论文：[CLIP](https://github.com/openai/CLIP)）
 2020年 | RAG（Retrieval-Augmented Generation，检索增强生成） | 由FAIR（Facebook AI Research）团队提出，结合信息检索、文本增强、文本生成的NLP技术，将传统信息检索系统的优势与LLM的功能结合在一起，使大模型生成更准确、丰富的文本内容。简称挂知识库。
 2023年 | Agent（智能体） | 处理LLM只能处理推断的问题，扩展爬虫、文件处理、系统操作等能力
 2024年 | MCP（Model Context Protocol，模型上下文协议） | anthropic提出的Agent扩展工具交互规范 （alias: function call， tool calls）。有了交互规范，则可作为单独服务对接不同Agent供应商，Agent供应商只需考虑提示词的书写。
 2024年 | 工作流（flow） | 低码工程在风口的再次起飞
+2025年 | 小模型 | 开始出现效果能对标大模型的小体量模型，使个人PC部署开始成为可能
 2025年 | SKILL | anthropic提出的“问题处理指南”概念，处理大模型已知道问题、信息、可调用工具的情况下仍无法提出高效处理方案的问题。本质上是mcp协议里的一个tool工具，里面分门别类的放置skill名称、描述和预制提示词，大模型根据skill名称、描述判断是否继续接收该skill的预制提示词。 （[link_anthropic_skills](https://github.com/anthropics/skills/tree/main/skills)/[link_skillsmp](https://skillsmp.com/zh)/[link_skillsh](https://skills.sh/)）
 2025年 | Vibe Coding （氛围编程） | 由 Andrej Karpathy（OpenAI的联合创始人、前特斯拉AI负责人） 于2025年2月提出"你只需要完全沉浸在氛围中，甚至忘记代码的存在"，于2025年10月承认"它们的表现完全不够好，整体而言完全'没有帮助'"。（todo 观点是什么？）
 2026年 | Harness Agent | “Vibe Coding Plus” HA是模型以外的任何东西
-2026年 | A2A（Agent to Agent） | todo
+2026年 | A2A（Agent to Agent） | todo 没空了解，感觉还是个东拼西凑的临时解决方案
+2026年 | 韬（τ）定律 | 韬（τ）是物理学中代表时间常数（时延）的希腊字母。这里表示摩尔定律貌似失效后，老乡提出的新芯片技术衡量标准和技术构想。构想通过逻辑折叠（LogicFolding）技术减少单元指令经过的门电路数量，从而实现弯道超车（需要软硬件的结合，如需要自研3D版EDA芯片设计软件）。
+
+<!-- more -->
 
 ## 产品
 
