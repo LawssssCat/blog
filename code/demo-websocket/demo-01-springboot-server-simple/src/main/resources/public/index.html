@@ -5,39 +5,104 @@
     <title>WebSocket</title>
 </head>
 <body>
+<div>
+    <span>客户端在线测试： http://www.easywoole.com/wstool.html</span>
+</div>
+<div>
+    <textarea id="message-text" cols="200" rows="10"></textarea>
+</div>
+<button onclick="establish()">建立连接</button>
+<button onclick="send()">发送消息</button>
+<button onclick="disconnect()">断开连接</button>
+<div>
+    <div>服务端：<input id="server-info" style="width: 400px;" value="ws://localhost:23380/channel/echo/1"/></div>
+    <div><span id="connect-status">未连接</span></div>
+</div>
+<div>
+    <div id="message-history"></div>
+</div>
 <script type="text/javascript">
-    let websocket = new WebSocket("ws://localhost:23380/channel/echo/1");
+    domMessageHistory = document.getElementById("message-history")
+    domMessageText = document.getElementById("message-text")
+    domConnectStatus = document.getElementById("connect-status")
+    domServerInfo = document.getElementById("server-info")
 
-    // 连接断开
-    websocket.onclose = e => {
-        console.log(`连接关闭: code=${e.code}, reason=${e.reason}`)
+    if (!('WebSocket' in window)) {
+        alert("浏览器不支持WebSocket")
     }
-    // 收到消息
-    websocket.onmessage = e => {
-        console.log(`收到消息：${e.data}`);
-    }
-    // 异常
-    websocket.onerror = e => {
-        console.log("连接异常")
-        console.error(e)
-    }
-    // 连接打开
-    websocket.onopen = e => {
-        console.log("连接打开");
+    let url = null;
+    let websocket = null
 
-        // 创建连接后，往服务器连续写入3条消息
-        websocket.send("springdoc.cn");
-        websocket.send("springdoc.cn");
-        websocket.send("springdoc.cn");
-
+    function disconnect() {
         // 最后发送 bye，由服务器断开连接
         // websocket.send("bye");
 
         // 也可以由客户端主动断开
-        setTimeout(() => {
-            websocket.close();
-        }, 1000)
+        websocket.close();
     }
+
+    function establish() {
+        if (websocket) {
+            alert("已连接")
+            return
+        }
+        url = domServerInfo.value;
+        websocket = new WebSocket(url);
+
+        // 连接打开
+        websocket.onopen = e => {
+            console.log("连接打开");
+            // 创建连接后，往服务器连续写入3条消息
+            domConnectStatus.innerHTML = "已连接:" + url
+            domConnectStatus.style.color = "#0f0"
+            addHistory("chat", "connect establish")
+            doSend("hello");
+        }
+        // 连接断开
+        websocket.onclose = e => {
+            console.log(`连接关闭: code=${e.code}, reason=${e.reason}`)
+            websocket = null;
+            domConnectStatus.innerHTML = "未连接"
+            domConnectStatus.style.color = "#000"
+            addHistory("chat", "connect closed")
+        }
+        // 收到消息
+        websocket.onmessage = e => {
+            console.log(`收到消息：${e.data}`);
+            addHistory("server", e.data)
+        }
+        // 异常
+        websocket.onerror = e => {
+            console.log("连接异常")
+            console.error(e)
+            domConnectStatus.innerHTML = "连接异常:" + e
+            domConnectStatus.style.color = "#f00"
+            addHistory("chat", e)
+        }
+    }
+
+    function send() {
+        if (!websocket) {
+            alert("未连接")
+            return
+        }
+        let message = domMessageText.value;
+        if (!message) {
+            alert("请输入消息")
+            return
+        }
+        doSend(message)
+    }
+
+    function doSend(msg) {
+        addHistory("you", msg)
+        websocket.send(msg)
+    }
+
+    function addHistory(role, msg) {
+        domMessageHistory.innerHTML = role + ": " + msg + "<br>" + domMessageHistory.innerHTML
+    }
+
 </script>
 </body>
 </html>
