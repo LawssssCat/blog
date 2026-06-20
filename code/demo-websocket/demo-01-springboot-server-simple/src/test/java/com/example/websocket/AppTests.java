@@ -1,10 +1,10 @@
-package com.example.demo01springbootserversimple;
+package com.example.websocket;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Demo01SpringbootServerSimpleApplicationTests {
+class AppTests {
 
     @Test
     void contextLoads() {

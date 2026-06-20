@@ -1,4 +1,4 @@
-package com.example.demo01springbootserversimple.model.dto;
+package com.example.websocket.simple.model.dto;
 
 import lombok.Data;
 

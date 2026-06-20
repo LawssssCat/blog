@@ -1,6 +1,6 @@
-package com.example.demo01springbootserversimple.runtime;
+package com.example.websocket.simple.runtime;
 
-import com.example.demo01springbootserversimple.model.dto.ClientDTO;
+import com.example.websocket.simple.model.dto.ClientDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 @Component
 @Slf4j

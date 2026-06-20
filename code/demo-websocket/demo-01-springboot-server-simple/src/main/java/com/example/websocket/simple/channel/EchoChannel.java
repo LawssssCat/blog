@@ -1,6 +1,6 @@
-package com.example.demo01springbootserversimple.channel;
+package com.example.websocket.simple.channel;
 
-import com.example.demo01springbootserversimple.runtime.WebSocketSessionMgr;
+import com.example.websocket.simple.runtime.WebSocketSessionMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

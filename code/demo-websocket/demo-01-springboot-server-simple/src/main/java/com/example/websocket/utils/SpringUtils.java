@@ -1,4 +1,4 @@
-package com.example.demo01springbootserversimple.utils;
+package com.example.websocket.utils;
 
 import java.util.List;
 

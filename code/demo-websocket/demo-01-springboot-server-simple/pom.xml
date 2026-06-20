@@ -60,7 +60,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.example.demo01springbootserversimple.Demo01SpringbootServerSimpleApplication
+                    <mainClass>com.example.websocket.App
                     </mainClass>
                     <skip>true</skip>
                 </configuration>
