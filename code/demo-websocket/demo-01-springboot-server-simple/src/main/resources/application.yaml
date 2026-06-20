@@ -1,2 +1,10 @@
 server:
   port: 23380
+
+
+logging:
+  level:
+    # 捕获服务端往外写的 STOMP 数据（包含心跳空行）
+    org.springframework.messaging.simp.stomp.StompEncoder: TRACE
+    # 捕获客户端发进来的 STOMP 数据（包含心跳空行）
+    org.springframework.messaging.simp.stomp.StompDecoder: TRACE
