@@ -19,7 +19,7 @@ controller.listener.names=CONTROLLER
 log.dirs=./kafka-logs                            # kafka数据存放地址
 ```
 
-测试
+## 测试
 
 ```shell
 # 创建topic
@@ -39,9 +39,21 @@ hello
 hello
 Ctrl + C
 Processed a total of 2 messages
+
+# 查看头信息
+$ product/bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --from-beginning --topic Topic_2_Request \
+  --from-beginning \
+  --property print.headers=true \
+  --property print.timestamp=true \
+  --property print.key=true
+$ product/bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --from-beginning --topic Topic_2_Response \
+  --from-beginning \
+  --property print.headers=true \
+  --property print.timestamp=true \
+  --property print.key=true
 ```
 
-windows访问wsl的kafka服务
+## windows访问wsl的kafka服务
 
 + 开启localhost转发（必须）
 + 开启镜像网络
