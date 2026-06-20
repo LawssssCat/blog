@@ -9,6 +9,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class SimpleClientExample {
@@ -17,6 +18,16 @@ public class SimpleClientExample {
     // 用于定时发送心跳的线程池
     private static final ScheduledExecutorService heartbeatScheduler = Executors.newSingleThreadScheduledExecutor();
 
+    private static final String topicId = "88888"; // 服务端会把它解析为 Long topic
+    private static final String url = "ws://localhost:32122/channel/echo/" + topicId;
+
+    // 记录连续重连失败的次数
+    private static final AtomicInteger reconnectAttempts = new AtomicInteger(0);
+    // 最大重连等待间隔（秒），避免无限拉长等待时间
+    private static final int MAX_RECONNECT_BACKOFF_SEC = 60;
+
+    private static ScheduledFuture<?> heartbeatTask = null;
+    private static WebSocketSession currentSession = null;
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // 1. 创建原生 WebSocket 客户端
@@ -37,17 +48,18 @@ public class SimpleClientExample {
 
         log.info("-------- 客户端连接成功，进入运行等待阶段 -------------");
         // 4. 启动手动心跳：每 10 秒向服务端发送一次标准 Ping 帧
-        heartbeatScheduler.scheduleAtFixedRate(() -> {
-            try {
-                if (session.isOpen()) {
-                    log.info("💓 [客户端] 正在向服务端发送标准 Ping 心跳...");
-                    // 发送底层的标准 Ping 消息（Tomcat 等容器收到后会自动回复 Pong）
-                    session.sendMessage(new PingMessage(ByteBuffer.wrap(new byte[0])));
-                }
-            } catch (Exception e) {
-                log.error("发送心跳失败: {}", e.getMessage());
-            }
-        }, 10, 10, TimeUnit.SECONDS);
+        // ❗有服务端心跳了，不需要客户端心跳
+//        heartbeatScheduler.scheduleAtFixedRate(() -> {
+//            try {
+//                if (session.isOpen()) {
+//                    log.info("💓 [客户端] 正在向服务端发送标准 Ping 心跳...");
+//                    // 发送底层的标准 Ping 消息（Tomcat 等容器收到后会自动回复 Pong）
+//                    session.sendMessage(new PingMessage(ByteBuffer.wrap(new byte[0])));
+//                }
+//            } catch (Exception e) {
+//                log.error("发送心跳失败: {}", e.getMessage());
+//            }
+//        }, 10, 10, TimeUnit.SECONDS);
 
         // 5. 核心：主线程在此永久阻塞，直到网络断开触发 countDown
         disconnectLatch.await();

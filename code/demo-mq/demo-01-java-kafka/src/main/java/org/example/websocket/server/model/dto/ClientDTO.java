@@ -8,4 +8,6 @@ public class ClientDTO {
     private String clientId;
 
     private Session session;
+
+    private Long lastActiveTimestamp;
 }

@@ -6,6 +6,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.example.websocket.server.runtime.WebSocketSessionMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.socket.PingMessage;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -55,6 +56,17 @@ public class EchoChannel {
         this.topic = topic;
         LOGGER.info("[websocket] open 新的连接：id={}，topic={}, config={} [{}]", this.session.getId(), this.topic, endpointConfig, this);
         WebSocketSessionMgr.getInstance().add(String.valueOf(topic), session);
+
+        // 这表示服务端收到客户端的pong，需要服务端主动ping客户端，客户端pong了才到这里。
+        // 为什么不直接等客户端的ping？1、client-ping、server-pong的流程没有hook方式；2、无。
+        session.addMessageHandler(new MessageHandler.Whole<PongMessage>() {
+            @Override
+            public void onMessage(PongMessage pongMessage) {
+                // 当收到客户端的标准 Ping 帧时，Jakarta WebSocket 会自动回复 Pong，并触发此回调
+                LOGGER.info("💗 [服务端收到 Pong 回应] 确认客户端在线！id={}，topic={}", session.getId(), topic);
+                WebSocketSessionMgr.getInstance().refreshActiveTime(String.valueOf(topic));
+            }
+        });
     }
 
     // 连接关闭
