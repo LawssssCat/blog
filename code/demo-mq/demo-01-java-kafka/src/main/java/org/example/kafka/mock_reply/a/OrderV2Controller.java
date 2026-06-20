@@ -1,4 +1,4 @@
-package org.example.mock_reply.a;
+package org.example.kafka.mock_reply.a;
 
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;

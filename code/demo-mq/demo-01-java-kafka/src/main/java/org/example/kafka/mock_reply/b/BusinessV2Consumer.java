@@ -1,4 +1,4 @@
-package org.example.mock_reply.b;
+package org.example.kafka.mock_reply.b;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.SendTo;

@@ -1,4 +1,4 @@
-package org.example.mock_reply;
+package org.example.kafka.mock_reply;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

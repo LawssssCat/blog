@@ -1,4 +1,4 @@
-package org.example.mock.a;
+package org.example.kafka.mock.a;
 
 import jakarta.annotation.Resource;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
