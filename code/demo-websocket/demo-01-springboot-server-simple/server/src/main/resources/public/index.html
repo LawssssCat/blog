@@ -6,7 +6,10 @@
 </head>
 <body>
 <div>
-    <span>客户端在线测试： http://www.easywoole.com/wstool.html</span>
+    <span>客户端在线测试： </span>
+    <ul>
+        <li><del>http://www.easywoole.com/wstool.html</del></li>
+    </ul>
 </div>
 <div>
     <textarea id="message-text" cols="200" rows="10"></textarea>
@@ -15,8 +18,8 @@
 <button onclick="send()">发送消息</button>
 <button onclick="disconnect()">断开连接</button>
 <div>
-    <div>服务端：<input id="server-info" style="width: 400px;" value="ws://localhost:23380/channel/echo/1"/></div>
-    <ul>
+    <div>服务端：<input id="server-info" style="width: 400px;" value=""/></div>
+    <ul id="server-list">
         <li>直连： <span>ws://localhost:23380/channel/echo/1</span></li>
         <li>nginx： <span>ws://localhost:23388/channel/echo/1</span></li>
     </ul>
@@ -30,76 +33,134 @@
     domMessageText = document.getElementById("message-text")
     domConnectStatus = document.getElementById("connect-status")
     domServerInfo = document.getElementById("server-info")
+    domServerList = document.getElementById("server-list")
 
     if (!('WebSocket' in window)) {
         alert("浏览器不支持WebSocket")
     }
-    let url = null;
-    let websocket = null
+
+    let websocketMap = {}
+
+    function getWsInstance() {
+        let uu = domServerInfo.value
+        let xx = websocketMap[uu]
+        if (!xx) {
+            xx = new WsInstance()
+            xx.url = uu
+            websocketMap[uu] = xx
+        }
+        return xx
+    }
+
+    class WsInstance {
+        url = null;
+        session = null;
+        domStatus = "";
+        domStatusColor = "";
+        domHistory = "";
+        refresh() {
+            if (getWsInstance() === this) {
+                domConnectStatus.innerHTML = this.domStatus
+                domConnectStatus.style.color = this.domStatusColor
+                domMessageHistory.innerHTML = this.domHistory
+            }
+        }
+        close() {
+            this.session.close();
+        }
+        isEstablish() {
+            return this.session
+        }
+        establish() {
+            if (this.isEstablish()) {
+                this.refresh()
+                return
+            }
+            this.domStatus = "连接中..." + this.url
+            this.domStatusColor = "#fa0"
+            this.session = new WebSocket(this.url);
+            this.refresh()
+
+            // 连接打开
+            this.session.onopen = e => {
+                console.log("连接打开", this.url);
+                // 创建连接后，往服务器连续写入3条消息
+                this.domStatus = "已连接:" + this.url
+                this.domStatusColor = "#0f0"
+                this.addHistory("chat", "connect establish")
+                this.doSend("hello");
+                this.refresh();
+            }
+            // 连接断开
+            this.session.onclose = e => {
+                console.log(`连接关闭:`, this.url, e)
+                this.session = null;
+                if (e.code === 1000) {
+                    this.domStatus = "连接关闭：" + (e.reason || "正常关闭");
+                    this.domStatusColor = "#000"
+                } else {
+                    let reasonDesc = e.reason;
+                    if (e.code === 1006) {
+                        reasonDesc = (reasonDesc || "请检查后端是否启动、或 Nginx 是否支持 WebSocket 转发");
+                    } else {
+                        reasonDesc = (reasonDesc || "未知原因")
+                    }
+                    this.domStatus = "连接异常中断：" + reasonDesc
+                    this.domStatusColor = "#f00"
+                }
+                this.addHistory("chat", "connect closed")
+                this.refresh();
+            }
+            // 收到消息
+            this.session.onmessage = e => {
+                console.log(`收到消息：${e.data}`, this.url);
+                this.addHistory("server", e.data)
+                this.refresh();
+            }
+            // 异常
+            this.session.onerror = e => {
+                console.log("连接异常", this.url, e)
+            }
+        }
+
+         doSend(msg) {
+            this.addHistory("you", msg)
+            try {
+                this.session.send(msg)
+            } catch (err) {
+                this.addHistory("chat", err)
+            }
+        }
+
+         addHistory(role, msg) {
+            const now = new Date();
+            const YYYY = now.getFullYear();
+            const MM = String(now.getMonth() + 1).padStart(2, '0'); // 月份從 0 開始，記得 +1
+            const DD = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            this.domHistory = `${YYYY}-${MM}-${DD} ${hh}:${mm}:${ss}` + " [" + role + "] -> " + msg + "<br>" + this.domHistory
+        }
+    }
+
 
     function disconnect() {
         // 最后发送 bye，由服务器断开连接
         // websocket.send("bye");
 
         // 也可以由客户端主动断开
-        if (websocket) {
-            websocket.close();
+        if (getWsInstance()) {
+            getWsInstance().close();
         }
     }
 
     function establish() {
-        if (websocket) {
-            alert("已连接")
-            return
-        }
-        url = domServerInfo.value;
-
-        domConnectStatus.innerHTML = "连接中..." + url
-        domConnectStatus.style.color = "#fa0"
-        websocket = null
-        websocket = new WebSocket(url);
-
-        // 连接打开
-        websocket.onopen = e => {
-            console.log("连接打开");
-            // 创建连接后，往服务器连续写入3条消息
-            domConnectStatus.innerHTML = "已连接:" + url
-            domConnectStatus.style.color = "#0f0"
-            addHistory("chat", "connect establish")
-            doSend("hello");
-        }
-        // 连接断开
-        websocket.onclose = e => {
-            console.log(`连接关闭:`, e)
-            websocket = null;
-            if (e.code === 1000) {
-                domConnectStatus.innerHTML = "连接关闭：" + (e.reason || "正常关闭");
-                domConnectStatus.style.color = "#000"
-            } else {
-                let reasonDesc = e.reason;
-                if (e.code === 1006) {
-                    reasonDesc = (reasonDesc || "请检查后端是否启动、或 Nginx 是否支持 WebSocket 转发");
-                } else {
-                    reasonDesc = (reasonDesc || "未知原因")
-                }
-                domConnectStatus.innerHTML = "连接异常中断：" + reasonDesc
-                domConnectStatus.style.color = "#f00"
-            }
-            addHistory("chat", "connect closed")
-        }
-        // 收到消息
-        websocket.onmessage = e => {
-            console.log(`收到消息：${e.data}`);
-            addHistory("server", e.data)
-        }
-        // 异常
-        websocket.onerror = e => {
-            console.log("连接异常", e)
-        }
+        getWsInstance().establish()
     }
 
     function send() {
-        if (!websocket) {
+        if (!getWsInstance().isEstablish()) {
             alert("未连接")
             return
         }
@@ -108,29 +169,31 @@
             alert("请输入消息")
             return
         }
-        doSend(message)
+        getWsInstance().doSend(message)
     }
 
-    function doSend(msg) {
-        addHistory("you", msg)
-        try {
-            websocket.send(msg)
-        } catch (err) {
-            addHistory("chat", err)
+    // ===================
+    // 2
+    // ===================
+
+    let xx = [
+        {
+            "name": "直连",
+            "url": "ws://localhost:23380/channel/echo/1"
+        },
+        {
+            "name": "nginx",
+            "url": "ws://localhost:23388/channel/echo/1"
         }
+    ]
+    domServerList.innerHTML = xx.map(x => {
+        return `<li>${x.name} —— <span onclick="enableServer('${x.url}')">${x.url}</span></li>`;
+    }).join("")
+    function enableServer(url) {
+        domServerInfo.value = url;
+        domMessageText.focus()
+        establish()
     }
-
-    function addHistory(role, msg) {
-        const now = new Date();
-        const YYYY = now.getFullYear();
-        const MM = String(now.getMonth() + 1).padStart(2, '0'); // 月份從 0 開始，記得 +1
-        const DD = String(now.getDate()).padStart(2, '0');
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        const ss = String(now.getSeconds()).padStart(2, '0');
-        domMessageHistory.innerHTML = `${YYYY}-${MM}-${DD} ${hh}:${mm}:${ss}` + " [" + role + "] -> " + msg + "<br>" + domMessageHistory.innerHTML
-    }
-
 </script>
 </body>
 </html>
