@@ -1,6 +1,6 @@
-package com.example.websocket.server.simple.runtime;
+package com.example.websocket.server.ws.simple.runtime;
 
-import com.example.websocket.server.simple.model.dto.ClientDTO;
+import com.example.websocket.server.ws.simple.model.dto.ClientDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
-package com.example.websocket.server.stomp.controller;
+package com.example.websocket.server.ws.stomp.controller;
 
-import com.example.websocket.server.stomp.model.dto.ChatRequest;
-import com.example.websocket.server.stomp.model.dto.ChatResponse;
+import com.example.websocket.server.ws.stomp.model.dto.ChatRequest;
+import com.example.websocket.server.ws.stomp.model.dto.ChatResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;

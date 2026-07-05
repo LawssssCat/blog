@@ -1,4 +1,4 @@
-package com.example.websocket.server.simple.model.dto;
+package com.example.websocket.server.ws.simple.model.dto;
 
 import lombok.Data;
 

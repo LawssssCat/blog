@@ -1,12 +1,11 @@
-package com.example.websocket.server.simple.channel;
+package com.example.websocket.server.ws.simple.channel;
 
-import com.example.websocket.server.simple.runtime.WebSocketSessionMgr;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.example.websocket.server.ws.simple.runtime.WebSocketSessionMgr;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.time.Instant;
 
@@ -14,9 +13,8 @@ import java.time.Instant;
  * WebSocket端点，通过value注解指定websocket的路径
  */
 @ServerEndpoint(value = "/channel/echo/{topic}")
+@Slf4j
 public class EchoChannel {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EchoChannel.class);
-
     /**
      * 表示当前连接对象，我们可以通过此对象来执行发送消息、断开连接等操作。
      * WebSocket 的连接 URL，类似于 Http 的 URL，也可以传递查询参数、path 参数。
@@ -36,7 +34,7 @@ public class EchoChannel {
     // 收到消息
     @OnMessage
     public void onMessage(String message) throws IOException {
-        LOGGER.info("[websocket] message 收到消息：id={}，topic={}，message={} [{}]", this.session.getId(), this.topic, message, this);
+        log.info("[websocket] message 收到消息：id={}，topic={}，message={} [{}]", this.session.getId(), this.topic, message, this);
 
         if ("bye".equalsIgnoreCase(message)) {
             // 由服务器主动关闭连接。状态码为 NORMAL_CLOSURE（正常关闭）。
@@ -53,21 +51,21 @@ public class EchoChannel {
         // 保存 session 到对象
         this.session = session;
         this.topic = topic;
-        LOGGER.info("[websocket] open 新的连接：id={}，topic={}, config={} [{}]", this.session.getId(), this.topic, endpointConfig, this);
+        log.info("[websocket] open 新的连接：id={}，topic={}, config={} [{}]", this.session.getId(), this.topic, endpointConfig, this);
         WebSocketSessionMgr.getInstance().add(String.valueOf(topic), session);
     }
 
     // 连接关闭
     @OnClose
     public void onClose(CloseReason closeReason) {
-        LOGGER.info("[websocket] close 连接断开：id={}，topic={}，reason={} [{}]", this.session.getId(), this.topic, closeReason, this);
+        log.info("[websocket] close 连接断开：id={}，topic={}，reason={} [{}]", this.session.getId(), this.topic, closeReason, this);
         WebSocketSessionMgr.getInstance().remove(String.valueOf(this.topic), closeReason);
     }
 
     // 连接异常
     @OnError
     public void onError(Throwable throwable) throws IOException {
-        LOGGER.info("[websocket] error 连接异常：id={}，topic={}，throwable={} [{}]", this.session.getId(), this.topic, throwable.getMessage(), this);
+        log.info("[websocket] error 连接异常：id={}，topic={}，throwable={} [{}]", this.session.getId(), this.topic, throwable.getMessage(), this);
         // 关闭连接。状态码为 UNEXPECTED_CONDITION（意料之外的异常）
         WebSocketSessionMgr.getInstance().remove(String.valueOf(this.topic), new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, throwable.getMessage()));
     }
