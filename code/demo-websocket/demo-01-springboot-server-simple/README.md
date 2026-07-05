@@ -14,7 +14,7 @@ websocket是h5中提供的在单个tcp连接上进行全双工通信的协议。
 RFC6455定义了websocket的通信标准。
 + 实现：
   + java —— JSR356定义了websocket在java中的api。
-web容器，如tomcat的`tomcat-websocket.jar`中实现了上述接口。
+  + tomcat —— web容器，如tomcat的`tomcat-websocket.jar`中实现了上述接口。
 
 ```xml
 <dependency>

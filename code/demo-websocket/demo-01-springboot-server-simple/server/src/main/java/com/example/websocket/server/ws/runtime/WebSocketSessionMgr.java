@@ -1,13 +1,12 @@
-package com.example.websocket.server.ws.simple.runtime;
+package com.example.websocket.server.ws.runtime;
 
-import com.example.websocket.server.ws.simple.model.dto.ClientDTO;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
-import jakarta.annotation.PostConstruct;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.RemoteEndpoint;
 import jakarta.websocket.Session;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,18 +17,17 @@ import java.util.function.BiConsumer;
 public class WebSocketSessionMgr {
     private static final Map<String, ClientDTO> CLIENTS = new ConcurrentHashMap<>();
 
-    private static WebSocketSessionMgr instance;
-
-    @PostConstruct
-    public void postConstruct() {
-        if (instance != null) {
-            log.warn("duplicate instance");
-        }
-        instance = this;
-    }
+    private static final WebSocketSessionMgr INSTANCE = new WebSocketSessionMgr();
 
     public static WebSocketSessionMgr getInstance() {
-        return instance;
+        return INSTANCE;
+    }
+
+    @Data
+    public class ClientDTO {
+        private String clientId;
+
+        private Session session;
     }
 
     public void travelClients(BiConsumer<String, ClientDTO> func) {

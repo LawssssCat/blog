@@ -1,4 +1,4 @@
-package com.example.websocket.server.ws.stomp.config;
+package com.example.websocket.server.ws.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -23,15 +23,25 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Map;
 
+/**
+ * 用于开启 Spring 高级消息代理（STOMP/SockJS） 架构。
+ * 它是一套功能完备的“全家桶”框架，自带应用层协议、房间路由和发布订阅（Pub/Sub）功能。
+ *
+ * /my-stomp/endpoint —— 服务端建立连接的前缀
+ * /my-stomp/app —— 服务端接收消息的前缀
+ * /my-stomp/topic —— 服务端/客户端广播的前缀
+ * /my-stomp/queue —— 同上
+ * /my-stomp/user —— 服务端私聊的前缀
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 @Slf4j
-public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
+public class StompWebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 1. 连接建立地址
         registry.addEndpoint(
-                "/ws-endpoint"
+                "/my-stomp/endpoint"
         ).setHandshakeHandler(new DefaultHandshakeHandler() {
             @Override
             protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
@@ -45,16 +55,19 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 2. 业务处理前缀：凡是 /app/... 的消息都进入 Controller 处理
-        registry.setApplicationDestinationPrefixes("/app");
+        // 2. 服务端，Controller监听的业务处理前缀：
+        registry.setApplicationDestinationPrefixes("/xxx/app");
 
-        // 3. 消息广播/订阅通道的前缀：凡是 /topic/... 的消息都进入内存代理直接广播
-        // 处理逻辑：
-        // 当客户端/服务端执行 session.send("/topic/greetings", msg) 时，
-        // 消息不经过任何 Java 代码（Controller），直接由 Broker 复制并分发给所有订阅了该主题的客户端。
-        // 适用场景：
-        // 不需要鉴权、不需要存数据库、纯粹的“前端对前端”实时同步（例如：匿名聊天室、实时画板）。
-        registry.enableSimpleBroker("/topic", "/queue");
+        // 3. 服务端，消息广播/私发的前缀。
+        // 客户端，监听广播消息：
+        // /xxx/topic
+        // /xxx/queue
+        registry.enableSimpleBroker("/xxx/topic", "/xxx/queue");
+        // 4. 服务端，私发前缀。
+        // 客户端监听私发消息
+        // /xxx/user/xxx/topic
+        // /xxx/user/xxx/queue
+        registry.setUserDestinationPrefix("/xxx/user");
     }
 
 
