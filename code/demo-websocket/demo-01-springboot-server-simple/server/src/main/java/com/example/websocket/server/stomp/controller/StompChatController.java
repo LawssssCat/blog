@@ -1,14 +1,14 @@
-package com.example.websocket.stomp.controller;
+package com.example.websocket.server.stomp.controller;
 
-import com.example.websocket.stomp.model.dto.ChatRequest;
-import com.example.websocket.stomp.model.dto.ChatResponse;
+import com.example.websocket.server.stomp.model.dto.ChatRequest;
+import com.example.websocket.server.stomp.model.dto.ChatResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.security.Principal;
 
 @Controller

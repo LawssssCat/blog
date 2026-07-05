@@ -1,4 +1,4 @@
-package com.example.websocket.utils;
+package com.example.websocket.server.utils;
 
 import java.util.List;
 

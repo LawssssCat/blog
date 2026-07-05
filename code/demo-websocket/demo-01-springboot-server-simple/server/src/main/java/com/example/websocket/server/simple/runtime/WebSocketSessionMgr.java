@@ -1,13 +1,13 @@
-package com.example.websocket.simple.runtime;
+package com.example.websocket.server.simple.runtime;
 
-import com.example.websocket.simple.model.dto.ClientDTO;
+import com.example.websocket.server.simple.model.dto.ClientDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.websocket.CloseReason;
-import javax.websocket.RemoteEndpoint;
-import javax.websocket.Session;
+import jakarta.annotation.PostConstruct;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.RemoteEndpoint;
+import jakarta.websocket.Session;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

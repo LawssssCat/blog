@@ -1,4 +1,4 @@
-package com.example.websocket.stomp.model.dto;
+package com.example.websocket.server.stomp.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,8 @@
-package com.example.websocket.simple.model.dto;
+package com.example.websocket.server.simple.model.dto;
 
 import lombok.Data;
 
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 @Data
 public class ClientDTO {

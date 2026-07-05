@@ -1,7 +1,7 @@
-package com.example.websocket.simple.config;
+package com.example.websocket.server.simple.config;
 
-import com.example.websocket.simple.channel.EchoChannel;
-import com.example.websocket.simple.runtime.WebSocketSessionMgr;
+import com.example.websocket.server.simple.channel.EchoChannel;
+import com.example.websocket.server.simple.runtime.WebSocketSessionMgr;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
