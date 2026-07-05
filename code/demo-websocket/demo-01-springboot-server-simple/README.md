@@ -79,3 +79,220 @@ RFC6455定义了websocket的通信标准。
   + 路由规则（Spring 规范）：
     + `/app/*`：这是关键。Spring 服务端配置了 `config.setApplicationDestinationPrefixes("/app")`。
       当客户端发送的目的地是以 /app 开头（如 /app/hello）时，消息不会直接进广播队列，而是被拦截并路由到后端带有 `@MessageMapping("/hello")` 注解的 Spring Controller 方法 中，交由 Java 业务代码处理。
+
+
+---
+
+todo 分布式服务端管理
+
+```bash
+#########
+# [窗口A]
+#########
+redis-cli -h 127.0.0.1 -p 6379
+# 输入订阅命令（频道名与你 Java 里的常量一致）
+SUBSCRIBE websocket-bridge
+#########
+# [窗口B]
+#########
+redis-cli -h 127.0.0.1 -p 6379
+# 向指定频道发送测试文本
+PUBLISH websocket-bridge "Hello, Redis Pub/Sub Test!"
+
+#########################
+如果功能正常，
+窗口 B 会返回一个整数 (integer) 1（代表当前有 1 个客户端成功收到了这则广播）；
+同时 窗口 A 也会瞬间刷出如下日志：
+1) "message"
+2) "websocket-bridge"
+3) "Hello, Redis Pub/Sub Test!"
+#########################
+如果功能被禁用：
+虽然 Redis 默认是开启 Pub/Sub 的，但为了提高生产环境的安全性，
+很多运维人员或云服务商（如 AWS ElastiCache、阿里云）会通过以下两种官方手段将该功能强行禁用：
++ 禁用手段1：在安全配置区域添加以下内容，将订阅/发布相关的命令完全禁用
+rename-command SUBSCRIBE ""
+rename-command PUBLISH ""
+rename-command PSUBSCRIBE ""
++ 禁用手段2：通过 ACL 细粒度权限限制 —— 在现代 Redis 版本中，更常用的做法是不给当前连接的系统账号分配 @pubsub 权限组。
+# 显式移除账号的 pubsub 权限类目
+ACL SETUSER your_java_user -@pubsub
+#########################
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+
+我们需要配置 Redis 订阅一个叫 websocket-bridge 的通道，一旦有任何一台机器发布消息，所有机器都会被通知并执行转发。
+
+创建 RedisStompBridgeConfig.java
+package com.example.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
+import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Configuration
+public class RedisStompBridgeConfig {
+
+    public static final String REDIS_CHANNEL = "websocket-bridge";
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public RedisStompBridgeConfig(SimpMessagingTemplate simpMessagingTemplate) {
+        this.simpMessagingTemplate = simpMessagingTemplate;
+    }
+
+    /**
+     * 配置 Redis 消息监听容器
+     */
+    @Bean
+    public RedisMessageListenerContainer redisContainer(RedisConnectionFactory connectionFactory,
+                                                        MessageListenerAdapter listenerAdapter) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        // 让所有服务器节点都订阅统一的 Redis 频道
+        container.addMessageListener(listenerAdapter, new ChannelTopic(REDIS_CHANNEL));
+        return container;
+    }
+
+    /**
+     * 绑定具体的业务处理方法
+     */
+    @Bean
+    public MessageListenerAdapter listenerAdapter() {
+        return new MessageListenerAdapter(new Object() {
+            // 当 Redis 收到消息时，会自动触发这个 handleMessage 方法
+            @SuppressWarnings("unused")
+            public void handleMessage(String message) {
+                try {
+                    // 1. 反序列化成我们自定义的消息中转包
+                    RedisMessageWrapper wrapper = objectMapper.readValue(message, RedisMessageWrapper.class);
+                    
+                    // 2. 根据消息类型判断是【广播】还是【私聊】
+                    if ("BROADCAST".equals(wrapper.getType())) {
+                        // 统一调用本地的内存 Broker 推送给连在这台机器上的所有对应订阅者
+                        simpMessagingTemplate.convertAndSend(wrapper.getDestination(), wrapper.getPayload());
+                    } else if ("PRIVATE".equals(wrapper.getType())) {
+                        // 统一调用本地的内存 Broker 推送给连在这台机器上的指定用户
+                        simpMessagingTemplate.convertAndSendToUser(wrapper.getTargetUser(), wrapper.getDestination(), wrapper.getPayload());
+                    }
+                } catch (Exception e) {
+                    System.err.println("解析 Redis 中转消息失败: " + e.getMessage());
+                }
+            }
+        }, "handleMessage");
+    }
+
+    /**
+     * 定义一个简单易用的消息中转包装类
+     */
+    public static class RedisMessageWrapper {
+        private String type;        // BROADCAST 或 PRIVATE
+        private String destination; // 例如 /my-stomp/topic/public
+        private String targetUser;  // 私聊目标用户的 userId
+        private Object payload;     // 真实的内容数据
+
+        // 无参和全参构造、Getter/Setter (可直接用 Lombok)
+        public RedisMessageWrapper() {}
+        public RedisMessageWrapper(String type, String destination, String targetUser, Object payload) {
+            this.type = type; this.destination = destination; this.targetUser = targetUser; this.payload = payload;
+        }
+        public String getType() { return type; }
+        public String getDestination() { return destination; }
+        public String getTargetUser() { return targetUser; }
+        public Object getPayload() { return payload; }
+    }
+}
+
+
+3. 业务代码发送消息（Controller 改动）
+在具体的 Java 代码中，你不再直接使用 messagingTemplate.convertAndSend，
+而是通过 redisTemplate 向 Redis 广播，
+让 Redis 负责把消息复制到集群的每一台机器上。
+修改你的 StompChatController.java：
+package com.example.controller;
+
+import com.example.config.RedisStompBridgeConfig;
+import com.example.config.RedisStompBridgeConfig.RedisMessageWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Controller;
+
+import java.security.Principal;
+import java.util.Map;
+
+@Controller
+public class StompChatController {
+
+    private final StringRedisTemplate redisTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public StompChatController(StringRedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    /**
+     * 分布式群聊广播
+     */
+    @MessageMapping("/group-chat")
+    public void handleGroupChat(Principal principal, @Payload Map<String, String> message) throws Exception {
+        String senderId = principal.getName();
+        
+        Map<String, String> payload = Map.of(
+                "sender", senderId,
+                "content", message.get("content"),
+                "type", "GROUP"
+        );
+
+        // 🌟 核心改变：构建中转包，发布到 Redis 中，通知分布式集群里的所有机器
+        RedisMessageWrapper wrapper = new RedisMessageWrapper(
+                "BROADCAST", 
+                "/my-stomp/topic/public", 
+                null, 
+                payload
+        );
+
+        redisTemplate.convertAndSend(RedisStompBridgeConfig.REDIS_CHANNEL, objectMapper.writeValueAsString(wrapper));
+    }
+
+    /**
+     * 分布式点对点私聊
+     */
+    @MessageMapping("/private-chat")
+    public void handlePrivateChat(Principal principal, @Payload Map<String, String> message) throws Exception {
+        String currentUserId = principal.getName();
+        String targetUserId = message.get("targetUserId");
+        
+        Map<String, String> payload = Map.of(
+                "sender", currentUserId,
+                "content", message.get("content"),
+                "type", "PRIVATE"
+        );
+
+        // 🌟 核心改变：不管目标用户在不在这台机器上，直接丢给 Redis 广播。
+        // 集群中拥有该 targetUserId 的那台服务器收到后，会自动将其推给对应的浏览器客户端。
+        RedisMessageWrapper wrapper = new RedisMessageWrapper(
+                "PRIVATE", 
+                "/my-stomp/queue/private", // 👈 注意：配合 convertAndSendToUser 时这里不要带虚拟前缀 /user
+                targetUserId, 
+                payload
+        );
+
+        redisTemplate.convertAndSend(RedisStompBridgeConfig.REDIS_CHANNEL, objectMapper.writeValueAsString(wrapper));
+    }
+}
+```
+
+

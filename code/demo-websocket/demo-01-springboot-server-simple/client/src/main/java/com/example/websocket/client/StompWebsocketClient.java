@@ -2,6 +2,8 @@ package com.example.websocket.client;
 
 import com.example.websocket.model.dto.ChatRequest;
 import com.example.websocket.model.dto.ChatResponse;
+import jakarta.websocket.ContainerProvider;
+import jakarta.websocket.WebSocketContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
@@ -19,8 +21,18 @@ public class StompWebsocketClient {
     private static final CountDownLatch disconnectLatch = new CountDownLatch(1);
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        // 允许 Tomcat 底层网络驱动单次接收和发送最大 2MB 的文本和二进制物理帧（默认是 64KB）
+        container.setDefaultMaxTextMessageBufferSize(2 * 1024 * 1024);
+//        container.setDefaultMaxBinaryMessageBufferSize(2 * 1024 * 1024);
+
+        System.out.println("ContainerProvider.getWebSocketContainer().getDefaultMaxTextMessageBufferSize() = " + ContainerProvider.getWebSocketContainer().getDefaultMaxTextMessageBufferSize());
+        System.out.println("ContainerProvider.getWebSocketContainer().getDefaultMaxBinaryMessageBufferSize() = " + ContainerProvider.getWebSocketContainer().getDefaultMaxBinaryMessageBufferSize());
+
         // 1. 创建底层的 WebSocket 物理连接客户端
-        StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
+        StandardWebSocketClient webSocketClient = new StandardWebSocketClient(container);
+//        StandardWebSocketClient webSocketClient = new StandardWebSocketClient();
+
         // 2. 包装为上层的 STOMP 协议客户端
         WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
         // 3. 核心选型配置：必须配置 Jackson 转换器，这样发送的对象才能自动转为 JSON 字符串
@@ -33,6 +45,9 @@ public class StompWebsocketClient {
         taskScheduler.initialize(); // 必须显式初始化
         stompClient.setTaskScheduler(taskScheduler); // 注入调度器
         stompClient.setDefaultHeartbeat(new long[]{10000, 10000}); // 每10秒双向互发心跳
+
+//        stompClient.setInboundMessageSizeLimit(2 * 1024 * 1024);  // 允许客户端接收最大 2MB 的单条消息
+//        stompClient.setOutboundMessageSizeLimit(2 * 1024 * 1024); // 允许客户端发送最大 2MB 的单条消息
 
 
         // 服务端的物理握手连接地址 (对应配置中的 registerStompEndpoints)
@@ -125,5 +140,7 @@ public class StompWebsocketClient {
             log.error("网络传输异常（如服务端停机或网络断开）. {}", session.getSessionId(), exception);
             disconnectLatch.countDown();
         }
+
+        after
     }
 }

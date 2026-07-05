@@ -2,6 +2,8 @@ package com.example.websocket.server.ws.controller;
 
 import com.example.websocket.model.dto.ChatRequest;
 import com.example.websocket.model.dto.ChatResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -61,5 +63,15 @@ public class StompChatController {
         // 逻辑 B：根据业务条件，决定发给谁。比如发送到指定的频道：
         ChatResponse response = new ChatResponse(request.getSender(), request.getContent());
         messagingTemplate.convertAndSendToUser(currentClientId, "/xxx/queue/my-private", response); // 私聊发回给自己
+
+        // mock 回复一个大消息
+//        ChatResponse response2 = new ChatResponse(request.getSender(), new String(new byte[1024]));
+        ChatResponse response2 = new ChatResponse(request.getSender(), new String(new byte[1024 * 1024]));
+        messagingTemplate.convertAndSendToUser(currentClientId, "/xxx/queue/my-private", response2);
+        try {
+            log.info("ok {}", new ObjectMapper().writeValueAsString(response2).length());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
