@@ -143,3 +143,129 @@ VirtualMachine.list()
 virtualMachine = VirtualMachine.attach("2392") // pid
 virtualMachine.loadAgent
 ```
+
+## ClassLoader
+
+todo Platform class jdk.internal.loader.ClassLoaders$PlatformClassLoader
+
+todo Arthas class com.taobao.arthas.core.server.ArthasBootstrap extends java.net.URLClassLoader
+
+java.lang.Class#getProtectionDomain —— 保护域（ProtectionDomain）包含了类的安全属性，如权限和代码源。
+
+```bash
+ArthasBootstrap.class.getProtectionDomain().getCodeSource();
+(file:/mnt/c/my/learning-java/arthas/arthas-packaging-3.6.8-bin/arthas-core.jar <no signer certificates>)
+```
+
+## 内存管理
+
+top 指标：
+
+- VIRT（Virtual Memory Size，虚拟内存） —— 进程申请的总虚拟空间，包含已申请但未实际使用的内存。
+- RES（Resident Memory Size，常驻内存大小） —— 进程当前精确占用的物理内存，是实打实吃掉的硬件内存。
+- SHR（Shred Memory Size，共享内存） —— 包含可以被其他进程共享的内存（如公共动态链接库）。
+
+> 进程独自占物理内存 = RES - SHR
+
+JVM堆使用情况：
+
+- `jcmd 1 GC.heap_info` —— 实时查看 PID 为 1 的 Java 进程的堆内存使用详情和元空间（Metaspace）状态
+- `jstat -gcutil 1 1000` —— 每隔 1000 毫秒动态、连续地查看 PID 为 1 的 Java 进程的垃圾回收（GC）统计信息（S0/S1/E/O/M/CCS/YGC/YGCT/FGC/FGCT/GCT）。
+
+堆外内存：
+
+- arthas memeory 看 metaspace direct 等非堆内存
+- pmap -X 1 查看 linux 进程内存布局，从而查看 jvm native 内存（即与该 JVM内存 相关的 linux 进程内存布局情况）
+
+  各字段含义解释：
+
+  - Address： 表示此内存段的起始地址
+  - Kbytes： 表示此虚拟内存段的大小
+  - RSS： 表示此内存段被读写时Linux实际分配的物理内存大小
+  - Dirty： 此内存段中被修改过的脏内存大小
+  - Mode： 内存段是否可读（R）、可写（W）、可执行（X）
+  - Mapping： 内存段映射的文件，匿名内存段显示为anon、非匿名内存段显示文件名（加 `-p` 可显示全路径）
+
+![Java JVM 在 Linux 进程中的内存布局情况](https://files.catbox.moe/iop4ff.png)
+
+![Java JVM 内存分布与观测工具对照图](https://files.catbox.moe/d44ojf.png)
+
+参考：
+
+- 孟小哥抓虫vlog | 对外内存排查经验 <https://www.bilibili.com/video/BV1Mc41147AC/>
+
+> Linux进程内存布局
+>
+> 1. Linux进程启动时，有：
+>
+> ```bash
+> 栈（Stack，向下增长）
+> 内存映射段（Memory Mapping Segment）
+> 堆（Heap，向上增长）
+> 数据段（Data Segment，R+W）
+> 代码段（Code Segment，R+X）
+> ```
+>
+> 1. JVM等原生应用程序在运行过程中，调用的 malloc、 mmap 等C库libc函数来使用内存。这些C库最终使用linux系统提供的 brk 系统调用扩展堆或者 mmap/munmap 系统调用创建新的内存映射段等系统调用方式来分配虚拟内存
+> 1. 为了减少系统调用开销，libc实现了一个类似内存池的机制，在free函数调用时将内存块缓存起来不归还给linux，缓存到一定阈值才会实际执行归还内存的系统覅用。所以进程占用内存比理论要大一些，一定程度是正常的
+>
+
+若应用程序存在内存泄漏，则过一段时间，进程的内存布局中肯定会有新增或增大一些的内存块。
+因此，可以保存两个时间的内存布局进行对比：
+
+`icdiff pmap-2023-07-27-09-49-46.log pmap-2023-07-28-09-49-46.log | less -SR`
+
+查看Linux内存块中的数据：
+
+`tail -c +$((0x00007face000000+1)) /proc/1/mem | head -c $((11616*1024)) | strings | less -S`
+
+GZIPInputStream 会使用 Inflater 对象，这个对象会申请 native 内存，这个内存在流的 close 方法中通过调用对象的 end 方法归还
+
+排查内存泄漏还有；
+
+- 开启JVM的NMT原生的内存追踪
+
+  在java进程启动命令中加上 `-XX:NativeMemoryTracking=detail` 然后 `jcmd 1 VM.native_memory` 查看内存分配情况
+  （注意：NMT只能观测到JVM管理的内存，像通过JNI机制直接调用malloc分配的内存则感知不到）
+
+- 检查被glibc内存分配器缓存的内存
+
+  `gdb -q -batch -ex 'call malloc_stats()' -p 1 # 查看glibc内存分配情况，会输出到进程标准错误中`
+
+  - `Total (incl. mmap)` 表示glibc分配的总体情况（包含mmap分配的部分）
+  - `system bytes` 表示glibc从操作系统中申请的虚拟内存总大小
+  - `in use bytes` 表示JVM正在使用的内存总大小（即调用glibc的malloc函数后且没有free的内存）
+
+  `gdb -q -batch -ex 'call malloc_trim(0)' -p 1 # 回收glibc缓存的内存` （❗注意，通过gdb调用c函数，有概率导致jvm进程崩溃，需谨慎执行）
+
+- 使用tcmalloc或者jemalloc的内存泄漏检测工具
+
+  说明：
+  使用Linux的`LD_PRELOAD`机制，可将glibc的内存分配器更换为tcmalloc或者jemalloc，它们提供了内存泄漏检测的功能。
+  通过hook进程的malloc、free函数调用，然后找到调用malloc后一直没有free的地方，找到可能的内存泄漏点。
+
+  ```bash
+  HEAPPROFILE=./heap.log
+  HEAP_PROFILE_ALLOCATION_INTERVAL=104857600
+  LD_PRELOAD=./libtcmalloc_and_profiler.so
+  java -jar xxx ...
+
+  pprof --pdf /path/to/java heap.log.xxx.heap > test.pdf
+  ```
+
+### 内存监控
+
+查看类在内存中的布局
+
+```xml
+<dependency>
+  <groupId>org.openjdk.jol</groupId>
+  <artifcatId>jol-core</artifactId>
+  <version>0.9</version>
+  <scope>compile</scope>
+</dependency>
+```
+
+## todo JVM机制
+
+todo JVM垃圾回收机制 <https://www.bilibili.com/video/BV1fkSTB6EHW/>
