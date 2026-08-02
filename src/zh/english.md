@@ -20,6 +20,10 @@ title: 英文（english）
 
 ## 单词
 
+cognitive 认知 —— Cognitive Enhancement，认知提升
+
+resident 常驻的、居住的；居民
+
 miscellaneous 杂项
 
 inference 推理
@@ -115,6 +119,17 @@ LPE（Local Privilege Escalation，本地权限提升）
 
 + ARPU（Average Revenue Per User，每用户平均收入） —— 指的是一个时期内(通常为一个月或一年)电信运营企业平均每个用户贡献的通信业务收入，其单位为元/户。
 
+薪资架构 —— 需要写到合同，或者大公司有“公司薪酬制度”，而不是HR口嗨
+
++ Base Salary，底薪 —— 基本盘，少于60%马上跑
++ Performance Pay，绩效 —— 规则要清晰，考核可量化，公开透明
++ Subsidies，补贴
++ Bonus，奖金
++ 扣除项
+  + Social Insurance，社会保险
+  + Income Tax，个人所得税
++ Net Salary，净工资 = 底薪 + 绩效 + 补贴 + 奖金 - 扣除项
+
 ### 互联网
 
 #### 产品经济
@@ -134,6 +149,8 @@ LPE（Local Privilege Escalation，本地权限提升）
   + CPD（Cost per Day，按天收费） —— 实际上CPT（Cost perTime）才是按照时段收费，也包括了按天收费，故CPD为按天收费的说法是错误的。
   + CTR（Click Through Rate，点击通过率） —— 指网络广告（图片广告/文字广告/关键词广告/排名广告/视频广告等）的点击到达率，即该广告的实际点击次数（严格的来说，可以是到达目标页面的数量）除以广告的展现量（Show content）。
   + CVR（Conversion Rate，转化率） —— 是一个衡量CPA广告效果的指标，简言之就是用户点击广告到成为一个有效激活或者注册甚至付费用户的转化率。
+
++ Man-Month（人月） —— 《The Mythical Man-Month，人月神话》
 
 #### 产品价值
 
