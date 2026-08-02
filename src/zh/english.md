@@ -62,6 +62,12 @@ departure 启程，出发，离开
 
 arrival 到达
 
+field 字段，菲尔兹奖（Fields Medal）
+
+medal 奖牌
+
+gadget 小工具
+
 ## 简写
 
 ### 技术名词
