@@ -129,6 +129,11 @@ VPN：跨局域网安全传输数据
 
 #### 流量管控
 
+Linux防火墙
+
+- IPFire —— 著名的开源防火墙项目
+  - [loongfire](https://github.com/vincentmli/loongfire) —— 基于IPFire项目fork出来专给龙芯使用的防火墙
+
 Android防火墙（firewall）
 
 - [Rethink DNS + Firewall + VPN for Android](https://github.com/celzero/rethink-app) —— inspired by [OpenSnitch](https://github.com/evilsocket/opensnitch) and [pi-hole](https://github.com/pi-hole/pi-hole)
@@ -136,6 +141,12 @@ Android防火墙（firewall）
   - firewall allow（放行） —— 允许所有IP
   - firewall isolate（隔离） —— 仅允许白名单的IP
   - firewall block（拦截） —— 禁止所有IP
+
+OpenWrt
+
+- luci —— web管理界面
+- DAED —— 流量代理
+  - 参考： <https://www.youtube.com/watch?v=OJEtyODERBY>
 
 #### 系统监控
 
@@ -195,6 +206,7 @@ Android防火墙（firewall）
 - C/C++
 - Rust —— 有IDE工具：zed
 - Zig
+- Haskell
 
 - Object Pascal —— 一种面向对象的编程语言。有Delphi（商业，擅长Windows开发）、Lazarus（开源，擅长移动端开发）两款IDE工具
 - PHP
@@ -592,6 +604,12 @@ IP 检测、DNS 泄漏、WebRTC（Web Real-Time Communication，网页实时通�
 - [ChromElevator](https://github.com/xaitax/Chrome-App-Bound-Encryption-Decryption)
 - ~~[L1v1ng0ffTh3L4N/EdgeSavedPasswordsDumper](https://github.com/L1v1ng0ffTh3L4N/EdgeSavedPasswordsDumper) —— 从Edge浏览器内存读取密码~~
 
+本地系统扫描
+
+- nmap —— 扫端口、网络服务
+- sqlmap —— 扫SQL注入
+- BurpSuit —— Web重放
+
 #### 威胁利用
 
 列表
@@ -626,6 +644,14 @@ IP 检测、DNS 泄漏、WebRTC（Web Real-Time Communication，网页实时通�
   - Miscellaneous
 
 ### 多媒体
+
+#### 自动化
+
+- Web RPA —— 浏览器工作流
+
+#### 字体
+
+- monaspace —— 等宽字体
 
 #### 文字生成/图片生成
 
@@ -834,18 +860,65 @@ PPT：
     - u/用户（Redditor）可以创建或加入板块，在板块内发布帖子、对帖子点赞或点踩，收到赞的用户会增加“Karma”值（表示用户的活跃程度）
 
 - 技术
+  - 信息系统安全
   - [Hacker News](https://news.ycombinator.com/news)
+  - 网络系统安全
+    - [IPFire](https://community.ipfire.org/latest) —— 著名的开源防火墙项目
   - [O站](https://www.ozabc.com/c/8-category/8) —— 分享AI、网络、实用工具
+  - 其他
   - [吾爱破解论坛](https://www.52pojie.cn/) —— 致力於軟體安全與病毒分析的非營利性技術論壇，由A-new、Hmily、ZzAge共同創建於2008年3月13日，有三个官方团队：LCG（Love Crack Group，吾愛破解小組）、LSG（Love Security Group，吾愛安全小組）、管理團隊
   - ~~[易码工作室/文曲星](https://www.emsky.net/bbs)~~
   - <https://linux.do/>
+    - [UnknoWnCheaTs](https://www.unknowncheats.me/forum/index.php) —— 外挂论坛
 
 #### 实时通讯
 
 - discord
 
-- [cabal](https://cabal.chat/)
-  - <https://github.com/cabal-club>
+- [cabal](https://cabal.chat/) —— 基于cabal协议的p2p（去中心化点对点）消息系统
+  - 代码仓：<https://github.com/cabal-club>
+  - 介绍：
+    - [Dat Ecosystem | Demo Session: Chat with Cabal CLI](https://blog.dat-ecosystem.org/demo-session-cabal/)
+  - 原理：
+    - [How Dat Works](https://dat-ecosystem-archive.github.io/how-dat-works/)
+  - 概念：
+    - 安装 —— `npm install --global cabal`
+    - cabal —— 会话/聊天群。可以通过 `cabal --new` 新建会话，可以通过 `cabal cabal://fe5xx...bdbe8?admin=ea98xx...x79398` 加入会话
+      - 问号前： 群组的公共密钥（Space Key / Swarm Key） —— 大群的全局唯一标识符（类似群号）。⚠️所有在这个群里发送的聊天数据，都会用这串密钥进行加密。
+      - 问号后（可选）： 群组创建者（或当前指定的总管理员）的个人公钥（Admin Public Key） —— 类似非p2p的服务器，客户端会将该节点作为信任锚点（Anchor of Trust），同步他的数据和黑名单规则。
+    - user（用户） —— 加入群的用户
+    - channel（管道） —— 群里面的主题板块，一个群里可以有多个板块
+      - `!status` —— 虚拟管道，用于展示群的状态
+      - default —— 默认管道，可以通过 `/join xxx` 命令创建/加入新管道，可以通过 `/leave xxx` 命令离开管道，可以通过 `Ctrl+p`/`Ctrl+n` 命令切换管道
+    - topic（主题） —— 一个管道可以设置一个主题
+  - `cabal-core`库基本使用：
+
+    ```js
+    // npm install cabal-core
+    // yarn add cabal-core
+    const cabal = require('cabal-core')
+    // cabal([dir][, key][, opts]) -> Cabal
+    // + dir (string, optional) - cabal 存储的目录，默认为 ./cabal。
+    // + key (string, optional) - 一个 64 位以即可读的字符串表示的公共密钥（可以是 ed25519 或其他基于 NaCL 的键）。如果未提供，将自动生成一个。
+    // + opts (object, optional) - 额外的选项。具体选项如下：
+    //   + latest (boolean, default: true) - 如果为 true，则始终尝试连接并拉取存档中的最新数据。 如果为 false，则不会自动拉取数据，而是需要手动调用 cabal.archive.download()。
+    const cab = cabal()
+    // on 方法允许您监听 cabal 实例上的事件。传递一个事件名称和一个回调函数，当事件触发时，将调用此回调函数。可以使用 off 方法取消。
+    cab.on('ready', () => {
+      // 包含当前 cabal 的用户名。如果新建的 cabal 则随机生成。
+      console.log(`Welcome aboard ${cab.username}!`)
+      // 当前 cabal 的连接点和当前连接的模式。这是一个只读属性。
+      console.log(`Connected to: ${cab.archives.swarm}`)
+    })
+    // 尝试连接并拉取存档中的最新数据。如果opts.latest为false，则需要手动调用。
+    cab.archive.download(() => {
+      console.log('downloaded all')
+      console.log(cab.archive.db)
+    })
+    ```
+
+- [IRC client](https://libera.chat/)
+- [weechat](https://github.com/weechat/weechat)
 
 #### 文件分享
 
