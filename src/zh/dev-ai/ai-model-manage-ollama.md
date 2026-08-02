@@ -2,7 +2,7 @@
 title: ollama
 ---
 
-用 ollama 下载、推送：
+用 ollama 下载、推送模型：
 
 ```bash
 ollama pull example # 拉取一个模型

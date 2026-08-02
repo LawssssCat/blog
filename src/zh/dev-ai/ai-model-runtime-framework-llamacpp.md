@@ -6,6 +6,22 @@ title: llama.cpp
 
 <!-- more -->
 
++ llama cli —— 命令行方式交互
++ llama server —— web方式交互
+
+```bash
+# 通过 open webui 运行
+pip install open-webui
+open-webui serve
+# dockerfile
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    volumes:
+    - ./open-webui:/app/backend/data
+  network_mode: "host"
+```
+
 ## 模型调用方式
 
 ### llama.cpp + python 调用
