@@ -2,6 +2,12 @@
 title: 本地模型部署
 ---
 
+模型本地部署原理、步骤
+
+<!-- more-->
+
+## 安装
+
 Qwen3.6-35B-A3B是开源混合架构模型（不是传统稠密模型）每次激活只需3B（而不是总的35B）参数量同时进入显存。
 
 > 一般35B大模型需要24G才能运行。
@@ -13,10 +19,6 @@ llama.cpp的CPU Offload模式通过MoE（混合专家）：
 
 实现CPU加CPU的混合推理。
 支持N卡、A卡、I卡和纯CPU运行。
-
-<!-- more-->
-
-## 安装
 
 ### 配置
 
@@ -227,15 +229,3 @@ API key：
   "enabled_providers": ["local"]
 }
 ```
-
-## 参考
-
-- 本地8G的GPU跑QWen3.6的35B模型（支持：多模态、超长上下文）  <https://www.youtube.com/watch?v=nU9c-PffHPg> （[link_文章](https://www.freedidi.com/24267.html)）
-- 本地6G的GPU跑Qwen3.6“越狱”版模型 <https://www.youtube.com/watch?v=S0_4AUJflNc> （[link_文章](https://www.freedidi.com/24284.html)）
-
-todo N/A/Intel适配
-todo 超长上下文
-
-todo llama.cpp
-todo 注意力层、专家层
-todo KV缓存
