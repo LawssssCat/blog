@@ -604,11 +604,14 @@ IP 检测、DNS 泄漏、WebRTC（Web Real-Time Communication，网页实时通�
 - [ChromElevator](https://github.com/xaitax/Chrome-App-Bound-Encryption-Decryption)
 - ~~[L1v1ng0ffTh3L4N/EdgeSavedPasswordsDumper](https://github.com/L1v1ng0ffTh3L4N/EdgeSavedPasswordsDumper) —— 从Edge浏览器内存读取密码~~
 
-本地系统扫描
+漏洞利用
 
 - nmap —— 扫端口、网络服务
 - sqlmap —— 扫SQL注入
 - BurpSuit —— Web重放
+- marshalsec —— 研究 Java 反序列化、JNDI 以及 RMI 安全问题的攻击与测试框架
+- ysoserial —— 生成 Java 反序列化漏洞利用 payload 的开源工具
+- JNDIExploit —— 用于 JNDI 注入漏洞利用与验证 的 Java 攻击辅助工具
 
 #### 威胁利用
 
