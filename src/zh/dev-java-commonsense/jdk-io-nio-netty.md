@@ -14,13 +14,15 @@ netty版本：
 
 alternative
 
-+ Mina
++ APACHE MINA 2
++ Grizzly
 
 ## 参考
 
 + 概念：netty 核心概念 <https://www.javaspring.net/blog/java-netty/>
 + 概念：EventLoop <https://zhuanlan.zhihu.com/p/666030635>
 + 文档：netty 官方文档 <https://netty.io/wiki/>
++ 文档：netty 官方文档 <https://docs.jboss.org/netty/3.2/guide/html/>
 + netty rpc 实现 <https://www.bilibili.com/video/av44457831/> \
   资料 <https://www.jianshu.com/p/b0343bfd216e>
 + rpc 介绍 <https://www.jianshu.com/p/b0343bfd216e>
@@ -358,3 +360,9 @@ TCP/IP 建立连接的三个阶段被称为“三次握手”，三次握手完�
 + accept queue: 已完成三次握手，内核正等待进程执行 accept 函数的连接，记作 B 队列。
 
 `ChannelOption.SO_BACKLOG` 配置就是控制 A + B 队列总长度的参数，如果这两个队列都满了，那么 Netty 服务将不会再接收新的连接请求了。
+
+## 粘包、拆包处理
+
++ 使用 FixedLengthFrameDecoder 对应固定长度法。
++ 使用 LineBasedFrameDecoder 或 DelimiterBasedFrameDecoder 对应特殊分隔符法。
++ 使用 LengthFieldBasedFrameDecoder 对应消息头+消息体法（推荐）。
