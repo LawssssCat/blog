@@ -1,0 +1,24 @@
+package org.example.goods.controller;
+
+import org.example.goods.service.GoodsService;
+import org.example.model.Goods;
+import org.example.model.RestResult;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@RestController
+public class GoodsController {
+    @Resource
+    private GoodsService goodsService;
+
+    @RequestMapping("/service/goods")
+    public RestResult<List<Goods>> goods(Model model) {
+        List<Goods> allGoods = goodsService.getAllGoods();
+        return RestResult.ok(allGoods);
+    }
+}

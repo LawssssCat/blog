@@ -1,0 +1,24 @@
+---
+title: SpringCloud微服务架构
+---
+
+SpringCloud是Java微服务（microservice）架构的构建标准之一。
+SpringCloud为开发人员提供了一些工具用来快速构建分布式系统中的一些常见模式和解决一些常见问题（例如配置管理、服务发现、断路器、智能路由、微代理、控制总线、一次性令牌、全局锁、领导选举、分布式会话、集群状态）。分布式系统的协调导致了很多样板式的代码，使用SpringCloud开发人员可以快速建立实现这些模式的服务和应用程序。
+
+标准中有如下元素：
+
+```bash
+API Gateway —— 接口网关
+Service Registry —— 服务注册
+Config Server —— 配置中心
+Distributed Tracing —— 分布式链路追踪
+Microservices —— 微服务
+```
+
+> 参考：
+>
+> - 微服务论文 - <https://martinfowler.com/articles/microservices.html> （[link_翻译](http://blog.cuicc.com/blog/2015/07/22/microservices)）
+> - SpringCloud 官方文档 - <https://sca.aliyun.com/en/docs/2022/overview/what-is-sca/>
+> - SpringCloud 介绍 - <https://www.cnblogs.com/qdhxhz/p/14563991.html>
+
+<!-- more -->
