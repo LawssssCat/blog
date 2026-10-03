@@ -14,6 +14,7 @@
         <module>../xx-goods</module>
         <module>../xx-portal</module>
         <module>../xx-eureka</module>
+        <module>../xx-hystrix</module>
     </modules>
 
     <properties>
