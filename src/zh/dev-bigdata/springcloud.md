@@ -37,5 +37,5 @@ Eureka | AP | Eureka各节点平等，只要一台Eureka还在就能保证注册
 
 ## 功能：负载均衡
 
-Spring Cloud 提供了一套客户端负载均衡器，例如：Ribbon。
+Spring Cloud 提供了一套客户端负载均衡器，例如：Ribbon、Feign（封装Ribbon调用）。
 

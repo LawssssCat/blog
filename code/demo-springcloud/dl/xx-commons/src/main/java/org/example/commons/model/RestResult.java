@@ -1,7 +1,7 @@
-package org.example.model;
+package org.example.commons.model;
 
 import lombok.*;
-import org.example.constant.RestCode;
+import org.example.commons.constant.RestCode;
 
 @Data
 @NoArgsConstructor

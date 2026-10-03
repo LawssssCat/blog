@@ -2,7 +2,7 @@ package org.example.goods.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.example.model.Goods;
+import org.example.commons.model.Goods;
 
 import java.util.List;
 

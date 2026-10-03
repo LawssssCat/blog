@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-@Configuration
+//@Configuration // 使用Feign实现接口调用
 public class RestConfig {
     @LoadBalanced // 使用Ribbon实现负载均衡调用
     @Bean

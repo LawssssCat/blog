@@ -1,4 +1,4 @@
-package org.example.constant;
+package org.example.commons.constant;
 
 public class RestCode {
     public static final int OK = 200;

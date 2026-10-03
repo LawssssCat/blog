@@ -1,6 +1,6 @@
 package org.example.goods.service;
 
-import org.example.model.Goods;
+import org.example.commons.model.Goods;
 
 import java.util.List;
 

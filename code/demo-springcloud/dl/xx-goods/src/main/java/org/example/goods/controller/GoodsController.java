@@ -1,9 +1,8 @@
 package org.example.goods.controller;
 
 import org.example.goods.service.GoodsService;
-import org.example.model.Goods;
-import org.example.model.RestResult;
-import org.springframework.stereotype.Controller;
+import org.example.commons.model.RestResult;
+import org.example.commons.model.Goods;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
