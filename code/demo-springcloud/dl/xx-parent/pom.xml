@@ -15,6 +15,7 @@
         <module>../xx-portal</module>
         <module>../xx-eureka</module>
         <module>../xx-hystrix</module>
+        <module>../xx-zuul</module>
     </modules>
 
     <properties>
