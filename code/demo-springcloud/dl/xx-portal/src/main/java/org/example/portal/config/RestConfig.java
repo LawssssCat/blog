@@ -1,5 +1,7 @@
 package org.example.portal.config;
 
+import com.netflix.loadbalancer.IRule;
+import com.netflix.loadbalancer.RoundRobinRule;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,5 +13,11 @@ public class RestConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    // 设置Ribbon负载均衡算法
+    @Bean
+    public IRule iRule() {
+        return new RoundRobinRule();
     }
 }

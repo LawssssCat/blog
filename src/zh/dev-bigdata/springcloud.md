@@ -23,7 +23,7 @@ Microservices —— 微服务
 
 <!-- more -->
 
-## 服务注册和发现
+## 功能：服务注册和发现
 
 Spring Cloud 提供了多种服务注册与发现的实现方式，例如：Eureka、Consul，Zookeeper。
 
@@ -34,3 +34,8 @@ Spring Cloud 提供了多种服务注册与发现的实现方式，例如：Eure
 --- | --- | ---
 Zookeeper | CP | ZK选举期间不可用
 Eureka | AP | Eureka各节点平等，只要一台Eureka还在就能保证注册服务可用，只不过查到的信息可能不是最新的
+
+## 功能：负载均衡
+
+Spring Cloud 提供了一套客户端负载均衡器，例如：Ribbon。
+
