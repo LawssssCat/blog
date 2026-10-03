@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@FeignClient("xx-goods")
+@FeignClient(value = "xx-goods", fallback = GoodsRemoteClientFallback.class)
 public interface GoodsRemoteClient {
     @RequestMapping("/service/goods")
     RestResult<List<Goods>> goods();
