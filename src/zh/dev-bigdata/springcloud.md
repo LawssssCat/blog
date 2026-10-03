@@ -22,3 +22,15 @@ Microservices —— 微服务
 > - SpringCloud 介绍 - <https://www.cnblogs.com/qdhxhz/p/14563991.html>
 
 <!-- more -->
+
+## 服务注册和发现
+
+Spring Cloud 提供了多种服务注册与发现的实现方式，例如：Eureka、Consul，Zookeeper。
+
+- 服务注册 —— 将服务所在的主机、端口、版本号、通信协议等信息登记到注册中心上。
+- 服务发现 —— 向注册中心请求已经登记的服务列表，获得某个服务的主机、端口、版本号、通信协议等信息，从而实现对具体服务的调用。
+
+服务 | C（一致性）、A（可用性）、P（分区容错性） | 说明
+--- | --- | ---
+Zookeeper | CP | ZK选举期间不可用
+Eureka | AP | Eureka各节点平等，只要一台Eureka还在就能保证注册服务可用，只不过查到的信息可能不是最新的
