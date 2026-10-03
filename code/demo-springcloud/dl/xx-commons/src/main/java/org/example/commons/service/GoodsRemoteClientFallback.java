@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 @Slf4j
 public class GoodsRemoteClientFallback implements GoodsRemoteClient {
     @Override
