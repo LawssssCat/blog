@@ -1,0 +1,9 @@
+# java -Djdk.net.hosts.file=/path/to/my-hosts.txt -jar your-app.jar
+
+127.0.0.1 eureka8700
+127.0.0.1 eureka8701
+127.0.0.1 eureka8702
+127.0.0.1 eureka8703
+
+127.0.0.1 portal
+127.0.0.1 goods
