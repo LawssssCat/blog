@@ -31,6 +31,13 @@
             <artifactId>xx-commons</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <!-- 热加载（Hot Swap） when 构建项目（Build project） -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

@@ -31,7 +31,7 @@ public class GoodsController {
     @RequestMapping("/cloud/timeout")
     public RestResult<String> timeout(Model model, @RequestParam(value = "t", required = false) Float t) {
         if (t == null || t < 0) {
-            t = 1000F;
+            t = 1F;
         }
         long duration = (long) (t * 1000);
         log.info("------------ duration = {}", duration);
@@ -45,6 +45,6 @@ public class GoodsController {
 
     // 坑：回调参数要与原方法一致，最多加异常参数
     public RestResult<String> timeout_fallback(Model model, Float t, Throwable e) {
-        return RestResult.error("服务降级！");
+        return RestResult.error("服务降级！！！！！！！！！！");
     }
 }
