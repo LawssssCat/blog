@@ -1,6 +1,7 @@
 package org.example.portal.controller;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.math.raw.Mod;
 import org.example.commons.model.RestResult;
@@ -27,7 +28,16 @@ public class GoodsController {
         return goodsRemoteClient.goods();
     }
 
-    @HystrixCommand(fallbackMethod = "timeout_fallback") // 默认1s超时
+    @HystrixCommand(
+            // 降级：默认1s超时后降级
+            fallbackMethod = "timeout_fallback",
+            // 限流：并发超过coreSize+maxQueueSize就会出现限流，呈现降级效果
+            threadPoolKey = "test",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "2"),
+                    @HystrixProperty(name = "maxQueueSize", value = "1"),
+            }
+    )
     @RequestMapping("/cloud/timeout")
     public RestResult<String> timeout(Model model, @RequestParam(value = "t", required = false) Float t) {
         if (t == null || t < 0) {
