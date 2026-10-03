@@ -18,4 +18,12 @@ public class RestResult<T> {
     public static <T> RestResult<T> ok(T data) {
         return ok(null, data);
     }
+
+    public static <T> RestResult<T> error(String msg, T data) {
+        return new RestResult<>(RestCode.ERROR, msg, data);
+    }
+
+    public static <T> RestResult<T> error(String msg) {
+        return error(msg, null);
+    }
 }
