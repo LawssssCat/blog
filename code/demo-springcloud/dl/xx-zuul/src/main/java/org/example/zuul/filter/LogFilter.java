@@ -15,6 +15,7 @@ public class LogFilter extends ZuulFilter {
     @Override
     public String filterType() {
         // 多种路由类型，和 iptable 类似
+        // pre -> routing -> origin server -> routing -> [error] -> post
         return FilterConstants.ROUTE_TYPE;
     }
 
