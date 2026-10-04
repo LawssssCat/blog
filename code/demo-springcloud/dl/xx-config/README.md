@@ -17,7 +17,7 @@ System.getProperty("user.dir") + /config-repo
 code/demo-springcloud/dl/xx-config/config-repo
 
 访问：
-config-repo/application-dev.properties
+config-repo/test-dev.properties
 config-repo/{application}-{profile}.properties
 + 查看信息
 http://localhost:9300/application/dev
@@ -35,8 +35,8 @@ http://localhost:9300/application/dev/master
 }
 ```
 + 读取内容
-http://localhost:9300/application-dev.properties
-http://localhost:9300/master/application-dev.properties
+http://localhost:9300/test-dev.properties
+http://localhost:9300/master/test-dev.properties
 ```bash
 my.name: hello-world
 ```
