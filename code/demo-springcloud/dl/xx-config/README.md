@@ -2,6 +2,8 @@
 
 Spring Cloud Config 支持管理git仓库（默认）或者文件系统（`spring.profiles.active=native`）两种配置仓库格式。
 
+## 功能：配置读取
+
 配置文件映射规则： （[link_scc文档](http://springcloud.cc/spring-cloud-config.html)）
 - `/{application}/{profile}[/{label}]` —— 查看信息
 - `/{application}-{profile}.properties` —— 查看内容
@@ -47,3 +49,29 @@ my:
   name: hello-world
 ```
 ``````
+
+## 功能：加解密
+
+是否支持加解密
+
+```bash
+$ curl -X GET http://localhost:9300/encrypt/status 
+{"description":"The encryption algorithm is not strong enough","status":"INVALID"}
+{"status":"OK"} # 配置encrypt.key之后
+```
+
+加密
+
+```bash
+$ curl -X POST http://localhost:9300/encrypt/ -d 'root'
+9896251cbca01e1eb3be854743a0e24a57a16ce4c9e0905bb7395b59b40a7dbb
+```
+
+解密
+
+```bash
+$ curl -X POST http://localhost:9300/decrypt/ -d '9896251cbca01e1eb3be854743a0e24a57a16ce4c9e0905bb7395b59b40a7dbb'
+root
+```
+
+> 支持配置文件 `{cipher}9896251cbca01e1eb3be854743a0e24a57a16ce4c9e0905bb7395b59b40a7dbb` 解密
