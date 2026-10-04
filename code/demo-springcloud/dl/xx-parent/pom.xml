@@ -16,6 +16,7 @@
         <module>../xx-eureka</module>
         <module>../xx-hystrix</module>
         <module>../xx-zuul</module>
+        <module>../xx-config</module>
     </modules>
 
     <properties>

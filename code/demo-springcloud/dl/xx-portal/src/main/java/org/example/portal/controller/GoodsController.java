@@ -32,7 +32,7 @@ public class GoodsController {
             // 降级：默认1s超时后降级
             fallbackMethod = "timeout_fallback",
             // 限流：并发超过coreSize+maxQueueSize就会出现限流，呈现降级效果
-            threadPoolKey = "test",
+            threadPoolKey = "xx-portal-threadPool-test",
             threadPoolProperties = {
                     @HystrixProperty(name = "coreSize", value = "2"),
                     @HystrixProperty(name = "maxQueueSize", value = "1"),

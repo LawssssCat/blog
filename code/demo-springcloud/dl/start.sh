@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# -Xmx100m
+
 java -version
 
 nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.profiles.active=eureka8701 > ./log/run-eureka8701.log &
