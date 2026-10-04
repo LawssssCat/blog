@@ -17,6 +17,26 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
+
+        <!--
+        说明：
+        当配置了 mq 和 actuator 之后，可以调用 actuator 的
+            /actuator/bus-refresh/ —— 全局
+            /actuator/bus-refresh/ —— 指定服务
+        接口，来通知全局/指定服务的配置刷新。
+        这套解决方案比较多“显而易见”的问题，就不多尝试了。
+        + 权限平等，任何一个完成上述服务理论上都可以通知全部服务刷新配置。只能通过运维人工管理使其“有序”。
+        + 维护成本高，需要维护多个服务。
+        -->
+        <!-- AMQP（Advanced Message Queuing Protocol，高级消息队列协议） -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

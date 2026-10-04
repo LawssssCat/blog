@@ -50,6 +50,17 @@ my:
 ```
 ``````
 
+> 客户端可以通过引入 `spring-boot-starter-actuator` 依赖，然后调用刷新方法更新 `@RefreshScope` 配置
+> 
+> ```bash
+> <dependency>
+>     <groupId>org.springframework.boot</groupId>
+>     <artifactId>spring-boot-starter-actuator</artifactId>
+> </dependency>
+> 
+> curl -XPOST http://localhost:8080/actuator/refresh
+> ```
+
 ## 功能：加解密
 
 是否支持加解密
