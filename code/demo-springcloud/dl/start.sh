@@ -8,9 +8,9 @@ java -version
 nohup java -jar xx-config-1.0-SNAPSHOT.jar > ./log/run-config.log &
 
 # 注册中心
-nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.cloud.config.profile=eureka8701 > ./log/run-eureka8701.log &
-nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.cloud.config.profile=eureka8702 > ./log/run-eureka8702.log &
-nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.cloud.config.profile=eureka8703 > ./log/run-eureka8703.log &
+nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.profiles.active=eureka8701 > ./log/run-eureka8701.log &
+nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.profiles.active=eureka8702 > ./log/run-eureka8702.log &
+nohup java -jar xx-eureka-1.0-SNAPSHOT.jar --spring.profiles.active=eureka8703 > ./log/run-eureka8703.log &
 
 # 接口调用看板
 # nohup java -jar xx-hystrix-1.0-SNAPSHOT.jar > ./log/run-hystrix.log &
