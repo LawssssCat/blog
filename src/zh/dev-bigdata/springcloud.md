@@ -87,3 +87,43 @@ XDiamond
 Qconf | 奇虎360的分布式配置中心
 Disconf | 百度的分布式配置中心
 Spring Cloud Config | 过渡到Nacos/Consul组件
+
+## 功能：分布式链路跟踪/服务与服务间的调用
+
+Spring Cloud 提供了分布式链路跟踪的解决方案，例如 Spring Cloud Sleuth。
+
+解决问题：
+
+- 串联整个调用链路，快速定位问题
+- 理清微服务之间的依赖关系
+- 分析微服务之间的性能情况
+
+组件 | 作用 | 说明
+--- | --- | ---
+Spring Cloud Sleuth | 采集数据 | 借用 Google Dapper、Twitter Zipkin、Apache HTrace的设计。
+[Zipkin](https://zipkin.io) | 呈现数据 | 由Twitter开源的分布式实时数据跟踪系统（Distributed Tracking System），基于Google Dapper的论文设计形成。 《Dapper, a Large-Scale Distributed Systems Tracing Infrastructure》
+Pinpoint | APM（应用性能管理） | 韩国Naver提供
+Apache Htrace | APM（应用性能管理） |
+EagleEye（鹰眼） | APM（应用性能管理） | 阿里巴巴提供
+
+概念： <https://cloud.spring.io/spring-cloud-static/Greenwich.SR3/single/spring-cloud.html#_spring_cloud_sleuth>
+
+- 跟踪（trace） —— 一个请求在分布式系统中穿透所有相关微服务节点的有向无环图（DAG，Directed Acyclic Grap）。
+- 跨度（span） —— 整个trace中的某一段，一个trace由多个span组成，是trace的“基本工作单元”。它代表了一个服务内部具有边界的、具体的操作阶段（如一次 RPC 调用、一次数据库查询、一次本地方法执行）。
+- 标注/事件（annotation） —— 一个span中的关键事件点。
+  有如下基本标准的时间戳事件：
+  - CS（Client Sent，客户端发送）
+  - SR（Server Received，服务端接收）
+  - SS（Server Sent，服务端发送）
+  - CR（Client Received，客户端接收）
+
+```bash
+[Trace] 整个分布式调用的生命周期
+   ├── [Span A] 网关接收请求并处理
+   └── [Span B] 服务A 通过 RPC/HTTP 调用 服务B (产生 RPC Span)
+          ├── [Annotation: CS] -> 客户端发送
+          ├── [Annotation: SR] -> 服务端接收
+          ├── [Annotation: SS] -> 服务端发送
+          └── [Annotation: CR] -> 客户端接收
+```
+

@@ -5,6 +5,11 @@ java -jar xxx.jar --server.port=8701
 java -jar xxx.jar --spring.profiles.active=eureka8701
 ```
 
+页面：
+- http://localhost:8701/
+- http://localhost:8702/
+- http://localhost:8703/
+
 ## 功能：身份认证
 
 服务端
