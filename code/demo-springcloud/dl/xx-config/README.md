@@ -86,3 +86,24 @@ root
 ```
 
 > 支持配置文件 `{cipher}9896251cbca01e1eb3be854743a0e24a57a16ce4c9e0905bb7395b59b40a7dbb` 解密
+
+## 功能：身份认证
+
+服务端
+
+```bash
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+spring.security.user.name=cat
+spring.security.user.password=123456
+```
+
+客户端
+
+```bash
+spring.cloud.config.username=cat
+spring.cloud.config.password=123456
+```
