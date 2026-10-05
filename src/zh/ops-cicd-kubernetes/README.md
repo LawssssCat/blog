@@ -10,64 +10,166 @@ title: Kubernetes 系列
 >
 > - 官方文档 —— <https://kubernetes.io/zh-cn/docs/home/>
 
-<Catalog />
+## 介绍
 
-## 前提
+作用：
+k8s 处理“自动化部署、弹性伸缩和全面管理容器化应用”问题。
 
-### 产生背景：微服务治理
+其他类似产品的问题：
 
-为了解决传统单体架构存在的诸多问题（如：单点故障、无法扩容、需全线停机以更新局部功能），厂商倾向于把传统单体架构服务按功能/按业务拆分成诸多微服务逐个治理，从而缓解单体架构带来的问题。
+- Mesos —— 并非专为容器设计，需配合 Marathon 使用，架构与配置极其复杂，且目前社区活跃度低、基本退出容器编排主流市场。
+- Docker Swarm —— 功能过于单一，缺乏复杂的调度策略、高级自动补救（Self-healing）和大规模集群管理能力，生态与社区活跃度已边缘化。
 
-但是拆分成多个微服务后，要管理的服务增多，对服务的管理成本增加。
-主要有以下问题：
+## 集群 （宏观架构）
 
-1. **微服务间通信问题** —— 微服务间通讯需考虑 I/O、线程调度模型、序列化方式、多语言支持、服务治理等问题。基于 REST API/RPC/MQ 等协议，业界有 Dubbo/Dubbox、Motan、Thrift、Grpc 等解决方案。
+Master 节点 —— 管理端，负责维护整个集群正常运行
 
-   | RPC 对比 | Dubbo/Dubbox | Motan | Thrift | Grpc |
-   | -------- | ----------- | ------- | ----- | ------ |
-   | 开发团队 | Dubbo - 阿里 <br> Dubbox - 当当 | 新浪微博 | apache | google |
-   | 开发语言 | Java      | Java    | 跨语言    | 跨语言   |
-   | 服务治理 | ✅        | ✅     | ❌      | ❌    |
-   | 多种序列化 | ✅      | ✅     | 只支持 thrift | 只支持 protobuf |
-   | 多种注册中心 | ✅    | ✅     | ❌      | ❌    |
-   | 管理中心   | ✅     | ✅      | ❌      | ❌     |
-   | 跨语言通信 | ❌      | ❌     | ✅      | ✅      |
-   | 通信架构 | ![image.png](https://s2.loli.net/2024/03/06/yr5gho7T3i18bks.png) | ![image.png](https://s2.loli.net/2024/03/06/YANgHPkIZVjpoMz.png) | ![image.png](https://s2.loli.net/2024/03/06/25ZunBshdkGP7V9.png) | ![image.png](https://s2.loli.net/2024/03/06/8rgYWh3QyUMpfoc.png) |
+- 数量： 3 / 5 / 7 / 9 —— 由于etcd的raft选举算法，要求集群节点个数为奇数个
 
-1. **微服务发现问题** —— 有如下解决方案：
+Node 节点 —— 负责提供业务处理的算力资源
 
-   - 传统服务配置 —— 需要运维人员手动配置
+- 数量： 基于业务需求决定
 
-     ![image.png](https://s2.loli.net/2024/03/06/8GRUtZn7J93apfC.png)
+## 架构 （微观架构）
 
-   - 客户端发现 —— 访问多个 ip，ip 后的服务器直接提供服务
+```mermaid
+graph TB
+    %% 样式定義
+    classDef blueBox fill:#337ab7,stroke:#1f4e79,color:#fff,font-weight:bold;
+    classDef greenBox fill:#8bc34a,stroke:#689f38,color:#fff,font-weight:bold;
+    classDef whiteBox fill:#fff,stroke:#000,color:#000,font-weight:bold;
+    classDef dashedBox fill:#fff,stroke:#ccc,stroke-dasharray: 5 5,color:#000;
+    classDef cloudBox fill:#337ab7,stroke:#1f4e79,color:#fff;
 
-     ![image.png](https://s2.loli.net/2024/03/06/5mMdiRu2sWTGweO.png)
+    %% ----------------------------------------------------
+    %% 第一排：顶部的 kubectl 和 web UI
+    %% ----------------------------------------------------
+    subgraph Row1 [ ]
+        direction LR
+        kubectl[kubectl]:::blueBox
+        webUI[web UI]:::dashedBox
+    end
+    style Row1 fill:transparent,stroke:none;
 
-   - 服务端发现 —— 访问一个 ip，ip 后的服务器通过正向代理方式提供服务
+    %% ----------------------------------------------------
+    %% 第二排：控制平面（蓝色大框） 和 右侧的 etcd
+    %% ----------------------------------------------------
+    subgraph Row2 [ ]
+        direction LR
+        
+        %% 控制平面内部
+        subgraph ControlPlane [ master ]
+            direction LR
+            subgraph CP_Left [ ]
+                direction TB
+                scheduler[scheduler]:::greenBox
+                repController[replication controller]:::greenBox
+            end
+            apiServer[api server]:::greenBox
+            
+            scheduler --> apiServer
+            repController --> apiServer
+        end
+        
+        etcd[etcd]:::blueBox
+        apiServer <--> etcd
+    end
+    style Row2 fill:transparent,stroke:none;
+    style CP_Left fill:transparent,stroke:none;
+    style ControlPlane fill:transparent,stroke:#337ab7,stroke-width:2px;
 
-     ![image.png](https://s2.loli.net/2024/03/06/w9WSpPJIlG6AmZN.png)
+    %% 从顶部组件指向 api server 的箭头
+    kubectl --> apiServer
+    webUI --> apiServer
 
-1. **服务部署/更新/扩容问题** —— 需要准备代码、准备制品、准备服务器、修改配置，分配端口、运维部署应用（手动/脚本/自动化）、配置反向代理、...诸多繁琐的步骤
+    %% ----------------------------------------------------
+    %% 第三排：底部区域（左边小 node、中间主 node、右边 Internet/防火墙）
+    %% ----------------------------------------------------
+    subgraph Row3 [ ]
+        direction LR
+        
+        %% 左侧的两个独立 node
+        subgraph LeftNodes [ ]
+            direction TB
+            nodeLeft1[node]:::whiteBox
+            nodeLeft2[node]:::whiteBox
+        end
+        
+        %% 中间的工作节点（Worker Node）
+        subgraph WorkerNode [node]
+            direction TB
+            subgraph KubeTools [ ]
+                direction LR
+                kubelet[kubelet]:::greenBox
+                kubeProxy[kube proxy]:::greenBox
+            end
+            
+            subgraph Pods [ ]
+                direction LR
+                subgraph Pod1 [Pod]
+                    container1[container]:::blueBox
+                end
+                subgraph Pod2 [Pod]
+                    container2[container]:::blueBox
+                end
+            end
+        end
+        
+        %% 右侧的独立元素（Internet 和 firewall）
+        subgraph RightElements [ ]
+            direction TB
+            Internet([Internet]):::cloudBox
+            firewall[firewall]:::greenBox
+        end
+    end
+    style Row3 fill:transparent,stroke:none;
+    style LeftNodes fill:transparent,stroke:none;
+    style RightElements fill:transparent,stroke:none;
+    style KubeTools fill:transparent,stroke:none;
+    style Pods fill:transparent,stroke:none;
+    style WorkerNode fill:transparent,stroke:#000,stroke-width:2px;
+    style Pod1 fill:transparent,stroke:#000;
+    style Pod2 fill:transparent,stroke:#000;
+```
 
-为此，提供服务编排能力的产品应运而生：
+相关组件
 
-- **Mesos** —— Mesos是一个分布式调度系统内核，早于Docker产生。Mesos作为资源管理器，从DC/OS（数据中心操作系统）的角度提供资源视图。Mesos工作模式为主从结构，主节点分配任务，从节点上的Executor负责任务的执行，通过Zookeeper给主节点提供服务注册、服务发现能力，通过Framework Marathon提供容器调度能力。
-- **Docker Swarm** —— Docker Swarm是一个由Docker团队开发的调度框架。Swarm由多个代理（Agent）组成，把这些代理称为节点（Node）。这些节点在启动Docker Daemon时会打开端口、API提供Docker Swarm远程调用。
-- **Kubernetes** —— Kubernetes借鉴了Google的Borg框架优缺点而形成。提出很多实用的新概念，目前（2025年12月30日）k8s是业界绝对的标准。
+- internet
+- firewall
 
-### 容器层
+- kubectl （命令行工具） —— 用户发送管理指令给 api server 的官方客户端入口。一般在 master 节点中存在这个工具。
+- Web UI （可选） —— 可视化 kubectl 操作
 
-[link](./container/README.md)
+- master 集群
+  - api server （通信枢纽） —— 负责接收 kubectl 命令和集群间通信
+  - scheduler （资源调度器） —— 决定 Pod 部署哪个 node 节点上。
+  - replication controller （副本控制器） —— 确保 Pod 副本数量符合预期。
+- etcd （键值数据库） —— 负责存储集群所有配置与状态数据，仅允许 api server 直接读写的数据库。
 
-## 实验环境
+- node 集群
+  - kubelet （通信枢纽） —— 接收 master 集群 api server 的命令
+  - kube proxy （流量调度器） —— 负责维护节点的网络规则，确保流量被正确路由
+  - pod / [container](./container/README.md) （计算最小单元） —— 负责运行计算任务
+
+## 环境搭建
+
+运维同学至少手工搭建一次“[二进制安装](#id-laboratory-binary)”，开发同学只想知道怎么使用可以使用下面快速搭建工具。
 
 K8S官方有推荐几种快速搭建实验环境的工具： <https://kubernetes.io/docs/tasks/tools/>
 
+- [kubeadm](#id-laboratory-kubeadm)
 - [minikube](#id-laboratory-minikube)
-- [kind](#kind-idid-laboratory-kind)
-- [k3d](#k3d-idid-laboratory-k3d)
+- [kind](#id-laboratory-kind)
+- [k3d](#id-laboratory-k3d)
 - k3s
+
+### 二进制安装 {id=id-laboratory-binary}
+
+todo
+
+### kubeadm {id=id-laboratory-kubeadm}
+
+todo
 
 ### minikube {id=id-laboratory-minikube}
 
@@ -84,35 +186,7 @@ https://www.lixueduan.com/posts/kubernetes/15-kind-kubernetes-in-docker/
 
 https://coding.gs/2024/04/03/k3d/getting-started-with-k3d/
 
-## 架构
 
-分层架构：
-
-- 生态系统
-- 接口层
-- 管理层
-- 应用层
-- 核心层
-
-相关组件
-
-- 控制面板组件
-  - etcd
-  - kube-apiserver —— 提供所有内部和外部的 API 请求操作的唯一入口。同时也负责整个集群的认证、授权、访问控制、服务发现等等能力。
-  - kube-controller-manager —— 负责维护整个 Kubernetes 集群的状态，比如多副本创建、滚动更新等。
-  - cloud-controller-manager
-  - kube-scheduler —— 监听未调度的 Pod，按照预定的调度策略绑定到满足条件的节点上。
-- 节点组件
-  - kubelet
-  - kube-proxy
-  - container runtime
-- 附加组件
-  - kube-dns
-  - Ingress Controller
-  - Heapster
-  - Dashboard
-  - Federation
-  - Fluentd-elasticsearch
 
 ## 工具
 
