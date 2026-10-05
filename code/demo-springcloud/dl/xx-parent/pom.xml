@@ -17,6 +17,7 @@
         <module>../xx-hystrix</module>
         <module>../xx-zuul</module>
         <module>../xx-config</module>
+        <module>../xx-zipkin</module>
     </modules>
 
     <properties>
@@ -27,6 +28,8 @@
         <spring-boot.version>2.1.9.RELEASE</spring-boot.version>
         <mybatis-boot.version>2.2.2</mybatis-boot.version>
         <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
+
+        <zipkin.version>2.12.3</zipkin.version>
     </properties>
 
     <dependencyManagement>
@@ -50,6 +53,17 @@
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.zipkin.java</groupId>
+                <artifactId>zipkin-autoconfigure-ui</artifactId>
+                <version>${zipkin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zipkin.java</groupId>
+                <artifactId>zipkin-server</artifactId>
+                <version>${zipkin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
