@@ -92,6 +92,35 @@ li = Store[Dog]([Dog()]) # 只允许狗
 print(li.buy())
 ```
 
+## itemgetter & attrgetter
+
+```py
+from operator import itemgetter
+
+wang = {
+  "name": "wang",
+  "age": 18,
+  "gender": "N"
+}
+name, age = itemgetter("name", "age")(wang) # 如果获取字段不存在，报错。 和 xx["xxx"] 一样
+print(name, age)
+
+xx = [1, 2, 3]
+a, e = itemgetter(0, -1, 2) # 获取数组也行
+```
+
+```py
+from operator import attrgetter
+
+class Person:
+  def __init__(self, name, age, gender):
+    self.name = name
+    self.age = age
+    self.gender = gender
+wang = Person("wang", 18, "N")
+name, age = attrgetter("name","age", "name.find")(wang)
+```
+
 ## 遍历器`iterator`
 
 实现 `__getitem__` 方法
@@ -469,3 +498,34 @@ down # 切换到下一个堆栈环境 （不改变语句执行）
 
 Cython 调用C语言
 <https://www.youtube.com/watch?v=28nOTHMUcco>
+
+## VSCode插件：Jupyter
+
+交互式编程环境，可以将代码拆分成小块运行和调试
+
+```py
+# 1. 安装vscode扩展
+# 2. 安装jupyter运行环境
+pip install jupyter
+# 3. 用 #%% 分割代码
+
+#%%
+a: int = 1
+b: int = 2
+c: int = a + b
+#%%
+s: str = str(c)
+print(s, type(s))
+```
+
+同时支持交互式文件 `.ipynb` （interactive Python Notebook）
+
+## VSCode插件：Pylance
+
+Auto Format Strings —— on
+
+Call Argument Names —— partial
+
+Function Return Types —— on
+
+Type Checking Mode —— standard
