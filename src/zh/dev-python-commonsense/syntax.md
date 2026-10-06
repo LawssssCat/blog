@@ -232,3 +232,111 @@ def hello():
 # hello = timing(hello) # 等于 @timing 语法糖
 hello()
 ```
+
+## 弱引用
+
+```py
+import random
+import weakref
+
+# id_user = {}
+id_user = weakref.WeakValueDictionary() # value 是弱引用 —— 当 value 没有引用时，对应的 entry 被删除
+# user_id = weakref.WeakKeyDictionary() # key 是弱引用 —— 当 key 没有引用时，对应的 entry 被删除
+# s = weakref.WeakSet() # 弱引用集合
+# u_ref = weakref.ref(u) # 获得 u 的弱引用
+
+class User:
+  def __init__(self):
+    self._id = random.randint(0, 1000)
+    while self._id in id_user:
+      self._id = random.randint(0, 1000)
+    id_user[self._id] = self
+
+def chat_room():
+  u1 = User()
+  u2 = User()
+
+  # Chat ...
+
+  # del id_user[ul._id]
+  # del id_user[u2._id]
+
+chat_room()
+
+for i, u in id_user.items():
+  print(f"{i} {u}")
+```
+
+## 上下文管理器（Context Manager）
+
+```py
+import os
+
+# 写法1
+class CtxManager:
+  def __int__(self, old_path):
+    self.old_path = old_path
+  def __enter__(self):
+    print("enter __enter__")
+    return self.old_path # 返回的是 as 后面引用的值
+  def __exit__(self,
+    exc_type, # 异常类型
+    exc_value, # 异常实例
+    traceback # 异常堆栈
+  ):
+    os.chdir(self.old_path)
+    if exc_type is ZeroDivisionError: # 如果有异常，返回True表示异常已经被处理
+      return True
+    return False
+def change_dir(path):
+  old_path = os.getcwd()
+  os.chdir(path)
+  return CtxManager(old_path)
+
+# 写法2
+from contextlib import contextmanager
+@contextmanager
+def change_dir(path):
+  old_path = os.getcwd()
+  os.chdir(path)
+  try:
+    yield old_path
+  except ZeroDivisionError:
+    pass
+  os.chdir(old_path)
+
+# 使用
+tmp = change_dir("/tmp")
+with change_dir as old_dir:
+  print(f"old dir {old_dir}")
+  print(f"current dir {os.getcwd()}")
+print(f"After with dir is {os.getcwd()}")
+```
+
+## 日志模块
+
+略，AI
+<https://www.youtube.com/watch?v=f7yS61tTxuc>
+
+```py
+import logging
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s')
+
+logging.debug("debug")
+logging.info("info")
+logging.warning("warning")
+logging.error("error")
+logging.critical("critical")
+
+# 记录异常
+try:
+  1 / 0
+except:
+  logging.exception("Get Exception")
+```
+
+## 调用C语言
+
+Cython 调用C语言
+<https://www.youtube.com/watch?v=28nOTHMUcco>
