@@ -494,6 +494,137 @@ up # 切换到上一个堆栈环境 （不改变语句执行）
 down # 切换到下一个堆栈环境 （不改变语句执行）
 ```
 
+## 异步IO
+
+::: tabs
+
+@tab IO等待
+
+```py
+import time
+
+def play():
+  print("enter play")
+  for _ in range(5):
+    print("等待玩家思考")
+    time.sleep(1) # 模拟思考过程 —— ❗这个等待过程，可以让机器做其他事情
+    for _ in range(1000):
+      # 模拟机器思考过程。占用CPU资源。
+      pass
+
+def main():
+  print("enter main")
+  start = time.time()
+  for _ in range(10):
+    play()
+  end = time.time()
+  print(f"total time: {end - start} seconds")
+main()
+```
+
+@tab 异步改造
+
+```py
+import time
+import asyncio
+
+async def play(init_event):
+  await init_event.wait()
+  print("enter play")
+  for _ in range(5):
+    print("等待玩家思考")
+    # 都有对应的async版本
+    # http —— aiohttp
+    # 文件读写 —— aiofiles
+    # t = asyncio.sleep(1) # 模拟思考过程 —— ❗注意，这里和 time.sleep 不同，并非直接阻塞线程
+    # await asyncio.create_task(t)
+    await asyncio.sleep(1) # 语法糖：直接等待
+    # await asyncio.to_thread(time.sleep, 1) # 如果没有异步版本，可以使用多线程版本
+    # 多线程问题：
+    # 1. GIL问题
+    # 2. 同步竞争问题
+    for _ in range(1000):
+      # 模拟机器思考过程。占用CPU资源。
+      pass
+
+async def main():
+  print("enter main")
+  start = time.time()
+  tasks = []
+  init_event = asyncio.Event()
+  # 1. 任务发布
+  for _ in range(10):
+    t = asyncio.create_task(play(init_event))
+    tasks.append(t)
+  # 2. 处理初始化
+  await asyncio.sleep(1) # 模拟初始化处理
+  print("Init Done ...")
+  init_event.set() # 通知初始化完成
+  # 3. 等待任务完成
+  # for t in tasks:
+  #   await t
+  await asyncio.gather(*tasks) # 语法糖：等待全部
+  end = time.time()
+  print(f"total time: {end - start} seconds")
+asyncio.run(main()) # 会在内部建立一个event loop然后让调用线程开始执行内部任务（coroutine）
+```
+
+todo 类似的异步操作还有：
+
+- Lock
+  ```py
+  # 1
+  lock = asyncio.Lock()
+  await lock.acquire()
+  try:
+    ...
+  finally:
+    lock.release()
+  # 2
+  lock = asyncio.Lock()
+  async with lock:
+    ...
+  ```
+- Semaphore
+  ```py
+  # 1
+  sem = asyncio.Semaphore(10)
+  await sem.acquire()
+  try:
+    ...
+  finally:
+    sem.release()
+  # 2
+  sem = asyncio.Semaphore(10)
+  async with sem:
+    ...
+  ```
+- Barrier
+  ```py
+  # 1
+  barrier = asyncio.Barrier(2)
+  await barrier.wait()
+  # 2
+  barrier = asyncio.Barrier(2)
+  async with barrier:
+    ...
+  ```
+- Condition
+  ```py
+  # 1
+  cond = asyncio.Condition()
+  await cond.acquire()
+  try:
+    await cond.wait()
+  finally:
+    cond.release()
+  # 2
+  cond = asyncio.Condition()
+  await cond.wait()
+  ```
+
+:::
+
 ## 调用C语言
 
 Cython 调用C语言
