@@ -132,7 +132,7 @@ graph TB
     style Pod2 fill:transparent,stroke:#000;
 ```
 
-相关组件
+组件 —— 不可或缺组成部分
 
 - internet
 - firewall
@@ -143,13 +143,27 @@ graph TB
 - master 集群
   - api server （通信枢纽） —— 负责接收 kubectl 命令和集群间通信
   - scheduler （资源调度器） —— 决定 Pod 部署哪个 node 节点上。
-  - replication controller （副本控制器） —— 确保 Pod 副本数量符合预期。
+  - Controller Manager （控制器管理器） / ~~replication controller~~ （副本控制器，已被前者替代） —— 确保 Pod 副本数量符合预期。
 - etcd （键值数据库） —— 负责存储集群所有配置与状态数据，仅允许 api server 直接读写的数据库。
 
 - node 集群
-  - kubelet （通信枢纽） —— 接收 master 集群 api server 的命令
+  - kubelet （通信枢纽） —— 负责容器创建删除维护
   - kube proxy （流量调度器） —— 负责维护节点的网络规则，确保流量被正确路由
   - pod / [container](./container/README.md) （计算最小单元） —— 负责运行计算任务
+
+插件 —— 需要，但可替换的部分
+
+- containerd / ~~Docker~~ / ~~podman~~  —— 容器运行时
+- Calico / Cilium / Flannel —— 网络插件（CNI），负责 Pod 跨节点网络互通。
+- CoreDNS / ~~kube-dns~~（在k8s 1.11被前者替代） —— 提供私有域名解析服务
+- Ingress Controller / LVS + keepalive —— 提供7层的负载均衡功能
+
+附件 —— 非必要部分，提供扩展功能，提效运维
+
+- Prometheus / Grafana / ~~Heapster~~ —— 集群节点状态监控
+- Dashboard —— 仪表盘
+- Federation —— 多k8s集群管理
+- Fluentd-elasticsearch —— 日志收集方案
 
 ## 环境搭建
 
