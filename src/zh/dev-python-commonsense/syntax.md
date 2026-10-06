@@ -313,6 +313,46 @@ with change_dir as old_dir:
 print(f"After with dir is {os.getcwd()}")
 ```
 
+## 模块管理
+
+包导入
+
+```py title="mymath.py"
+略
+```
+
+```py title="main.py"
+import mymath as mm
+import mymath as mm2
+
+print(mm.add(1, 2))
+print(type(mm))
+print(id(mm1) == id(mm2)) # true
+```
+
+包查找
+
+```py title="main.py"
+from pprint import pprint
+
+pprint(sys.path) # 可以看到module查找路径
+
+PYTHONPATH=/a/b/c python main.py # 指定环境变量将路径加到module查找路径中
+
+import xx # 基于上述路径，会找 xx.py 或者 xx/ （找到目录的话，如果有 __init__.py 会被执行）
+print(dir()) # 可以看到 xx 目录
+print(dir(xx)) # 可以看到 xx 目录内部有什么目录
+```
+
+包编写
+
+```py title="xx/a.py"
+# 导入当前模块的子模块方法
+import xx.subdir       # 相对项目根目录
+import . import subdir # 相对当前文件目录
+import .. import main
+```
+
 ## 日志模块
 
 略，AI
@@ -334,6 +374,95 @@ try:
   1 / 0
 except:
   logging.exception("Get Exception")
+```
+
+loguru库
+
+```py
+# 装包
+pip install loguru
+
+# 引包
+from loguru import logger
+import sys
+
+# 配置
+logger.remove() # 关闭控制台打印
+logger.add(sys.stdout, format="{time} - <level>{level}</level> - <YELLOW>{message}</YELLOW>") # 自定义控制台输出
+handler_id = logger.add("msg.log", level="ERROR", format="{time} - {level} - {message}") # 开启文件输出
+# logger.remove(handler_id) # 关闭指定输出
+
+# 日志打印
+logger.info("info msg")
+logger.warning("warning msg")
+logger.error("error msg")
+logger.critical("critical msg")
+
+# 添加自定义信息 —— 方式 1
+child = logger.bind(foo="bar") # 在 format 中使用 `{extra}` 声明使用
+child.info("msg xxxxxxx")
+# 添加自定义信息 —— 方式 2
+with logger.contextualize(foo="bar"):
+  logger.info("msg xxxxxxxxx")
+# 添加自定义信息 —— 方式 3
+@logger.contextualize(foo="bar")
+def xxx():
+  logger.info("msg xxxxxxxxx")
+xxx()
+
+
+# 异常记录
+# 1
+try:
+  1 / 0
+except:
+  logger.exception("xxxx")
+# 2
+with logger.catch(ZeroDivisionError, level="WARNING"):
+  1 / 0
+# 3
+@logger.catch()
+def test():
+  1 / 0
+test()
+```
+
+## 调试工具
+
+pdb <https://www.youtube.com/watch?v=rUygQQ8Dxv8>
+
+```py
+python -m pdb main.py
+
+help # 列出pdb命令
+
+回车 # 执行上一个命令
+
+list # 看代码
+list . # 查看当前代码
+
+next # 执行当前语句
+
+step # 步入函数
+
+continue # 执行到断点
+break # 列出所有断点
+break main.py:4 # 设置断点
+clear # 清理断点
+clear 1 # 清理第一个断点
+disable 1 # 临时关闭断点
+enable 1 # 重新开启断点
+
+until 7 # 执行到第7行
+
+p i # 查看变量i的值
+p [i, n, nums] # 支持python语法，这里用数组形式查看 i n nums 的变量取值
+p globals() # 查看全局变量
+pp global() # （格式化）查看全局变量
+
+where # 查看当前命令所在堆栈
+up # 切换到上一个堆栈环境 （不改变语句执行）
+down # 切换到下一个堆栈环境 （不改变语句执行）
 ```
 
 ## 调用C语言
