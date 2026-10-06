@@ -581,7 +581,7 @@ todo
   - ImmediateDispatcher —— 发布事件时立即将事件分发给订阅者，而不使用中间队列更改分发顺序。这实际上是 **深度优先** 的调度顺序，而不是使用队列时的 **广度优先**。
 - Executor/ExceptionHandler
 
-```
+```txt
 结构：
 
 EventBus

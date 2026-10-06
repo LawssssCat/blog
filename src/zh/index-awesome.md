@@ -612,6 +612,7 @@ IP 检测、DNS 泄漏、WebRTC（Web Real-Time Communication，网页实时通�
 - marshalsec —— 研究 Java 反序列化、JNDI 以及 RMI 安全问题的攻击与测试框架
 - ysoserial —— 生成 Java 反序列化漏洞利用 payload 的开源工具
 - JNDIExploit —— 用于 JNDI 注入漏洞利用与验证 的 Java 攻击辅助工具
+- CodeQL —— 静态代码分析（SAST）工具。它允许安全研究员通过编写类似 SQL 的查询语句，在大规模的源代码中自动搜寻安全漏洞。
 
 #### 威胁利用
 

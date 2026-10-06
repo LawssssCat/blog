@@ -30,6 +30,8 @@ inference 推理
 
 diagnostic 诊断
 
+mitigation 缓解
+
 aggressive 挑衅
 
 election 选举

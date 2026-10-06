@@ -27,6 +27,7 @@ zypper用法：
 
 ```bash
 zypper [全局选项]  [命令选项] [参数]
+zypper -vvv ....... # verbose
 
 zypper lr # 仓库
 zypper addrepo -c SLES12-SP3-Updates

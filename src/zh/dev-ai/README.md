@@ -14,21 +14,22 @@ order: 1
 1950年 | **NLP（Natural Language Processing，自然语言处理）** | 句子成分拆分
 1950年 | AI（Artificial Intelligence，人工智能） | 阿兰·麦席森·图灵（Alan Turing）发表论文《计算机器与智能》，正式提出“图灵测试”，这是 AI 概念的真正起点。
 2016年 | AI元年 | 阿法狗围棋打败李世石，次年打败柯洁 （当年人类围棋技术最顶尖的两人）
-2017年 | PLM（Pre-trained Language Model，预训练语言模型/小模型） | 指 ELMo、BERT、GPT-1 等早期“小规模”预训练模型。它们证明了“先在海量文本上盲读，再回考场精调（Pre-train + Fine-tune）”的技术路线可行，是 LLM 爆发前的直接孵化器。
-2017年 | **LLM（Large Language Model，大语言模型）** | 基于论文《Attention Is All You Need》指出的Transformer架构训练得到的语言模型，本质是基于输入“猜测”下文作为输出。衍生黑话：机器幻觉（Hallucination）、Token
-2017年 | AGI（Artificial General Intelligence，通用人工智能 —— 指具有与人类同等或超越人类广泛智能的AI） | 大厂提供的LLM“实现”（打印引号是因为实际效果欠缺，但确实能引起资本幻觉）
+2017年⭐ | PLM（Pre-trained Language Model，预训练语言模型/小模型） | 指 ELMo、BERT、GPT-1 等早期“小规模”预训练模型。它们证明了“先在海量文本上盲读，再回考场精调（Pre-train + Fine-tune）”的技术路线可行，是 LLM 爆发前的直接孵化器。
+2017年⭐ | **LLM（Large Language Model，大语言模型）** | 基于论文《Attention Is All You Need》指出的Transformer架构训练得到的语言模型，本质是基于输入“猜测”下文作为输出。衍生黑话：机器幻觉（Hallucination）、Token
+2017年⭐ | AGI（Artificial General Intelligence，通用人工智能 —— 指具有与人类同等或超越人类广泛智能的AI） | 大厂提供的LLM“实现”（打印引号是因为实际效果欠缺，但确实能引起资本幻觉）
 2019年⭐ | Multimodality，多模态 | 多种形式数据（如文字、声音、图片、味觉、触觉、...）输入、训练、输出，应用如图片/音频/视频输入和生成。（论文：[CLIP](https://github.com/openai/CLIP)）
 2020年⭐ | RAG（Retrieval-Augmented Generation，检索增强生成） | 由FAIR（Facebook AI Research）团队提出，结合信息检索、文本增强、文本生成的NLP技术，将传统信息检索系统的优势与LLM的功能结合在一起，使大模型生成更准确、丰富的文本内容。简称挂知识库。
-2023年 | Agent（智能体） | 处理LLM只能处理推断的问题，扩展爬虫、文件处理、系统操作等能力
+2023年⭐ | Agent（智能体） | 处理LLM只能处理推断的问题，扩展爬虫、文件处理、系统操作等能力
 2023年 | Function Calling | OpenAI推出的工具调用功能
-2024年⭐ | MCP（Model Context Protocol，模型上下文协议） | anthropic提出的Agent扩展工具交互规范 （alias: function call， tool calls），统一工具调用规范。
+2024年 | MCP（Model Context Protocol，模型上下文协议） | anthropic提出的Agent扩展工具交互规范 （alias: function call， tool calls），统一工具调用规范。
 2024年 | 工作流（flow） | 低码工程在风口的再次起飞
 2025年 | 小模型 | 开始出现效果能对标大模型的小体量模型，使个人PC部署开始成为可能
-2025年⭐ | SKILL | anthropic提出的“问题处理指南”概念，处理大模型已知道问题、信息、可调用工具的情况下仍无法提出高效处理方案的问题。本质上是mcp协议里的一个tool工具，里面分门别类的放置skill名称、描述和预制提示词，大模型根据skill名称、描述判断是否继续接收该skill的预制提示词。 （[link_anthropic_skills](https://github.com/anthropics/skills/tree/main/skills)/[link_skillsmp](https://skillsmp.com/zh)/[link_skillsh](https://skills.sh/)）
+2025年 | SKILL | anthropic提出的“问题处理指南”概念，处理大模型已知道问题、信息、可调用工具的情况下仍无法提出高效处理方案的问题。本质上是mcp协议里的一个tool工具，里面分门别类的放置skill名称、描述和预制提示词，大模型根据skill名称、描述判断是否继续接收该skill的预制提示词。 （[link_anthropic_skills](https://github.com/anthropics/skills/tree/main/skills)/[link_skillsmp](https://skillsmp.com/zh)/[link_skillsh](https://skills.sh/)）
 2025年 | A2A（Agent to Agent Protocol） | 解决“不同厂商/框架的 Agent 之间如何互相握手、对齐需求、组队协同”的问题
 2025年 | Vibe Coding （氛围编程） | 由 Andrej Karpathy（OpenAI的联合创始人、前特斯拉AI负责人） 于2025年2月提出"你只需要完全沉浸在氛围中，甚至忘记代码的存在"，于2025年10月承认"它们的表现完全不够好，整体而言完全'没有帮助'"，并又提出个概念“Agentic Engineering（智能体工程）”。
 2026年 | Harness Agent / Agentic Engineering | “Vibe Coding Plus” HA是模型以外的任何东西
-2026年⭐ | SubAgent（子智能体） | 在多智能体（Multi-Agent）架构中，由主智能体（Master/Router）根据任务动态派生（Spawn）出的垂直细分智能体。主 Agent 负责分发与统筹，Subagent 负责死磕单一具体任务（如 debug 某段代码、深挖某个搜索），任务结束后销毁，降低主模型的 context 污染。
+2026年 | SubAgent（子智能体） | 在多智能体（Multi-Agent）架构中，由主智能体（Master/Router）根据任务动态派生（Spawn）出的垂直细分智能体。主 Agent 负责分发与统筹，Subagent 负责死磕单一具体任务（如 debug 某段代码、深挖某个搜索），任务结束后销毁，降低主模型的 context 污染。
+2026年⭐ | 小模型 | jav
 
 ⭐： 对模型使用有本质提升的概念
 
