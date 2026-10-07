@@ -2,6 +2,34 @@
 title: Python 语法
 ---
 
+## 区别：str、bytes
+
+```py
+s = "abc"
+b = b"abc"
+
+b2 = bytes([1,2,3,256]) # byte包含8位字节，取值0~255，因此这行第3个字节取值256会导致报错
+print(b2)
+print(b2[0], type(b2[0]))
+
+# 文件读取，指定编码
+with open("msg.txt", "rb") as fp:
+  content = fp.readline()
+  print(content, type(content)) # b'\xb6\xbc\xbf\xb4....' <class 'bytes'>
+with open("msg.txt", "r", encoding="gb2312"):
+  content = fp.readline()
+  print(content, type(content)) # 文本内容 <class 'str'>
+```
+
+## 区别：is、==
+
+- `==` —— 值是否相等
+  场景：
+  - 值对比
+- `is` —— 对象是否一致
+  场景：
+  - 判空
+
 ## 临时变量
 
 [Walrus Operator，海象运算符](https://www.youtube.com/watch?v=aGitW09mXEA) —— 用来简化赋值
@@ -492,6 +520,81 @@ pp global() # （格式化）查看全局变量
 where # 查看当前命令所在堆栈
 up # 切换到上一个堆栈环境 （不改变语句执行）
 down # 切换到下一个堆栈环境 （不改变语句执行）
+```
+
+## 多进程
+
+```py title="pi.py"
+import os
+
+# pi = 4 * (1 - 1/3 + 1/5 - 1/7 + 1/9 - 1/11 + ...)
+def calculate_pi(start: int, end: int) -> float:
+  result = 0.0
+  positive = True if start % 2 == 0 else False
+  for i in range(start, end):
+    tmp = 1.0 / (float(i * 2) + 1.0)
+    if positive:
+      result += tmp
+    else:
+      result -= tmp
+    positive = not positive
+  return result * 4.0
+```
+
+```py title="mproc.py"
+import pi
+import time
+import multiprocessing as mp
+
+iter_round = 100_000_000
+
+# 单线程 15s
+def single_process() -> float:
+  return pi.calculate_pi(0, iter_round)
+
+# 多线程 5s 但是复杂（共享内存、循环等待）
+def multi_process():
+  step = iter_round // 4
+  procs = []
+  def calculate_pi_wrapper(result, start, end):
+    result.value = pi.calculate_pi(start, end)
+  for start in range(0, iter_round, step):
+    result = mp.Value("d")
+    // 坑：不同线程，使用pickle对参数进程序列化和反序列化
+    p = mp.Process(target=calculate_pi_wrapper, args=[start, start + step])
+    p.start()
+    procs.append((p, result))
+  pi = 0.0
+  for p, result in procs:
+    p.join()
+    pi += result.value
+  return pi
+
+# 线程池
+def multi_process_pool():
+  params = []
+  step = iter_round // 4
+  for start in range(0, iter_round, step):
+    params.append((start, start + step))
+  with mp.Pool(4) as pool:
+    result = pool.starmap(pi.calculate_pi, params)
+  return sum(result)
+
+
+def main() -> None:
+  start_time = time.time()
+  # 1
+  # print(single_process())
+  # print(f"single_process: {end_time - start_time} seconds")
+  # 1
+  # print(multi_process())
+  # print(f"multi_process: {end_time - start_time} seconds")
+  # 1
+  print(multi_process_pool())
+  print(f"multi_process_pool: {end_time - start_time} seconds")
+  end_time = time.time()
+if __name__ == "__main__":
+  main()
 ```
 
 ## 异步IO
