@@ -2,9 +2,8 @@
 title: Python打包
 ---
 
-随着 AI 浪潮的到来，使用 Python 作为主要开发语言的项目激增。
-但同时此类 Python 项目经常需要与 cuda/mlk/ROCm 等非 python 项目打交道，如果没有一套优秀的代码管理实践方案，会使代码工程管理变得复杂。
-因此，了解 Python 现代的工程结构、打包发布方式尤为重要。
+了解 Python 现代的工程结构、打包发布方式尤为重要。
+尤其伴随 AI 发展 Python 项目经常需要与 cuda/mlk/ROCm 等非 python 项目打交道。
 
 <!-- more -->
 
@@ -16,13 +15,17 @@ Python 工程结构分两种 conda方案、python官方方案：
 + python官方方案 —— 官方主要提供标准和官方实践，具体管理工具非常多。
   如打包工具有 setuptools/hatchling/...；
   如依赖安装工具有 pip/uv/poetry/...；
+  + pip（自带） —— 包管理工具
+  + venv（自带） —— 虚拟环境管理工具
+  + pipenv —— 整合pip和venv的工具
 
-### 工程结构演进记录
+
+## 不同包管理工具使用方式
 
 下面记录多种常见的工程结构。
 （不推荐的管理结构会进行标识）
 
-#### 全局依赖【不推荐】
+### 全局依赖【不推荐】
 
 ```bash
 # 安装依赖
@@ -34,7 +37,7 @@ pip3 show flask # 可查看存放位置 location
 
 1. 版本冲突 —— 如果全局中有两个项目依赖不同版本 flask 会导致依赖冲突导致的运行问题
 
-#### venv + requirements.txt 模式【不推荐】
+### venv + requirements.txt 模式【不推荐】
 
 ```bash
 # 启动虚拟环境
@@ -56,7 +59,7 @@ pip install -r requirements.txt # 别人可通过该命令一键安装依赖
 + 依赖关系不清楚 —— 通过 `requirements.txt` 管理的依赖关系无法区分直接依赖、间接依赖，当项目体量增大、依赖关系变多后，想区分无用的依赖、对项目体积进行删减将变得困难。
 + 只卸载直接依赖 —— 通过 `pip uninstall flask` 命令卸载 flask 时， pip 只卸载 flask 本身，不卸载 flask 引入的依赖。
 
-#### venv + pyproject.toml 模式【不推荐】
+### venv + pyproject.toml 模式【不推荐】
 
 ```bash
 # 启动虚拟环境
@@ -89,7 +92,7 @@ testpaths = ["tests"]
 
 1. 维护 `pyptoject.toml` 麻烦 —— 添加新依赖需要到官网查询版本信息
 
-#### uv 模式
+### uv 模式
 
 目前 python 项目类似 uv 的工具很多，以目前最流行的 uv 为例。
 
@@ -129,6 +132,32 @@ uv add flask
 uv sync
 
 uv run main.py
+```
+
+### pipenv
+
+参考：
+- 程序员老王|[[Python] pipenv 包管理 虚拟环境管理](https://www.youtube.com/watch?v=ejVBDeRYLCw)
+
+```bash
+# 删除（当前目录已有的）虚拟环境
+pipenv --rm
+
+# 进入虚拟环境
+pipenv shell
+# 创建虚拟环境，如果没有
+# 创建Pipfile（配置文件），如果没有 —— 记录虚拟环境的依赖（自动维护，一般不用手动修改）
+
+# 安装依赖
+pipenv install flask
+pipenv install pytest --dev
+pipenv install       # 安装Pipfile依赖，不包含开发依赖
+pipenv install --dev # 安装Pipfile依赖，包含开发依赖
+pipenv graph # 查看依赖树
+
+# 运行命令
+python hello.py # 在虚拟环境中
+pipenv run python hello.py # 在虚拟环境外，直接执行命令
 ```
 
 ## 打包发布
