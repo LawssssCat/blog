@@ -924,6 +924,21 @@ PPT：
 - [IRC client](https://libera.chat/)
 - [weechat](https://github.com/weechat/weechat)
 
+#### 文件制作
+
+压缩
+
+- tar.gz/tgz —— tar归档，gz压缩。在linux上常见。
+- zip —— 在Windows和Linux都支持，虽然压缩率不高，但逐个文件压缩所以支持单独文件编辑，适合多媒体场景
+- rar —— 商业软件 WinRAR 的产品，支持损坏恢复的专利技术，可以避免大文件网络下载完解压打开报错的情况
+- 7z —— 开源免费，压缩率高，适合文字压缩如日志、代码
+
+> 场景总结：
+> - 写好多个word、excel、ppt传给人，用 zip
+> - 程序本地打包、安装包制作，用 7z
+> - 程序运行日志归档，用 tar.gz
+> - 重要文件归档、大文件传输，用 rar
+
 #### 文件分享
 
 互联网平台
