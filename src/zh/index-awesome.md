@@ -112,9 +112,14 @@ BT网站：
 
 VPN：跨局域网安全传输数据
 
-- WireGuard
+- WireGuard —— 现代加密算法、代码简洁
   - GUI
     - WGDashboard —— WireGuard VPN 仪表盘
+- OpenVPN —— 配置灵活、兼容性好
+- IKEv2/IPsec —— 移动端有专门优化
+  IKEv2协商安全参数，IPsec使用ESP等机制保护数据流量
+- L2TP/IPsec —— 部分旧设备支持。但开销相对大，目前优先考虑其他方案
+  L2TP建立隧道，IPsec提供保护
 
 内网穿透：暴露局域网服务到公网
 
@@ -508,6 +513,8 @@ CDN
 
 todo <https://www.bilibili.com/video/BV1FP411B7b7/>
 
+REA（Reverse Engineer Anything，逆向一切） —— 使用Hopper、Ghidra等成熟逆向工具交给AI自动驾驶
+
 #### 大数据分析
 
 大数据仓库/分析引擎
@@ -604,13 +611,14 @@ IP 检测、DNS 泄漏、WebRTC（Web Real-Time Communication，网页实时通�
 - [ChromElevator](https://github.com/xaitax/Chrome-App-Bound-Encryption-Decryption)
 - ~~[L1v1ng0ffTh3L4N/EdgeSavedPasswordsDumper](https://github.com/L1v1ng0ffTh3L4N/EdgeSavedPasswordsDumper) —— 从Edge浏览器内存读取密码~~
 
-漏洞利用
+漏洞分析
 
 - nmap —— 扫端口、网络服务
 - sqlmap —— 扫SQL注入
 - BurpSuit —— Web重放
 - marshalsec —— 研究 Java 反序列化、JNDI 以及 RMI 安全问题的攻击与测试框架
 - ysoserial —— 生成 Java 反序列化漏洞利用 payload 的开源工具
+https://www.bilibili.com/video/BV1ZT42127aB
 - JNDIExploit —— 用于 JNDI 注入漏洞利用与验证 的 Java 攻击辅助工具
 - CodeQL —— 静态代码分析（SAST）工具。它允许安全研究员通过编写类似 SQL 的查询语句，在大规模的源代码中自动搜寻安全漏洞。
 
@@ -875,6 +883,12 @@ PPT：
   - <https://linux.do/>
     - [UnknoWnCheaTs](https://www.unknowncheats.me/forum/index.php) —— 外挂论坛
 
+大佬的博客：
+
+- <https://github.com/accelazh/accelazh.github.io> —— 计算机技术、数学算法、AI算法
+- <https://without.boats/> —— Rust async 库作者，堪称 Rust 语言设计领域的“宝库”
+- <https://smallcultfollowing.com/babysteps/> —— Rust 语言编译器架构、类型系统和借用检查器的“总设计师”
+
 #### 实时通讯
 
 - discord
@@ -923,6 +937,14 @@ PPT：
 
 - [IRC client](https://libera.chat/)
 - [weechat](https://github.com/weechat/weechat)
+
+#### 配置文件
+
+- 1985 | ini —— 简单，但无法存放复杂数据
+- 1998 | xml —— 支持树结构，键值对支持属性，但标签会占用更多字节
+- 2001 | json —— 简化标签方式，通过特殊符号嵌套，便于传输，但不再支持键值属性
+- 2001 | yaml —— 简化标签方式，通过缩进格式嵌套，便于解析，但人类维护容易出错
+- 2013 | toml —— 优化ini格式定义，支持复杂数据
 
 #### 文件制作
 

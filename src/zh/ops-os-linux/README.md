@@ -107,16 +107,21 @@ order: 1
   + ~~NetBSD~~
 + RTOS（Real-Time Operating System，实时操作系统） 专为满足实时控制需求而设计
   + FreeRTOS （金主：AWS） 特定场景：嵌入式、医疗设备、汽车ECU（Electronic Control Unit，电子控制单元）
+  todo RT-Thread https://www.bilibili.com/video/BV1kjL56QEhb/
+  todo Zephyr
 
-## 桌面环境
+包管理与软件生态：Linux没有“唯一应用商店”，而是由发行版、官方及第三方共同构成的灵活生态。
 
-+ GNOME
-+ KDE
-+ 主题
-  + DANK LINUX （[link_介绍](https://www.bilibili.com/video/BV1M6AizkEdk/)）
-+ 兼容win
-  + wine
-  + DXVK Vulkan
++ 发行版官方仓库 —— 最稳定安全的选择，但软件版本通常不是最新。
+  + apt（DEB格式）
+  + dnf/yum（[RPM格式](./package-rpm.md)）
++ 通用包格式 —— 跨发行版通用，沙箱（Sandbox）隔离更安全，但体积较大。
+  （沙箱隔离机制时为了安全，但默认配置通常非常严格，限制了应用对系统资源如文件系统、硬件设备的访问访问，这会导致如钉钉无法访问下载目录以外文件、Stream无法访问麦克风设备等的问题。解决这类问题，可以使用FlatSeal等图形化工具手动配置权限，或者通过命令行参数调整访问策略。注意权衡便利性与安全性。）
+  + Flatpak
+  + Snap
++ 第三方仓库 —— 提供丰富软件，但需要注意来源安全性，建议慎用。
+  + PPA
+  + AUR
 
 ## 图形系统
 
@@ -135,18 +140,15 @@ order: 1
 显示效果 | 高分屏缩放实现复杂，效果欠佳 | 原生支持任意倍率缩放及HDR显示
 现状 | 逐步淘汰的旧标准，仅用于兼容 | 主流发行版默认选项，未来的趋势
 
-包管理与软件生态：Linux没有“唯一应用商店”，而是由发行版、官方及第三方共同构成的灵活生态。
+桌面环境：
 
-+ 发行版官方仓库 —— 最稳定安全的选择，但软件版本通常不是最新。
-  + apt（DEB格式）
-  + dnf/yum（[RPM格式](./package-rpm.md)）
-+ 通用包格式 —— 跨发行版通用，沙箱（Sandbox）隔离更安全，但体积较大。
-  （沙箱隔离机制时为了安全，但默认配置通常非常严格，限制了应用对系统资源如文件系统、硬件设备的访问访问，这会导致如钉钉无法访问下载目录以外文件、Stream无法访问麦克风设备等的问题。解决这类问题，可以使用FlatSeal等图形化工具手动配置权限，或者通过命令行参数调整访问策略。注意权衡便利性与安全性。）
-  + Flatpak
-  + Snap
-+ 第三方仓库 —— 提供丰富软件，但需要注意来源安全性，建议慎用。
-  + PPA
-  + AUR
++ GNOME
++ KDE
++ 主题
+  + DANK LINUX （[link_介绍](https://www.bilibili.com/video/BV1M6AizkEdk/)）
++ 兼容win
+  + wine
+  + DXVK Vulkan
 
 ## 文件系统
 
