@@ -2,6 +2,16 @@
 title: Python 语法
 ---
 
+## 版本特性
+
+- 3.15 <https://www.youtube.com/watch?v=t4QF0t_Y2Bs>
+  - frozendict （不可变字典）
+  - sentinel
+  - lazy import
+  - 推导式构建容器
+  - 默认UTF-8编码
+  - 采样式性能分析器 Tachyon —— 开销低、可直接挂到运行中程序
+
 ## 区别：str、bytes
 
 ```py
