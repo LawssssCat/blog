@@ -99,7 +99,11 @@ export default hopeTheme({
   hotReload: true,
 
   // all features are enabled for demo, only preserve features you need here
-  markdown,
+  markdown: {
+    math: true, // 开启数学公式支持（默认使用 katex，也可填 'katex' 或 'mathjax'）
+    mermaid: true, // 开启流程图/时间线支持（你文章里用到了 mermaid）
+    attrs: true, // 开启标题自定义 ID 支持（即你标题上的 {#math-nt-...}）
+  },
 
   plugins: {
     blog: true,
