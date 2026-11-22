@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: read
-  
+
 jobs:
   build-gh-pages-test:
     runs-on: ubuntu-latest
@@ -24,17 +24,20 @@ jobs:
           # if your docs needs submodules, uncomment the following line
           # submodules: true
 
+      # 第 1 步：先把 pnpm 装好（只安装工具本身，不提前装依赖）
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          run_install: true
-          version: 8
-
+          version: 10
+      # 第 2 步：配置 Node.js 20，此时系统里已经有 pnpm 了，才能正常识别 cache: pnpm
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+      # 第 3 步：Node 20 和 pnpm 缓存都已就绪，此时再正式安装项目依赖
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build Docs
         env:
